@@ -29,8 +29,10 @@
 - 7 步导览（约 90 秒）：卡片、步骤号、暂停/继续、下一步、退出；拖动/滚轮/触摸立即暂停；`prefers-reduced-motion` 不自动播放。
 - `window.__sceneContext`：sceneId/stageId/selectedObjectId/knowledgeIds/experienceMode/interaction；`selectStage` 与设备点击同步。
 - 设备级 objectId：`three_phase_separator`、`fixed_roof_tank`、`floating_roof_tank`、`atmospheric_tower`、`vacuum_tower`、`heater`、`pumpjack`、`wellhead`、`fuel_dispenser`、`plastic_bottle`、`fiber_spool`、`lubricant_can`、`asphalt_slab`（点击命中后写入上下文）。
-- 设备卡片：点击设备后显示名称、用途、所属环节、「问 AI」（自动填入问题并聚焦输入框）、「读本章知识」；可关闭并清除 `selectedObjectId`。
+- 设备卡片：点击设备后显示名称、用途、所属环节、「问 AI」（自动填入问题并聚焦输入框）、「读本章知识」；**卡片按设备三维锚点投影定位**，随相机旋转/缩放跟随，越界时夹在视口内，进入关卡自动隐藏；可关闭并清除 `selectedObjectId`。
 - 关卡交互回写：`__stage.setInteraction()` 已接入 l1 压力差、l2 出口选择、l3 液位、l4 馏分选择/放置、l5 产品勾选；进入关卡时 `levelId` 置为 `l1–l5`。
+- 操作历史：保留最近 12 条（action/value/unit/环节/关卡/时间），上下文带最近 8 条；AI `ctx` 追加最近 4 条；导出探索记录时写入操作轨迹。
+- 全景构图：相机改为更俯视（elevation 0.54 / radius 54 / target 4），五个区域与产品区全部入画。
 - `ai.js`：`/api/ask` 的 `ctx` 数组追加“产业链环节/当前设备/知识点/体验模式”，请求体字段保持 `{question, ctx, tier, mode}` 兼容。
 
 ### P3 · 性能与稳定性
@@ -61,7 +63,7 @@
 
 ## 3. 已知限制与遗留
 
-1. 设备卡片已可点击展示，但射线命中依赖 OBJ/程序化 Mesh 的坐标；自动化只验证了 `showDevice()` 与卡片内容，未做画布坐标点击测试。
+1. 设备卡片的画布坐标点击仍未做自动化测试（`showDevice()` 与锚定投影已验证，射线路径靠代码审查）。
 2. `levels/entry.js` 的全局粒子 RAF 未彻底收口（关卡 loop 已有 running 控制，但 entry.js 的输入/粒子仍需单独审）。
 3. 关卡 interaction 只回写最近一次操作，未做操作历史队列。
 4. `write.html` 仍是旧版冷蓝视觉（本轮未动）。

@@ -228,6 +228,12 @@
               lines.push('本轮操作：' + sc.interaction.action + '=' + sc.interaction.value + (sc.interaction.unit ? '（' + sc.interaction.unit + '）' : ''));
             }
             if (sc.experienceMode) lines.push('体验模式：' + sc.experienceMode);
+            if (sc.history && sc.history.length) {
+              const recent = sc.history.slice(-4).map(function (h) {
+                return h.action + '=' + h.value + (h.unit ? '（' + h.unit + '）' : '');
+              });
+              lines.push('最近操作：' + recent.join('；'));
+            }
           }
           return lines;
         })(),

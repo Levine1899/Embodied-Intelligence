@@ -38,7 +38,8 @@ window.__sceneContext = {
 - `selectStage(index, focus, objectId)` 更新并 `dispatchEvent('scene-context')`；AI 面板同步标题。
 - 设备点击：射线命中后向上找 `userData.objectId`，再找 `userData.stage`，把 objectId 传入。
 - 关卡内部通过 `window.__stage.setInteraction(action,value,unit)` 回写：l1 压力差、l2 出口、l3 液位、l4 馏分、l5 产品；进入关卡时 `levelId` 置为 `l1–l5`。
-- 设备卡片：`showDeviceCard()` 展示名称/用途/环节/问 AI/读本章；关闭时清空 `selectedObjectId`。
+- 设备卡片：`showDeviceCard(objectId,index,anchor)` 按三维锚点投影定位（`updateDeviceCard()` 每帧更新），越界夹取；进入关卡自动隐藏；关闭清空 `selectedObjectId`。
+- 操作历史：`history` 保留 12 条，`__sceneContext.history` 带最近 8 条。
 
 ## 5. AI 兼容
 

@@ -252,12 +252,12 @@
     el.textContent = "读本章知识 · 第 " + m.n + " 章 " + m.t + " →";
   }
 
-  function selectStage(index, focus, objectId) {
+  function selectStage(index, focus, objectId, anchor) {
     currentStage = index;
     updateTask();
     syncChapterLink(index);
     syncSceneContext(index, objectId || null, null);
-    if (objectId) showDeviceCard(objectId, index); else hideDeviceCard();
+    if (objectId) showDeviceCard(objectId, index, anchor); else hideDeviceCard();
     if (focus && modelGroups[index]) {
       const p = modelGroups[index].position;
       const preset = CAM_PRESETS[index] || CAM_PRESETS[0];
@@ -768,6 +768,24 @@
       label.element.style.top = (top + height / 2) + 'px';
       placed.push({ left: x - width / 2, right: x + width / 2, top: top, bottom: top + height });
     });
+    updateDeviceCard();
+  }
+
+  function updateDeviceCard() {
+    if (!deviceCardEl || deviceCardEl.hidden) return;
+    if (activeScene) { deviceCardEl.hidden = true; return; }
+    if (!deviceAnchor) return;
+    const point = deviceAnchor.clone().project(camera);
+    if (point.z > 1) { deviceCardEl.hidden = true; return; }
+    const w = viewport.clientWidth, h = viewport.clientHeight;
+    const cw = deviceCardEl.offsetWidth || 280;
+    const ch = deviceCardEl.offsetHeight || 160;
+    let x = (point.x + 1) * w / 2;
+    let y = (1 - point.y) * h / 2;
+    x = Math.max(cw / 2 + 8, Math.min(w - cw / 2 - 8, x));
+    y = Math.max(ch + 30, Math.min(h - 18, y));
+    deviceCardEl.style.left = x + 'px';
+    deviceCardEl.style.top = y + 'px';
   }
 
   function render(timestamp) {
@@ -879,6 +897,7 @@
         ), camera);
         const hits = raycaster.intersectObjects(modelGroups, true);
         if (hits.length) {
+          const hitPoint = hits[0].point.clone();
           let object = hits[0].object;
           let objectId = null;
           let probe = object;
@@ -891,7 +910,7 @@
             const idx = object.userData.stage;
             const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
             if (hook) { markLevel(idx); hook(); return; }
-            selectStage(idx, true, objectId);
+            selectStage(idx, true, objectId, hitPoint);
           }
         }
       }
@@ -911,7 +930,7 @@
   });
   depthSelect.addEventListener('change', updateTask);
   document.getElementById('overview').addEventListener('click', function () {
-    moveCamera({ targetX: 6, targetY: 2.6, targetZ: 0, radius: 50, azimuth: 0.28, elevation: 0.46 });
+    moveCamera({ targetX: 4, targetY: 2.8, targetZ: 0, radius: 54, azimuth: 0.28, elevation: 0.54 });
   });
   document.getElementById('focus').addEventListener('click', function () { selectStage(currentStage, true); });
   document.getElementById('next').addEventListener('click', function () {
@@ -976,6 +995,13 @@
       });
       lines.push('');
     }
+    if (history.length) {
+      lines.push('操作轨迹（示意）：');
+      history.forEach(function (row) {
+        lines.push('  ' + row.time + ' · ' + row.action + ' = ' + row.value + (row.unit ? '（' + row.unit + '）' : '') + ' · ' + (row.stageId || ''));
+      });
+      lines.push('');
+    }
     lines.push('本记录来自原理示意模型与预置讲解。');
     const url = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' }));
     const link = document.createElement('a');
@@ -1011,11 +1037,15 @@
     asphalt_slab: { name: '沥青路面', stage: 4, ask: '沥青是炼厂的哪个部分来的？', text: '沥青主要来自减压渣油等重质组分，经处理满足道路或建筑用途。' }
   };
   let deviceCardEl = null;
-  function showDeviceCard(objectId, index) {
+  let deviceAnchor = null;
+  const history = [];
+  function showDeviceCard(objectId, index, anchor) {
     const info = DEVICE_INFO[objectId];
     if (!info) return;
     if (!deviceCardEl) deviceCardEl = document.getElementById('device-card');
     if (!deviceCardEl) return;
+    if (deviceCardEl.parentNode !== viewport) viewport.appendChild(deviceCardEl);
+    deviceAnchor = anchor && anchor.clone ? anchor.clone() : new THREE.Vector3(REGIONS[index].x, 3.4, REGIONS[index].z);
     deviceCardEl.hidden = false;
     document.getElementById('device-stage').textContent = '第 ' + (index + 1) + ' 环节 · ' + stageNames[index];
     document.getElementById('device-name').textContent = info.name;
@@ -1041,6 +1071,7 @@
   }
   function hideDeviceCard() {
     if (deviceCardEl) deviceCardEl.hidden = true;
+    deviceAnchor = null;
   }
 
   /* ---------- 场景上下文：AI / 写作 / 测试共用 ---------- */
@@ -1083,6 +1114,13 @@
     const ctx = window.__sceneContext || fallback;
     ctx.interaction = { action: action, value: value, unit: unit || '示意' };
     ctx.experienceMode = mode || ctx.experienceMode;
+    history.push({
+      action: action, value: value, unit: unit || '示意',
+      stageId: ctx.stageId, levelId: ctx.levelId || null,
+      time: new Date().toTimeString().slice(0, 8)
+    });
+    if (history.length > 12) history.shift();
+    ctx.history = history.slice(-8);
     window.__sceneContext = ctx;
     document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
   }
@@ -1131,7 +1169,7 @@
     if (!step) { stopTour(); return; }
     tourIndex = index;
     if (step.stage == null) {
-      moveCamera({ targetX: 6, targetY: 2.6, targetZ: 0, radius: 50, azimuth: 0.28, elevation: 0.46 });
+      moveCamera({ targetX: 4, targetY: 2.8, targetZ: 0, radius: 54, azimuth: 0.28, elevation: 0.54 });
       syncSceneContext(null);
     } else {
       selectStage(step.stage, true);
