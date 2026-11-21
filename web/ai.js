@@ -98,7 +98,7 @@
     '<div class="lm sys"><b>星火</b>这一层看到的东西，可以随时问我。库里有答案我直接给；库里没有、但属于石油这行的，我调模型组织一段，并标出来源属性。</div>',
     '</div>',
     '<form class="leadai__ask" id="leadai-form"><input id="leadai-q" placeholder="就这一层问一句…" aria-label="提问"><button type="submit" aria-label="发送">↑</button></form>',
-    '<div class="leadai__foot"><span id="leadai-pending">待审补库 0 条</span><span>模型回答档位：<b id="leadai-tier">通俗版</b></span></div>'
+    '<div class="leadai__foot"><span id="leadai-pending">待审补库 0 条</span><span class="leadai__tiers" id="leadai-tiers">档位：<button type="button" data-tier="kid">童话</button><button type="button" data-tier="mid" aria-pressed="true" class="on">通俗</button><button type="button" data-tier="pro">工程</button></span></div>'
   ].join('');
   const src = side.querySelector('.source');
   if (src) side.insertBefore(box, src); else side.appendChild(box);
@@ -174,8 +174,11 @@
   function paintPending() {
     const el = box.querySelector('#leadai-pending');
     if (el) el.textContent = '待审补库 ' + pendingList().length + ' 条';
-    const t = box.querySelector('#leadai-tier');
-    if (t) t.textContent = TIER_NAME[tier];
+    box.querySelectorAll('#leadai-tiers button').forEach(b => {
+      const on = b.dataset.tier === tier;
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.classList.toggle('on', on);
+    });
   }
   function addPending(q) {
     const l = pendingList();
@@ -187,7 +190,10 @@
   }
 
   let tier = 'mid';
-  const TIER_NAME = { mid: '通俗版', pro: '工程版' };
+  const TIER_NAME = { kid: '少儿童话', mid: '通俗版', pro: '工程版' };
+  const TIER_SHORT = { kid: '童话', mid: '通俗', pro: '工程' };
+  const TIER_ORDER = ['kid', 'mid', 'pro'];
+  const nextTier = () => TIER_ORDER[(TIER_ORDER.indexOf(tier) + 1) % TIER_ORDER.length];
 
   function nearestChips(ranked) {
     return ranked.slice(0, 2).filter(r => r && r.it)
@@ -221,7 +227,7 @@
       '<div class="who">模型补充 · 未逐条核验 · ' + TIER_NAME[tier] + '</div>' +
       '<div class="lm-body">' + esc(text).replace(/\n+/g, '<br/>') + '</div>' +
       '<div class="lm-acts">' +
-        '<button type="button" class="lm-act" data-a="tier">换个' + (tier === 'mid' ? '工程' : '通俗') + '版</button>' +
+        '<button type="button" class="lm-act" data-a="tier">换个' + TIER_SHORT[nextTier()] + '档重讲</button>' +
         '<button type="button" class="lm-act" data-a="save">加入待审补库</button>' +
         '<button type="button" class="lm-act" data-a="copy">复制</button>' +
       '</div>' +
@@ -229,7 +235,7 @@
     d.querySelectorAll('.lm-act').forEach(b => {
       b.onclick = () => {
         const a = b.dataset.a;
-        if (a === 'tier') { tier = tier === 'mid' ? 'pro' : 'mid'; paintPending(); ask(q); }
+        if (a === 'tier') { tier = nextTier(); paintPending(); ask(q); }
         else if (a === 'save') { addPending(q); b.textContent = '已加入待审'; b.disabled = true; }
         else if (a === 'copy') {
           if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => { b.textContent = '已复制'; });
@@ -295,9 +301,19 @@
     '.lm-act{height:26px;padding:0 9px;background:transparent;border:1px solid #2a4353;color:#cfe2ea;border-radius:6px;font-size:11.5px;cursor:pointer}',
     '.lm-act:hover{border-color:#48d7f0;color:#48d7f0}',
     '.lm-act:disabled{opacity:.55;cursor:default}',
-    '.lm-note{font-size:11.5px;color:#7d93a2;margin-top:4px}'
+    '.lm-note{font-size:11.5px;color:#7d93a2;margin-top:4px}',
+    '.leadai__tiers{display:inline-flex;gap:4px;align-items:center}',
+    '.leadai__tiers button{background:transparent;border:1px solid #2a4353;color:#9fb4c0;font-size:11px;padding:2px 7px;border-radius:4px;cursor:pointer}',
+    '.leadai__tiers button.on{border-color:#48d7f0;color:#48d7f0}'
   ].join('\n');
   document.head.appendChild(style);
+  box.querySelectorAll('#leadai-tiers button').forEach(b => {
+    b.addEventListener('click', () => {
+      if (!TIER_NAME[b.dataset.tier]) return;
+      tier = b.dataset.tier;
+      paintPending();
+    });
+  });
   paintPending();
 
   /* ---------- 生成材料 ---------- */

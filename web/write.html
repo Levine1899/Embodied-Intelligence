@@ -67,7 +67,7 @@
   .acts button.pri{border-color:var(--amber);color:var(--amber)}
   .acts input{flex:1;min-width:120px;height:30px;background:#0d1a22;border:1px solid var(--line);color:var(--text);padding:0 8px;border-radius:2px;font:inherit;font-size:12px}
   .overall{font-size:12px;color:var(--dim);margin-top:6px}
-</style>
+  .kblink-row{margin:-6px 0 18px;font-size:12.5px}\n  .kblink-row a{color:var(--cyan);text-decoration:underline;text-underline-offset:4px}\n</style>
 </head>
 <body>
 <header>
@@ -76,13 +76,14 @@
     <a href="./">沉浸讲解</a>
     <a href="ask.html">科普问答</a>
     <a href="write.html" aria-current="page">文案生成</a>
-    <a href="kb.html">知识库</a>
   </nav>
 </header>
 
 <main>
   <h1>把一场讲解，<em>写成文章</em></h1>
   <p class="sub">左边填素材和事实，右边出稿。数字只照抄事实里的，模型不会自己编。</p>
+
+  <p class="kblink-row"><a href="kb.html">← 查石油知识库（引用来自这里）</a></p>
 
   <div class="layout">
     <section class="card">
@@ -124,7 +125,7 @@
         <div class="c" style="color:var(--dim)">生成后这里显示真实命中的资料与分数</div>
       </div>
       <div class="audit" id="audit"><h4>三道防线 · 发布前必过</h4>
-        <div class="row" id="ar1"><span class="dot"></span><span class="t"><b>1. 机器初筛</b><br/><span class="st">还没运行</span></span></div>
+        <div class="row" id="ar1"><span class="dot"></span><span class="t"><b>1. 机器初筛（含来源约束）</b><br/><span class="st">还没运行</span></span></div>
         <div class="row" id="ar2"><span class="dot"></span><span class="t"><b>2. 编辑复审</b><br/><span class="st">等待初筛通过</span></span></div>
         <div class="row" id="ar3"><span class="dot"></span><span class="t"><b>3. 专家终审</b><br/><span class="st">等待复审通过</span></span></div>
         <div class="acts" id="aacts"></div>

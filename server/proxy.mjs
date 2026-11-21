@@ -122,8 +122,10 @@ const TIER_SYS = {
   kid: `【表达档位·少儿童话版】读者是 8–12 岁的孩子。
 1. 全篇 70–110 字，最多两段。
 2. 必须用一个生活里能摸到的东西打比方（海绵、吸管、锅盖、吸管、饼干这类），不要自己编新道具。
-3. 不用专业术语：不写"孔隙度、渗透率、馏分、干酪根、烃源岩"。
-4. 不写数字，不写百分号。`,
+3. 不用专业术语：不写"孔隙度、渗透率、馏分、干酪根、烃源岩、压裂、井筒、井段、储层"。
+4. 不写数字，不写百分号。
+5. 严格控制在 110 字以内，超了就删到 110 字以内（这条优先于其他要求）。
+6. 用生活里的东西打比方说清"为什么"，不要解释工艺流程。`,
   mid: `【表达档位·中学原理版】读者是中学生。
 1. 150–200 字。
 2. 结构：一句话结论 → 为什么会这样（机制）→ 一个生活里能对上的现象。
@@ -134,14 +136,34 @@ const TIER_SYS = {
 3. 不做投资、安全或合规判断。`
 };
 
-async function callAsk(question, ctx, tier, mode) {
+const KID_BAN = ['压裂', '井筒', '井段', '储层', '馏分', '渗透率', '孔隙度', '烃源岩'];
+
+async function askOnce(messages) {
   const r = await fetch('https://api.deepseek.com/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + KEY },
-    body: JSON.stringify({ model: 'deepseek-chat', temperature: 0.35, max_tokens: 700, messages: askMessages(question, ctx, tier, mode) })
+    body: JSON.stringify({ model: 'deepseek-chat', temperature: 0.35, max_tokens: 700, messages })
   });
   const j = await r.json();
   return j?.choices?.[0]?.message?.content?.trim() || '';
+}
+
+async function callAsk(question, ctx, tier, mode) {
+  const messages = askMessages(question, ctx, tier, mode);
+  let text = await askOnce(messages);
+  // 童话档硬约束：模型经常写飞，超长或带术语就只重写一次
+  if (tier === 'kid' && text) {
+    const solid = text.replace(/\s/g, '');
+    const hits = KID_BAN.filter(w => text.includes(w));
+    if (solid.length > 120 || hits.length) {
+      const fix = await askOnce(messages.concat([
+        { role: 'assistant', content: text },
+        { role: 'user', content: '重写，只输出正文：100 字以内；不要出现「' + (hits.join('、') || '专业术语') + '」；用一个生活里能摸到的东西打比方。' }
+      ]));
+      if (fix) text = fix;
+    }
+  }
+  return text;
 }
 const server = http.createServer(async (req, res) => {
   const url = req.url.split('?')[0];

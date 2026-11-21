@@ -38,6 +38,26 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 @media(max-width:800px){.layout{grid-template-columns:1fr}.side{border-left:0;padding:20px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:24px}.source{margin-top:0;padding:0;border-top:0}.viewport{height:440px}.heading{align-items:flex-start;flex-wrap:wrap}.nav{gap:18px}.return{display:none}.heading h1{font-size:28px}.top{gap:22px}.main{padding:20px}.source-photo img{height:160px}}
 @media(max-width:500px){.top{height:auto;padding:16px;flex-wrap:wrap;gap:14px}.brand{font-size:20px}.nav{gap:22px;flex-basis:100%;font-size:12px}.nav .active{padding-bottom:5px}.main{padding:18px 15px}.heading h1{font-size:26px}.heading p{font-size:12px}.reading select{font-size:16px}.scene-head{flex-wrap:wrap}.viewport{height:350px}.object-label{font-size:11px;padding:3px 6px}.stage-navigation button{padding:11px 6px;font-size:11px}.stage-navigation small{display:none}.side{grid-template-columns:1fr}.choices button{font-size:14px}.source{border-top:1px solid var(--line);padding-top:17px}.source-photo img{height:180px}.explanation{padding:14px}.explanation .chapter{width:100%}.explanation .next{width:100%}.foot{flex-wrap:wrap}.foot button{width:100%}.live{font-size:11px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* 前置章：石油从哪来（2D，不占 3D） */
+.origin-bar{padding:12px 18px 0}
+.origin-bar button{display:inline-flex;align-items:center;gap:9px;background:#12222c;border:1px solid #2f4b57;color:#a9c3cb;padding:7px 13px;font-size:12.5px;cursor:pointer}
+.origin-bar button:hover{border-color:var(--amber);color:var(--amber)}
+.origin-bar button i{width:6px;height:6px;border-radius:50%;background:var(--cyan);display:block}
+.origin-bar button small{color:#7d96a2;font-size:11px}
+.originbar-dialog{max-width:760px}
+.origin-lead{font-size:13px;color:#bcc9ce;line-height:1.9;margin:0 0 14px}
+.origin-timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 16px;padding:0;list-style:none}
+.origin-timeline li{border-top:2px solid #2f4b57;padding:9px 8px 0;font-size:12px;color:#a8b7bf;line-height:1.7}
+.origin-timeline li b{display:block;color:var(--cyan);font-weight:500;font-size:11px;margin-bottom:3px}
+.origin-figure{margin:0 0 14px;border:1px solid #243843;background:#0b1620;padding:10px}
+.origin-figure svg{display:block;width:100%;height:auto}
+.origin-figure figcaption{font-size:11px;color:#7d96a2;margin-top:7px;line-height:1.7}
+.origin-points{display:grid;gap:6px;margin:0 0 12px;padding-left:18px;font-size:12.5px;color:#bcc9ce;line-height:1.85}
+.origin-myth{font-size:12px;color:#e0b071;border-left:2px solid var(--amber);padding-left:10px;line-height:1.8;margin:0 0 16px}
+.origin-dialog footer{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #243843;padding-top:13px}
+.origin-dialog footer button{background:var(--amber);color:#19232a;border:0;padding:9px 16px;font-size:12.5px;font-weight:600;cursor:pointer}
+.origin-dialog footer span{font-size:11px;color:#7d96a2;line-height:1.7}
+@media(max-width:700px){.origin-timeline{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -47,7 +67,6 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
         <a href="./" aria-current="page">沉浸讲解</a>
         <a href="ask.html">科普问答</a>
         <a href="write.html">文案生成</a>
-        <a href="kb.html">知识库</a>
       </nav>
 
 </header>
@@ -60,6 +79,7 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 <div class="view-hint"><b>拖动</b> 旋转 · <b>滚轮</b> 缩放 · 点击节点查看</div>
 <div class="fallback" id="fallback" hidden>三维场景正在准备。</div>
 </div>
+<div class="origin-bar"><button type="button" id="open-origin"><i></i>第一站 · 石油从哪来<small>2D 前置章 · 约 40 秒</small></button></div>
 <nav class="stage-navigation" id="stages" aria-label="流程环节"><button type="button" data-stage="0" aria-current="step">地下开采<small>储层与井筒</small></button><button type="button" data-stage="1">地面处理<small>产出物的处理</small></button><button type="button" data-stage="2">储运<small>储罐与输送</small></button><button type="button" data-stage="3">炼化<small>分离与转化</small></button><button type="button" data-stage="4">产品去向<small>燃料与材料原料</small></button></nav>
 <div class="explanation"><span class="chapter" id="chapter">地下开采</span><p id="explanation"></p><button type="button" class="next" id="next">继续查看 →</button></div>
 </section>
@@ -73,6 +93,52 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 <p class="note"><b>本页状态</b> 问答：演示知识包（20 条）· 拒答为真实逻辑<br>文案生成：<b>真实模型</b>（DeepSeek），未审校<br>三维：原理级示意，非真实工艺比例 · 数据为示意值<br><b>构建</b> wide6 · 2026-11-20 15:52</p>
 </main>
 <dialog id="details"><header><h2 id="details-title">原理与资料</h2><button type="button" id="close-dialog" aria-label="关闭资料">关闭</button></header><div id="details-content"></div></dialog>
+
+<dialog id="origin-dialog" class="originbar-dialog" aria-labelledby="origin-title">
+  <header><h2 id="origin-title">第一站 · 石油从哪来</h2><button type="button" id="close-origin" aria-label="关闭前置章">关闭</button></header>
+  <p class="origin-lead">这一页只看四件事：有机质怎么沉下来、怎么被埋、怎么变成油、又怎么聚到一起。看完再进三维场景，五个环节就有起点。</p>
+  <ol class="origin-timeline">
+    <li><b>1 · 沉积</b>藻类、浮游生物和细小有机质随泥沙沉到浅海或湖底，和泥一起埋起来。</li>
+    <li><b>2 · 埋深</b>上面不断堆积新地层，下面的泥越埋越深，温度和压力慢慢升高。</li>
+    <li><b>3 · 生烃</b>在合适的温度和时间内，有机质逐步转化成油和气——这一步叫生烃。</li>
+    <li><b>4 · 聚集成藏</b>油气从致密岩层挤进多孔的储层，往上浮，被盖层挡住、被圈闭扣住，才聚成藏。</li>
+  </ol>
+  <figure class="origin-figure">
+    <svg viewBox="0 0 640 200" role="img" aria-label="生油层、储层、盖层与圈闭的剖面示意：油气从生油层运移到储层，被盖层封住形成油气藏">
+      <defs>
+        <pattern id="og-src" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#1b2a33"/><path d="M0 8L8 0" stroke="#3f5d6b" stroke-width="1"/></pattern>
+        <pattern id="og-res" width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="#243b46"/><circle cx="2" cy="2" r="1" fill="#6f9dae"/><circle cx="5" cy="5" r="1" fill="#6f9dae"/></pattern>
+        <pattern id="og-cap" width="10" height="6" patternUnits="userSpaceOnUse"><rect width="10" height="6" fill="#33424a"/><path d="M0 5H10" stroke="#718b96" stroke-width="1.4"/></pattern>
+        <marker id="og-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#48d7f0"/></marker>
+      </defs>
+      <rect x="0" y="0" width="640" height="200" fill="#0b1620"/>
+      <path d="M0 150 L80 120 L150 108 L230 118 L300 92 L360 92 L420 116 L500 108 L570 122 L640 150 L640 200 L0 200 Z" fill="#16232b"/>
+      <path d="M0 150 L80 120 L150 108 L230 118 L300 92 L360 92 L420 116 L500 108 L570 122 L640 150" fill="none" stroke="#4d6874" stroke-width="1.4"/>
+      <path d="M0 176 L120 160 L230 168 L300 140 L360 140 L430 166 L540 158 L640 176 L640 200 L0 200 Z" fill="url(#og-src)"/>
+      <path d="M296 146 L300 132 L360 132 L364 146 L430 160 L360 168 L296 160 Z" fill="url(#og-res)"/>
+      <path d="M284 130 L300 112 L360 112 L376 130 L360 132 L300 132 Z" fill="url(#og-cap)"/>
+      <path d="M330 170 L330 134" stroke="#48d7f0" stroke-width="1.6" stroke-dasharray="4 4" marker-end="url(#og-arrow)"/>
+      <text x="16" y="166" fill="#8fa9b4" font-size="11">生油层（致密，有机质在这里转化）</text>
+      <text x="386" y="140" fill="#a9c3cb" font-size="11">储层（多孔，能存油和气）</text>
+      <text x="386" y="106" fill="#c4d4da" font-size="11">盖层（致密，挡住油气）</text>
+      <text x="336" y="180" fill="#48d7f0" font-size="10.5">运移</text>
+      <text x="16" y="24" fill="#e0b071" font-size="11.5">圈闭：盖层 + 储层组成的“盖子 + 容器”</text>
+    </svg>
+    <figcaption>原理示意，不代表任何具体油田的构造与比例；颜色仅作教学区分。</figcaption>
+  </figure>
+  <ul class="origin-points">
+    <li>石油不是“一滩地下湖”，多数是藏在岩石的微小孔隙和裂缝里。</li>
+    <li>生成、运移、聚集是三件事，缺一件就成不了藏。</li>
+    <li>找油找的往往不是油本身，而是“能成藏的地方”——圈闭。</li>
+  </ul>
+  <p class="origin-myth">常见误区：石油不是恐龙尸体变的。主要来源是海洋和湖泊里的浮游生物、藻类等有机质。</p>
+  <footer>
+    <span>本章为 2D 前置章，不占三维场景；正式讲解以专业审核稿为准。</span>
+    <button type="button" id="origin-go">进入第一环节 · 地下开采 →</button>
+  </footer>
+</dialog>
+
+<script src="origin.js?v=1"></script>
 <script src="assets/three.browser.js"></script>
 <script src="immersion.js?v=fix21"></script>
 <style>
@@ -122,7 +188,7 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
   #gen-note{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#7f929b;margin-left:auto}
 </style>
 <script src="kb-sources.js?v=3"></script>
-<script src="ai.js?v=kb7"></script>
+<script src="ai.js?v=kb8"></script>
 <style id="level-css">
   .lvl-entries{position:absolute;left:16px;top:16px;z-index:6;display:flex;flex-direction:column;gap:8px}
   .lvl-entry{display:flex;gap:7px;align-items:center;
