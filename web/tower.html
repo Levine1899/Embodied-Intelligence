@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>常减压蒸馏塔 · 剖面详解 | 油见未来</title>
+<style>
+  :root{
+    --bg:#0a1119;--panel:#101c25;--line:#243843;--text:#e6f2f8;--muted:#8fa9b4;--dim:#6e8592;
+    --amber:#f0a22e;--cyan:#48d7f0;--steel:#5b7280;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{background:var(--bg);color:var(--text);font:14px/1.75 "Microsoft YaHei UI","PingFang SC",system-ui,sans-serif;overflow-x:hidden}
+  header{display:flex;align-items:center;gap:18px;padding:14px 28px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#0a1119ee;backdrop-filter:blur(6px);z-index:20}
+  .brand{font-size:17px;font-weight:600;letter-spacing:.5px}
+  .brand i{display:inline-block;width:8px;height:8px;background:var(--amber);margin-right:9px;vertical-align:middle}
+  .brand small{color:var(--muted);font-size:12px;font-weight:400;margin-left:8px}
+  nav{margin-left:auto;display:flex;gap:4px}
+  nav a{color:var(--muted);text-decoration:none;font-size:13px;padding:7px 13px;border:1px solid transparent}
+  nav a:hover{color:var(--text)}
+  nav a[aria-current]{color:var(--amber);border-color:rgba(240,162,46,.4)}
+  main{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:0;min-height:calc(100vh - 62px)}
+  .stage{position:relative;min-height:560px;background:
+    radial-gradient(1200px 600px at 55% 20%, #12293a 0%, #0a1119 60%)}
+  #scene{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+  #scene.dragging{cursor:grabbing}
+  .hud{position:absolute;left:24px;top:20px;max-width:420px;pointer-events:none}
+  .hud h1{margin:0 0 6px;font-size:23px;letter-spacing:.4px}
+  .hud p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.9}
+  .hud .tag{display:inline-block;margin-top:10px;font-size:11px;color:var(--amber);border:1px solid rgba(240,162,46,.45);padding:3px 8px}
+  .levels{position:absolute;left:24px;bottom:22px;display:flex;gap:6px;z-index:5}
+  .levels button,.reset{background:#12222c;border:1px solid #2f4b57;color:#a9c3cb;font-size:12.5px;padding:8px 13px;cursor:pointer}
+  .levels button:hover,.reset:hover{border-color:var(--amber);color:var(--amber)}
+  .levels button[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);background:#202722}
+  .reset{position:absolute;right:22px;bottom:22px;z-index:5}
+  .legend{position:absolute;right:22px;top:20px;font-size:11.5px;color:var(--dim);text-align:right;line-height:2;pointer-events:none}
+  .legend b{color:var(--amber);font-weight:500}
+  .legend i{display:inline-block;width:16px;height:3px;vertical-align:middle;margin-right:5px}
+  .legend .c{background:var(--cyan)}.legend .a{background:var(--amber)}
+  .labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .hs{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;
+    background:#0f1d27e6;border:1px solid #4a6772;color:#cfe2ea;font-size:11.5px;padding:3px 8px;white-space:nowrap;
+    transition:border-color .15s,color .15s,background .15s}
+  .hs:hover{border-color:var(--cyan);color:var(--cyan)}
+  .hs.on{border-color:var(--amber);color:var(--amber);background:#282318e8}
+  .hs:after{content:"";position:absolute;left:50%;top:100%;width:1px;height:10px;background:currentColor;opacity:.5}
+  aside{border-left:1px solid var(--line);padding:22px;display:flex;flex-direction:column;gap:16px;background:#0c1620}
+  aside h2{font-size:15px;margin:0;letter-spacing:.5px}
+  .detail{border:1px solid var(--line);padding:14px;min-height:210px;font-size:13px;line-height:1.9;color:#bcc9ce}
+  .detail h3{margin:0 0 8px;font-size:15px;color:var(--amber);font-weight:600}
+  .detail ul{margin:9px 0 0;padding-left:17px}
+  .detail li{margin:3px 0}
+  .detail .hint{color:var(--dim);font-size:11.5px;margin-top:10px}
+  .detail a{color:var(--cyan);text-decoration:underline;text-underline-offset:4px;font-size:11.5px}
+  .list{display:grid;gap:6px}
+  .list button{text-align:left;background:#12222c;border:1px solid #2f4b57;color:#bcc9ce;font:inherit;font-size:12.5px;padding:8px 11px;cursor:pointer}
+  .list button:hover{border-color:var(--cyan);color:var(--cyan)}
+  .list button[aria-pressed="true"]{border-color:var(--amber);color:var(--amber)}
+  .list small{display:block;color:var(--dim);font-size:11px;margin-top:2px}
+  footer{border-top:1px solid var(--line);padding:10px 28px;font-size:11.5px;color:var(--dim);line-height:1.8}
+  .fallback{padding:40px 30px;color:var(--amber)}
+  .fallback svg{max-width:560px;width:100%;height:auto;display:block;margin:16px 0}
+  .fallback p{color:#bcc9ce;font-size:13px}
+  @media(max-width:900px){
+    main{grid-template-columns:1fr}
+    aside{border-left:0;border-top:1px solid var(--line)}
+    .stage{min-height:440px}
+    .hud h1{font-size:19px}.hud{max-width:70%}.legend{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><i></i>油见未来<small>常减压蒸馏 · 剖面详解</small></div>
+  <nav aria-label="主菜单">
+    <a href="./">沉浸讲解</a>
+    <a href="ask.html">科普问答</a>
+    <a href="write.html">文案生成</a>
+  </nav>
+</header>
+
+<main>
+  <section class="stage">
+    <canvas id="scene" aria-label="常压塔与减压塔的三维剖面示意，可拖动旋转、滚轮缩放"></canvas>
+    <div class="hud">
+      <h1>常压塔 · 减压塔</h1>
+      <p>原油进装置后，先在加热炉汽化，再进常压塔按沸点范围分段；塔底重油进减压塔，降低压力后继续分离。</p>
+      <span class="tag">程序化示意模型 · 非真实装置比例</span>
+    </div>
+    <div class="legend"><b><i class="a"></i>原油 / 进料</b><br><b><i class="c"></i>汽相 / 馏分</b><br>颜色为教学示意</div>
+    <div class="levels" id="levels" role="group" aria-label="剖切层级">
+      <button type="button" data-level="0" aria-pressed="true">外观</button>
+      <button type="button" data-level="1" aria-pressed="false">半剖</button>
+      <button type="button" data-level="2" aria-pressed="false">全剖</button>
+    </div>
+    <button type="button" class="reset" id="reset">重置视角</button>
+    <div class="labels" id="labels"></div>
+  </section>
+
+  <aside>
+    <h2 id="side-title">五个热点</h2>
+    <div class="list" id="hotspot-list" role="group" aria-label="热点列表"></div>
+    <div class="detail" id="detail">
+      <h3>先看哪里？</h3>
+      <p>点左侧设备上的标签，或点下面的按钮。切到「半剖」能看见塔内的塔板。</p>
+      <p class="hint">这个是程序化示意模型：塔板数量、侧线位置为教学简化，真实装置以工艺资料为准。</p>
+    </div>
+  </aside>
+</main>
+
+<footer>剖面与颜色均为教学示意，不代表真实装置比例、温度、压力或流量。模型由 Three.js 程序化生成，<b>非</b>外包精模 GLB。</footer>
+
+<script src="assets/three.browser.js"></script>
+<script src="tower.js?v=7"></script>
+</body>
+</html>

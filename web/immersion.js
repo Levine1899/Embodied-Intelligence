@@ -169,6 +169,8 @@
     document.getElementById('chapter').textContent = stageNames[currentStage];
     document.getElementById('explanation').textContent = explanations[currentStage][Number(depthSelect.value)];
     document.getElementById('source-link').href = sourceUrls[currentStage];
+    const towerLink = document.getElementById('tower-link');
+    if (towerLink) towerLink.hidden = currentStage !== 3;
   stageButtons.forEach(function (button, index) {
       if (index === currentStage) button.setAttribute('aria-current', 'step');
       else button.removeAttribute('aria-current');

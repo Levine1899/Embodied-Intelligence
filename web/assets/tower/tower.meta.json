@@ -1,0 +1,84 @@
+{
+  "model": "常减压蒸馏装置（程序化示意）",
+  "units": "meter-ish，示意比例",
+  "coordinate_system": "Y-up，与 THREE 默认一致",
+  "anchor_blender_z_up": {
+    "anchor_tower_overview": [
+      0.0,
+      0.0,
+      14.0
+    ],
+    "anchor_tower_feed": [
+      -4.5,
+      0.0,
+      13.0
+    ],
+    "anchor_tower_trays": [
+      0.0,
+      0.0,
+      16.0
+    ],
+    "anchor_tower_vacuum": [
+      7.6,
+      0.0,
+      9.0
+    ],
+    "anchor_tower_products": [
+      9.5,
+      0.0,
+      17.0
+    ]
+  },
+  "anchor_web_y_up": {
+    "anchor_tower_overview": [
+      0.0,
+      14.0,
+      -0.0
+    ],
+    "anchor_tower_feed": [
+      -4.5,
+      13.0,
+      -0.0
+    ],
+    "anchor_tower_trays": [
+      0.0,
+      16.0,
+      -0.0
+    ],
+    "anchor_tower_vacuum": [
+      7.6,
+      9.0,
+      -0.0
+    ],
+    "anchor_tower_products": [
+      9.5,
+      17.0,
+      -0.0
+    ]
+  },
+  "heater_bbox_obj_y_up": [
+    -9.25,
+    2.0,
+    -2.25,
+    -4.75,
+    14.0,
+    2.25
+  ],
+  "groups": {
+    "cutaway_hide": [
+      "Tower_Atmospheric_Shell",
+      "Tower_Atmospheric_Dome"
+    ],
+    "cutaway_show_only": [
+      "Tray_",
+      "VacTray_"
+    ],
+    "hotspots": {
+      "hs_crude_feed": "Pipe_Feed_Horizontal",
+      "hs_heater": "Heater",
+      "hs_atm_tower": "Tower_Atmospheric_Shell",
+      "hs_vacuum": "Tower_Vacuum_Shell",
+      "hs_products": "Box_"
+    }
+  }
+}

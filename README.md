@@ -14,6 +14,7 @@
 | **科普问答** `web/ask.html` | 独立问答页，同样的三段策略 |
 | **文案生成** `web/write.html` | 三种体裁（展馆讲解词 / 科普推文 / 短视频脚本），真调模型；生成后给**本地库引用**与**三道防线**审核 |
 | **知识库** `web/kb.html` | 15 条公开科普条目的检索视图（辅助入口，不在主导航） |
+| **塔剖面** `web/tower.html` | 常减压蒸馏装置 3D 剖面：五个热点、三档剖切（外观 / 半剖 / 全剖）、进料与侧线流向、可拖动镜头；入口在沉浸页的「炼化」环节 |
 
 一级导航只有三个 Tab：**沉浸讲解 / 科普问答 / 文案生成**；知识库从导航降为辅助入口（问答页与文案页的链接、沉浸页页脚）。
 
@@ -75,6 +76,7 @@ scienceagent/
 │  ├─ kb-sources.js         # 外部科普条目（标题/摘要/要点/出处/网址）
 │  ├─ levels/               # 五个关卡
 │  └─ assets/               # three.browser.js + 场景图片
+├─ tools/make_tower.py      # Blender 4.5 headless 程序化建模（导出 OBJ/GLB + 渲染图）
 ├─ server/
 │  ├─ proxy.mjs             # /api/ask 与 /api/gen，Key 只在服务端
 │  ├─ dev.mjs               # 本地静态服务 + /api 转发
@@ -93,6 +95,18 @@ scienceagent/
 
 ---
 
+## 4.5 重建塔模型（可选）
+
+模型不是手敲的，是脚本生成的；改了参数重跑即可：
+
+```powershell
+# 便携版 Blender 4.5 LTS（装在 D 盘，未进系统 PATH）
+D:\tools\blender\blender-4.5.16-windows-x64\blender.exe -b -P tools/make_tower.py -- web/assets/tower
+```
+
+产出：`tower.obj/.mtl`（网页加载）、`tower.glb`（母版，可直接给外包精修）、`tower.meta.json`（锚点/包围盒）、`render-overview.png` / `render-cutaway.png`（PPT 可用，1920×1200）。
+
+---
 ## 5. 生产部署（参考）
 
 ```nginx

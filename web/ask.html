@@ -165,6 +165,11 @@
     }
   }
 
+  try {
+    var q0 = new URLSearchParams(location.search).get('q');
+    if (q0) { $('#q').value = q0; $('#q').focus(); }
+  } catch (e) { /* 忽略 */ }
+
   $('#send').onclick = ask;
   $('#q').addEventListener('keydown', e => { if (e.key === 'Enter') ask(); });
 })();

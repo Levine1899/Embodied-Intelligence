@@ -38,7 +38,7 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 @media(max-width:800px){.layout{grid-template-columns:1fr}.side{border-left:0;padding:20px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:24px}.source{margin-top:0;padding:0;border-top:0}.viewport{height:440px}.heading{align-items:flex-start;flex-wrap:wrap}.nav{gap:18px}.return{display:none}.heading h1{font-size:28px}.top{gap:22px}.main{padding:20px}.source-photo img{height:160px}}
 @media(max-width:500px){.top{height:auto;padding:16px;flex-wrap:wrap;gap:14px}.brand{font-size:20px}.nav{gap:22px;flex-basis:100%;font-size:12px}.nav .active{padding-bottom:5px}.main{padding:18px 15px}.heading h1{font-size:26px}.heading p{font-size:12px}.reading select{font-size:16px}.scene-head{flex-wrap:wrap}.viewport{height:350px}.object-label{font-size:11px;padding:3px 6px}.stage-navigation button{padding:11px 6px;font-size:11px}.stage-navigation small{display:none}.side{grid-template-columns:1fr}.choices button{font-size:14px}.source{border-top:1px solid var(--line);padding-top:17px}.source-photo img{height:180px}.explanation{padding:14px}.explanation .chapter{width:100%}.explanation .next{width:100%}.foot{flex-wrap:wrap}.foot button{width:100%}.live{font-size:11px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
-/* 前置章：石油从哪来（2D，不占 3D） */
+.tower-link{align-self:center;flex-shrink:0;font-size:12.5px;color:var(--cyan);border:1px solid #2f4b57;padding:7px 13px;text-decoration:none;white-space:nowrap}.tower-link:hover{border-color:var(--cyan);color:#9fe9f7}.tower-link[hidden]{display:none}`n/* 前置章：石油从哪来（2D，不占 3D） */
 .origin-bar{padding:12px 18px 0}
 .origin-bar button{display:inline-flex;align-items:center;gap:9px;background:#12222c;border:1px solid #2f4b57;color:#a9c3cb;padding:7px 13px;font-size:12.5px;cursor:pointer}
 .origin-bar button:hover{border-color:var(--amber);color:var(--amber)}
@@ -81,7 +81,7 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 </div>
 <div class="origin-bar"><button type="button" id="open-origin"><i></i>第一站 · 石油从哪来<small>2D 前置章 · 约 40 秒</small></button></div>
 <nav class="stage-navigation" id="stages" aria-label="流程环节"><button type="button" data-stage="0" aria-current="step">地下开采<small>储层与井筒</small></button><button type="button" data-stage="1">地面处理<small>产出物的处理</small></button><button type="button" data-stage="2">储运<small>储罐与输送</small></button><button type="button" data-stage="3">炼化<small>分离与转化</small></button><button type="button" data-stage="4">产品去向<small>燃料与材料原料</small></button></nav>
-<div class="explanation"><span class="chapter" id="chapter">地下开采</span><p id="explanation"></p><button type="button" class="next" id="next">继续查看 →</button></div>
+<div class="explanation"><span class="chapter" id="chapter">地下开采</span><p id="explanation"></p><a class="tower-link" id="tower-link" href="tower.html" hidden>看分馏塔剖面 →</a><button type="button" class="next" id="next">继续查看 →</button></div>
 </section>
 <aside class="side">
 <div class="task-section"><div class="task-top"><strong id="task-label">探究任务</strong><span id="task-state">待观察</span></div><h2 id="question"></h2><div class="choices" id="choices" role="group" aria-label="探究问题选项"></div><p class="feedback" id="feedback" role="status" aria-live="polite"></p><div class="read-actions"><button type="button" id="read-more">展开原理</button><button type="button" id="speak">朗读讲解</button></div></div>
@@ -140,7 +140,7 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 
 <script src="origin.js?v=1"></script>
 <script src="assets/three.browser.js"></script>
-<script src="immersion.js?v=fix21"></script>
+<script src="immersion.js?v=fix22"></script>
 <style>
   .view-hint{font-size:12px}
   .stage-navigation small{font-size:12px}
