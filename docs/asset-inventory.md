@@ -43,3 +43,8 @@
 - `web/refactor.css`：全站引用为 0，已删除。
 - `web/home.html`：旧首页草稿，已归档到设计目录。
 - `tower.obj/glb` 本地未解释的法线改动：已回滚到已提交版本。
+
+
+## 6. Hero 资产 v1（2026-11-22 新增）
+
+`web/assets/hero/<id>/`：separator（8,236 面 / 452 KB）、pumpjack（1,208 / 66 KB）、wellhead（3,948 / 201 KB）、floating_roof_tank（5,448 / 310 KB）、heater（1,364 / 65 KB）。均为 `tools/make_hero_assets.py` 程序化生成，OBJ/MTL + meta/stats + Cycles 预览；来源与许可见脚本头注释，未使用外部模型/贴图。

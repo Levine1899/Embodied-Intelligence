@@ -1,0 +1,43 @@
+{
+  "asset": "wellhead",
+  "triangles": 3948,
+  "vertices": 2004,
+  "meshes": 4,
+  "materials": 4,
+  "size_m": {
+    "x": 2.4,
+    "y": 1.24,
+    "z": 2.21
+  },
+  "anchors": [
+    {
+      "id": "top",
+      "name": "井口顶部",
+      "pos": [
+        0,
+        0,
+        2.1
+      ]
+    },
+    {
+      "id": "wing",
+      "name": "翼阀",
+      "pos": [
+        1.1,
+        0,
+        1.35
+      ]
+    }
+  ],
+  "budget": {
+    "triangles": 8000,
+    "drawCalls": 6
+  },
+  "units": "meters",
+  "up_axis_after_export": "Y",
+  "note": "Teaching-grade medium detail; not an engineering model.",
+  "files": {
+    "obj_bytes": 206140,
+    "mtl_bytes": 781
+  }
+}

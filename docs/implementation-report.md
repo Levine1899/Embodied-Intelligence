@@ -97,3 +97,20 @@ DEEPSEEK_API_KEY=sk-... node server/proxy.mjs
 - **GLB 运行时暂不通过**：现有 `three.browser.js` 未导出 GLTFLoader，spike 的最小解析器不支持贴图/骨骼/动画/压缩；
 - 推荐近期走 **Blender → OBJ + MTL**（塔页已用 OBJ），GLB 留待官方 loader 本地化后再切；
 - 生产资产需按材质合并，目标 ≤ 8 draw calls/台。
+
+
+## 附录 · Hero 资产 v1（2026-11-22）
+
+Blender 批量生成五台设备，详见 [hero-assets.md](hero-assets.md)：
+
+| 资产 | 三角面 | 合并对象 | OBJ | 状态 |
+|---|---|---|---|---|
+separator | 8,236 | 5 | 452 KB | 接受 v1 |
+pumpjack | 1,208 | 4 | 66 KB | 需美术复审 |
+wellhead | 3,948 | 4 | 201 KB | 接受 v1 |
+floating_roof_tank | 5,448 | 4 | 310 KB | 接受 v1 |
+heater | 1,364 | 4 | 65 KB | 需重做结构 |
+
+- 全部在面数预算内；按材质合并，理论 draw call ≤ 5/台；
+- 未接入沙盘：缺共享 OBJ 解析器、材质映射、锚点注册与 LOD；
+- 预览为 Cycles CPU 渲染，不是应用内截图。

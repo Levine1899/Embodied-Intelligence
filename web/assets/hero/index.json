@@ -1,0 +1,271 @@
+[
+  {
+    "asset": "separator",
+    "triangles": 8236,
+    "vertices": 4160,
+    "meshes": 5,
+    "materials": 5,
+    "size_m": {
+      "x": 5.74,
+      "y": 3.1,
+      "z": 3.18
+    },
+    "anchors": [
+      {
+        "id": "inlet",
+        "name": "原油进口",
+        "pos": [
+          -2.83,
+          0,
+          1.35
+        ]
+      },
+      {
+        "id": "outlet",
+        "name": "油出口",
+        "pos": [
+          2.83,
+          0,
+          1.1
+        ]
+      },
+      {
+        "id": "gas",
+        "name": "气出口",
+        "pos": [
+          0,
+          0,
+          2.9
+        ]
+      },
+      {
+        "id": "water",
+        "name": "水出口",
+        "pos": [
+          0,
+          0,
+          0.15
+        ]
+      }
+    ],
+    "budget": {
+      "triangles": 12000,
+      "drawCalls": 8
+    },
+    "units": "meters",
+    "up_axis_after_export": "Y",
+    "note": "Teaching-grade medium detail; not an engineering model.",
+    "files": {
+      "obj_bytes": 463275,
+      "mtl_bytes": 960
+    }
+  },
+  {
+    "asset": "pumpjack",
+    "triangles": 1208,
+    "vertices": 680,
+    "meshes": 4,
+    "materials": 4,
+    "size_m": {
+      "x": 7.16,
+      "y": 2.945,
+      "z": 4.494
+    },
+    "anchors": [
+      {
+        "id": "horsehead",
+        "name": "驴头",
+        "pos": [
+          2.7,
+          0,
+          3.45
+        ]
+      },
+      {
+        "id": "beam",
+        "name": "游梁",
+        "pos": [
+          0.3,
+          0,
+          3.5
+        ]
+      },
+      {
+        "id": "crank",
+        "name": "曲柄",
+        "pos": [
+          -2.35,
+          0,
+          2.0
+        ]
+      },
+      {
+        "id": "motor",
+        "name": "电机",
+        "pos": [
+          -3.55,
+          0,
+          0.85
+        ]
+      }
+    ],
+    "budget": {
+      "triangles": 10000,
+      "drawCalls": 6
+    },
+    "units": "meters",
+    "up_axis_after_export": "Y",
+    "note": "Teaching-grade medium detail; not an engineering model.",
+    "files": {
+      "obj_bytes": 67221,
+      "mtl_bytes": 781
+    }
+  },
+  {
+    "asset": "wellhead",
+    "triangles": 3948,
+    "vertices": 2004,
+    "meshes": 4,
+    "materials": 4,
+    "size_m": {
+      "x": 2.4,
+      "y": 1.24,
+      "z": 2.21
+    },
+    "anchors": [
+      {
+        "id": "top",
+        "name": "井口顶部",
+        "pos": [
+          0,
+          0,
+          2.1
+        ]
+      },
+      {
+        "id": "wing",
+        "name": "翼阀",
+        "pos": [
+          1.1,
+          0,
+          1.35
+        ]
+      }
+    ],
+    "budget": {
+      "triangles": 8000,
+      "drawCalls": 6
+    },
+    "units": "meters",
+    "up_axis_after_export": "Y",
+    "note": "Teaching-grade medium detail; not an engineering model.",
+    "files": {
+      "obj_bytes": 206140,
+      "mtl_bytes": 781
+    }
+  },
+  {
+    "asset": "floating_roof_tank",
+    "triangles": 5448,
+    "vertices": 2792,
+    "meshes": 4,
+    "materials": 4,
+    "size_m": {
+      "x": 13.5,
+      "y": 13.5,
+      "z": 6.44
+    },
+    "anchors": [
+      {
+        "id": "deck",
+        "name": "浮盘",
+        "pos": [
+          0,
+          0,
+          2.7
+        ]
+      },
+      {
+        "id": "rim",
+        "name": "罐顶边缘",
+        "pos": [
+          0,
+          0,
+          6.0
+        ]
+      },
+      {
+        "id": "inlet",
+        "name": "进口",
+        "pos": [
+          5.7,
+          0,
+          1.2
+        ]
+      }
+    ],
+    "budget": {
+      "triangles": 10000,
+      "drawCalls": 6
+    },
+    "units": "meters",
+    "up_axis_after_export": "Y",
+    "note": "Teaching-grade medium detail; not an engineering model.",
+    "files": {
+      "obj_bytes": 317062,
+      "mtl_bytes": 781
+    }
+  },
+  {
+    "asset": "heater",
+    "triangles": 1364,
+    "vertices": 748,
+    "meshes": 4,
+    "materials": 4,
+    "size_m": {
+      "x": 6.3,
+      "y": 4.2,
+      "z": 9.11
+    },
+    "anchors": [
+      {
+        "id": "stack",
+        "name": "烟囱",
+        "pos": [
+          1.2,
+          0,
+          9.0
+        ]
+      },
+      {
+        "id": "outlet",
+        "name": "出口",
+        "pos": [
+          2.3,
+          0,
+          1.0
+        ]
+      },
+      {
+        "id": "burner",
+        "name": "燃烧器",
+        "pos": [
+          -1.8,
+          0,
+          1.4
+        ]
+      }
+    ],
+    "budget": {
+      "triangles": 8000,
+      "drawCalls": 6
+    },
+    "units": "meters",
+    "up_axis_after_export": "Y",
+    "note": "Teaching-grade medium detail; not an engineering model.",
+    "files": {
+      "obj_bytes": 66996,
+      "mtl_bytes": 781
+    }
+  }
+]

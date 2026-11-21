@@ -1,0 +1,61 @@
+{
+  "asset": "pumpjack",
+  "triangles": 1208,
+  "vertices": 680,
+  "meshes": 4,
+  "materials": 4,
+  "size_m": {
+    "x": 7.16,
+    "y": 2.945,
+    "z": 4.494
+  },
+  "anchors": [
+    {
+      "id": "horsehead",
+      "name": "驴头",
+      "pos": [
+        2.7,
+        0,
+        3.45
+      ]
+    },
+    {
+      "id": "beam",
+      "name": "游梁",
+      "pos": [
+        0.3,
+        0,
+        3.5
+      ]
+    },
+    {
+      "id": "crank",
+      "name": "曲柄",
+      "pos": [
+        -2.35,
+        0,
+        2.0
+      ]
+    },
+    {
+      "id": "motor",
+      "name": "电机",
+      "pos": [
+        -3.55,
+        0,
+        0.85
+      ]
+    }
+  ],
+  "budget": {
+    "triangles": 10000,
+    "drawCalls": 6
+  },
+  "units": "meters",
+  "up_axis_after_export": "Y",
+  "note": "Teaching-grade medium detail; not an engineering model.",
+  "files": {
+    "obj_bytes": 67221,
+    "mtl_bytes": 781
+  }
+}
