@@ -9,6 +9,7 @@
 - **科学修正**：l1 压力差示意边界；l3 删除排放量推断与“压没”；l4 改为五种馏分并说明馏分≠成品油；l5 产品路线不绝对化。
 - **稳定性**：l1–l4 真实 deltaTime；塔页 WebGL2 检测、上下文丢失处理、加载后 `setLevel(0)`。
 - **文档**：新增 audit-baseline / asset-inventory / experience-design / scene-map / scene-sandbox / implementation-report，重写塔场景文档；版本号统一 3.4.0。
+- **GLB spike**：Blender 三相分离器（10.4k 面 / 500 KB）导出并在真实浏览器加载（72 ms / 29 draw calls）；确认现有 three 包缺 GLTFLoader，近期推荐 OBJ 管线，见 `docs/asset-spike-separator.md`。
 
 ## 3.3.2 — 2026-11-21 · 问答页统一暖墨；导航文案收口
 

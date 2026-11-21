@@ -86,3 +86,14 @@ DEEPSEEK_API_KEY=sk-... node server/proxy.mjs
 ```
 
 无代理时三维、导览、关卡、章节、知识库均可运行。
+
+
+## 附录 · GLB 管线 spike（2026-11-21）
+
+先用一台三相分离器验证 Blender → 浏览器链路，结论见 [asset-spike-separator.md](asset-spike-separator.md)：
+
+- 资产：10,412 三角面 / 27 mesh / 5 材质 / GLB 500 KB / OBJ 698 KB；
+- 运行时：fetch 70 ms、解析 1.2 ms、首帧前 72 ms、draw calls 29（headless，FPS 未测）；
+- **GLB 运行时暂不通过**：现有 `three.browser.js` 未导出 GLTFLoader，spike 的最小解析器不支持贴图/骨骼/动画/压缩；
+- 推荐近期走 **Blender → OBJ + MTL**（塔页已用 OBJ），GLB 留待官方 loader 本地化后再切；
+- 生产资产需按材质合并，目标 ≤ 8 draw calls/台。
