@@ -11,17 +11,22 @@
   body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 "PingFang SC","Microsoft YaHei",system-ui,sans-serif}
   header{border-bottom:1px solid var(--line);padding:16px 40px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px}
-  .brand i{width:6px;height:22px;background:var(--amber);display:block}
+  .brand img{width:26px;height:26px;object-fit:contain;display:block;flex:none}
   nav{display:flex;gap:6px;margin-left:8px}
   nav a{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 12px;border:1px solid transparent;border-radius:2px}
   nav a:hover{color:var(--text);border-color:var(--line)}
   nav a[aria-current]{color:var(--amber);border-color:rgba(240,162,46,.45)}
   main{max-width:900px;margin:0 auto;padding:34px 40px 90px}
+  .heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
   h1{margin:0 0 6px;font-size:30px;letter-spacing:.01em}
   h1 em{font-style:normal;color:var(--amber)}
   .sub{margin:0 0 24px;font-size:13px;color:var(--muted)}
+  .new-chat{padding:5px 12px;border:1px solid var(--line);background:var(--panel);color:var(--text);
+            border-radius:2px;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+  .new-chat:hover{border-color:var(--cyan)}
+  .composer{position:sticky;bottom:0;padding:12px 0;background:var(--bg);z-index:1}
   .askbar{display:flex;gap:10px}
-  .askbar input{flex:1;height:48px;padding:0 16px;background:var(--panel);border:1px solid var(--line);
+  .askbar input{flex:1;min-width:0;height:48px;padding:0 16px;background:var(--panel);border:1px solid var(--line);
                 color:var(--text);font:inherit;font-size:15px;border-radius:2px}
   .askbar input:focus{outline:2px solid var(--cyan);outline-offset:-1px}
   .askbar button{height:48px;padding:0 26px;background:var(--amber);color:#20160a;border:0;
@@ -32,23 +37,144 @@
                 color:var(--muted);font:inherit;font-size:12.5px;cursor:pointer;border-radius:2px}
   .chips button:hover{border-color:var(--cyan);color:var(--cyan)}
   .ans{border:1px solid var(--line);background:var(--panel);padding:22px 24px;border-radius:2px;margin-bottom:18px}
-  .ans__q{font-size:13px;color:var(--dim);margin-bottom:10px}
+  .turn__q{width:fit-content;max-width:90%;margin:0 0 10px auto;padding:8px 14px;white-space:pre-wrap;
+           overflow-wrap:anywhere;background:#261e14;border:1px solid #614927;color:var(--text);border-radius:2px}
+  .turn__q b{font-weight:600;color:var(--amber);margin-right:8px}
   .ans__t{font-size:16px;line-height:1.85;white-space:pre-wrap}
-  .ans__meta{margin-top:14px;font-size:12px;color:var(--dim);display:flex;gap:14px;flex-wrap:wrap}
+  .ans__t{overflow-wrap:anywhere}
   .src{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
   .src b{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.06em}
   .src ul{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
   .src li a{color:var(--text);text-decoration:none;font-size:13.5px;border-bottom:1px dashed rgba(72,215,240,.35)}
   .src li a:hover{color:var(--cyan)}
   .src li span{display:block;font-size:12px;color:var(--dim);margin-top:2px}
-  .hintbox{font-size:12.5px;color:var(--dim);border-left:2px solid var(--line);padding-left:12px;margin-top:26px;line-height:1.8}
+  .hintbox{font-size:12.5px;color:var(--muted);margin:8px 0 0;line-height:1.8}
   .loading{color:var(--cyan);font-size:13px}
-  @media(max-width:720px){main{padding:24px 20px 70px}header{padding:12px 18px}h1{font-size:24px}}
+  @media(max-width:720px){main{padding:24px 20px 24px}header{padding:12px 18px;gap:8px}nav{margin:0;flex-wrap:wrap}h1{font-size:24px}}
+  .welcome,.send-icon,.composer-plus,.composer-mode,.explore,.suggestion-title,.composer-note{display:none}
+  body.is-empty{color-scheme:dark;min-height:100svh;background:#0b141c;color:#e9eff0}
+  .is-empty header{min-height:72px;padding:14px 40px;background:#0b141c;border-color:#20303a}
+  .is-empty .brand{font-size:17px;letter-spacing:.04em}
+  .is-empty nav a{border:0;border-radius:8px;padding:7px 13px}
+  .is-empty nav a[aria-current]{color:#e8eef0;background:#1c2b34}
+  .is-empty main{width:min(100%,800px);padding:clamp(90px,15vh,160px) 24px 80px}
+  .is-empty .heading,.is-empty .sub,.is-empty #out,.is-empty .hintbox,.is-empty .send-label{display:none}
+  .is-empty .welcome{display:flex;flex-direction:column;align-items:flex-start;margin:0 0 30px}
+  .welcome-mark{display:grid;place-items:center;width:38px;height:38px;margin-bottom:22px;border-radius:12px;background:#d7aa64}
+  .welcome svg{width:20px;height:25px;color:#17232b}
+  .welcome h1{margin:0;color:#f0f4f4;font:600 clamp(28px,4vw,36px)/1.3 "PingFang SC","Microsoft YaHei",sans-serif;letter-spacing:-.03em}
+  .welcome p{margin:10px 0 0;color:#93a5ae;font-size:15px}
+  .is-empty .composer{position:relative;margin:0;padding:0;background:transparent}
+  .askbar,.is-empty .askbar{display:flex;align-items:center;gap:8px;min-height:58px;padding:8px 12px 8px 20px;background:#182630;border:1px solid #354750;border-radius:32px;box-shadow:0 4px 16px #0002;transition:border-color .2s,box-shadow .2s}
+  .askbar:focus-within,.is-empty .askbar:focus-within{border-color:#78939a;box-shadow:0 4px 18px #0003}
+  .askbar textarea,.is-empty .askbar textarea{display:block;flex:1;min-width:0;min-height:40px;max-height:160px;padding:8px 0;background:transparent;color:#edf2f3;border:0;outline:0;resize:none;overflow-y:auto;font:inherit;font-size:15px;line-height:24px}
+  .askbar textarea::placeholder,.is-empty .askbar textarea::placeholder{color:#91a2aa}
+  .askbar button#send,.is-empty .askbar button#send{display:grid;place-items:center;flex:none;width:32px;height:32px;padding:0;border:0;border-radius:50%;background:#d7aa64;color:#17232b;cursor:pointer}
+  .askbar button#send:hover,.is-empty .askbar button#send:hover{background:#e8c187;color:#17232b}
+  .askbar button#send:disabled{opacity:.5;cursor:default}
+  .send-label,.composer-mode,.composer-note{display:none}
+  .send-icon,.is-empty .send-icon{display:block;width:18px;height:18px}
+  .is-empty .suggestion-title{display:block;margin:30px 0 13px;color:#8fa1a9;font-size:12px;font-weight:500;letter-spacing:.04em}
+  .is-empty .chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}
+  .is-empty .chips button{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:48px;height:auto;padding:11px 13px;text-align:left;line-height:1.5;color:#b9c8cc;background:transparent;border:1px solid #293c46;border-radius:10px;font-size:13px;transition:background .2s,border-color .2s,color .2s}
+  .is-empty .chips button::after{content:"↗";color:#728890;flex:none}
+  .is-empty .chips button:hover{color:#f3f6f5;background:#17272f;border-color:#526a72}
+  .is-empty main button:focus-visible{outline:2px solid #b8d5d7;outline-offset:3px}
+  @media(max-width:600px){
+    .is-empty header{padding:12px 18px;gap:8px}
+    .is-empty nav{width:100%;overflow-x:auto;flex-wrap:nowrap}
+    .is-empty nav a{white-space:nowrap}
+    .is-empty main{padding:76px 18px 48px}
+    .is-empty .welcome{margin-bottom:26px}
+    .is-empty .chips{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(prefers-reduced-motion:reduce){.is-empty .askbar,.is-empty .chips button{transition:none}}
+
+  body:not(.is-empty){background:#0b141c;color:#e9eff0}
+  body:not(.is-empty) header{background:#0b141c;border-color:#20303a}
+  body:not(.is-empty) main{max-width:800px;padding:34px 24px 270px}
+  body:not(.is-empty) .heading h1{font-size:20px;font-weight:600}
+  body:not(.is-empty) .sub{margin:2px 0 30px;color:#82969e}
+  body:not(.is-empty) .new-chat{display:inline-flex;align-items:center;gap:10px;min-height:40px;padding:8px 12px;border:0;border-radius:8px;background:transparent;color:#d8e2e3;font-size:14px;font-weight:400;transition:background .18s,color .18s}
+  body:not(.is-empty) .new-chat:hover{background:#1c2b34;color:#fff}
+  .new-chat__icon{display:grid;place-items:center;width:18px;height:18px;color:currentColor}
+  .new-chat__icon svg{width:18px;height:18px}
+  .new-chat:focus-visible{outline:2px solid #b8d5d7;outline-offset:3px}
+  @media(prefers-reduced-motion:reduce){body:not(.is-empty) .new-chat{transition:none}}
+  body:not(.is-empty) .chips{display:none}
+  #out article{margin:0 0 42px}
+  .user-message{display:flex;flex-direction:column;align-items:flex-end;margin:0 0 20px}
+  .turn__q{max-width:82%;margin:0;padding:12px 18px;border:0;border-radius:18px;background:#22313a;color:#e9eff0;line-height:1.65}
+  .user-actions{display:flex;align-items:center;gap:4px;min-height:28px;color:#81969e;font-size:12px;opacity:0;transition:opacity .15s}
+  .user-message:hover .user-actions,.user-message:focus-within .user-actions{opacity:1}
+  .user-actions[hidden]{display:none}
+  .user-actions time{margin-right:4px}
+  .message-action{display:grid;place-items:center;width:27px;height:27px;padding:0;border:0;border-radius:6px;background:transparent;color:#92a5ac;cursor:pointer}
+  .message-action:hover,.message-action:focus-visible{background:#253740;color:#edf2f3}
+  .message-action svg{width:15px;height:15px}
+  .message-action:focus-visible{outline:2px solid #b8d5d7;outline-offset:2px}
+  .edit-message{width:min(100%,540px);padding:14px;background:#22313a;border:1px solid #526971;border-radius:16px}
+  .edit-message textarea{display:block;width:100%;min-height:54px;padding:0;resize:vertical;border:0;outline:0;background:transparent;color:#e9eff0;font:inherit}
+  .edit-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+  .edit-actions button{padding:6px 12px;border:1px solid #526971;border-radius:8px;background:transparent;color:#e9eff0;font:inherit;font-size:12px;cursor:pointer}
+  .edit-actions .edit-save{background:#dce3e3;color:#17252c;border-color:#dce3e3}
+  .edit-actions button:disabled{opacity:.5;cursor:default}
+  @media(hover:none){.user-actions{opacity:1}}
+  .ans{margin:0;padding:0;border:0;background:transparent;border-radius:0}
+  .ans__t{font-size:15px;line-height:1.9;color:#cbd7da;white-space:normal}
+  .ans__t h2{margin:0 0 16px;color:#f0f4f4;font-size:22px;line-height:1.4}
+  .ans__t h3{margin:22px 0 8px;color:#edf2f2;font-size:16px}
+  .ans__t p{margin:0 0 12px}
+  .ans__t ul{margin:8px 0 16px;padding-left:22px}
+  .ans__t li{padding-left:3px;margin:6px 0}
+  .ans__t blockquote{margin:20px 0 0;padding:2px 0 2px 16px;border-left:3px solid #b78d50;color:#aebfc2}
+  .answer-actions{display:flex;align-items:center;gap:4px;margin-top:16px;color:#789099;font-size:12px}
+  .loading{color:#9aafb6;font-size:14px}
+  body:not(.is-empty) .composer{position:fixed;z-index:2;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,800px);padding:16px 24px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#0b141c 18%)}
+  body:not(.is-empty) .hintbox{text-align:center;color:#758b93}
+  @media(max-width:600px){body:not(.is-empty) main{padding:24px 18px 270px}body:not(.is-empty) .composer{padding-inline:18px}.turn__q{max-width:90%}.ans__t h2{font-size:20px}}
+
+  /* 科普问答首页 */
+  .is-empty header{border-bottom-color:#1d303a}
+  .is-empty main{width:min(100%,860px);padding:clamp(62px,10vh,102px) 24px 90px}
+  .is-empty .welcome{position:relative;display:flex;align-items:flex-start;text-align:left;min-height:180px;margin:0 0 24px;padding:8px 0 12px;overflow:hidden}
+  .is-empty .welcome-mark{display:none}
+  .is-empty .welcome .eyebrow{display:flex;align-items:center;gap:9px;margin:0 0 18px;color:#d7aa64;font-size:12px;font-weight:600;letter-spacing:.12em}
+  .is-empty .welcome .eyebrow::before{content:"";width:18px;height:1px;background:#d7aa64}
+  .is-empty .welcome h1{position:relative;z-index:1;max-width:560px;font:600 clamp(30px,4vw,42px)/1.35 "PingFang SC","Microsoft YaHei",sans-serif;letter-spacing:.01em;color:#edf2f2}
+  .is-empty .welcome p{position:relative;z-index:1;display:block;margin:12px 0 0;color:#91a5ab;font-size:14px}
+  .strata{display:none}
+  .is-empty .strata{display:block;position:absolute;right:40px;top:12px;width:132px;height:132px;object-fit:contain;pointer-events:none}
+  .is-empty .askbar{min-height:66px;padding:10px 12px 10px 22px;border-color:#3a5057;background:#14252e;box-shadow:0 12px 36px #0003}
+  .is-empty .askbar button#send{width:38px;height:38px;background:#d7aa64;color:#17232b}
+  .is-empty .askbar button#send:hover{background:#e8c187}
+  .is-empty .suggestion-title{display:block;margin:34px 0 14px;color:#91a5ab;font-size:12px;font-weight:500;letter-spacing:.04em}
+  .is-empty .chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:10px;margin:0}
+  .is-empty .chips button{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:8px;min-height:120px;padding:16px;text-align:left;border:1px solid #273e47;border-radius:12px;background:#102029;color:#d9e5e5;font-size:14px;line-height:1.5;transition:background .2s,border-color .2s,transform .2s}
+  .is-empty .chips button::after{content:"↗";position:absolute;right:15px;top:13px;color:#678087;font-size:15px}
+  .is-empty .chips button:hover{background:#182d35;border-color:#5b7779;transform:translateY(-2px)}
+  .is-empty .chips svg{width:18px;height:18px;stroke:#d7aa64}
+  .is-empty .chips .shortcut-label{color:#80979d;font-size:11px;letter-spacing:.06em}
+  .is-empty .chips .shortcut-question{font-size:14px;color:#d9e5e5}
+  .is-empty .hintbox{display:block;position:static;margin:12px 4px 0;text-align:left;color:#718990;font-size:12px}
+  @media(max-width:600px){
+    .is-empty main{padding:54px 18px 48px}
+    .is-empty .welcome{min-height:158px;margin-bottom:16px}
+    .is-empty .welcome h1{max-width:290px;font-size:29px}
+    .is-empty .welcome p{max-width:250px;line-height:1.7}
+    .is-empty .strata{width:76px;height:76px;right:0;top:0;opacity:.9}
+    .is-empty .chips{grid-template-columns:1fr;gap:8px}
+    .is-empty .chips button{min-height:72px;display:grid;grid-template-columns:24px 1fr;column-gap:10px;row-gap:2px;padding:12px 15px}
+    .is-empty .chips svg{grid-row:1 / 3;align-self:center}
+    .is-empty .chips .shortcut-question{padding-right:20px}
+  }
+  @media(prefers-reduced-motion:reduce){.is-empty .chips button{transition:none}.is-empty .chips button:hover{transform:none}}
+
 </style>
 </head>
-<body>
+<body class="is-empty">
 <header>
-  <div class="brand"><i></i>油见未来</div>
+  <div class="brand"><img src="assets/science-logo.png" alt="">油见未来</div>
   <nav>
     <a href="./">沉浸讲解</a>
     <a href="ask.html" aria-current="page">科普问答</a>
@@ -58,114 +184,277 @@
 </header>
 
 <main>
-  <h1>问一句，<em>讲清楚</em></h1>
-  <p class="sub">回答只依据科普中国、中国石油学会公开文章；下方会列出用到的原文，可点进去读全文。</p>
-
-  <div class="askbar">
-    <input id="q" type="text" placeholder="例如：石油为什么是黑色的？" autocomplete="off">
-    <button id="send" type="button">问</button>
+  <div class="welcome">
+    <div class="welcome-mark"><svg viewBox="0 0 52 64" fill="none" aria-hidden="true">
+      <defs><clipPath id="drop"><path d="M27 2C22 15 5 29 5 42a21 21 0 0 0 42 0C47 29 34 13 27 2Z"/></clipPath></defs>
+      <g clip-path="url(#drop)"><path fill="currentColor" d="M0 0h52v64H0z"/>
+        <path d="M-2 38q13 10 27 0t29-2M-2 45q13 10 27 0t29-2M-2 52q13 10 27 0t29-2" stroke="var(--bg)" stroke-width="2.6"/>
+      </g>
+    </svg></div>
+    <span class="eyebrow">石油科普 · 问答</span>
+    <h1>从一个问题，<br>认识石油的世界。</h1>
+    <p>从地下岩层到日常生活，把好奇变成了解。</p>
+    <img class="strata" src="assets/science-logo.png" alt="" aria-hidden="true">
   </div>
+  <div class="heading">
+    <h1>问一句，<em>讲清楚</em></h1>
+    <button class="new-chat" id="new-chat" type="button"><span class="new-chat__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7"/><path d="m11 13 8-8a2 2 0 0 1 3 3l-8 8-4 1z"/></svg></span><span>新对话</span></button>
+  </div>
+  <p class="sub">探索石油知识，从一个问题开始</p>
+
+  <div id="out" role="log" aria-label="问答记录"></div>
+
+  <div class="composer" id="composer">
+    <form class="askbar" id="ask-form">
+      <textarea id="q" name="question" rows="1" placeholder="关于石油，你想知道什么？" aria-label="输入石油科普问题" maxlength="300" required></textarea>
+      <span class="composer-mode" title="自动匹配科普资料">自动</span>
+      <span class="composer-note">石油科普问答</span>
+      <button id="send" type="submit" aria-label="发送问题"><span class="send-label">发送</span><svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-7 7 7-7 7 7"/></svg></button>
+    </form>
+    <p class="hintbox">内容仅供科普参考。</p>
+  </div>
+  <section class="explore" aria-labelledby="explore-title">
+    <h2 id="explore-title">从现场开始探索</h2>
+    <div class="field-stories">
+      <button class="field-story" type="button" style="--photo:url('assets/core-rock.jpg')" data-question="看一段岩心，怎么判断岩石里能不能藏油？"><small>地下勘探</small><strong>一段岩心，怎么看出油藏？</strong><span>从岩石的孔隙问起 ↗</span></button>
+      <button class="field-story" type="button" style="--photo:url('assets/reservoir-lab.jpg')" data-question="实验室怎么测出原油有多稠，黏度又怎样影响开采？"><small>油藏实验室</small><strong>同样是原油，为什么有稀有稠？</strong><span>看看黏度怎样影响开采 ↗</span></button>
+    </div>
+  </section>
+  <h2 class="suggestion-title">不知道从哪里开始？试试这些问题</h2>
   <div class="chips" id="chips"></div>
-
-  <div id="out"></div>
-
-  <p class="hintbox">
-    回答由模型生成，仅作科普参考，不构成技术方案或商业口径；涉及数字以原文为准。
-  </p>
 </main>
 
-<script src="kb-sources.js?v=4"></script>
 <script>
 (function () {
-  const $ = s => document.querySelector(s);
-  const KB = Array.isArray(window.__KB_EXTRA) ? window.__KB_EXTRA : [];
-  const STAGE = ['地下开采', '地面处理', '储运', '炼化', '产品去向'];
-  const CHIPS = [
-    '石油为什么是黑色的',
-    '为什么油藏在石头里',
-    '浮顶罐为什么能防蒸发',
-    '汽油和柴油差在哪',
-    '石油能做衣服吗',
-    '为什么有的油稠有的稀'
-  ];
-
+  const $ = selector => document.querySelector(selector);
+  const questionInput = $('#q');
+  const sendButton = $('#send');
+  const output = $('#out');
   const chips = $('#chips');
-  CHIPS.forEach(t => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.textContent = t;
-    b.onclick = () => { $('#q').value = t; ask(); };
-    chips.appendChild(b);
+  const initialPlaceholder = questionInput.placeholder;
+  let pending = null;
+  const examples = [
+    { question:'石油为什么是黑色的', keys:/黑色|颜色/, title:'石油为什么通常是黑色的？', intro:'石油并不都是黑色的。它的颜色可以从浅黄、棕褐到深黑，主要取决于其中不同成分的比例。', points:['原油由多种烃类和少量其他物质组成，成分不同，外观也会不同。','较重的组分以及胶质、沥青质含量较高时，原油往往颜色更深。','颜色较浅的原油通常含有较多轻质组分，但不能仅凭颜色判断品质。'], summary:'简单说，石油的颜色是多种成分共同作用的结果。' },
+    { question:'为什么油藏在石头里', keys:/石头|岩石|油藏|岩心/, title:'油为什么能藏在石头里？', intro:'地下的石油通常不是聚集在巨大的空洞中，而是存在于储层岩石的微小孔隙里。', points:['砂岩等储层岩石内部有许多细小孔隙，像海绵一样可以容纳流体。','孔隙相互连通时，油和气能够在一定条件下流动。','上方的致密盖层可以阻挡油气继续向上运移，帮助形成油藏。'], summary:'理解油藏的关键，是岩石的孔隙、连通性和封闭条件。' },
+    { question:'浮顶罐为什么能防蒸发', keys:/浮顶罐|蒸发|储罐/, title:'浮顶罐如何减少油品蒸发？', intro:'浮顶罐的顶部浮在液面上，并随着液位升降，从而减少油品与上方空气接触的空间。', points:['浮顶随液面移动，缩小了油面上方的气体空间。','浮顶边缘设有密封装置，有助于减少油气从边缘逸出。','它能降低蒸发损耗，但并不能让蒸发完全消失。'], summary:'浮顶罐的作用，是通过减少气体空间和加强密封来降低损耗。' },
+    { question:'汽油和柴油差在哪', keys:/汽油|柴油/, title:'汽油和柴油有什么区别？', intro:'汽油和柴油都是石油加工产品，但它们的组分、挥发性和常见用途不同。', points:['汽油相对更容易挥发，常用于火花点火式发动机。','柴油通常较不易挥发，常用于压燃式发动机。','两种燃料的使用要求不同，应按车辆或设备规定加注。'], summary:'选择燃料要看发动机要求，不能互相替代。' },
+    { question:'石油能做衣服吗', keys:/衣服|纤维|衣物|塑料/, title:'石油能做成衣服吗？', intro:'石油不会直接变成衣服，但它可以提供制造某些合成纤维的原料。', points:['石油经过炼制和化工加工，可得到制造合成材料所需的基础原料。','涤纶、锦纶等合成纤维可以加工成面料，用于服装和日常用品。','一件衣服也可能由合成纤维与棉、羊毛等天然纤维混纺制成。'], summary:'从石油到衣服，中间需要经过炼化、聚合、纺丝和织造等步骤。' },
+    { question:'为什么有的油稠有的稀', keys:/稠|黏|粘|原油/, title:'为什么有的原油稠，有的原油稀？', intro:'原油的稀稠与组成和温度有关，通常可以用黏度来描述它流动时的阻力。', points:['原油中重质组分的比例不同，流动性也会不同。','温度会影响黏度：同一种原油在较低温度下往往更难流动。','原油黏度会影响输送和开采方式，实际工程需要结合油藏条件评估。'], summary:'原油稀稠并非只由一个因素决定，成分和温度都很重要。' }
+  ];
+  const shortcutIcons = [
+    '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c-2.7 4-6 7.3-6 11a6 6 0 0 0 12 0c0-3.7-3.3-7-6-11Z"/><path d="M9 15a3 3 0 0 0 3 3"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 5-8 4 4 3-6 6 10Z"/><path d="M3 20h18"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V5h10v16M3 21h15M7 5V3h6v2M8 8h4M8 11h4"/><path d="M15 8h2l2 2v8a2 2 0 0 0 4 0v-6l-3-3"/></svg>'
+  ];
+  [examples[0], examples[1], examples[3]].forEach((example, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.innerHTML = shortcutIcons[index];
+    const label = document.createElement('span');
+    label.className = 'shortcut-question';
+    label.textContent = example.question;
+    const category = document.createElement('span');
+    category.className = 'shortcut-label';
+    category.textContent = ['认识原油', '走进地下', '能源与生活'][index];
+    button.append(category, label);
+    button.addEventListener('click', () => ask(example.question));
+    chips.appendChild(button);
   });
-
-  /* 关键词打分：标题/摘要/要点命中越多越靠前 */
-  function pick(q, n) {
-    const qs = q.replace(/[？?，,。.！!、]/g, ' ').split(/\s+/).filter(Boolean);
-    const grams = [];
-    qs.forEach(w => {
-      for (let i = 0; i < w.length - 1; i += 1) grams.push(w.slice(i, i + 2));
-    });
-    const score = it => {
-      const hay = (it.t + ' ' + it.sum + ' ' + (it.k || []).join(' ') + ' ' + (it.a || '')).toLowerCase();
-      let s = 0;
-      grams.forEach(g => { if (hay.includes(g.toLowerCase())) s += 1; });
-      (it.k || []).forEach(k => { if (q.includes(k)) s += 3; });
-      return s;
+  function node(tag, className, text) {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text) el.textContent = text;
+    return el;
+  }
+  function answerFor(question) {
+    return examples.find(item => item.question === question || item.keys.test(question)) || {
+      title:'这是一个值得探索的问题',
+      intro:'暂时没有找到这个问题的相关内容。',
+      points:['可以试试询问石油的颜色、油藏、浮顶罐、汽油与柴油、合成纤维或原油黏度。'],
+      summary:'也可以从推荐问题开始探索。'
     };
-    return KB.map(it => ({ it, s: score(it) })).sort((a, b) => b.s - a.s).slice(0, n).map(x => x.it);
   }
-
-  function render(q, text, src, ms) {
-    const box = document.createElement('section');
-    box.className = 'ans';
-    const list = src.map(it => `
-      <li>
-        <a href="${it.url}" target="_blank" rel="noopener noreferrer">${it.t}</a>
-        <span>${it.org} · ${it.site} · ${it.date} · ${STAGE[it.stage - 1] || ''}</span>
-      </li>`).join('');
-    box.innerHTML = `
-      <div class="ans__q">你问：${q.replace(/[<>&]/g, '')}</div>
-      <div class="ans__t">${text.replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]))}</div>
-      <div class="ans__meta"><span>${ms} ms</span><span>参考 ${src.length} 篇原文</span></div>
-      ${src.length ? `<div class="src"><b>用到的资料</b><ul>${list}</ul></div>` : ''}`;
-    $('#out').prepend(box);
-  }
-
-  let busy = false;
-  async function ask() {
-    const q = $('#q').value.trim();
-    if (!q || busy) return;
-    busy = true;
-    const btn = $('#send');
-    btn.disabled = true;
-    const t0 = Date.now();
-    const wait = document.createElement('section');
-    wait.className = 'ans';
-    wait.innerHTML = '<div class="loading">正在查资料并组织回答…</div>';
-    $('#out').prepend(wait);
-    const src = pick(q, 3);
-    try {
-      const r = await fetch('/api/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q, ctx: src.map(it => it.t + '：' + it.sum) })
+  function createUserMessage(question, prompt, turn) {
+    const wrapper = node('div', 'user-message');
+    const actions = node('div', 'user-actions');
+    actions.setAttribute('role', 'group');
+    actions.setAttribute('aria-label', '消息操作');
+    const time = node('time', '', new Intl.DateTimeFormat('zh-CN', { hour:'2-digit', minute:'2-digit', hour12:false }).format(new Date()));
+    const copy = node('button', 'message-action');
+    copy.type = 'button';
+    copy.title = '复制';
+    copy.setAttribute('aria-label', '复制消息');
+    copy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    copy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(question);
+        copy.title = '已复制';
+        copy.setAttribute('aria-label', '已复制');
+        setTimeout(() => { copy.title = '复制'; copy.setAttribute('aria-label', '复制消息'); }, 1800);
+      } catch { copy.title = '复制失败'; copy.setAttribute('aria-label', '复制失败'); }
+    });
+    const edit = node('button', 'message-action');
+    edit.type = 'button';
+    edit.title = '编辑';
+    edit.setAttribute('aria-label', '编辑消息');
+    edit.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>';
+    edit.addEventListener('click', () => {
+      if (pending || wrapper.querySelector('.edit-message')) return;
+      const form = node('form', 'edit-message');
+      const input = node('textarea');
+      input.value = question;
+      input.maxLength = 300;
+      input.setAttribute('aria-label', '编辑问题');
+      const controls = node('div', 'edit-actions');
+      const cancel = node('button', '', '取消');
+      cancel.type = 'button';
+      const save = node('button', 'edit-save', '保存并重新提问');
+      save.type = 'submit';
+      const update = () => { save.disabled = !input.value.trim() || input.value.trim() === question; };
+      input.addEventListener('input', update);
+      cancel.addEventListener('click', () => { form.replaceWith(prompt); actions.hidden = false; edit.focus(); });
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        const value = input.value.trim();
+        if (!value || value === question || pending) return;
+        let next = turn;
+        while (next) { const following = next.nextElementSibling; next.remove(); next = following; }
+        ask(value);
       });
-      const j = await r.json();
-      wait.remove();
-      if (!r.ok || !j.text) throw new Error(j.error || '没有得到回答');
-      render(q, j.text, src, j.ms || Date.now() - t0);
-    } catch (e) {
-      wait.remove();
-      render(q, '出错了：' + e.message + '（可稍后重试）', src, Date.now() - t0);
-    } finally {
-      busy = false;
-      btn.disabled = false;
-      $('#q').value = '';
-    }
+      update();
+      controls.append(cancel, save);
+      form.append(input, controls);
+      prompt.replaceWith(form);
+      actions.hidden = true;
+      input.focus();
+    });
+    actions.append(time, copy, edit);
+    wrapper.append(prompt, actions);
+    return wrapper;
   }
-
-  $('#send').onclick = ask;
-  $('#q').addEventListener('keydown', e => { if (e.key === 'Enter') ask(); });
+  function ask(value, existingTurn = null) {
+    const question = value.trim().slice(0, 300);
+    if (!question || pending) return;
+    if (document.body.classList.contains('is-empty')) {
+      document.body.classList.remove('is-empty');
+      output.before(chips);
+    }
+    sendButton.disabled = true;
+    if (!existingTurn) {
+      questionInput.value = '';
+      resizeInput();
+      questionInput.focus({ preventScroll:true });
+    }
+    const turn = existingTurn || node('article');
+    const answer = existingTurn ? turn.querySelector('.ans') : node('div', 'ans');
+    const loading = node('div', 'loading', '正在组织回答…');
+    answer.replaceChildren(loading);
+    if (!existingTurn) {
+      const prompt = node('p', 'turn__q', question);
+      turn.append(createUserMessage(question, prompt, turn), answer);
+      output.append(turn);
+      window.scrollTo({ top:document.documentElement.scrollHeight });
+    }
+    const request = { timer:null };
+    pending = request;
+    request.timer = setTimeout(() => {
+      if (pending !== request) return;
+      const data = answerFor(question);
+      const content = node('div', 'ans__t');
+      const blocks = [
+        { tag:'h2', text:data.title },
+        { tag:'p', text:data.intro },
+        { tag:'h3', text:'可以这样理解' },
+        ...data.points.map(text => ({ tag:'li', text })),
+        { tag:'blockquote', text:data.summary }
+      ];
+      const list = node('ul');
+      answer.replaceChildren(content);
+      let blockIndex = 0;
+      let charIndex = 0;
+      let current = null;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function stream() {
+        if (pending !== request) return;
+        const followScroll = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 300;
+        const block = blocks[blockIndex];
+        if (!current) {
+          current = node(block.tag);
+          if (block.tag === 'li') {
+            if (!list.isConnected) content.append(list);
+            list.append(current);
+          } else {
+            content.append(current);
+          }
+        }
+        charIndex = Math.min(block.text.length, charIndex + (reducedMotion ? block.text.length : 2));
+        current.textContent = block.text.slice(0, charIndex);
+        if (charIndex === block.text.length) {
+          blockIndex += 1;
+          charIndex = 0;
+          current = null;
+        }
+        if (followScroll) window.scrollTo({ top:document.documentElement.scrollHeight });
+        if (blockIndex < blocks.length) {
+          request.timer = setTimeout(stream, reducedMotion ? 0 : 25);
+          return;
+        }
+        const actions = node('div', 'answer-actions');
+        actions.setAttribute('role', 'group');
+        actions.setAttribute('aria-label', '回答操作');
+        const copy = node('button', 'message-action');
+        copy.type = 'button';
+        copy.title = '复制';
+        copy.setAttribute('aria-label', '复制回答');
+        copy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+        copy.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(content.innerText);
+            copy.title = '已复制';
+            copy.setAttribute('aria-label', '已复制');
+            setTimeout(() => { copy.title = '复制'; copy.setAttribute('aria-label', '复制回答'); }, 1800);
+          } catch { copy.title = '复制失败'; copy.setAttribute('aria-label', '复制失败'); }
+        });
+        const retry = node('button', 'message-action');
+        retry.type = 'button';
+        retry.title = '重新生成';
+        retry.setAttribute('aria-label', '重新生成回答');
+        retry.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4v5h-5M4 20v-5h5"/><path d="M5 9a8 8 0 0 1 13-3l2 3M19 15a8 8 0 0 1-13 3l-2-3"/></svg>';
+        retry.addEventListener('click', () => { if (!pending) ask(question, turn); });
+        actions.append(copy, retry);
+        answer.append(actions);
+        pending = null;
+        sendButton.disabled = false;
+        questionInput.placeholder = '继续追问…';
+        if (followScroll) window.scrollTo({ top:document.documentElement.scrollHeight });
+      }
+      stream();
+    }, 650);
+  }
+  function resizeInput() {
+    questionInput.style.height = 'auto';
+    questionInput.style.height = Math.min(questionInput.scrollHeight, 160) + 'px';
+  }
+  questionInput.addEventListener('input', resizeInput);
+  questionInput.addEventListener('keydown', event => {
+    if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+      event.preventDefault();
+      $('#ask-form').requestSubmit();
+    }
+  });
+  $('#ask-form').addEventListener('submit', event => { event.preventDefault(); ask(questionInput.value); });
+  $('#new-chat').addEventListener('click', () => {
+    if (pending) clearTimeout(pending.timer);
+    pending = null;
+    output.replaceChildren();
+    document.body.classList.add('is-empty');
+    $('.suggestion-title').after(chips);
+    sendButton.disabled = false;
+    questionInput.value = '';
+    questionInput.placeholder = initialPlaceholder;
+    resizeInput();
+    questionInput.focus();
+  });
 })();
 </script>
 </body>
