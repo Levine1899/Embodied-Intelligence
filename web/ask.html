@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>科普问答 · 油见未来</title>
+<style>
+  :root{--bg:#070f16;--panel:#0a151f;--line:#17303c;--text:#e6f1f5;--muted:#8aa6b3;--dim:#5f7d8a;
+        --amber:#f0a22e;--cyan:#48d7f0}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 "PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+  header{border-bottom:1px solid var(--line);padding:16px 40px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px}
+  .brand i{width:6px;height:22px;background:var(--amber);display:block}
+  nav{display:flex;gap:6px;margin-left:8px}
+  nav a{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 12px;border:1px solid transparent;border-radius:2px}
+  nav a:hover{color:var(--text);border-color:var(--line)}
+  nav a[aria-current]{color:var(--amber);border-color:rgba(240,162,46,.45)}
+  main{max-width:900px;margin:0 auto;padding:34px 40px 90px}
+  h1{margin:0 0 6px;font-size:30px;letter-spacing:.01em}
+  h1 em{font-style:normal;color:var(--amber)}
+  .sub{margin:0 0 24px;font-size:13px;color:var(--muted)}
+  .askbar{display:flex;gap:10px}
+  .askbar input{flex:1;height:48px;padding:0 16px;background:var(--panel);border:1px solid var(--line);
+                color:var(--text);font:inherit;font-size:15px;border-radius:2px}
+  .askbar input:focus{outline:2px solid var(--cyan);outline-offset:-1px}
+  .askbar button{height:48px;padding:0 26px;background:var(--amber);color:#20160a;border:0;
+                 font:inherit;font-weight:700;font-size:15px;border-radius:2px;cursor:pointer}
+  .askbar button:disabled{opacity:.55;cursor:default}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 26px}
+  .chips button{height:34px;padding:0 14px;background:var(--panel);border:1px solid var(--line);
+                color:var(--muted);font:inherit;font-size:12.5px;cursor:pointer;border-radius:2px}
+  .chips button:hover{border-color:var(--cyan);color:var(--cyan)}
+  .ans{border:1px solid var(--line);background:var(--panel);padding:22px 24px;border-radius:2px;margin-bottom:18px}
+  .ans__q{font-size:13px;color:var(--dim);margin-bottom:10px}
+  .ans__t{font-size:16px;line-height:1.85;white-space:pre-wrap}
+  .ans__meta{margin-top:14px;font-size:12px;color:var(--dim);display:flex;gap:14px;flex-wrap:wrap}
+  .src{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+  .src b{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.06em}
+  .src ul{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+  .src li a{color:var(--text);text-decoration:none;font-size:13.5px;border-bottom:1px dashed rgba(72,215,240,.35)}
+  .src li a:hover{color:var(--cyan)}
+  .src li span{display:block;font-size:12px;color:var(--dim);margin-top:2px}
+  .hintbox{font-size:12.5px;color:var(--dim);border-left:2px solid var(--line);padding-left:12px;margin-top:26px;line-height:1.8}
+  .loading{color:var(--cyan);font-size:13px}
+  @media(max-width:720px){main{padding:24px 20px 70px}header{padding:12px 18px}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><i></i>油见未来</div>
+  <nav>
+    <a href="./">沉浸讲解</a>
+    <a href="ask.html" aria-current="page">科普问答</a>
+    <a href="write.html">文案生成</a>
+    <a href="kb.html">知识库</a>
+  </nav>
+</header>
+
+<main>
+  <h1>问一句，<em>讲清楚</em></h1>
+  <p class="sub">回答只依据科普中国、中国石油学会公开文章；下方会列出用到的原文，可点进去读全文。</p>
+
+  <div class="askbar">
+    <input id="q" type="text" placeholder="例如：石油为什么是黑色的？" autocomplete="off">
+    <button id="send" type="button">问</button>
+  </div>
+  <div class="chips" id="chips"></div>
+
+  <div id="out"></div>
+
+  <p class="hintbox">
+    回答由模型生成，仅作科普参考，不构成技术方案或商业口径；涉及数字以原文为准。
+  </p>
+</main>
+
+<script src="kb-sources.js?v=4"></script>
+<script>
+(function () {
+  const $ = s => document.querySelector(s);
+  const KB = Array.isArray(window.__KB_EXTRA) ? window.__KB_EXTRA : [];
+  const STAGE = ['地下开采', '地面处理', '储运', '炼化', '产品去向'];
+  const CHIPS = [
+    '石油为什么是黑色的',
+    '为什么油藏在石头里',
+    '浮顶罐为什么能防蒸发',
+    '汽油和柴油差在哪',
+    '石油能做衣服吗',
+    '为什么有的油稠有的稀'
+  ];
+
+  const chips = $('#chips');
+  CHIPS.forEach(t => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = t;
+    b.onclick = () => { $('#q').value = t; ask(); };
+    chips.appendChild(b);
+  });
+
+  /* 关键词打分：标题/摘要/要点命中越多越靠前 */
+  function pick(q, n) {
+    const qs = q.replace(/[？?，,。.！!、]/g, ' ').split(/\s+/).filter(Boolean);
+    const grams = [];
+    qs.forEach(w => {
+      for (let i = 0; i < w.length - 1; i += 1) grams.push(w.slice(i, i + 2));
+    });
+    const score = it => {
+      const hay = (it.t + ' ' + it.sum + ' ' + (it.k || []).join(' ') + ' ' + (it.a || '')).toLowerCase();
+      let s = 0;
+      grams.forEach(g => { if (hay.includes(g.toLowerCase())) s += 1; });
+      (it.k || []).forEach(k => { if (q.includes(k)) s += 3; });
+      return s;
+    };
+    return KB.map(it => ({ it, s: score(it) })).sort((a, b) => b.s - a.s).slice(0, n).map(x => x.it);
+  }
+
+  function render(q, text, src, ms) {
+    const box = document.createElement('section');
+    box.className = 'ans';
+    const list = src.map(it => `
+      <li>
+        <a href="${it.url}" target="_blank" rel="noopener noreferrer">${it.t}</a>
+        <span>${it.org} · ${it.site} · ${it.date} · ${STAGE[it.stage - 1] || ''}</span>
+      </li>`).join('');
+    box.innerHTML = `
+      <div class="ans__q">你问：${q.replace(/[<>&]/g, '')}</div>
+      <div class="ans__t">${text.replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]))}</div>
+      <div class="ans__meta"><span>${ms} ms</span><span>参考 ${src.length} 篇原文</span></div>
+      ${src.length ? `<div class="src"><b>用到的资料</b><ul>${list}</ul></div>` : ''}`;
+    $('#out').prepend(box);
+  }
+
+  let busy = false;
+  async function ask() {
+    const q = $('#q').value.trim();
+    if (!q || busy) return;
+    busy = true;
+    const btn = $('#send');
+    btn.disabled = true;
+    const t0 = Date.now();
+    const wait = document.createElement('section');
+    wait.className = 'ans';
+    wait.innerHTML = '<div class="loading">正在查资料并组织回答…</div>';
+    $('#out').prepend(wait);
+    const src = pick(q, 3);
+    try {
+      const r = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: q, ctx: src.map(it => it.t + '：' + it.sum) })
+      });
+      const j = await r.json();
+      wait.remove();
+      if (!r.ok || !j.text) throw new Error(j.error || '没有得到回答');
+      render(q, j.text, src, j.ms || Date.now() - t0);
+    } catch (e) {
+      wait.remove();
+      render(q, '出错了：' + e.message + '（可稍后重试）', src, Date.now() - t0);
+    } finally {
+      busy = false;
+      btn.disabled = false;
+      $('#q').value = '';
+    }
+  }
+
+  $('#send').onclick = ask;
+  $('#q').addEventListener('keydown', e => { if (e.key === 'Enter') ask(); });
+})();
+</script>
+</body>
+</html>

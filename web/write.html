@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>文案生成 · 油见未来</title>
+<style>
+  :root{--bg:#070f16;--panel:#0a151f;--line:#17303c;--text:#e6f1f5;--muted:#8aa6b3;--dim:#5f7d8a;
+        --amber:#f0a22e;--cyan:#48d7f0}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 "PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+  header{border-bottom:1px solid var(--line);padding:16px 40px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px}
+  .brand i{width:6px;height:22px;background:var(--amber);display:block}
+  nav{display:flex;gap:6px;margin-left:8px}
+  nav a{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 12px;border:1px solid transparent;border-radius:2px}
+  nav a:hover{color:var(--text);border-color:var(--line)}
+  nav a[aria-current]{color:var(--amber);border-color:rgba(240,162,46,.45)}
+  main{max-width:1080px;margin:0 auto;padding:34px 40px 90px}
+  h1{margin:0 0 6px;font-size:30px;letter-spacing:.01em}
+  h1 em{font-style:normal;color:var(--amber)}
+  .sub{margin:0 0 24px;font-size:13px;color:var(--muted)}
+  .layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+  .card{border:1px solid var(--line);background:var(--panel);padding:20px 22px;border-radius:2px}
+  .label{font-size:12px;color:var(--muted);letter-spacing:.08em;margin:0 0 10px}
+  .genres{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .genres button{height:38px;padding:0 16px;background:transparent;border:1px solid var(--line);
+                 color:var(--muted);font:inherit;font-size:13.5px;cursor:pointer;border-radius:2px}
+  .genres button[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);background:rgba(240,162,46,.08)}
+  textarea,input[type=text]{width:100%;background:#08121a;border:1px solid var(--line);color:var(--text);
+                            font:inherit;font-size:14px;padding:12px 14px;border-radius:2px;resize:vertical}
+  textarea:focus,input[type=text]:focus{outline:2px solid var(--cyan);outline-offset:-1px}
+  .field{margin-bottom:16px}
+  .field span{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px}
+  .go{width:100%;height:48px;background:var(--amber);color:#20160a;border:0;font:inherit;font-weight:700;
+      font-size:15px;border-radius:2px;cursor:pointer;margin-top:4px}
+  .go:disabled{opacity:.55;cursor:default}
+  .out{min-height:260px;border:1px solid var(--line);background:#08121a;padding:18px 20px;border-radius:2px;
+       white-space:pre-wrap;font-size:14.5px;line-height:1.9}
+  .out__empty{color:var(--dim);font-size:13.5px}
+  .tools{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .tools button{height:34px;padding:0 14px;background:var(--panel);border:1px solid var(--line);
+                color:var(--muted);font:inherit;font-size:12.5px;cursor:pointer;border-radius:2px}
+  .tools button:hover{border-color:var(--cyan);color:var(--cyan)}
+  .meta{font-size:12px;color:var(--dim);margin-top:10px}
+  .hintbox{font-size:12.5px;color:var(--dim);border-left:2px solid var(--line);padding-left:12px;margin-top:22px;line-height:1.8}
+  @media(max-width:900px){.layout{grid-template-columns:1fr}main{padding:24px 20px 70px}header{padding:12px 18px}h1{font-size:24px}}
+  /* 引用区 + 三道防线 */
+  .citebox{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:12px;font-size:12.5px;line-height:1.7}
+  .citebox h4{margin:0 0 6px;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+  .citebox .c{display:flex;gap:8px;align-items:baseline;margin:3px 0}
+  .citebox .c i{font-style:normal;color:var(--amber);font-size:11px;border:1px solid var(--amber);border-radius:3px;padding:0 4px}
+  .citebox .c .s{margin-left:auto;color:var(--dim);font-size:11.5px}
+  .audit{border:1px solid var(--line);border-radius:8px;padding:12px;margin-top:12px}
+  .audit h4{margin:0 0 8px;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+  .row{display:flex;gap:10px;align-items:flex-start;padding:6px 0}
+  .row .dot{width:8px;height:8px;border-radius:50%;background:var(--line);margin-top:5px;flex:none}
+  .row.pass .dot{background:var(--cyan)}
+  .row.fail .dot{background:#e77d65}
+  .row .t{font-size:12.5px;line-height:1.6}
+  .row .t b{font-weight:600}
+  .row .t .st{color:var(--dim);font-size:11.5px}
+  .row.fail .t .st{color:#e77d65}
+  .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .acts button{height:30px;padding:0 11px;background:transparent;border:1px solid var(--line);color:var(--text);font:inherit;font-size:12px;cursor:pointer;border-radius:2px}
+  .acts button:hover{border-color:var(--cyan);color:var(--cyan)}
+  .acts button.pri{border-color:var(--amber);color:var(--amber)}
+  .acts input{flex:1;min-width:120px;height:30px;background:#0d1a22;border:1px solid var(--line);color:var(--text);padding:0 8px;border-radius:2px;font:inherit;font-size:12px}
+  .overall{font-size:12px;color:var(--dim);margin-top:6px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><i></i>油见未来</div>
+  <nav>
+    <a href="./">沉浸讲解</a>
+    <a href="ask.html">科普问答</a>
+    <a href="write.html" aria-current="page">文案生成</a>
+    <a href="kb.html">知识库</a>
+  </nav>
+</header>
+
+<main>
+  <h1>把一场讲解，<em>写成文章</em></h1>
+  <p class="sub">左边填素材和事实，右边出稿。数字只照抄事实里的，模型不会自己编。</p>
+
+  <div class="layout">
+    <section class="card">
+      <p class="label">体裁</p>
+      <div class="genres" id="genres">
+        <button type="button" data-g="copy" aria-pressed="true">展馆讲解词</button>
+        <button type="button" data-g="post" aria-pressed="false">科普推文</button>
+        <button type="button" data-g="script" aria-pressed="false">短视频脚本</button>
+      </div>
+
+      <div class="field">
+        <span>这场讲的是什么（一句话）</span>
+        <input id="topic" type="text" placeholder="例如：原油怎样从地下走到加油站">
+      </div>
+
+      <div class="field">
+        <span>事实底稿（一行一条，会作为唯一数字来源）</span>
+        <textarea id="facts" rows="8" placeholder="原油是多种碳氢化合物的混合物&#10;国内原油密度多在 0.82–0.92 g/cm³&#10;常压蒸馏按沸点把原油切成不同馏分"></textarea>
+      </div>
+
+      <div class="field">
+        <span>过程记录（可选，一行一句，会按顺序串进文章）</span>
+        <textarea id="notes" rows="4" placeholder="问了为什么油藏在石头里&#10;看了井筒剖面&#10;拖了压力滑块"></textarea>
+      </div>
+
+      <button class="go" id="go" type="button">生成</button>
+      <p class="hintbox">事实底稿里的数字会原样使用；底稿没写的数字，模型不会补。</p>
+    </section>
+
+    <section>
+      <div class="out" id="out"><span class="out__empty">生成的文字会出现在这里。</span></div>
+      <div class="tools">
+        <button type="button" id="copy">复制</button>
+        <button type="button" id="dl">下载 .txt</button>
+        <button type="button" id="clear">清空</button>
+      </div>
+      <p class="meta" id="meta"></p>
+      <div class="citebox" id="citebox"><h4>句级信源（本地知识库检索，不是逐句对齐）</h4>
+        <div class="c" style="color:var(--dim)">生成后这里显示真实命中的资料与分数</div>
+      </div>
+      <div class="audit" id="audit"><h4>三道防线 · 发布前必过</h4>
+        <div class="row" id="ar1"><span class="dot"></span><span class="t"><b>1. 机器初筛</b><br/><span class="st">还没运行</span></span></div>
+        <div class="row" id="ar2"><span class="dot"></span><span class="t"><b>2. 编辑复审</b><br/><span class="st">等待初筛通过</span></span></div>
+        <div class="row" id="ar3"><span class="dot"></span><span class="t"><b>3. 专家终审</b><br/><span class="st">等待复审通过</span></span></div>
+        <div class="acts" id="aacts"></div>
+        <div class="overall" id="aoverall">当前：未提交</div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script src="kb-sources.js"></script>
+<script>
+(function () {
+  const $ = s => document.querySelector(s);
+  let genre = 'copy';
+
+  $('#genres').addEventListener('click', e => {
+    const b = e.target.closest('button[data-g]');
+    if (!b) return;
+    genre = b.dataset.g;
+    Array.prototype.forEach.call($('#genres').children, x => {
+      x.setAttribute('aria-pressed', String(x === b));
+    });
+  });
+
+  function ledger() {
+    const rows = [];
+    const topic = $('#topic').value.trim();
+    if (topic) rows.push({ type: '段', text: topic });
+    $('#notes').value.split('\n').map(s => s.trim()).filter(Boolean).forEach(s => {
+      rows.push({ type: /问/.test(s) ? '问' : (/看/.test(s) ? '看' : '段'), text: s });
+    });
+    const facts = $('#facts').value.split('\n').map(s => s.trim()).filter(Boolean);
+    if (!rows.length && facts.length) rows.push({ type: '段', text: '围绕这些事实写一篇科普短文' });
+    return { rows, facts };
+  }
+
+  let last = '';
+  let busy = false;
+  async function run() {
+    if (busy) return;
+    const { rows, facts } = ledger();
+    if (!rows.length) { $('#out').innerHTML = '<span class="out__empty">先写一句这场讲的是什么。</span>'; return; }
+    busy = true;
+    $('#go').disabled = true;
+    $('#out').innerHTML = '<span class="out__empty">正在生成…</span>';
+    $('#meta').textContent = '';
+    const t0 = Date.now();
+    try {
+      const r = await fetch('/api/gen', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ledger: rows, genre, facts })
+      });
+      const j = await r.json();
+      if (!r.ok || !j.text) throw new Error(j.error || '没有拿到文字');
+      last = j.text;
+      $('#out').textContent = j.text;
+      renderCite();
+      audit = blankAudit(); saveAudit(); renderAudit();
+      const n = j.text.replace(/\s/g, '').length;
+      $('#meta').textContent = (j.ms || Date.now() - t0) + ' ms · ' + n + ' 字 · ' +
+        ({ copy: '展馆讲解词', post: '科普推文', script: '短视频脚本' }[genre]);
+    } catch (e) {
+      last = '';
+      $('#out').innerHTML = '<span class="out__empty">出错了：' + e.message + '</span>';
+    } finally {
+      busy = false;
+      $('#go').disabled = false;
+    }
+  }
+
+  /* ---------- 引用：本地知识库检索打分（不是逐句对齐，别把它说成逐句） ---------- */
+  const KB = (window.__KB_EXTRA || []).slice();
+  function rank(q) {
+    let clean = q;
+    ['为什么', '怎么', '怎样', '什么', '哪些', '多少', '可以', '需要', '这个', '那个', '的', '了', '吗', '呢'].forEach(w => { clean = clean.split(w).join(' '); });
+    const grams = [];
+    clean.replace(/[？?，,。.！!、\s]/g, ' ').split(/\s+/).filter(Boolean).forEach(w => {
+      for (let i = 0; i < w.length - 1; i += 1) grams.push(w.slice(i, i + 2));
+    });
+    return KB.map(it => {
+      const hay = (it.t + ' ' + (it.sum || '') + ' ' + (it.k || []).join(' ') + ' ' + (it.a || '')).toLowerCase();
+      let s = 0;
+      grams.forEach(g => { if (hay.includes(g.toLowerCase())) s += 1; });
+      (it.k || []).forEach(k => { if (q.includes(k)) s += 3; });
+      return { it, s };
+    }).sort((a, b) => b.s - a.s);
+  }
+  function renderCite() {
+    const q = ($('#topic').value || '') + ' ' + ($('#facts').value || '');
+    const box = $('#citebox');
+    if (!box) return;
+    const top = rank(q).filter(r => r.s > 0).slice(0, 2);
+    if (!top.length) {
+      box.innerHTML = '<h4>句级信源（本地知识库检索，不是逐句对齐）</h4><div class="c" style="color:var(--dim)">本题在知识库里没找到可用引用——不会给文案挂一个假出处</div>';
+      return;
+    }
+    box.innerHTML = '<h4>句级信源（本地知识库检索，不是逐句对齐）</h4>' +
+      top.map((r, i) => '<div class="c"><i>0' + (i + 1) + '</i><span>' + r.it.t + '<br/><span style="color:var(--dim)">' + (r.it.org || '') + '</span></span><span class="s">命中 ' + r.s + ' 分</span></div>').join('');
+  }
+
+  /* ---------- 三道防线（三态、可退回、记人与时间） ---------- */
+  const AUDIT_KEY = 'v3.write.audit.v1';
+  const WHO = ['系统', '本机编辑', '本机专家'];
+  const BAN = ['赋能', '打造', '一站式', '众所周知', '随着'];
+  let audit = loadAudit();
+  let rejecting = 0;
+
+  function nowStr() {
+    const d = new Date(), p = n => String(n).padStart(2, '0');
+    return p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+  function blankAudit() { return { steps: [{ s: 'todo' }, { s: 'todo' }, { s: 'todo' }], warns: [] }; }
+  function loadAudit() {
+    try {
+      const a = JSON.parse(localStorage.getItem(AUDIT_KEY) || 'null');
+      if (a && Array.isArray(a.steps) && a.steps.length === 3) return a;
+    } catch (e) { /* 忽略 */ }
+    return blankAudit();
+  }
+  function saveAudit() { try { localStorage.setItem(AUDIT_KEY, JSON.stringify(audit)); } catch (e) { /* 忽略 */ } }
+
+  function renderAudit() {
+    const S = audit.steps;
+    S.forEach((st, i) => {
+      const row = $('#ar' + (i + 1));
+      if (!row) return;
+      row.classList.toggle('pass', st.s === 'pass');
+      row.classList.toggle('fail', st.s === 'fail');
+      const stEl = row.querySelector('.st');
+      const label = st.s === 'pass' ? '已通过' : st.s === 'fail' ? '退回：' + (st.reason || '未填原因') : (i === 0 || S[i - 1].s === 'pass') ? '待办' : '等上一步';
+      stEl.textContent = label + (st.who ? ' · ' + st.who + ' · ' + st.at : '');
+    });
+    let html = '';
+    if (S[0].s === 'todo') html += '<button class="pri" data-act="screen">运行初筛</button>';
+    if (S[0].s === 'fail') html += '<button data-act="reset1">重新初筛</button>';
+    if (S[0].s === 'pass' && S[1].s === 'todo') html += '<button class="pri" data-act="pass2">编辑通过</button><button data-act="rej2">退回</button>';
+    if (S[1].s === 'fail') html += '<button data-act="reset2">重新提交复审</button>';
+    if (S[1].s === 'pass' && S[2].s === 'todo') html += '<button class="pri" data-act="pass3">专家终审通过</button><button data-act="rej3">退回</button>';
+    if (S[2].s === 'fail') html += '<button data-act="reset3">重新终审</button>';
+    if (rejecting) html += '<input id="rejwhy" placeholder="退回原因（必填）" /><button class="pri" data-act="rejok">确认退回</button><button data-act="rejcancel">取消</button>';
+    const acts = $('#aacts');
+    if (acts) {
+      acts.innerHTML = html;
+      acts.querySelectorAll('button[data-act]').forEach(b => { b.onclick = () => act(b.dataset.act); });
+      const why = $('#rejwhy');
+      if (why) why.focus();
+    }
+    const overall = $('#aoverall');
+    if (overall) {
+      overall.textContent = S[2].s === 'pass' ? '当前：三道都过，可以发布'
+        : S.some(x => x.s === 'fail') ? '当前：已退回，改完重新走流程'
+          : S.some(x => x.s === 'pass') ? '当前：审核中'
+            : '当前：未提交';
+      if (audit.warns && audit.warns.length) overall.textContent += ' · 数字提醒（不阻断）：' + audit.warns.join('、') + ' 没在事实底稿里';
+    }
+  }
+
+  function runScreen() {
+    const text = ($('#out').textContent || '').trim();
+    const len = text.replace(/\s/g, '').length;
+    const hits = BAN.filter(w => text.includes(w));
+    const allowed = new Set((($('#facts').value || '') + ' ' + ($('#topic').value || '')).match(/\d+(\.\d+)?/g) || []);
+    const used = new Set((text.replace(/\d+(\.\d+)?\s*(s|秒)/g, '').match(/\d+(\.\d+)?/g) || []));
+    audit.warns = [...used].filter(x => !allowed.has(x)).slice(0, 6);
+    let reason = '';
+    if (!text || /生成的文字会出现在这里/.test(text)) reason = '还没有稿子';
+    else if (len < 80) reason = '字数不足 80（' + len + ' 字）';
+    else if (hits.length) reason = '出现空话套话：' + hits.join('、');
+    audit.steps[0] = reason ? { s: 'fail', reason: reason, who: WHO[0], at: nowStr() } : { s: 'pass', who: WHO[0], at: nowStr() };
+    saveAudit(); renderAudit();
+  }
+  function act(a) {
+    if (a === 'screen') return runScreen();
+    if (a === 'reset1' || a === 'reset2' || a === 'reset3') {
+      audit.steps[Number(a.slice(-1)) - 1] = { s: 'todo' };
+      rejecting = 0; saveAudit(); return renderAudit();
+    }
+    if (a === 'pass2' || a === 'pass3') {
+      const n = Number(a.slice(-1));
+      audit.steps[n - 1] = { s: 'pass', who: WHO[n - 1], at: nowStr() };
+      saveAudit(); return renderAudit();
+    }
+    if (a === 'rej2' || a === 'rej3') { rejecting = Number(a.slice(-1)); return renderAudit(); }
+    if (a === 'rejcancel') { rejecting = 0; return renderAudit(); }
+    if (a === 'rejok') {
+      const why = ($('#rejwhy') && $('#rejwhy').value.trim()) || '';
+      if (!why) { const el = $('#rejwhy'); if (el) el.focus(); return; }
+      audit.steps[rejecting - 1] = { s: 'fail', reason: why, who: WHO[rejecting - 1], at: nowStr() };
+      for (let k = rejecting; k < 3; k += 1) audit.steps[k] = { s: 'todo' };
+      rejecting = 0; saveAudit(); return renderAudit();
+    }
+  }
+
+  renderAudit();
+  renderCite();
+  $('#topic').addEventListener('change', renderCite);
+  $('#facts').addEventListener('change', renderCite);
+
+  $('#go').onclick = run;
+  $('#copy').onclick = async () => {
+    if (!last) return;
+    try { await navigator.clipboard.writeText(last); $('#meta').textContent = '已复制'; }
+    catch { $('#meta').textContent = '浏览器不允许复制，可手动选择'; }
+  };
+  $('#dl').onclick = () => {
+    if (!last) return;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([last], { type: 'text/plain;charset=utf-8' }));
+    a.download = '科普文案-' + new Date().toISOString().slice(0, 10) + '.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+  $('#clear').onclick = () => {
+    $('#out').innerHTML = '<span class="out__empty">生成的文字会出现在这里。</span>';
+    $('#meta').textContent = '';
+    last = '';
+    audit = blankAudit(); saveAudit(); renderAudit(); renderCite();
+  };
+})();
+</script>
+</body>
+</html>

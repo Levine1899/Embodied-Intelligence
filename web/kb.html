@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>石油知识库 · 油见未来</title>
+<style>
+  :root{
+    --bg:#070f16; --panel:#0a151f; --line:#1b2b35; --text:#dbe7ec;
+    --muted:#8fa3b0; --dim:#5f7d8a; --amber:#f0a22e; --cyan:#48d7f0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:400 15px/1.7 "Microsoft YaHei UI","PingFang SC",sans-serif;
+       -webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  header{border-bottom:1px solid var(--line);padding:18px 40px;display:flex;align-items:center;gap:18px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:.02em}
+  .brand i{width:6px;height:22px;background:var(--amber);display:block}
+  .knav{display:flex;gap:6px;margin-left:auto}
+  .knav a{font-size:12.5px;color:var(--muted);text-decoration:none;padding:6px 10px;border:1px solid transparent;border-radius:2px}
+  .knav a:hover{color:var(--text);border-color:var(--line)}
+  .back{margin-left:0;font-size:13px;color:var(--muted);text-decoration:none;
+        border:1px solid var(--line);padding:7px 14px;border-radius:2px}
+  .back:hover{border-color:var(--amber);color:var(--amber)}
+  main{max-width:1180px;margin:0 auto;padding:36px 40px 80px}
+  h1{margin:0 0 6px;font-size:30px;letter-spacing:.01em}
+  h1 em{font-style:normal;color:var(--amber)}
+  .sub{margin:0 0 26px;font-size:13px;color:var(--muted)}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:22px}
+  .bar input{flex:1;min-width:220px;height:40px;padding:0 14px;background:var(--panel);
+             border:1px solid var(--line);color:var(--text);font:inherit;font-size:14px}
+  .bar input:focus{outline:2px solid var(--cyan);outline-offset:-1px}
+  .chip{height:40px;padding:0 16px;background:var(--panel);border:1px solid var(--line);
+        color:var(--muted);font:inherit;font-size:13px;cursor:pointer;border-radius:2px}
+  .chip[aria-pressed="true"]{border-color:var(--amber);color:var(--amber)}
+  .sec{margin:34px 0 14px;display:flex;align-items:baseline;gap:12px}
+  .sec b{font-size:15px}
+  .sec span{font-size:12px;color:var(--dim);font-family:ui-monospace,Consolas,monospace}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}main{padding:24px 20px 60px}header{padding:14px 20px}}
+  .card{display:block;padding:18px 20px;background:var(--panel);border:1px solid var(--line);
+        text-decoration:none;transition:border-color .15s}
+  .card:hover{border-color:var(--cyan)}
+  .card h3{margin:0 0 7px;font-size:16px;font-weight:600;line-height:1.45}
+  .card p{margin:0 0 12px;font-size:13px;color:var(--muted);line-height:1.65}
+  .card .meta{display:flex;justify-content:space-between;gap:12px;font-size:11.5px;color:var(--dim);
+              font-family:ui-monospace,Consolas,monospace}
+  .card .meta em{font-style:normal;color:var(--cyan)}
+  .empty{padding:40px 0;color:var(--dim);text-align:center}
+  footer{max-width:1180px;margin:0 auto;padding:0 40px 60px;font-size:12px;color:var(--dim);line-height:1.9}
+  footer b{color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><i></i>油见未来</div>
+  <div style="font-size:13px;color:var(--muted)">石油知识库</div>
+  <nav class="knav"><a href="./">沉浸讲解</a><a href="ask.html">科普问答</a><a href="write.html">文案生成</a><a href="kb.html" aria-current="page">知识库</a></nav>`n    <a class="back" href="./">← 回到沉浸讲解</a>
+</header>
+
+<main>
+  <h1>石油知识库 <em id="count"></em></h1>
+  <p class="sub">全部条目录自科普中国站内文章，人工摘录为要点；点击卡片可读原文。</p>
+
+  <div class="bar">
+    <input id="q" type="search" placeholder="搜：圈闭、浮顶、分馏、脱水……" aria-label="搜索知识条目">
+    <button class="chip" data-stage="all" aria-pressed="true">全部</button>
+    <button class="chip" data-stage="1" aria-pressed="false">01 地下开采</button>
+    <button class="chip" data-stage="2" aria-pressed="false">02 地面处理</button>
+    <button class="chip" data-stage="3" aria-pressed="false">03 储运</button>
+    <button class="chip" data-stage="4" aria-pressed="false">04 炼化</button>
+    <button class="chip" data-stage="5" aria-pressed="false">05 产品去向</button>
+  </div>
+
+  <div id="list"></div>
+  <div class="empty" id="empty" hidden>没有匹配的条目，换个词试试。</div>
+</main>
+
+<footer>
+  <b>来源说明</b>　所有条目均来自 <a href="https://www.kepuchina.cn/" target="_blank" rel="noopener noreferrer">科普中国</a> 站内文章，其中多条为中国石油学会原创稿。<br>
+  <b>使用边界</b>　本站只保留摘要、要点与出处链接，不转载全文；数字与口径以原文为准。<br>
+  <b>更新</b>　条目以 <code>kb-sources.js</code> 为准，新增文章只需追加一条记录。
+</footer>
+
+<script src="kb-sources.js?v=3"></script>
+<script>
+(function(){
+  var STAGE = ['地下开采','地面处理','储运','炼化','产品去向'];
+  var data = window.__KB_EXTRA || [];
+  var state = { q: '', stage: 'all' };
+  var list = document.getElementById('list');
+  var countEl = document.getElementById('count');
+  var empty = document.getElementById('empty');
+
+  countEl.textContent = data.length + ' 条';
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  function match(it){
+    if (state.stage !== 'all' && String(it.stage) !== state.stage) return false;
+    if (!state.q) return true;
+    var hay = (it.t + ' ' + it.sum + ' ' + it.a + ' ' + it.k.join(' ') + ' ' + it.org).toLowerCase();
+    return hay.indexOf(state.q.toLowerCase()) >= 0;
+  }
+
+  function render(){
+    var rows = data.filter(match);
+    list.innerHTML = '';
+    if (!rows.length) { empty.hidden = false; return; }
+    empty.hidden = true;
+    var groups = {};
+    rows.forEach(function(it){ (groups[it.stage] = groups[it.stage] || []).push(it); });
+    Object.keys(groups).sort().forEach(function(k){
+      var sec = document.createElement('section');
+      sec.className = 'sec';
+      sec.innerHTML = '<b>' + (k < 10 ? '0' + k : k) + ' ' + STAGE[k - 1] + '</b><span>' + groups[k].length + ' 条</span>';
+      var grid = document.createElement('div');
+      grid.className = 'grid';
+      groups[k].forEach(function(it){
+        var a = document.createElement('a');
+        a.className = 'card';
+        a.href = it.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.innerHTML = '<h3>' + esc(it.t) + '</h3><p>' + esc(it.sum) + '</p>' +
+          '<div class="meta"><span>' + esc(it.org) + ' · ' + esc(it.date) + '</span><em>读原文 ↗</em></div>';
+        grid.appendChild(a);
+      });
+      list.appendChild(sec);
+      list.appendChild(grid);
+    });
+  }
+
+  document.getElementById('q').addEventListener('input', function(e){
+    state.q = e.target.value.trim();
+    render();
+  });
+  document.querySelectorAll('.chip').forEach(function(b){
+    b.addEventListener('click', function(){
+      state.stage = b.dataset.stage;
+      document.querySelectorAll('.chip').forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
+      render();
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
