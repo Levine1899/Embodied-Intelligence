@@ -164,7 +164,7 @@
   let ticking = false;
 
   window.__makeFlow = function (scene, curve, opts) {
-    const o = Object.assign({ count: 16, color: 0xf0a22e, size: 0.075, speed: 0.16, spread: 0.9, opacity: 1 }, opts || {});
+    const o = Object.assign({ count: 16, color: 0xd8a24a, size: 0.075, speed: 0.16, spread: 0.9, opacity: 1 }, opts || {});
     const group = new THREE0.Group();
     const mat = new THREE0.MeshBasicMaterial({ color: o.color, transparent: true, opacity: o.opacity });
     const items = [];

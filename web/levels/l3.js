@@ -51,7 +51,7 @@
     if (window.__lvlGroup) window.__lvlGroup(2, G);
 
     const mSteel = new THREE.MeshStandardMaterial({ color: 0x2c3b46, roughness: 0.5, metalness: 0.7 });
-    const mOil = new THREE.MeshStandardMaterial({ color: 0x2a1c08, emissive: 0xf0a22e, emissiveIntensity: 0.85, roughness: 0.4 });
+    const mOil = new THREE.MeshStandardMaterial({ color: 0x2a1c08, emissive: 0xd8a24a, emissiveIntensity: 0.85, roughness: 0.4 });
     const mRoof = new THREE.MeshStandardMaterial({ color: 0x3a4a55, roughness: 0.45, metalness: 0.8 });
 
     function tank(x, z, floating) {

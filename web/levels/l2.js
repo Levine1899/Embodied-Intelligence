@@ -47,10 +47,10 @@
     if (window.__lvlGroup) window.__lvlGroup(1, G);
 
     const mSteel = new THREE.MeshStandardMaterial({ color: 0x2b3a45, roughness: 0.5, metalness: 0.7 });
-    const mPipe = new THREE.MeshStandardMaterial({ color: 0x243039, roughness: 0.65, metalness: 0.5 });
-    const gasMat = new THREE.MeshStandardMaterial({ color: 0x0a2f34, emissive: 0x48d7f0, emissiveIntensity: 1.0, roughness: 0.4 });
-    const oilMat = new THREE.MeshStandardMaterial({ color: 0x2a1c08, emissive: 0xf0a22e, emissiveIntensity: 1.0, roughness: 0.4 });
-    const waterMat = new THREE.MeshStandardMaterial({ color: 0x0d2338, emissive: 0x5aa7d8, emissiveIntensity: 0.9, roughness: 0.4 });
+    const mPipe = new THREE.MeshStandardMaterial({ color: 0x252420, roughness: 0.65, metalness: 0.5 });
+    const gasMat = new THREE.MeshStandardMaterial({ color: 0x1f2a26, emissive: 0x9fd3c6, emissiveIntensity: 1.0, roughness: 0.4 });
+    const oilMat = new THREE.MeshStandardMaterial({ color: 0x2a1c08, emissive: 0xd8a24a, emissiveIntensity: 1.0, roughness: 0.4 });
+    const waterMat = new THREE.MeshStandardMaterial({ color: 0x0d2338, emissive: 0x8fb6ad, emissiveIntensity: 0.9, roughness: 0.4 });
 
     /* 分离器 */
     const vessel = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.0, 6.0, 26), mSteel);
@@ -172,7 +172,7 @@
     const to = new THREE.Vector3(t.x, 2.15, t.z);
     const mid = new THREE.Vector3((from.x + to.x) / 2, Math.max(from.y, to.y) + 1.9, (from.z + to.z) / 2);
     const curve = new THREE.QuadraticBezierCurve3(from, mid, to);
-    const color = key === 'gas' ? 0x48d7f0 : key === 'oil' ? 0xf0a22e : 0x5aa7d8;
+    const color = key === 'gas' ? 0x9fd3c6 : key === 'oil' ? 0xd8a24a : 0x8fb6ad;
     streams[key] = makeFlowInGroup(curve, color, 12, 0.26, 0.07);
   }
 
@@ -246,7 +246,7 @@
     const to = new THREE.Vector3(t.x, 2.2, t.z);
     const mid = new THREE.Vector3((from.x + to.x) / 2, Math.max(from.y, to.y) + 1.6, (from.z + to.z) / 2);
     const curve = new THREE.QuadraticBezierCurve3(from, mid, to);
-    const color = ok ? (picked === 'gas' ? 0x48d7f0 : picked === 'oil' ? 0xf0a22e : 0x5aa7d8) : 0xff5a6e;
+    const color = ok ? (picked === 'gas' ? 0x9fd3c6 : picked === 'oil' ? 0xd8a24a : 0x8fb6ad) : 0xff5a6e;
 
     const dot = new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 10),
       new THREE.MeshBasicMaterial({ color: color, blending: THREE.AdditiveBlending, transparent: true }));

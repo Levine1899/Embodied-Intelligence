@@ -207,7 +207,7 @@
     modelGroups.forEach(function (group, index) {
       group.traverse(function (object) {
         if (!object.isMesh || !object.material.emissive) return;
-        object.material.emissive.set(index === currentStage ? 0x12363b : 0x000000);
+        object.material.emissive.set(index === currentStage ? 0x2a2418 : 0x000000);
         object.material.emissiveIntensity = index === currentStage ? 0.25 : 0;
       });
     });
@@ -229,12 +229,39 @@
     }
   }
 
+  // 环节机位预设：随流程逐级下降（高度 2.6 → 0.9，仰角同步压低）
+  const CAM_PRESETS = [
+    { targetY: 2.6, radius: 19, elevation: 0.30 },
+    { targetY: 2.1, radius: 19, elevation: 0.26 },
+    { targetY: 1.7, radius: 19, elevation: 0.22 },
+    { targetY: 1.3, radius: 19, elevation: 0.18 },
+    { targetY: 0.9, radius: 19, elevation: 0.15 }
+  ];
+  // 环节 → 章节（第 1 章「形成与勘探」没有 3D 环节）
+  const STAGE_CHAPTER = [
+    { id: "drill", n: 2, t: "地下开采" },
+    { id: "gather", n: 3, t: "集输处理" },
+    { id: "store", n: 4, t: "储运调配" },
+    { id: "refine", n: 5, t: "炼化加工" },
+    { id: "use", n: 6, t: "终端应用" }
+  ];
+
+  function syncChapterLink(index) {
+    const el = document.getElementById("chapter-link");
+    const m = STAGE_CHAPTER[index];
+    if (!el || !m) return;
+    el.href = "chapter.html?id=" + m.id;
+    el.textContent = "读本章知识 · 第 " + m.n + " 章 " + m.t + " →";
+  }
+
   function selectStage(index, focus) {
     currentStage = index;
     updateTask();
+    syncChapterLink(index);
     if (focus && modelGroups[index]) {
       const p = modelGroups[index].position;
-      moveCamera({ targetX: p.x, targetY: 1.8, targetZ: p.z, radius: 18 });
+      const preset = CAM_PRESETS[index] || CAM_PRESETS[0];
+      moveCamera(Object.assign({ targetX: p.x, targetZ: p.z }, preset));
     }
   }
 
@@ -312,12 +339,12 @@
   }
 
   function buildModels() {
-    const steel = material(0x879ba3, true);
-    const lightSteel = material(0xb8c5c6, true);
-    const darkSteel = material(0x324b58, true);
-    const yellow = material(0xcb9a40, true);
-    const cyan = material(0x6bc1c8, true);
-    const foundation = material(0x263c49, false);
+    const steel = material(0x9b968a, true);
+    const lightSteel = material(0xcfc8ba, true);
+    const darkSteel = material(0x3a3830, true);
+    const yellow = material(0xd8a24a, true);
+    const cyan = material(0x8fb6ad, true);
+    const foundation = material(0x2a2822, false);
     const positions = [[-12, -4], [-2, -4], [9, -4], [8, 5], [-5, 5]];
 
     positions.forEach(function (position, index) {
@@ -330,7 +357,7 @@
     });
 
     const underground = modelGroups[0];
-    const layers = [0x514d43, 0x6f6250, 0x4d6468];
+    const layers = [0x4a4235, 0x62604f, 0x4a4438];
     layers.forEach(function (color, index) {
       box(underground, 5.1, 0.6, 4.3, material(color, false), 0, 0.5 + index * 0.6, 0);
     });
@@ -398,7 +425,7 @@
       const pipe = new THREE.Mesh(new THREE.TubeGeometry(curve, 72, 0.11, 10, false), yellow.clone());
       scene.add(pipe);
       pipes.push({ curve: curve, object: pipe });
-      const particle = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 12), new THREE.MeshBasicMaterial({ color: 0x8ae4e4 }));
+      const particle = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 12), new THREE.MeshBasicMaterial({ color: 0x9fd3c6 }));
       particle.position.copy(curve.getPoint(0.3));
       scene.add(particle);
       particles.push(particle);
@@ -478,8 +505,8 @@
     THREE = window.THREE;
     if (!THREE) throw new Error('三维运行库未加载');
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0a151f);
-    scene.fog = new THREE.FogExp2(0x0a151f, 0.004);
+    scene.background = new THREE.Color(0x0b0f11);
+    scene.fog = new THREE.FogExp2(0x0b0f11, 0.004);
     camera = new THREE.PerspectiveCamera(40, 1, 0.1, 220);
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
@@ -488,21 +515,21 @@
     viewport.prepend(renderer.domElement);
     renderer.domElement.setAttribute('role', 'img');
     renderer.domElement.setAttribute('aria-label', '井筒、处理设施、储罐、炼化单元和产品的三维模型');
-    scene.add(new THREE.HemisphereLight(0xe0f2ff, 0x29301e, 2.0));
-    const key = new THREE.DirectionalLight(0xe5faff, 3.5);
+    scene.add(new THREE.HemisphereLight(0xf2ead9, 0x29301e, 2.0));
+    const key = new THREE.DirectionalLight(0xfff3df, 3.5);
     key.position.set(-12, 30, 18);
     scene.add(key);
-    const rim = new THREE.DirectionalLight(0x6cccd3, 2.8);
+    const rim = new THREE.DirectionalLight(0x8fb6ad, 2.8);
     rim.position.set(10, 15, -22);
     scene.add(rim);
-    const warm = new THREE.DirectionalLight(0xffcc7a, 1.5);
+    const warm = new THREE.DirectionalLight(0xffc887, 1.5);
     warm.position.set(-22, 10, -5);
     scene.add(warm);
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(35, 23), material(0x122532, false));
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(35, 23), material(0x14140f, false));
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = -0.25;
     scene.add(floor);
-    const grid = new THREE.GridHelper(44, 22, 0x416777, 0x213946);
+    const grid = new THREE.GridHelper(44, 22, 0x4a4437, 0x2a271f);
     grid.position.y = -0.23;
     scene.add(grid);
     buildModels();
@@ -799,6 +826,17 @@
     get camera() { return activeCamera || camera; },
     onResize(fn) { resizeHooks.push(fn); }
   };
+  // 深链：#stage=N 直接定位到某环节；并同步右栏「读本章知识」
+  window.__stage.selectStage = selectStage;
+  function stageFromHash() {
+    const m = /#stage=(\d+)/.exec(location.hash);
+    if (!m) return;
+    const idx = Number(m[1]);
+    if (idx >= 0 && idx < stageNames.length) selectStage(idx, true);
+  }
+  stageFromHash();
+  window.addEventListener("hashchange", stageFromHash);
+  syncChapterLink(currentStage);
   resizeHooks.forEach(function (fn) { fn(); });
 
 })();

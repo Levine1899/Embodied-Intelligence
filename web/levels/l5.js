@@ -35,8 +35,8 @@
     baseScene.add(G);
     if (window.__lvlGroup) window.__lvlGroup(4, G);
 
-    const mNeutral = new THREE.MeshStandardMaterial({ color: 0x33424c, roughness: 0.55, metalness: 0.45 });
-    const mPad = new THREE.MeshStandardMaterial({ color: 0x243039, roughness: 0.95 });
+    const mNeutral = new THREE.MeshStandardMaterial({ color: 0x3a3830, roughness: 0.55, metalness: 0.45 });
+    const mPad = new THREE.MeshStandardMaterial({ color: 0x252420, roughness: 0.95 });
 
     const pad = new THREE.Mesh(new THREE.BoxGeometry(13, 0.14, 7.4), mPad);
     pad.position.set(0, 0.03, 0);
@@ -63,7 +63,7 @@
 
       /* 选中时的环 */
       const ring = new THREE.Mesh(new THREE.TorusGeometry(0.78, 0.055, 8, 26),
-        new THREE.MeshStandardMaterial({ color: 0x1b262d, emissive: 0xf0a22e, emissiveIntensity: 0, roughness: 0.5 }));
+        new THREE.MeshStandardMaterial({ color: 0x1a1a16, emissive: 0xd8a24a, emissiveIntensity: 0, roughness: 0.5 }));
       ring.rotation.x = Math.PI / 2;
       ring.position.y = 0.12;
       g.add(ring);
@@ -143,7 +143,7 @@
     if (picked.has(i)) {
       picked.delete(i);
       it.ringMat.emissiveIntensity = 0;
-      it.mesh.material.color.setHex(0x33424c);
+      it.mesh.material.color.setHex(0x3a3830);
       it.mesh.scale.setScalar(1);
     } else {
       picked.add(i);
@@ -178,8 +178,8 @@
     hint.textContent = '已完成 · 石油不只是燃料';
     ITEMS.forEach(function (it, i) {
       it.ringMat.emissiveIntensity = it.oil ? 1.9 : 0;
-      it.ringMat.emissive.setHex(it.oil ? 0xf0a22e : 0x2a333a);
-      it.mesh.material.color.setHex(it.oil ? 0x5c4a2a : 0x33424c);
+      it.ringMat.emissive.setHex(it.oil ? 0xd8a24a : 0x2a333a);
+      it.mesh.material.color.setHex(it.oil ? 0x5c4a2a : 0x3a3830);
     });
     const log = (window.__leadai && window.__leadai.ledger) || [];
     log.push({ k: '看', t: '产品去向：石油制品与它以外的东西' });

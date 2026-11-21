@@ -41,9 +41,9 @@
 
   /* 产品：从塔顶往下 */
   const PRODUCTS = [
-    { key: 'lpg', name: '液化气', y: 7.9, color: 0x48d7f0, hint: '最轻 · 塔顶' },
+    { key: 'lpg', name: '液化气', y: 7.9, color: 0x9fd3c6, hint: '最轻 · 塔顶' },
     { key: 'gasoline', name: '汽油', y: 6.2, color: 0x7fd6a8, hint: '较轻' },
-    { key: 'diesel', name: '柴油', y: 4.4, color: 0xf0a22e, hint: '较重' },
+    { key: 'diesel', name: '柴油', y: 4.4, color: 0xd8a24a, hint: '较重' },
     { key: 'residue', name: '渣油', y: 2.2, color: 0xb9772e, hint: '最重 · 塔底' }
   ];
 
@@ -62,8 +62,8 @@
       color: 0x33444f, roughness: 0.45, metalness: 0.7,
       transparent: true, opacity: 0.30, side: THREE.DoubleSide
     });
-    const mSteel = new THREE.MeshStandardMaterial({ color: 0x2a3843, roughness: 0.5, metalness: 0.7 });
-    const mTray = new THREE.MeshStandardMaterial({ color: 0x1b262d, roughness: 0.8 });
+    const mSteel = new THREE.MeshStandardMaterial({ color: 0x2f2d26, roughness: 0.5, metalness: 0.7 });
+    const mTray = new THREE.MeshStandardMaterial({ color: 0x1a1a16, roughness: 0.8 });
 
     /* 塔体 */
     const H = 9.6, R = 1.6;
@@ -133,7 +133,7 @@
       new THREE.Vector3(-0.15, 6.0, 0),
       new THREE.Vector3(0.1, 8.6, 0)
     ]);
-    built.rise = makeFlowInGroup(riseCurve, 0xffb347, 22, 0.13, 0.085);
+    built.rise = makeFlowInGroup(riseCurve, 0xf0b45e, 22, 0.13, 0.085);
 
     /* 抽样口 */
     PRODUCTS.forEach(function (pr, i) {
@@ -144,7 +144,7 @@
       neck.position.x = R + 0.35;
       g.add(neck);
       const mat = new THREE.MeshStandardMaterial({
-        color: 0x1b262d, emissive: pr.color, emissiveIntensity: 0.25, roughness: 0.5
+        color: 0x1a1a16, emissive: pr.color, emissiveIntensity: 0.25, roughness: 0.5
       });
       const ring = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.05, 8, 20), mat);
       ring.rotation.y = Math.PI / 2;

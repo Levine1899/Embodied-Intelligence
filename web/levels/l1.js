@@ -26,9 +26,9 @@
     baseScene.add(G);
     if (window.__lvlGroup) window.__lvlGroup(0, G);
 
-    const mSteel = new THREE.MeshStandardMaterial({ color: 0x2a3843, roughness: 0.55, metalness: 0.65 });
+    const mSteel = new THREE.MeshStandardMaterial({ color: 0x2f2d26, roughness: 0.55, metalness: 0.65 });
     const mRock = new THREE.MeshStandardMaterial({ color: 0x3b4a52, roughness: 0.95 });
-    const mOil = new THREE.MeshStandardMaterial({ color: 0x1a1204, emissive: 0xf0a22e, emissiveIntensity: 0.9, roughness: 0.35 });
+    const mOil = new THREE.MeshStandardMaterial({ color: 0x1a1204, emissive: 0xd8a24a, emissiveIntensity: 0.9, roughness: 0.35 });
     const mAmber = new THREE.MeshStandardMaterial({ color: 0x2a1a06, emissive: 0xe8a33a, emissiveIntensity: 1.0, roughness: 0.5 });
 
     /* 井架：原来只借用了总览的模型，进关卡后被隐藏，远景就成了空地 */
@@ -62,7 +62,7 @@
     /* 地下剖面：给一个「土体盒子」和深度网格，避免镜头下沉后一片纯黑 */
 
     [0, -3.4, -8.6, -14.2, -20.6].forEach(function (y) {
-      const grid = new THREE.GridHelper(26, 26, 0x48d7f0, 0x24505c);
+      const grid = new THREE.GridHelper(26, 26, 0x9fd3c6, 0x24505c);
       grid.position.set(0, y, 0);
       grid.material.transparent = true;
       grid.material.opacity = y === 0 ? 0.2 : (y === -20.6 ? 0.26 : 0.13);
@@ -76,7 +76,7 @@
     G.add(casing);
     const glow = new THREE.Mesh(
       new THREE.CylinderGeometry(0.38, 0.38, -WELL_BOTTOM, 20, 1, true),
-      new THREE.MeshBasicMaterial({ color: 0x48d7f0, transparent: true, opacity: 0.10, side: THREE.BackSide })
+      new THREE.MeshBasicMaterial({ color: 0x9fd3c6, transparent: true, opacity: 0.10, side: THREE.BackSide })
     );
     glow.position.y = WELL_BOTTOM / 2;
     G.add(glow);
@@ -147,7 +147,7 @@
       new THREE.Vector3(0, 1.1, 0)
     ]);
     /* 曲线点在组内坐标系，先建到组里 */
-    const riseFlow = makeFlowInGroup(riseCurve, 0xffb347, 26, 0.055, 0.10);
+    const riseFlow = makeFlowInGroup(riseCurve, 0xf0b45e, 26, 0.055, 0.10);
     const headCurve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(-0.2, 1.0, 0),
       new THREE.Vector3(-1.6, 1.7, 0.5),
@@ -166,8 +166,8 @@
       new THREE.Vector3(1.0, WELL_BOTTOM + 0.3, -0.2),
       new THREE.Vector3(0, WELL_BOTTOM + 0.7, 0)
     ]);
-    const c1 = makeFlowInGroup(conv1, 0xf7b24a, 7, 0.05, 0.055);
-    const c2 = makeFlowInGroup(conv2, 0xf7b24a, 7, 0.05, 0.055);
+    const c1 = makeFlowInGroup(conv1, 0xf0b45e, 7, 0.05, 0.055);
+    const c2 = makeFlowInGroup(conv2, 0xf0b45e, 7, 0.05, 0.055);
     built2.push(c1, c2);
 
     return { droplets: droplets, riseFlow: riseFlow, extra: built2 };
