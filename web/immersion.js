@@ -905,7 +905,7 @@
   });
   depthSelect.addEventListener('change', updateTask);
   document.getElementById('overview').addEventListener('click', function () {
-    moveCamera({ targetX: 2, targetY: 3.0, targetZ: 0, radius: 44, azimuth: 0.30, elevation: 0.50 });
+    moveCamera({ targetX: 6, targetY: 2.6, targetZ: 0, radius: 50, azimuth: 0.28, elevation: 0.46 });
   });
   document.getElementById('focus').addEventListener('click', function () { selectStage(currentStage, true); });
   document.getElementById('next').addEventListener('click', function () {
@@ -1052,7 +1052,7 @@
     if (!step) { stopTour(); return; }
     tourIndex = index;
     if (step.stage == null) {
-      moveCamera({ targetX: 2, targetY: 3.0, targetZ: 0, radius: 44, azimuth: 0.30, elevation: 0.50 });
+      moveCamera({ targetX: 6, targetY: 2.6, targetZ: 0, radius: 50, azimuth: 0.28, elevation: 0.46 });
       syncSceneContext(null);
     } else {
       selectStage(step.stage, true);
