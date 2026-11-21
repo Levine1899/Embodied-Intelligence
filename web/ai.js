@@ -215,7 +215,25 @@
     const r = await fetch('/api/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question: q, ctx: [stageName()], tier: tier, mode: 'open' })
+      body: JSON.stringify({
+        question: q,
+        ctx: (function () {
+          const sc = window.__sceneContext;
+          const lines = [stageName()];
+          if (sc) {
+            if (sc.stageId && sc.stageId !== 'overview') lines.push('产业链环节：' + sc.stageId);
+            if (sc.selectedObjectId) lines.push('当前设备：' + sc.selectedObjectId);
+            if (sc.knowledgeIds && sc.knowledgeIds.length) lines.push('关联知识点：' + sc.knowledgeIds.join('、'));
+            if (sc.interaction) {
+              lines.push('本轮操作：' + sc.interaction.action + '=' + sc.interaction.value + (sc.interaction.unit ? '（' + sc.interaction.unit + '）' : ''));
+            }
+            if (sc.experienceMode) lines.push('体验模式：' + sc.experienceMode);
+          }
+          return lines;
+        })(),
+        tier: tier,
+        mode: 'open'
+      })
     });
     const j = await r.json();
     if (!r.ok || !j.text) throw new Error(j.error || '没有拿到回答');

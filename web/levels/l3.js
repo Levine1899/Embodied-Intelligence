@@ -1,6 +1,6 @@
 /* 关卡 03｜储运 —— 同样长在 V2 的场景里
    在「储运」节点旁立两个罐：左边固定顶，右边外浮顶，同一个液位滑块同时灌。
-   液位越低，固定顶罐里油气空间越大、蒸发越猛；外浮顶的顶盖始终贴着油面。 */
+   液位越低，固定顶罐的油气空间越大；外浮顶的顶盖始终贴着油面。此为教学示意，不换算真实排放量。 */
 (function () {
   const stage = window.__stage;
   if (!stage || !window.__lvlEntry) return;
@@ -101,18 +101,18 @@
     built.float = tank(2.0, 0, true);
 
     /* 标签 */
-    const l1 = window.__lvlLabel('固定顶罐', '#c3d1d6');
+    const l1 = window.__lvlLabel('固定顶罐', '#cfc8ba');
     l1.position.set(-2.0, 6.9, 0);
     G.add(l1);
-    const l1s = window.__lvlLabel('油气空间大', '#8fa3ad');
+    const l1s = window.__lvlLabel('油气空间大', '#9a948a');
     l1s.scale.set(1.5, 0.5, 1);
     l1s.position.set(-2.0, 6.05, 0);
     G.add(l1s);
 
-    const l2 = window.__lvlLabel('外浮顶罐', '#48d7f0');
+    const l2 = window.__lvlLabel('外浮顶罐', '#8fb6ad');
     l2.position.set(2.0, 6.9, 0);
     G.add(l2);
-    const l2s = window.__lvlLabel('顶盖贴着油面', '#8fb8c4');
+    const l2s = window.__lvlLabel('顶盖贴着油面', '#b6b0a2');
     l2s.scale.set(1.65, 0.5, 1);
     l2s.position.set(2.0, 6.05, 0);
     G.add(l2s);
@@ -142,11 +142,15 @@
   }
 
   let running = false;
+  let lastT = performance.now();
   function loop() {
     if (!running) return;
     requestAnimationFrame(loop);
     if (!stage.isLevel()) return;
-    flows.forEach(function (f) { f.update(0.016); });
+    const now = performance.now();
+    const dt = Math.min(0.05, (now - lastT) / 1000 || 0.016);
+    lastT = now;
+    flows.forEach(function (f) { f.update(dt); });
   }
 
   /* ---------- 状态 ---------- */
@@ -163,13 +167,13 @@
     built.float.oil.position.y = 0.12 + (3.5 * k) / 2;
     built.float.roof.position.y = 0.14 + 3.5 * k;
 
-    /* 液位越低，固定顶罐蒸发越猛 */
+    /* 液位越低，固定顶罐油气空间越大（教学示意） */
     if (built.fixed.ventFlow) built.fixed.ventFlow.speed = 0.05 + (1 - k) * 0.75;
 
     const space = Math.round((1 - k) * 100);
     const pct = Math.round(k * 100);
     uiPct.textContent = pct + '%';
-    uiSpace.textContent = '油气空间 ' + space + '% · 蒸发' + (space > 55 ? '很猛' : space > 25 ? '明显' : '很少');
+    uiSpace.textContent = '油气空间 ' + space + '%（示意）';
     uiSpace.style.color = space > 55 ? '#ff8a5c' : space > 25 ? '#f0a22e' : '#7fd6a8';
   }
 
@@ -179,9 +183,9 @@
   ui.innerHTML = [
     '<div class="lvl__bar"><span class="lvl__step">03 / 05</span><b>储运 · 浮顶罐</b><span class="lvl__hint" id="l3-hint">镜头正在靠近罐区…</span></div>',
     '<div class="lvl__act" id="l3-act" hidden>',
-    '<p>两个罐装的是同样的油。拖液位，看<b>固定顶罐</b>顶上冒出的油气。</p>',
+    '<p>两个罐装同样的油。拖液位，对比油气空间变化（教学示意，不代表实际排放）。</p>',
     '<div class="lvl__row"><input type="range" min="0" max="100" value="2" id="l3-level" aria-label="液位"><b id="l3-pct">2%</b></div>',
-    '<div class="lvl__out"><span id="l3-space">油气空间 98% · 蒸发很猛</span></div>',
+    '<div class="lvl__out"><span id="l3-space">油气空间 98%（示意）</span></div>',
     '</div>',
     '<button type="button" class="lvl__back" id="l3-back">返回总览</button>'
   ].join('');
@@ -198,16 +202,16 @@
     level = +slider.value / 100;
     applyLevel();
     if (level >= 0.85 && !completed) complete();
-    else if (level < 0.85) hint.textContent = '固定顶罐在冒油气 · 外浮顶没有';
+    else if (level < 0.85) hint.textContent = '固定顶罐油气空间大 · 外浮顶顶盖贴着油面';
   });
 
   function complete() {
     completed = true;
     ui.classList.add('done');
-    hint.textContent = '浮顶把油气空间压没了';
+    hint.textContent = '浮顶把油气空间压小了';
     const log = (window.__leadai && window.__leadai.ledger) || [];
     log.push({ k: '看', t: '储运：固定顶罐 vs 外浮顶罐' });
-    log.push({ k: '动手', t: '把液位提上去，看油气空间被压没', d: Math.round(level * 100) + '%' });
+    log.push({ k: '动手', t: '调节液位，对比固定顶与外浮顶的油气空间', d: Math.round(level * 100) + '%（示意）' });
     if (stage.setNodeDone) stage.setNodeDone(2, true);
     back.classList.add('pulse');
     back.textContent = '完成，返回总览 →';
@@ -240,7 +244,7 @@
 
     fly(startPos, startT,
       new THREE.Vector3(anchor.x + 4.5, 8.8, anchor.z + 14.5), new THREE.Vector3(anchor.x, 2.9, anchor.z), 1700, function () {
-        hint.textContent = '固定顶罐在冒油气 · 外浮顶没有';
+        hint.textContent = '固定顶罐油气空间大 · 外浮顶顶盖贴着油面';
         act.hidden = false;
       });
   }

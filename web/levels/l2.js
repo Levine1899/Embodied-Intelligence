@@ -194,11 +194,15 @@
   }
 
   let running = false;
+  let lastT = performance.now();
   function loop() {
     if (!running) return;
     requestAnimationFrame(loop);
     if (!stage.isLevel()) return;
-    flows.forEach(function (f) { f.update(0.016); });
+    const now = performance.now();
+    const dt = Math.min(0.05, (now - lastT) / 1000 || 0.016);
+    lastT = now;
+    flows.forEach(function (f) { f.update(dt); });
   }
 
   /* ---------- UI ---------- */
