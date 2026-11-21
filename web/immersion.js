@@ -57,7 +57,7 @@
       el.textContent = done ? '再看一遍 →' : '进入本环节 →';
       el.onclick = function () {
         const h = window.__levelHooks && window.__levelHooks[i];
-        if (h) h();
+        if (h) { markLevel(i); h(); }
       };
     }
   }
@@ -257,6 +257,7 @@
     updateTask();
     syncChapterLink(index);
     syncSceneContext(index, objectId || null, null);
+    if (objectId) showDeviceCard(objectId, index); else hideDeviceCard();
     if (focus && modelGroups[index]) {
       const p = modelGroups[index].position;
       const preset = CAM_PRESETS[index] || CAM_PRESETS[0];
@@ -499,6 +500,7 @@
     cylinder(drill, 0.16, 7.4, teal, -0.6, 1.4, -2.2);
     /* 井口：采油树 + 阀组 */
     const wellhead = new THREE.Group();
+    wellhead.userData.objectId = 'wellhead';
     wellhead.position.set(-0.6, 1.4, -2.2);
     drill.add(wellhead);
     box(wellhead, 0.9, 0.35, 0.9, darkSteel, 0, 0.1, 0);
@@ -509,6 +511,7 @@
     rod(wellhead, [0, 0.62, -0.45], [0, 0.62, 0.45], 0.09, amber);
     /* 抽油机：支架 + 游梁 + 驴头 */
     const pump = new THREE.Group();
+    pump.userData.objectId = 'pumpjack';
     pump.position.set(-4.6, 0.16, 3.2);
     drill.add(pump);
     box(pump, 1.6, 0.25, 1.1, concrete, 0, 0.12, 0);
@@ -627,6 +630,7 @@
     distillationTower(1.8, -1.4, 7.6, 1.7, '减压塔');
     /* 加热炉 + 烟囱 */
     const heater = new THREE.Group();
+    heater.userData.objectId = 'heater';
     heater.position.set(-4.6, 0, 3.6);
     refine.add(heater);
     box(heater, 3.4, 2.6, 2.6, steel, 0, 1.3, 0);
@@ -644,6 +648,7 @@
     const products = modelGroups[4];
     /* 加油机 */
     const dispenser = new THREE.Group();
+    dispenser.userData.objectId = 'fuel_dispenser';
     dispenser.position.set(-3.4, 0, 2.2);
     products.add(dispenser);
     box(dispenser, 1.1, 2.0, 0.7, lightSteel, 0, 1.0, 0);
@@ -661,21 +666,22 @@
     }
     bottlePts.push(new THREE.Vector2(0.12, 1.62));
     const bottle = mesh(products, new THREE.LatheGeometry(bottlePts, 26), material(0x9fd3c6, false), -1.2, 0.15, 2.4);
+    bottle.userData.objectId = 'plastic_bottle';
     bottle.material.transparent = true;
     bottle.material.opacity = 0.72;
     /* 纤维卷 */
     const spool = new THREE.Group();
     spool.position.set(0.9, 0, 2.6);
     products.add(spool);
-    cylinder(spool, 0.75, 0.9, lightSteel, 0, 0.55, 0);
+    cylinder(spool, 0.75, 0.9, lightSteel, 0, 0.55, 0).userData.objectId = 'fiber_spool';
     [0.25, 0.55, 0.85].forEach(function (y) {
       mesh(spool, new THREE.TorusGeometry(0.78, 0.09, 8, 26), material(0xc9b48a, false), 0, y, 0).rotation.x = Math.PI / 2;
     });
     /* 润滑油桶 */
-    cylinder(products, 0.55, 1.1, material(0xb38a4a, true), 2.8, 0.7, 2.3);
+    cylinder(products, 0.55, 1.1, material(0xb38a4a, true), 2.8, 0.7, 2.3).userData.objectId = 'lubricant_can';
     ring(products, 0.57, 1.2, darkSteel, 2.8, 2.3);
     /* 沥青路面样块 */
-    box(products, 2.6, 0.35, 1.5, material(0x2a2822, false), 0.4, 0.32, -2.6);
+    box(products, 2.6, 0.35, 1.5, material(0x2a2822, false), 0.4, 0.32, -2.6).userData.objectId = 'asphalt_slab';
     box(products, 2.2, 0.02, 0.12, material(0xcfc8ba, false), 0.4, 0.51, -2.6);
     /* 产品标签 */
     const productLabel = groundLabel('燃料 · 材料 · 日常用品', 7.2, '#b6b0a2');
@@ -884,7 +890,7 @@
           if (object) {
             const idx = object.userData.stage;
             const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
-            if (hook) { hook(); return; }
+            if (hook) { markLevel(idx); hook(); return; }
             selectStage(idx, true, objectId);
           }
         }
@@ -988,6 +994,55 @@
     fallback.textContent = '三维场景未能加载。请使用支持 WebGL 的浏览器打开，也可通过下方流程节点查看讲解。';
     live.textContent = String(error.message);
   }
+  /* ---------- 设备级知识卡（点击三维设备时使用） ---------- */
+  const DEVICE_INFO = {
+    three_phase_separator: { name: '三相分离器', stage: 1, ask: '三相分离器怎么把油、气、水分开？', text: '按密度与相态把井口产出物分成气、油、水三路，再分别送去处理或储存。' },
+    pumpjack: { name: '抽油机', stage: 0, ask: '抽油机是怎么把油从井里抽上来的？', text: '把地面动力转成上下往复运动，通过抽油杆带动井下泵，把油举升到地面。' },
+    wellhead: { name: '井口采油树', stage: 0, ask: '采油树上的阀门是做什么的？', text: '井口阀组控制油流开关与压力，把地下产出的流体安全导入集输管线。' },
+    fixed_roof_tank: { name: '固定顶储罐', stage: 2, ask: '固定顶储罐和浮顶罐有什么区别？', text: '罐顶固定，液位下降时罐内油气空间变大；需要呼吸阀与油气处理。' },
+    floating_roof_tank: { name: '外浮顶储罐', stage: 2, ask: '外浮顶罐为什么能减少油气损耗？', text: '浮盘随液位升降、紧贴油面，油气空间小；但损耗仍受密封、附件与操作影响。' },
+    atmospheric_tower: { name: '常压蒸馏塔', stage: 3, ask: '常压塔为什么不同高度能抽出不同馏分？', text: '塔板让上升油气与下降回流液反复接触，按沸点范围在不同高度分出馏分。' },
+    vacuum_tower: { name: '减压蒸馏塔', stage: 3, ask: '减压塔为什么要降低压力？', text: '降低压力可降低沸点，让重油在较低温度继续分离，避免高温裂解。' },
+    heater: { name: '加热炉', stage: 3, ask: '加热炉为什么不能把原油加热到更高温度？', text: '把热量经炉管传给原油，使其部分汽化；温度过高会导致裂解，改变产品结构。' },
+    fuel_dispenser: { name: '加油机', stage: 4, ask: '汽油从炼厂到加油机要经过哪些环节？', text: '炼厂产出的燃料经调和、储运与配送，最终到达加油站。' },
+    plastic_bottle: { name: '塑料瓶', stage: 4, ask: '塑料一定来自石油吗？', text: '塑料可由石油路线生产，也可能来自天然气、煤基或生物基原料，不能一概而论。' },
+    fiber_spool: { name: '合成纤维', stage: 4, ask: '衣服里的合成纤维和石油有什么关系？', text: '部分合成纤维以石化单体为原料；具体路线取决于纤维品种与工厂配置。' },
+    lubricant_can: { name: '润滑油', stage: 4, ask: '润滑油是怎么从原油里得到的？', text: '由适合的馏分经精制、调配与添加剂处理得到，用于减少摩擦与磨损。' },
+    asphalt_slab: { name: '沥青路面', stage: 4, ask: '沥青是炼厂的哪个部分来的？', text: '沥青主要来自减压渣油等重质组分，经处理满足道路或建筑用途。' }
+  };
+  let deviceCardEl = null;
+  function showDeviceCard(objectId, index) {
+    const info = DEVICE_INFO[objectId];
+    if (!info) return;
+    if (!deviceCardEl) deviceCardEl = document.getElementById('device-card');
+    if (!deviceCardEl) return;
+    deviceCardEl.hidden = false;
+    document.getElementById('device-stage').textContent = '第 ' + (index + 1) + ' 环节 · ' + stageNames[index];
+    document.getElementById('device-name').textContent = info.name;
+    document.getElementById('device-text').textContent = info.text;
+    const chapter = document.getElementById('device-chapter');
+    chapter.href = 'chapter.html?id=' + STAGE_IDS[index];
+    const askBtn = document.getElementById('device-ask');
+    askBtn.onclick = function () {
+      const input = document.getElementById('leadai-q');
+      if (!input) return;
+      input.value = info.ask;
+      input.focus();
+      input.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    };
+    const close = document.getElementById('device-close');
+    close.onclick = function () {
+      deviceCardEl.hidden = true;
+      if (window.__sceneContext) {
+        window.__sceneContext.selectedObjectId = null;
+        document.dispatchEvent(new CustomEvent('scene-context', { detail: window.__sceneContext }));
+      }
+    };
+  }
+  function hideDeviceCard() {
+    if (deviceCardEl) deviceCardEl.hidden = true;
+  }
+
   /* ---------- 场景上下文：AI / 写作 / 测试共用 ---------- */
   const SCENE_ID = 'oil_industry_journey';
   const STAGE_IDS = ['drill', 'gather', 'store', 'refine', 'use'];
@@ -1006,6 +1061,30 @@
     document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
     var box = document.getElementById('leadai-ctx');
     if (box && index != null) box.textContent = '上下文 · ' + stageNames[index];
+  }
+
+  function markLevel(index) {
+    if (!window.__sceneContext) syncSceneContext(index, null, null);
+    const ctx = window.__sceneContext;
+    ctx.levelId = 'l' + (index + 1);
+    ctx.interaction = null;
+    window.__sceneContext = ctx;
+    document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
+  }
+  function setInteraction(action, value, unit) {
+    const fallback = {
+      sceneId: SCENE_ID,
+      stageId: STAGE_IDS[currentStage],
+      levelId: null,
+      selectedObjectId: null,
+      knowledgeIds: ['kb_' + STAGE_IDS[currentStage]],
+      experienceMode: mode || 'task'
+    };
+    const ctx = window.__sceneContext || fallback;
+    ctx.interaction = { action: action, value: value, unit: unit || '示意' };
+    ctx.experienceMode = mode || ctx.experienceMode;
+    window.__sceneContext = ctx;
+    document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
   }
 
   /* ---------- 三种体验模式 + 沉浸导览 ---------- */
@@ -1235,6 +1314,8 @@
       document.dispatchEvent(new CustomEvent('stage-level'));
     },
     isLevel() { return !!activeScene; },
+    setInteraction(action, value, unit) { setInteraction(action, value, unit); },
+    showDevice(objectId) { const info = DEVICE_INFO[objectId]; if (info) selectStage(info.stage, true, objectId); },
     get scene() { return activeScene || scene; },
     get baseScene() { return scene; },
     get nodes() { return modelGroups.map(function (g) { return g.position.clone(); }); },
@@ -1253,7 +1334,7 @@
       const ov = document.getElementById('all-done'); if (ov) ov.classList.remove('on');
     },
     isNodeDone(i) { return doneSet.has(i); },
-    levelHook(i) { return (window.__levelHooks && window.__levelHooks[i]) || null; },
+    levelHook(i) { const h = (window.__levelHooks && window.__levelHooks[i]) || null; if (h) markLevel(i); return h; },
     refreshTaskPanel() { syncTaskPanel(); },
     get camera() { return activeCamera || camera; },
     onResize(fn) { resizeHooks.push(fn); }

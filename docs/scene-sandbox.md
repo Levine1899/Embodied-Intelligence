@@ -37,7 +37,8 @@ window.__sceneContext = {
 
 - `selectStage(index, focus, objectId)` 更新并 `dispatchEvent('scene-context')`；AI 面板同步标题。
 - 设备点击：射线命中后向上找 `userData.objectId`，再找 `userData.stage`，把 objectId 传入。
-- 关卡内部暂未写回 `interaction`（l3 液位等仍是关卡内部状态），属遗留项。
+- 关卡内部通过 `window.__stage.setInteraction(action,value,unit)` 回写：l1 压力差、l2 出口、l3 液位、l4 馏分、l5 产品；进入关卡时 `levelId` 置为 `l1–l5`。
+- 设备卡片：`showDeviceCard()` 展示名称/用途/环节/问 AI/读本章；关闭时清空 `selectedObjectId`。
 
 ## 5. AI 兼容
 
@@ -52,6 +53,6 @@ window.__sceneContext = {
 
 ## 7. 已知限制
 
-- 设备点击只把 objectId 写进上下文，右侧讲解仍是“本环节”级，没有按设备切换详情面板（遗留）。
-- 关卡内没有把液位/压力等 interaction 回传（遗留）。
+- 设备卡片已接到上下文与 AI；画布坐标点击未做自动化测试。
+- interaction 只保留最近一次操作，没有历史队列。
 - 声音未实现。

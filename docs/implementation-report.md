@@ -28,7 +28,9 @@
 - 三种模式工具栏：沉浸导览 / 自由探索 / 任务关卡（`aria-pressed`）。
 - 7 步导览（约 90 秒）：卡片、步骤号、暂停/继续、下一步、退出；拖动/滚轮/触摸立即暂停；`prefers-reduced-motion` 不自动播放。
 - `window.__sceneContext`：sceneId/stageId/selectedObjectId/knowledgeIds/experienceMode/interaction；`selectStage` 与设备点击同步。
-- 设备级 objectId：`three_phase_separator`、`fixed_roof_tank`、`floating_roof_tank`、`atmospheric_tower`、`vacuum_tower`（点击命中后写入上下文）。
+- 设备级 objectId：`three_phase_separator`、`fixed_roof_tank`、`floating_roof_tank`、`atmospheric_tower`、`vacuum_tower`、`heater`、`pumpjack`、`wellhead`、`fuel_dispenser`、`plastic_bottle`、`fiber_spool`、`lubricant_can`、`asphalt_slab`（点击命中后写入上下文）。
+- 设备卡片：点击设备后显示名称、用途、所属环节、「问 AI」（自动填入问题并聚焦输入框）、「读本章知识」；可关闭并清除 `selectedObjectId`。
+- 关卡交互回写：`__stage.setInteraction()` 已接入 l1 压力差、l2 出口选择、l3 液位、l4 馏分选择/放置、l5 产品勾选；进入关卡时 `levelId` 置为 `l1–l5`。
 - `ai.js`：`/api/ask` 的 `ctx` 数组追加“产业链环节/当前设备/知识点/体验模式”，请求体字段保持 `{question, ctx, tier, mode}` 兼容。
 
 ### P3 · 性能与稳定性
@@ -59,9 +61,9 @@
 
 ## 3. 已知限制与遗留
 
-1. 设备点击只更新上下文，右侧详情仍是“环节级”，没有按设备切换知识卡。
-2. 关卡内部（液位/压力等）没有把 `interaction` 回写 `__sceneContext`。
-3. `levels/entry.js` 的全局粒子 RAF 未彻底收口（关卡 loop 已有 running 控制，但 entry.js 的输入/粒子仍需单独审）。
+1. 设备卡片已可点击展示，但射线命中依赖 OBJ/程序化 Mesh 的坐标；自动化只验证了 `showDevice()` 与卡片内容，未做画布坐标点击测试。
+2. `levels/entry.js` 的全局粒子 RAF 未彻底收口（关卡 loop 已有 running 控制，但 entry.js 的输入/粒子仍需单独审）。
+3. 关卡 interaction 只回写最近一次操作，未做操作历史队列。
 4. `write.html` 仍是旧版冷蓝视觉（本轮未动）。
 5. 声音、录屏、真实用户测试、FPS 测量未执行。
 6. 塔热点仍依赖 OBJ 节点名正则；重新导出模型需同步。

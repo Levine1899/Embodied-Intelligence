@@ -269,6 +269,7 @@
 
   press.addEventListener('input', function () {
     pressure = +press.value;
+    if (stage.setInteraction) stage.setInteraction('adjust_pressure', pressure, '示意百分比');
     pct.textContent = pressure + '%';
     if (built) {
       built.droplets.children.forEach(function (d) {

@@ -72,7 +72,15 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
   <p id="tour-text"></p>
   <div class="tour-actions"><button type="button" id="tour-pause">暂停</button><button type="button" id="tour-next">下一步 →</button></div>
 </div>
-<div class="explanation"><span class="chapter" id="chapter">地下开采</span><p id="explanation"></p><a class="chapter-link" id="chapter-link" href="#">读本章知识 →</a><a class="tower-link" id="tower-link" href="tower.html">看塔剖面 →</a><button type="button" class="next" id="next">继续查看 →</button></div>
+<div class="device-card" id="device-card" hidden>
+  <div class="device-top"><span id="device-stage">本环节</span><button type="button" id="device-close" aria-label="关闭设备卡片">关闭</button></div>
+  <h3 id="device-name"></h3>
+  <p id="device-text"></p>
+  <div class="device-actions">
+    <button type="button" id="device-ask">问 AI</button>
+    <a id="device-chapter" href="#">读本章知识 →</a>
+  </div>
+</div><div class="explanation"><span class="chapter" id="chapter">地下开采</span><p id="explanation"></p><a class="chapter-link" id="chapter-link" href="#">读本章知识 →</a><a class="tower-link" id="tower-link" href="tower.html">看塔剖面 →</a><button type="button" class="next" id="next">继续查看 →</button></div>
 </section>
 <aside class="side">
 <div class="task-section"><div class="task-top"><strong id="task-label">探究任务</strong><span id="task-state">待观察</span></div><h2 id="question"></h2><div class="choices" id="choices" role="group" aria-label="探究问题选项"></div><p class="feedback" id="feedback" role="status" aria-live="polite"></p><div class="read-actions"><button type="button" id="read-more">展开原理</button><button type="button" id="speak">朗读讲解</button></div></div>
@@ -87,7 +95,7 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 
 
 <script src="assets/three.browser.js"></script>
-<script src="immersion.js?v=fix25"></script>
+<script src="immersion.js?v=fix26"></script>
 <link rel="stylesheet" href="assets/site/tokens.css">
 <style>
   .view-hint{font-size:12px}
@@ -235,13 +243,24 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 .chapter-link{align-self:center;flex-shrink:0;font-size:12.5px;color:var(--amber);border:1px solid var(--line);padding:7px 13px;text-decoration:none;white-space:nowrap;margin-right:10px}.chapter-link:hover{border-color:var(--amber);color:#efc684}
 .tower-link,.chapter-link{font-size:12px}
 </style>
-<script src="levels/entry.js?v=v34"></script>
-<script src="levels/l1.js?v=v34"></script>
-<script src="levels/l2.js?v=v34"></script>
-<script src="levels/l3.js?v=v34"></script>
-<script src="levels/l4.js?v=v34"></script>
-<script src="levels/l5.js?v=v34"></script>
+<script src="levels/entry.js?v=v35"></script>
+<script src="levels/l1.js?v=v35"></script>
+<script src="levels/l2.js?v=v35"></script>
+<script src="levels/l3.js?v=v35"></script>
+<script src="levels/l4.js?v=v35"></script>
+<script src="levels/l5.js?v=v35"></script>
 <style>
+.device-card{border-top:1px solid var(--line);padding:12px 14px;background:#0d1215}
+.device-card[hidden]{display:none}
+.device-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#8b867d}
+.device-top button{background:none;border:0;color:#9a948a;font-size:12px;cursor:pointer;min-height:28px}
+.device-card h3{margin:2px 0 4px;font-family:var(--font-display);font-size:20px;font-weight:400;color:#e8e1d4}
+.device-card p{margin:0 0 8px;font-size:13px;line-height:1.8;color:#b6b0a2}
+.device-actions{display:flex;gap:10px;align-items:center}
+.device-actions button{border:1px solid #3d3a33;background:#141816;color:#cfc8ba;font-size:12px;padding:6px 12px;min-height:32px;cursor:pointer}
+.device-actions button:hover{border-color:var(--amber);color:var(--amber)}
+.device-actions a{font-size:12px;color:#9a948a;border-bottom:1px solid #3d3a33}
+.device-actions a:hover{color:var(--amber)}
 .modebar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
 .modebar button{background:#141816;border:1px solid #3d3a33;color:#cfc8ba;font-size:12px;padding:6px 11px;min-height:32px;cursor:pointer}
 .modebar button[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);background:#26221a}

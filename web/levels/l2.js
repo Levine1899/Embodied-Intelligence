@@ -230,6 +230,7 @@
 
   function pickOutlet(key) {
     picked = key;
+    if (stage.setInteraction) stage.setInteraction('choose_outlet', key);
     built.OUTLETS.forEach(function (o) {
       o.ring.scale.setScalar(o.key === key ? 1.5 : 1);
       o.ring.material.emissiveIntensity = o.key === key ? 2.2 : 1.0;

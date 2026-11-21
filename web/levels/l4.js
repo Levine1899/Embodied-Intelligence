@@ -240,6 +240,7 @@
     const b = e.target.closest('[data-p]');
     if (!b || b.disabled) return;
     picked = b.getAttribute('data-p');
+    if (stage.setInteraction) stage.setInteraction('choose_fraction', picked);
     Array.from(chips.children).forEach(function (c) { c.classList.toggle('on', c === b); });
     const pr = PRODUCTS.find(function (x) { return x.key === picked; });
     note.textContent = '已选「' + pr.name + '」，点塔上它该出来的位置';
@@ -264,7 +265,8 @@
       hint.textContent = '对了 · ' + pr.name + ' 从' + (index === 0 ? '塔顶' : index === 3 ? '塔底' : '第 ' + (index + 1) + ' 层') + '出来';
       const chip = chips.querySelector('[data-p="' + pr.key + '"]');
       if (chip) { chip.classList.add('done'); chip.disabled = true; }
-      if (doneCount === PRODUCTS.length) complete();
+      if (stage.setInteraction) stage.setInteraction('place_fraction', PRODUCTS[want] ? PRODUCTS[want].name : picked);
+    if (doneCount === PRODUCTS.length) complete();
     } else {
       hint.textContent = '不对 · ' + pr.name + ' 应该更' + (index < want ? '靠下' : '靠上');
       note.textContent = pr.name + ' 不从这里出来';

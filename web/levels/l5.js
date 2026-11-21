@@ -152,6 +152,7 @@
       it.mesh.scale.setScalar(1.14);
     }
     refreshCount();
+    if (stage.setInteraction) stage.setInteraction('select_product', it.name, picked.size + ' 件');
     note.textContent = '已选 ' + picked.size + ' 件';
   }
 

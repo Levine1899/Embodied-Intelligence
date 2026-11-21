@@ -200,6 +200,7 @@
 
   slider.addEventListener('input', function () {
     level = +slider.value / 100;
+    if (stage.setInteraction) stage.setInteraction('change_liquid_level', Math.round(level * 100), '示意百分比');
     applyLevel();
     if (level >= 0.85 && !completed) complete();
     else if (level < 0.85) hint.textContent = '固定顶罐油气空间大 · 外浮顶顶盖贴着油面';
