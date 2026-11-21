@@ -48,21 +48,21 @@
   if ('outputColorSpace' in renderer && THREE.SRGBColorSpace) renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   var scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0a1119);
-  scene.fog = new THREE.Fog(0x0a1119, 95, 180);
+  scene.background = new THREE.Color(0x0b0f11);
+  scene.fog = new THREE.Fog(0x0b0f11, 95, 180);
   var camera = new THREE.PerspectiveCamera(42, 1, 0.5, 400);
 
-  scene.add(new THREE.HemisphereLight(0x9fd8ff, 0x0a1216, 0.8));
-  var key = new THREE.DirectionalLight(0xffffff, 1.35); key.position.set(26, 40, 30); scene.add(key);
-  var rim = new THREE.DirectionalLight(0x48d7f0, 0.45); rim.position.set(-30, 18, -24); scene.add(rim);
-  var warm = new THREE.PointLight(0xf0a22e, 7, 20, 2); warm.position.set(-7, 7, 0); scene.add(warm);
-  var fill = new THREE.DirectionalLight(0x8fb8c8, 0.75); fill.position.set(-18, 14, -26); scene.add(fill);
+  scene.add(new THREE.HemisphereLight(0xf2ead9, 0x0b0f11, 0.8));
+  var key = new THREE.DirectionalLight(0xfff3df, 1.35); key.position.set(26, 40, 30); scene.add(key);
+  var rim = new THREE.DirectionalLight(0x9fd3c6, 0.45); rim.position.set(-30, 18, -24); scene.add(rim);
+  var warm = new THREE.PointLight(0xd8a24a, 7, 20, 2); warm.position.set(-7, 7, 0); scene.add(warm);
+  var fill = new THREE.DirectionalLight(0xb6b0a2, 0.75); fill.position.set(-18, 14, -26); scene.add(fill);
 
-  var grid = new THREE.GridHelper(120, 60, 0x1e3a46, 0x142632);
+  var grid = new THREE.GridHelper(120, 60, 0x4a4437, 0x2a271f);
   grid.position.y = 0.01;
   scene.add(grid);
   var floor = new THREE.Mesh(new THREE.PlaneGeometry(160, 160),
-    new THREE.MeshStandardMaterial({ color: 0x0b1620, roughness: 1, metalness: 0 }));
+    new THREE.MeshStandardMaterial({ color: 0x14140f, roughness: 1, metalness: 0 }));
   floor.rotation.x = -Math.PI / 2; floor.position.y = -0.02; scene.add(floor);
 
   var clipPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0);
@@ -72,7 +72,7 @@
     var colors = {}, cur = null;
     text.split('\n').forEach(function (line) {
       var t = line.trim();
-      if (t.indexOf('newmtl ') === 0) { cur = t.slice(7).trim(); colors[cur] = 0x7f8c93; }
+      if (t.indexOf('newmtl ') === 0) { cur = t.slice(7).trim(); colors[cur] = 0x9b968a; }
       else if (t.indexOf('Kd ') === 0 && cur) {
         var p = t.split(/\s+/);
         var r = Math.round(parseFloat(p[1]) * 255), g = Math.round(parseFloat(p[2]) * 255), b = Math.round(parseFloat(p[3]) * 255);
@@ -132,20 +132,20 @@
       geo.setIndex(g.idx);
       var isShell = /Shell|Dome/.test(g.name);
       var isHalf = /ShellHalf$/.test(g.name);
-      var color = isHalf ? 0x6d828b : 0x5b7079;
-      if (/Shell|Dome/.test(g.name)) color = 0x5b7079;
-      else if (/Tray/.test(g.name)) color = 0x93a6ae;
-      else if (/Heater/.test(g.name)) color = 0x6d5741;
-      else if (/Pipe_Side|Pipe_Top/.test(g.name)) color = 0x2f7f8f;
-      else if (/Pipe_Feed|Pipe_Bottom/.test(g.name)) color = 0xd08a2a;
-      else if (/Box_/.test(g.name)) color = 0x3f5a66;
-      else if (/Railing|Post|Ladder|Manway|Skirt|Pump/.test(g.name)) color = 0x3a4a52;
+      var color = isHalf ? 0x9b968a : 0x8a8478;
+      if (/Shell|Dome/.test(g.name)) color = 0x8a8478;
+      else if (/Tray/.test(g.name)) color = 0xb6b0a2;
+      else if (/Heater/.test(g.name)) color = 0x6b5840;
+      else if (/Pipe_Side|Pipe_Top/.test(g.name)) color = 0x8fb6ad;
+      else if (/Pipe_Feed|Pipe_Bottom/.test(g.name)) color = 0xd8a24a;
+      else if (/Box_/.test(g.name)) color = 0x3a3830;
+      else if (/Railing|Post|Ladder|Manway|Skirt|Pump/.test(g.name)) color = 0x33312a;
       var mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
         color: color,
         metalness: isShell ? 0.55 : 0.35,
         roughness: isShell ? 0.42 : 0.6,
         side: THREE.DoubleSide,
-        emissive: /ShellHalf$/.test(g.name) ? 0x1b2b33 : (/Pipe_Side|Pipe_Top/.test(g.name) ? 0x0a2f38 : (/Pipe_Feed|Pipe_Bottom/.test(g.name) ? 0x3a2408 : 0x000000))
+        emissive: /ShellHalf$/.test(g.name) ? 0x2a2418 : (/Pipe_Side|Pipe_Top/.test(g.name) ? 0x1f2a26 : (/Pipe_Feed|Pipe_Bottom/.test(g.name) ? 0x3a2408 : 0x000000))
       }));
       mesh.name = g.name;
       mesh.userData.groupName = g.name;
@@ -157,28 +157,28 @@
   // ---------------------------------------------------------------- 热点
   var HOTSPOTS = [
     {
-      id: 'hs_crude_feed', name: '原油进料', pos: new THREE.Vector3(-4.6, 13.4, 0), match: /Pipe_Feed_Horizontal/,
+      id: 'hs_crude_feed', name: '原油进料', pos: new THREE.Vector3(-9.2, 15.2, 0), match: /Pipe_Feed_Horizontal/,
       title: '原油进料：先变成"能挥发的状态"',
       lede: '原油是油、气、水、盐和多种组分的混合物，不能直接"切"。进装置后先换热、再进加热炉，让它部分汽化，才有条件按沸点分开。',
       bullets: ['混合物 → 先汽化，才谈得上按沸点分', '进料位置通常在塔中部，给上下段都留出分离空间', '这一层不讲温度、压力等操作参数'],
       ask: '原油进常压塔前为什么要先加热'
     },
     {
-      id: 'hs_heater', name: '加热炉', pos: new THREE.Vector3(-7, 10.6, 0), match: /^Heater$/,
+      id: 'hs_heater', name: '加热炉', pos: new THREE.Vector3(-10.4, 9.0, 0), match: /^Heater$/,
       title: '加热炉：把热量交给原油',
       lede: '炉管内走原油，炉膛里烧燃料，通过管壁把热量传给原油。温度要控制在"能汽化但不至于大量裂解"的区间——这是工艺设计的核心取舍。',
       bullets: ['热量通过炉管壁传给原油', '温度过高会让分子裂解，改变产品结构', '真实参数属于工艺资料，这里不展开'],
       ask: '加热炉为什么不把原油加热到更高温度'
     },
     {
-      id: 'hs_atm_tower', name: '常压塔', pos: new THREE.Vector3(0, 18.5, 0), match: /^Tower_Atmospheric_Shell$/,
+      id: 'hs_atm_tower', name: '常压塔', pos: new THREE.Vector3(-0.8, 26.0, 0), match: /^Tower_Atmospheric_Shell$/,
       title: '常压塔：按沸点范围分段',
       lede: '塔内有多层塔板，上升的油气与下降的回流液在塔板上反复接触：轻组分往上走，重组分往下走，于是在不同高度抽出不同沸点范围的馏分。',
       bullets: ['塔顶出气相；上部石脑油，中部煤油、柴油，塔底常压渣油', '塔板让汽液充分接触、反复冷凝与汽化', '抽出的叫"馏分"，不等于最终成品油'],
       ask: '常压塔为什么不同高度能抽出不同馏分'
     },
     {
-      id: 'hs_vacuum', name: '减压塔', pos: new THREE.Vector3(7.6, 11.5, 0), match: /^Tower_Vacuum_Shell$/,
+      id: 'hs_vacuum', name: '减压塔', pos: new THREE.Vector3(11.2, 10.2, 0), match: /^Tower_Vacuum_Shell$/,
       title: '减压塔：降压，让重油"低烧"也能分',
       lede: '常压塔底的重油，在常压下要很高温度才馏得动，而那个温度会大量裂解。把压力降下来，沸点随之降低，就能在较低温度继续分离。',
       bullets: ['降低压力 → 沸点下降 → 避免高温裂解', '得到减压馏分（去进一步加工）与减压渣油', '两座塔串起来才是"常减压"'],
@@ -250,7 +250,7 @@
       hotspotMeshes.forEach(function (m) {
         if (m.userData.hotspot === h.id) {
           if (!m.material.emissive) m.material.emissive = new THREE.Color(0x000000);
-          m.material.emissive.setHex(on ? 0x2f4a2b : 0x000000);
+          m.material.emissive.setHex(on ? 0x3a3423 : 0x000000);
         }
       });
     });
@@ -277,11 +277,11 @@
     var note = document.getElementById('flow-note');
     if (note) note.hidden = n !== 2;
     if (internals) internals.visible = n === 2;
-    flyTo({ target: new THREE.Vector3(0, 15, 0), az: 0.42, el: n > 0 ? 0.16 : 0.38, dist: n > 0 ? 34 : 62 });
+    flyTo({ target: new THREE.Vector3(0, 11.5, 0), az: 0.42, el: n > 0 ? 0.16 : 0.30, dist: n > 0 ? 23 : 33 });
   }
 
   // ---------------------------------------------------------------- 相机
-  var cam = { az: 0.95, el: 0.38, dist: 62, target: new THREE.Vector3(1, 12.5, 0) };
+  var cam = { az: 0.72, el: 0.26, dist: 33, target: new THREE.Vector3(0.5, 9.6, 0) };
   var tween = null, dragging = false, moved = 0, lastPt = { x: 0, y: 0 };
 
   function applyCamera() {
@@ -401,8 +401,8 @@
 
     // 塔内汽液：全剖时显示（青色上升=汽相，琥珀下降=回流液，均为示意）
     internals = new THREE.Group();
-    var vaporMat = new THREE.MeshBasicMaterial({ color: 0x48d7f0, transparent: true, opacity: 0.85 });
-    var liquidMat = new THREE.MeshBasicMaterial({ color: 0xf0a22e, transparent: true, opacity: 0.8 });
+    var vaporMat = new THREE.MeshBasicMaterial({ color: 0x9fd3c6, transparent: true, opacity: 0.85 });
+    var liquidMat = new THREE.MeshBasicMaterial({ color: 0xd8a24a, transparent: true, opacity: 0.8 });
     var vaporGeo = new THREE.ConeGeometry(0.14, 0.46, 8);
     var liquidGeo = new THREE.SphereGeometry(0.11, 8, 6);
     for (var vi = 0; vi < 9; vi++) {
@@ -421,20 +421,20 @@
     }
     internals.visible = false;
     scene.add(internals);
-    addFlow([[-7, 7.2, 0], [-7, 13, 0], [-2.2, 13, 0]], 0xf0a22e, 0.22);
-    addFlow([[2.2, 21, 0], [9, 21, 0]], 0x48d7f0, 0.30);
-    addFlow([[2.2, 18.4, 0], [9, 18.4, 0]], 0x48d7f0, 0.32);
-    addFlow([[2.2, 15.8, 0], [9, 15.8, 0]], 0x48d7f0, 0.34);
-    addFlow([[0, 26, 0], [2.2, 26, 0], [2.2, 27.4, 0], [6.5, 27.4, 0]], 0x48d7f0, 0.24);
+    addFlow([[-7, 7.2, 0], [-7, 13, 0], [-2.2, 13, 0]], 0xd8a24a, 0.22);
+    addFlow([[2.2, 21, 0], [9, 21, 0]], 0x9fd3c6, 0.30);
+    addFlow([[2.2, 18.4, 0], [9, 18.4, 0]], 0x9fd3c6, 0.32);
+    addFlow([[2.2, 15.8, 0], [9, 15.8, 0]], 0x9fd3c6, 0.34);
+    addFlow([[0, 26, 0], [2.2, 26, 0], [2.2, 27.4, 0], [6.5, 27.4, 0]], 0x9fd3c6, 0.24);
 
-    cam.dist = 96; cam.el = 0.5;
-    flyTo({ target: new THREE.Vector3(1, 12.5, 0), az: 0.95, el: 0.38, dist: 62 }, 1400);
+    cam.dist = 80; cam.el = 0.42;
+    flyTo({ target: new THREE.Vector3(0.5, 9.6, 0), az: 0.72, el: 0.26, dist: 33 }, 1400);
 
     document.querySelectorAll('#levels button').forEach(function (b) {
       b.addEventListener('click', function () { setLevel(Number(b.dataset.level)); });
     });
     var reset = document.getElementById('reset');
-    if (reset) reset.addEventListener('click', function () { flyTo({ target: new THREE.Vector3(1, 12.5, 0), az: 0.95, el: 0.38, dist: 62 }); });
+    if (reset) reset.addEventListener('click', function () { flyTo({ target: new THREE.Vector3(0.5, 9.6, 0), az: 0.72, el: 0.26, dist: 33 }); });
 
     buildLabels(); buildList(); renderDetail(null);
   }).catch(function (err) {
