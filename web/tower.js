@@ -131,7 +131,8 @@
       else geo.computeVertexNormals();
       geo.setIndex(g.idx);
       var isShell = /Shell|Dome/.test(g.name);
-      var color = 0x5b7079;
+      var isHalf = /ShellHalf$/.test(g.name);
+      var color = isHalf ? 0x6d828b : 0x5b7079;
       if (/Shell|Dome/.test(g.name)) color = 0x5b7079;
       else if (/Tray/.test(g.name)) color = 0x93a6ae;
       else if (/Heater/.test(g.name)) color = 0x6d5741;
@@ -144,7 +145,7 @@
         metalness: isShell ? 0.55 : 0.35,
         roughness: isShell ? 0.42 : 0.6,
         side: THREE.DoubleSide,
-        emissive: /Pipe_Side|Pipe_Top/.test(g.name) ? 0x0a2f38 : (/Pipe_Feed|Pipe_Bottom/.test(g.name) ? 0x3a2408 : 0x000000)
+        emissive: /ShellHalf$/.test(g.name) ? 0x1b2b33 : (/Pipe_Side|Pipe_Top/.test(g.name) ? 0x0a2f38 : (/Pipe_Feed|Pipe_Bottom/.test(g.name) ? 0x3a2408 : 0x000000))
       }));
       mesh.name = g.name;
       mesh.userData.groupName = g.name;
@@ -265,9 +266,9 @@
     scene.traverse(function (o) {
       if (!o.isMesh) return;
       var name = o.userData.groupName || '';
-      if (/Half$/.test(name)) o.visible = n > 0;                       // 半剖壳：只在剖开时显示
-      else if (/^(Tower_Atmospheric_Shell|Tower_Atmospheric_Dome|Tower_Vacuum_Shell|Tower_Vacuum_Dome)$/.test(name)) {
-        o.visible = n === 0;                                           // 整壳：外观时显示
+      if (/ShellHalf$/.test(name)) o.visible = n > 0;                  // 半剖壳：只在剖开时显示
+      else if (/^(Tower_Atmospheric_Shell|Tower_Vacuum_Shell)$/.test(name)) {
+        o.visible = n === 0;                                           // 整壳：外观时显示（穹顶常驻）
       }
     });
     document.querySelectorAll('#levels button').forEach(function (b) {
@@ -392,11 +393,6 @@
         if (!o.isMesh) return;
         if (h.match.test(o.name)) { o.userData.hotspot = h.id; hotspotMeshes.push(o); }
       });
-    });
-
-    // 塔板收一点，别从塔壳边缘探出来
-    obj.traverse(function (o) {
-      if (o.isMesh && /^Tray_|^VacTray_/.test(o.name)) { o.scale.x *= 0.94; o.scale.z *= 0.94; }
     });
 
     addFlow([[-7, 7.2, 0], [-7, 13, 0], [-2.2, 13, 0]], 0xf0a22e, 0.22);

@@ -17,6 +17,7 @@
 
 import bpy
 import bmesh
+import math
 import json
 import os
 import sys
@@ -92,20 +93,74 @@ def empty(name, loc):
     return o
 
 
+def half_shell(name, x, r_out, z0, z1, thickness=0.14, segments=48, material=STEEL):
+    """带壁厚、且切面封盖的半圆柱壳（半剖显示用）。
+    保留 +Y 一侧（导出后位于网页 -Z 侧，正对默认相机）。"""
+    r_in = r_out - thickness
+    verts, faces = [], []
+    for i in range(segments + 1):
+        a = math.pi * i / segments
+        ca, sa = math.cos(a), math.sin(a)
+        for (r, z) in ((r_out, z0), (r_out, z1), (r_in, z0), (r_in, z1)):
+            verts.append((x + r * ca, r * sa, z))
 
-def half_copy(obj, name):
-    """复制一个对象并切掉 +Y 侧（Blender 里，导出后即网页 -Z 侧），用于半剖显示。"""
-    dup = obj.copy()
-    dup.data = obj.data.copy()
-    dup.name = name
-    bpy.context.collection.objects.link(dup)
+    def vid(i, k):
+        return i * 4 + k
+
+    for i in range(segments):
+        faces.append((vid(i, 0), vid(i + 1, 0), vid(i + 1, 1), vid(i, 1)))       # 外壁
+        faces.append((vid(i, 2), vid(i, 3), vid(i + 1, 3), vid(i + 1, 2)))       # 内壁
+        faces.append((vid(i, 1), vid(i + 1, 1), vid(i + 1, 3), vid(i, 3)))       # 顶部环
+        faces.append((vid(i, 0), vid(i, 2), vid(i + 1, 2), vid(i + 1, 0)))       # 底部环
+    # 两片切面封盖（就是"剖开后看到的金属壁厚"）
+    faces.append((vid(0, 0), vid(0, 1), vid(0, 3), vid(0, 2)))
+    faces.append((vid(segments, 0), vid(segments, 2), vid(segments, 3), vid(segments, 1)))
+
+    mesh = bpy.data.meshes.new(name)
+    mesh.from_pydata(verts, [], faces)
+    mesh.validate()
+    obj = bpy.data.objects.new(name, mesh)
+    bpy.context.collection.objects.link(obj)
     bm = bmesh.new()
-    bm.from_mesh(dup.data)
-    geom = bm.verts[:] + bm.edges[:] + bm.faces[:]
-    bmesh.ops.bisect_plane(bm, geom=geom, plane_co=(0, 0, 0), plane_no=(0, 1, 0), clear_inner=True)
-    bm.to_mesh(dup.data)
+    bm.from_mesh(mesh)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    bm.to_mesh(mesh)
     bm.free()
-    return dup
+    return assign(obj, material)
+
+
+def build_trays(name, x, r, levels, caps=8, material=TRAY):
+    """塔板 + 泡罩 + 降液板，合并成一个对象，避免网页里几百个 draw call。"""
+    parts = []
+    for idx, z in enumerate(levels):
+        bpy.ops.mesh.primitive_cylinder_add(vertices=40, radius=r, depth=0.10, location=(x, 0, z))
+        tray = bpy.context.object
+        tray.name = f"{name}_plate_{idx}"
+        parts.append(assign(tray, material))
+        for k in range(caps):
+            a = 2 * math.pi * k / caps
+            bpy.ops.mesh.primitive_cylinder_add(
+                vertices=10, radius=0.17, depth=0.13,
+                location=(x + math.cos(a) * r * 0.62, math.sin(a) * r * 0.62, z + 0.10))
+            parts.append(assign(bpy.context.object, material))
+        # 降液板：从塔板一侧向下延伸
+        a = 2 * math.pi * (idx % caps) / caps
+        bpy.ops.mesh.primitive_cube_add(size=1.0, location=(x + math.cos(a) * r * 0.78, math.sin(a) * r * 0.78, z - 0.42))
+        dc = bpy.context.object
+        dc.scale = (0.46, 0.10, 0.80)
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+        parts.append(assign(dc, material))
+
+    bpy.ops.object.select_all(action="DESELECT")
+    for p in parts:
+        p.select_set(True)
+    bpy.context.view_layer.objects.active = parts[0]
+    bpy.ops.object.join()
+    joined = bpy.context.object
+    joined.name = name
+    return joined
+
+
 
 # ---------------------------------------------------------------- 常压塔
 ATM_X, ATM_Y, ATM_R, ATM_BASE, ATM_H = 0.0, 0.0, 2.2, 2.0, 24.0
@@ -114,10 +169,8 @@ cyl("Tower_Atmospheric_Shell", ATM_R, ATM_H, (ATM_X, ATM_Y, atm_mid))
 cyl("Tower_Atmospheric_Skirt", ATM_R + 0.45, 2.0, (ATM_X, ATM_Y, 1.0), material=STEEL_DARK)
 sphere("Tower_Atmospheric_Dome", ATM_R, (ATM_X, ATM_Y, ATM_BASE + ATM_H), scale_z=0.38)
 
-# 塔板：16 层，只在该塔内部，名字统一进 Trays
-for i in range(16):
-    z = 4.6 + i * 1.28
-    cyl(f"Tray_{i+1:02d}", ATM_R - 0.28, 0.09, (ATM_X, ATM_Y, z), seg=32, material=TRAY)
+# 塔板：16 层（含泡罩与降液板，合并成一个对象）
+build_trays("Trays_A", ATM_X, ATM_R - 0.16, [4.6 + i * 1.28 for i in range(16)])
 
 # 平台栏杆（两层）
 for z in (10.0, 18.0):
@@ -134,6 +187,15 @@ for z in (10.0, 18.0):
 for z in (12.0, 22.0):
     cyl(f"Manway_{int(z)}", 0.32, 0.3, (ATM_R - 0.02, 0, z), rot=(0, 1.5708, 0), seg=16, material=STEEL_DARK)
 
+# 接管 + 法兰（三个高度，沿塔壁）
+for z, ang in ((9.0, 0.35), (16.0, 5.55), (24.0, 2.2)):
+    nx = ATM_X + math.cos(ang) * (ATM_R + 0.3)
+    ny = ATM_Y + math.sin(ang) * (ATM_R + 0.3)
+    cyl(f"Nozzle_{int(z)}", 0.26, 0.72, (nx, ny, z), rot=(0, 1.5708, ang), seg=14, material=STEEL_DARK)
+    fx = ATM_X + math.cos(ang) * (ATM_R + 0.66)
+    fy = ATM_Y + math.sin(ang) * (ATM_R + 0.66)
+    cyl(f"Flange_{int(z)}", 0.4, 0.12, (fx, fy, z), rot=(0, 1.5708, ang), seg=16, material=STEEL_DARK)
+
 # 梯子
 box("Ladder", (0.5, 0.12, ATM_H - 2), (ATM_X - ATM_R - 0.35, 0, ATM_BASE + (ATM_H - 2) / 2), STEEL_DARK)
 
@@ -144,10 +206,8 @@ cyl("Tower_Vacuum_Shell", VAC_R, VAC_H, (VAC_X, 0, VAC_BASE + VAC_H / 2))
 sphere("Tower_Vacuum_Dome", VAC_R, (VAC_X, 0, VAC_BASE + VAC_H), scale_z=0.35)
 cyl("Tower_Vacuum_Skirt", VAC_R + 0.4, 1.6, (VAC_X, 0, 0.8), material=STEEL_DARK)
 
-# 减压塔塔板
-for i in range(9):
-    z = 4.2 + i * 1.3
-    cyl(f"VacTray_{i+1:02d}", VAC_R - 0.3, 0.08, (VAC_X, 0, z), seg=28, material=TRAY)
+# 减压塔塔板（含泡罩与降液板）
+build_trays("Trays_V", VAC_X, VAC_R - 0.16, [4.2 + i * 1.3 for i in range(9)], caps=6)
 
 
 # ---------------------------------------------------------------- 加热炉
@@ -189,12 +249,11 @@ GROUND = assign(bpy.context.object, mat("Ground", (0.055, 0.075, 0.09), 0.1, 0.9
 GROUND.name = "Ground"
 
 
-# 半壳（半剖显示用）：常压塔、减压塔、两个穹顶
-HALF = []
-for base_name in ("Tower_Atmospheric_Shell", "Tower_Atmospheric_Dome", "Tower_Vacuum_Shell", "Tower_Vacuum_Dome"):
-    src = bpy.data.objects.get(base_name)
-    if src:
-        HALF.append(half_copy(src, base_name + "Half"))
+# 半壳（带壁厚 + 切面封盖，半剖显示用）
+HALF = [
+    half_shell("Tower_Atmospheric_ShellHalf", ATM_X, ATM_R, ATM_BASE, ATM_BASE + ATM_H),
+    half_shell("Tower_Vacuum_ShellHalf", VAC_X, VAC_R, VAC_BASE, VAC_BASE + VAC_H),
+]
 # ---------------------------------------------------------------- 锚点（网页坐标另存 meta）
 ANCHORS = {
     "anchor_tower_overview": (0.0, 0.0, 14.0),
