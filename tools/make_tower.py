@@ -129,6 +129,53 @@ def half_shell(name, x, r_out, z0, z1, thickness=0.14, segments=48, material=STE
     return assign(obj, material)
 
 
+
+def half_dome(name, x, z0, radius, squash=0.38, thickness=0.14, rings=12, segs=24, material=STEEL):
+    """带壁厚与切面封盖的半穹顶（保留 +Y 一侧，与半壳一致）。"""
+    def prof(dim):
+        pts = []
+        for i in range(rings + 1):
+            t = (math.pi / 2) * i / rings
+            pts.append((dim * math.sin(t), z0 + dim * squash * math.cos(t)))
+        return pts
+
+    po, pi = prof(radius), prof(radius - thickness)
+    verts, faces = [], []
+
+    def idx(s, i, k):
+        return (s * (rings + 1) + i) * 2 + k
+
+    for s in range(segs + 1):
+        phi = math.pi * s / segs
+        ca, sa = math.cos(phi), math.sin(phi)
+        for i in range(rings + 1):
+            ro, zo = po[i]
+            ri, zi = pi[i]
+            verts.append((x + ro * ca, ro * sa, zo))
+            verts.append((x + ri * ca, ri * sa, zi))
+
+    for s in range(segs):
+        for i in range(rings):
+            faces.append((idx(s, i, 0), idx(s + 1, i, 0), idx(s + 1, i + 1, 0), idx(s, i + 1, 0)))       # 外表面
+            faces.append((idx(s, i, 1), idx(s, i + 1, 1), idx(s + 1, i + 1, 1), idx(s + 1, i, 1)))       # 内表面
+        faces.append((idx(s, rings, 0), idx(s + 1, rings, 0), idx(s + 1, rings, 1), idx(s, rings, 1)))   # 底环
+    for s in (0, segs):                                                                                  # 两片切面封盖
+        for i in range(rings):
+            a, b, cc, d = idx(s, i, 0), idx(s, i, 1), idx(s, i + 1, 1), idx(s, i + 1, 0)
+            faces.append((a, d, cc, b) if s == 0 else (a, b, cc, d))
+
+    mesh = bpy.data.meshes.new(name)
+    mesh.from_pydata(verts, [], faces)
+    mesh.validate()
+    obj = bpy.data.objects.new(name, mesh)
+    bpy.context.collection.objects.link(obj)
+    bm = bmesh.new()
+    bm.from_mesh(mesh)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    bm.to_mesh(mesh)
+    bm.free()
+    return assign(obj, material)
+
 def build_trays(name, x, r, levels, caps=8, material=TRAY):
     """塔板 + 泡罩 + 降液板，合并成一个对象，避免网页里几百个 draw call。"""
     parts = []
@@ -253,6 +300,8 @@ GROUND.name = "Ground"
 HALF = [
     half_shell("Tower_Atmospheric_ShellHalf", ATM_X, ATM_R, ATM_BASE, ATM_BASE + ATM_H),
     half_shell("Tower_Vacuum_ShellHalf", VAC_X, VAC_R, VAC_BASE, VAC_BASE + VAC_H),
+    half_dome("Tower_Atmospheric_DomeHalf", ATM_X, ATM_BASE + ATM_H, ATM_R, 0.38),
+    half_dome("Tower_Vacuum_DomeHalf", VAC_X, VAC_BASE + VAC_H, VAC_R, 0.35),
 ]
 # ---------------------------------------------------------------- 锚点（网页坐标另存 meta）
 ANCHORS = {

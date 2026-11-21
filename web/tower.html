@@ -38,6 +38,9 @@
   .legend b{color:var(--amber);font-weight:500}
   .legend i{display:inline-block;width:16px;height:3px;vertical-align:middle;margin-right:5px}
   .legend .c{background:var(--cyan)}.legend .a{background:var(--amber)}
+  .flow-note{margin:10px 0 0;font-size:12px;color:#a9c3cb;line-height:1.8}
+  .flow-note[hidden]{display:none}
+  .flow-note b{font-weight:500}
   .labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
   .hs{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;
     background:#0f1d27e6;border:1px solid #4a6772;color:#cfe2ea;font-size:11.5px;padding:3px 8px;white-space:nowrap;
@@ -88,6 +91,7 @@
       <h1>常压塔 · 减压塔</h1>
       <p>原油进装置后，先在加热炉汽化，再进常压塔按沸点范围分段；塔底重油进减压塔，降低压力后继续分离。</p>
       <span class="tag">程序化示意模型 · 非真实装置比例</span>
+      <p class="flow-note" id="flow-note" hidden>塔内：<b style="color:#48d7f0">青色上升 = 汽相</b>，<b style="color:#f0a22e">琥珀下降 = 回流液</b>（教学示意）</p>
     </div>
     <div class="legend"><b><i class="a"></i>原油 / 进料</b><br><b><i class="c"></i>汽相 / 馏分</b><br>颜色为教学示意</div>
     <div class="levels" id="levels" role="group" aria-label="剖切层级">
@@ -113,6 +117,6 @@
 <footer>剖面与颜色均为教学示意，不代表真实装置比例、温度、压力或流量。模型由 Three.js 程序化生成，<b>非</b>外包精模 GLB。</footer>
 
 <script src="assets/three.browser.js"></script>
-<script src="tower.js?v=9"></script>
+<script src="tower.js?v=10"></script>
 </body>
 </html>

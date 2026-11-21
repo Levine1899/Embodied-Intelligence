@@ -266,14 +266,17 @@
     scene.traverse(function (o) {
       if (!o.isMesh) return;
       var name = o.userData.groupName || '';
-      if (/ShellHalf$/.test(name)) o.visible = n > 0;                  // 半剖壳：只在剖开时显示
-      else if (/^(Tower_Atmospheric_Shell|Tower_Vacuum_Shell)$/.test(name)) {
-        o.visible = n === 0;                                           // 整壳：外观时显示（穹顶常驻）
+      if (/ShellHalf$|DomeHalf$/.test(name)) o.visible = n > 0;         // 半剖壳/半穹顶：剖开时显示
+      else if (/^(Tower_Atmospheric_Shell|Tower_Vacuum_Shell|Tower_Atmospheric_Dome|Tower_Vacuum_Dome)$/.test(name)) {
+        o.visible = n === 0;                                           // 整壳/整穹顶：外观时显示
       }
     });
     document.querySelectorAll('#levels button').forEach(function (b) {
       b.setAttribute('aria-pressed', String(Number(b.dataset.level) === n));
     });
+    var note = document.getElementById('flow-note');
+    if (note) note.hidden = n !== 2;
+    if (internals) internals.visible = n === 2;
     flyTo({ target: new THREE.Vector3(0, 15, 0), az: 0.42, el: n > 0 ? 0.16 : 0.38, dist: n > 0 ? 34 : 62 });
   }
 
@@ -345,6 +348,7 @@
 
   // ---------------------------------------------------------------- 流向
   var flows = [];
+  var internals = null;
   var flowGeo = new THREE.SphereGeometry(0.22, 10, 8);
   function addFlow(points, color, speed) {
     var mat = new THREE.MeshBasicMaterial({ color: color });
@@ -395,6 +399,28 @@
       });
     });
 
+    // 塔内汽液：全剖时显示（青色上升=汽相，琥珀下降=回流液，均为示意）
+    internals = new THREE.Group();
+    var vaporMat = new THREE.MeshBasicMaterial({ color: 0x48d7f0, transparent: true, opacity: 0.85 });
+    var liquidMat = new THREE.MeshBasicMaterial({ color: 0xf0a22e, transparent: true, opacity: 0.8 });
+    var vaporGeo = new THREE.ConeGeometry(0.14, 0.46, 8);
+    var liquidGeo = new THREE.SphereGeometry(0.11, 8, 6);
+    for (var vi = 0; vi < 9; vi++) {
+      var v = new THREE.Mesh(vaporGeo, vaporMat);
+      var ang = Math.random() * Math.PI * 2, rr = 0.35 + Math.random() * 1.2;
+      v.position.set(Math.cos(ang) * rr, 5 + Math.random() * 18, Math.sin(ang) * rr);
+      v.userData.dir = 1;
+      internals.add(v);
+    }
+    for (var li = 0; li < 7; li++) {
+      var lq = new THREE.Mesh(liquidGeo, liquidMat);
+      var ang2 = Math.random() * Math.PI * 2, rr2 = 1.3 + Math.random() * 0.5;
+      lq.position.set(Math.cos(ang2) * rr2, 6 + Math.random() * 16, Math.sin(ang2) * rr2);
+      lq.userData.dir = -1;
+      internals.add(lq);
+    }
+    internals.visible = false;
+    scene.add(internals);
     addFlow([[-7, 7.2, 0], [-7, 13, 0], [-2.2, 13, 0]], 0xf0a22e, 0.22);
     addFlow([[2.2, 21, 0], [9, 21, 0]], 0x48d7f0, 0.30);
     addFlow([[2.2, 18.4, 0], [9, 18.4, 0]], 0x48d7f0, 0.32);
@@ -446,7 +472,17 @@
     var dt = Math.min(0.05, clock.getDelta());
     stepTween(performance.now());
     applyCamera();
-    if (state.loaded) { stepFlows(dt); stepLabels(); }
+    if (state.loaded) {
+      stepFlows(dt);
+      stepLabels();
+      if (internals && internals.visible) {
+        internals.children.forEach(function (m) {
+          m.position.y += m.userData.dir * dt * (m.userData.dir > 0 ? 2.4 : 1.6);
+          if (m.userData.dir > 0 && m.position.y > 24.6) m.position.y = 4.6;
+          if (m.userData.dir < 0 && m.position.y < 4.6) m.position.y = 24.6;
+        });
+      }
+    }
     renderer.render(scene, camera);
     state.frames += 1;
   }
