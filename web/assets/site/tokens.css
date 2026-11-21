@@ -1,0 +1,47 @@
+/* 石油科普智能体 · 站点设计变量（首页定稿）
+   标题字体：得意黑 Smiley Sans（SIL OFL 1.1，自托管，不依赖外网）
+   正文：系统黑体 */
+@font-face{
+  font-family:"Smiley Sans";
+  src:url("../fonts/SmileySans-Oblique.ttf") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
+:root{
+  /* 暖墨底：比纯蓝黑更像印刷品 */
+  --bg:#0b0f11;
+  --bg-2:#0d1215;
+  --surface:#111719;
+  --line:#242a2d;
+  --line-2:#323a3e;
+
+  /* 文字：暖白，不用冷蓝白 */
+  --text:#e8e1d4;
+  --text-2:#b9b3a6;
+  --muted:#98938a;
+  --faint:#8b867d;
+
+  /* 强调：只留一种赭黄，饱和度压下来 */
+  --accent:#d8a24a;
+  --accent-2:#efc684;
+
+  /* 字号：12 / 14 / 16 / 20 / 30 / 52 */
+  --fs-12:12px;
+  --fs-14:14px;
+  --fs-16:16px;
+  --fs-20:20px;
+  --fs-30:30px;
+  --fs-52:52px;
+
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px;
+  --s-6:32px; --s-7:48px; --s-8:64px; --s-9:96px; --s-10:128px;
+
+  --maxw:1160px;
+
+  --font-display:"Smiley Sans","PingFang SC","Microsoft YaHei",sans-serif;
+  --font-serif:"Songti SC","Noto Serif SC","Source Han Serif SC","STSong","SimSun",serif;
+  --font-sans:"PingFang SC","HarmonyOS Sans SC","MiSans","Microsoft YaHei",system-ui,sans-serif;
+  --font-mono:"SF Mono",ui-monospace,Consolas,monospace;
+}

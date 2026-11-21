@@ -1,293 +1,190 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="icon" href="data:,">
-<title>油见未来 · 原油怎样走出地下</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>油见未来 · 石油科普智能体</title>
+<link rel="stylesheet" href="assets/site/tokens.css">
 <style>
-  .view-hint{font-size:12px}
-  .nav--main{gap:4px}
-  .nav--main a{font-size:13.5px;color:var(--muted);text-decoration:none;padding:8px 16px;border:none;
-                border-radius:2px;position:relative;letter-spacing:.02em}
-  .nav--main a:hover{color:var(--text)}
-  .nav--main a[aria-current]{color:var(--amber);background:rgba(240,162,46,.09)}
-  .nav--main a[aria-current]::after{content:"";position:absolute;left:16px;right:16px;bottom:-1px;height:2px;background:var(--amber)}  .stage-navigation small{font-size:12px}
-  #question{font-size:19px}
-  #source-link,#read-more,#speak{min-height:26px;display:inline-flex;align-items:center}
-  .lm{font-size:12.5px}
-  .leadai__h em{font-size:12px}
-  .source-photo span{font-size:12px}
-  .source a{font-size:12px}
-  .source .context{font-size:12px}
-  .note{font-size:12px;line-height:1.7}
-:root{color-scheme:dark;--bg:#080f16;--panel:#111c25;--line:#293943;--text:#e7edf0;--muted:#93a6b2;--cyan:#7edce1;--amber:#edbd60;--red:#e87d65}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 "Microsoft YaHei UI","Microsoft YaHei","PingFang SC",sans-serif}button,select{font:inherit}button,a,select{outline-offset:4px}button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--amber)}button{cursor:pointer}a{color:inherit;text-decoration:none}h1,h2,h3,p{margin:0}button{color:inherit}[hidden]{display:none!important}
-.top{height:72px;padding:0 38px;display:flex;align-items:center;border-bottom:1px solid var(--line);gap:35px;background:#0c151e}.brand{font-size:23px;font-weight:700;letter-spacing:2px;display:flex;align-items:center;gap:13px}.brand:before{content:"";display:block;width:10px;height:27px;background:var(--amber);box-shadow:5px -4px 0 -2px #4d7279}.brand small{font-size:12px;color:var(--muted);font-weight:400;letter-spacing:1px;margin-left:5px}.nav{display:flex;height:100%;gap:29px;align-items:center;font-size:13px}.nav .active{color:var(--cyan);height:100%;display:flex;align-items:center;border-bottom:2px solid var(--cyan)}.return{margin-left:auto;font-size:12px;color:var(--muted)}
-.main{max-width:1800px;margin:auto;padding:25px 38px 20px}.heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px;gap:20px}.heading h1{font-size:32px;letter-spacing:1px;font-weight:650;line-height:1.4}.heading h1 span{color:var(--amber)}.heading p{font-size:13px;color:var(--muted);margin-top:8px}.reading{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)}.reading select{color:var(--text);background:var(--panel);border:1px solid var(--line);padding:8px 26px 8px 11px;border-radius:0;font-size:13px}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px}.scene{border-top:1px solid #47616d;border-bottom:1px solid var(--line);position:relative;min-width:0;background:#0a151f}.scene-head{display:flex;align-items:center;justify-content:space-between;padding:12px 17px;border-bottom:1px solid #283b47;gap:14px}.scene-head p{font-size:12px;color:var(--muted)}.scene-head strong{color:var(--cyan);font-weight:500}.tools{display:flex;gap:14px;flex-wrap:wrap}.tools button{background:transparent;border:0;color:var(--muted);font-size:12px;padding:2px 0}.tools button:hover,.tools button[aria-pressed="true"]{color:var(--amber)}
-.viewport{height:485px;position:relative;overflow:hidden;touch-action:none;isolation:isolate}.viewport canvas{width:100%;height:100%;display:block}.viewport:after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,#718fa608 4px);opacity:.35}.object-label{position:absolute;left:0;top:0;transform:translate(-50%,-50%);border:1px solid #58777c;background:#101f2ae0;font-size:12px;color:#b0c5cb;padding:4px 10px;white-space:nowrap;z-index:2}.object-label.selected{border-color:var(--amber);color:var(--amber);background:#282318e8}.view-hint{position:absolute;left:17px;bottom:14px;color:#8097a4;font-size:11px;pointer-events:none}.view-hint b{color:#b2c2c9;font-weight:400}.fallback{padding:50px 30px;color:var(--amber);position:absolute;inset:0;text-align:center;display:grid;place-content:center}
-.stage-navigation{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}.stage-navigation button{position:relative;display:block;text-align:left;background:#101b24;border:0;border-right:1px solid #243843;padding:13px 15px;font-size:13px;color:#a8b7bf;min-width:0}.stage-navigation button:last-child{border-right:0}.stage-navigation button:hover{background:#192934}.stage-navigation button[aria-current="step"]{color:var(--amber);background:#202722}.stage-navigation button[aria-current="step"]:before{content:"";position:absolute;height:2px;top:0;left:0;right:0;background:var(--amber)}.stage-navigation small{display:block;font-size:11px;color:#7d96a2;margin-top:3px}.stage-navigation .complete:after{content:"✓";position:absolute;right:12px;top:13px;color:var(--cyan)}
-.explanation{border-top:1px solid #2a3e49;padding:18px;display:flex;gap:18px;align-items:flex-start;background:#0e1922}.explanation .chapter{flex-shrink:0;font-size:12px;color:var(--cyan);border-left:2px solid var(--cyan);padding-left:9px;margin-top:2px}.explanation p{font-size:13px;color:#bcc9ce;line-height:1.95}.next{background:var(--amber);color:#19232a;border:0;padding:10px 18px;white-space:nowrap;font-size:13px;font-weight:600}.explanation .next{margin-left:auto;align-self:center}
-.side{border-left:1px solid var(--line);padding-left:23px}.task-top{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);margin-bottom:13px}.task-top strong{color:var(--cyan);font-weight:500}.side h2{font-size:20px;line-height:1.55;letter-spacing:.3px;margin-bottom:16px}.choices{display:grid;gap:9px}.choices button{text-align:left;border:1px solid #3b505c;border-radius:0;background:#14232d;padding:11px 13px;line-height:1.8;font-size:13px}.choices button:hover{border-color:#71919a}.choices button[aria-pressed="true"]{border-color:var(--amber);background:#242b23;color:var(--amber)}.choices button.correct{border-color:var(--cyan);color:var(--cyan);background:#132d31}.feedback{margin:13px 0 17px;color:var(--muted);font-size:12px;min-height:45px;line-height:1.9}.feedback.success{color:var(--cyan)}.read-actions{display:flex;gap:17px;border-top:1px solid var(--line);padding-top:13px}.read-actions button{color:var(--cyan);background:none;border:0;padding:0;font-size:12px}
-.source{margin-top:22px;padding-top:19px;border-top:1px solid var(--line)}.source h3{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:1px;margin-bottom:10px}.source-photo{display:block;width:100%;padding:0;background:none;border:0;text-align:left}.source-photo img{width:100%;height:135px;object-fit:cover;display:block;filter:saturate(.55) contrast(1.03)}.source-photo span{font-size:11px;line-height:1.8;display:block;color:var(--muted);padding-top:7px}.source a{color:#a8cbd1;font-size:11px;display:block;margin-top:11px;text-decoration:underline;text-underline-offset:4px}.source .context{font-size:11px;line-height:1.9;color:var(--muted);margin-top:9px}
-.foot{display:flex;justify-content:space-between;gap:20px;align-items:center;padding-top:18px;margin-top:10px;font-size:12px;color:var(--muted)}.progress{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.progress .bars{display:flex;gap:5px}.progress i{display:block;width:24px;height:3px;background:#344851}.progress i.done{background:var(--cyan)}.foot button{border:1px solid #4c6873;background:none;color:#aec2c9;padding:6px 12px;font-size:12px}.note{font-size:11px;color:#6e8592;margin-top:12px}.live{font-size:12px;color:var(--cyan);min-height:23px;margin-top:8px}
-dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:800px;width:calc(100% - 36px);padding:24px}dialog::backdrop{background:#050b10c9}dialog header{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:18px}dialog header button{border:1px solid #49616c;background:none;color:var(--text);padding:4px 12px}dialog img{display:block;max-width:100%;max-height:450px;margin:auto}dialog p{font-size:13px;color:#b8c8ce;margin-top:16px;line-height:2}dialog a{font-size:12px;color:var(--cyan);text-decoration:underline;text-underline-offset:4px}
-@media(min-width:1650px){.viewport{height:590px}.main{padding:32px 48px}.side{padding-left:27px}.heading h1{font-size:38px}.layout{grid-template-columns:minmax(0,1fr) 340px}}
-@media(max-width:1100px){.main{padding:23px}.top{padding:0 23px;gap:22px}.brand small{display:none}.layout{grid-template-columns:minmax(0,1fr) 280px;gap:15px}.side{padding-left:15px}.viewport{height:440px}.explanation{flex-wrap:wrap}.explanation .next{margin-left:0}.stage-navigation button{padding:12px 9px}.tools{gap:10px}}
-@media(max-width:800px){.layout{grid-template-columns:1fr}.side{border-left:0;padding:20px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:24px}.source{margin-top:0;padding:0;border-top:0}.viewport{height:440px}.heading{align-items:flex-start;flex-wrap:wrap}.nav{gap:18px}.return{display:none}.heading h1{font-size:28px}.top{gap:22px}.main{padding:20px}.source-photo img{height:160px}}
-@media(max-width:500px){.top{height:auto;padding:16px;flex-wrap:wrap;gap:14px}.brand{font-size:20px}.nav{gap:22px;flex-basis:100%;font-size:12px}.nav .active{padding-bottom:5px}.main{padding:18px 15px}.heading h1{font-size:26px}.heading p{font-size:12px}.reading select{font-size:16px}.scene-head{flex-wrap:wrap}.viewport{height:350px}.object-label{font-size:11px;padding:3px 6px}.stage-navigation button{padding:11px 6px;font-size:11px}.stage-navigation small{display:none}.side{grid-template-columns:1fr}.choices button{font-size:14px}.source{border-top:1px solid var(--line);padding-top:17px}.source-photo img{height:180px}.explanation{padding:14px}.explanation .chapter{width:100%}.explanation .next{width:100%}.foot{flex-wrap:wrap}.foot button{width:100%}.live{font-size:11px}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
-.tower-link{align-self:center;flex-shrink:0;font-size:12.5px;color:var(--cyan);border:1px solid #2f4b57;padding:7px 13px;text-decoration:none;white-space:nowrap}.tower-link:hover{border-color:var(--cyan);color:#9fe9f7}.tower-link[hidden]{display:none}`n/* 前置章：石油从哪来（2D，不占 3D） */
-.origin-bar{padding:12px 18px 0}
-.origin-bar button{display:inline-flex;align-items:center;gap:9px;background:#12222c;border:1px solid #2f4b57;color:#a9c3cb;padding:7px 13px;font-size:12.5px;cursor:pointer}
-.origin-bar button:hover{border-color:var(--amber);color:var(--amber)}
-.origin-bar button i{width:6px;height:6px;border-radius:50%;background:var(--cyan);display:block}
-.origin-bar button small{color:#7d96a2;font-size:11px}
-.originbar-dialog{max-width:760px}
-.origin-lead{font-size:13px;color:#bcc9ce;line-height:1.9;margin:0 0 14px}
-.origin-timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 16px;padding:0;list-style:none}
-.origin-timeline li{border-top:2px solid #2f4b57;padding:9px 8px 0;font-size:12px;color:#a8b7bf;line-height:1.7}
-.origin-timeline li b{display:block;color:var(--cyan);font-weight:500;font-size:11px;margin-bottom:3px}
-.origin-figure{margin:0 0 14px;border:1px solid #243843;background:#0b1620;padding:10px}
-.origin-figure svg{display:block;width:100%;height:auto}
-.origin-figure figcaption{font-size:11px;color:#7d96a2;margin-top:7px;line-height:1.7}
-.origin-points{display:grid;gap:6px;margin:0 0 12px;padding-left:18px;font-size:12.5px;color:#bcc9ce;line-height:1.85}
-.origin-myth{font-size:12px;color:#e0b071;border-left:2px solid var(--amber);padding-left:10px;line-height:1.8;margin:0 0 16px}
-.origin-dialog footer{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #243843;padding-top:13px}
-.origin-dialog footer button{background:var(--amber);color:#19232a;border:0;padding:9px 16px;font-size:12.5px;font-weight:600;cursor:pointer}
-.origin-dialog footer span{font-size:11px;color:#7d96a2;line-height:1.7}
-@media(max-width:700px){.origin-timeline{grid-template-columns:1fr 1fr}}
+*{box-sizing:border-box}
+body{margin:0;background:#070a0c;color:var(--text);font-family:var(--font-sans);font-size:var(--fs-14);line-height:1.8;-webkit-font-smoothing:antialiased}
+body::after{
+  content:"";position:fixed;inset:0;z-index:70;pointer-events:none;opacity:.04;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+  mix-blend-mode:overlay;
+}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{width:min(1220px,calc(100% - 80px));margin:0 auto}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+
+/* ---------- 封面 ---------- */
+.cover{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.stage{position:absolute;inset:0;cursor:grab;touch-action:none}
+.stage:active{cursor:grabbing}
+.stage video,.stage .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 46%}
+.stage .poster{z-index:0}
+.stage video{z-index:1;filter:saturate(.96) brightness(1.02)}
+.stage.no-video video{display:none}
+.stage-ui{display:flex;align-items:center;gap:10px;justify-content:flex-end;margin-bottom:8px}
+.stage-btn{background:rgba(8,12,14,.5);border:1px solid rgba(232,225,212,.42);color:var(--text);font-family:inherit;font-size:var(--fs-12);padding:6px 10px;min-height:32px;cursor:pointer}
+.stage-btn:hover{border-color:var(--accent);color:var(--accent-2)}
+.hint{font-size:var(--fs-12);color:rgba(232,225,212,.62)}
+.side{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.cover::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(6,10,12,.7) 0%,rgba(6,10,12,.04) 28%,rgba(6,10,12,.06) 62%,rgba(6,10,12,.9) 100%)}
+.cover .top{position:relative;z-index:2;border-bottom:1px solid rgba(232,225,212,.14)}
+.cover .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--s-5);height:66px}
+.brand{display:flex;align-items:baseline;gap:12px}
+.brand b{font-family:var(--font-display);font-size:20px;letter-spacing:.1em}
+.brand span{font-size:var(--fs-12);letter-spacing:.2em;color:rgba(232,225,212,.58)}
+.issue{font-size:var(--fs-12);letter-spacing:.16em;color:rgba(232,225,212,.55);white-space:nowrap}
+.cover .bottom{position:relative;z-index:2;padding:0 0 var(--s-7)}
+.cover h1{margin:0 0 var(--s-3);font-family:var(--font-display);font-weight:400;font-size:80px;line-height:1.07;letter-spacing:.01em;text-shadow:0 2px 36px rgba(0,0,0,.4)}
+.cover h1 em{font-style:normal;color:var(--accent-2)}
+.cover .sub{margin:0 0 var(--s-5);font-size:var(--fs-16);color:rgba(232,225,212,.84)}
+.cover .foot{display:flex;align-items:center;gap:var(--s-5);justify-content:space-between;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 24px;font-size:var(--fs-16);color:var(--text);border:1px solid rgba(232,225,212,.55);background:rgba(8,12,14,.3);transition:border-color .18s,color .18s,background .18s}
+.btn:hover{border-color:var(--accent);color:var(--accent-2);background:rgba(8,12,14,.45)}
+.quiet{font-size:var(--fs-14);color:rgba(232,225,212,.72);border-bottom:1px solid rgba(232,225,212,.35);padding-bottom:2px;min-height:44px;display:inline-flex;align-items:center}
+.quiet:hover{color:var(--accent-2)}
+.cap{font-size:var(--fs-12);letter-spacing:.05em;color:rgba(232,225,212,.6);text-align:right;line-height:1.8}
+
+/* ---------- 三个入口 ---------- */
+.doors{border-bottom:1px solid var(--line)}
+.doors a{
+  display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-5);
+  padding:var(--s-4) 0;border-bottom:1px solid var(--line);
+}
+.doors a:last-child{border-bottom:0}
+.doors .t{font-family:var(--font-display);font-size:var(--fs-20);letter-spacing:.02em}
+.doors .d{font-size:var(--fs-12);color:var(--muted)}
+.doors a:hover .t{color:var(--accent)}
+.doors a:hover .d{color:var(--text-2)}
+
+/* ---------- 页脚 ---------- */
+footer{font-size:var(--fs-12);color:var(--faint)}
+footer .wrap{display:flex;justify-content:space-between;gap:var(--s-4);padding:var(--s-4) 0 var(--s-6);flex-wrap:wrap}
+footer a{color:var(--muted)}
+footer a:hover{color:var(--accent)}
+
+@media (max-width:1080px){
+  .wrap{width:calc(100% - 48px)}
+  .cover h1{font-size:60px}
+}
+@media (max-width:640px){
+  .wrap{width:calc(100% - 32px)}
+  .cover{min-height:94vh}
+  .cover .top .wrap{height:56px}
+  .brand span,.issue{display:none}
+  .cover h1{font-size:44px}
+  .cover .sub{font-size:var(--fs-14)}
+  .doors a{flex-direction:column;align-items:flex-start;gap:2px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<header class="top">
-<span class="brand">油见未来 <small>石油科学</small></span>
-<nav class="nav nav--main" aria-label="主菜单">
-        <a href="./" aria-current="page">沉浸讲解</a>
-        <a href="ask.html">科普问答</a>
-        <a href="write.html">文案生成</a>
-      </nav>
 
-</header>
-<main class="main">
-<div class="heading"><div><h1>原油，怎样<span>走出地下？</span></h1><p>沿着生产流程，观察设备、物料与加工过程。</p></div><label class="reading">理解深度<select id="depth"><option value="0">亲子与青少年</option><option value="1" selected>普通公众</option><option value="2">科技／石油爱好者</option><option value="3">专业人士</option></select></label></div>
-<div class="layout">
-<section class="scene" aria-label="三维动态流程">
-<div class="scene-head"><p><strong>原油生产与加工</strong> · 流向示意</p><div class="tools"><button type="button" id="overview">流程总览</button><button type="button" id="focus">聚焦当前环节</button><button type="button" id="play" aria-pressed="false">播放流向</button></div></div>
-<div class="viewport" id="viewport" role="group" aria-label="可旋转的原油开采、处理、储运、炼化和产品流程三维模型">
-<div class="view-hint"><b>拖动</b> 旋转 · <b>滚轮</b> 缩放 · 点击节点查看</div>
-<div class="fallback" id="fallback" hidden>三维场景正在准备。</div>
-</div>
-<div class="origin-bar"><button type="button" id="open-origin"><i></i>第一站 · 石油从哪来<small>2D 前置章 · 约 40 秒</small></button></div>
-<nav class="stage-navigation" id="stages" aria-label="流程环节"><button type="button" data-stage="0" aria-current="step">地下开采<small>储层与井筒</small></button><button type="button" data-stage="1">地面处理<small>产出物的处理</small></button><button type="button" data-stage="2">储运<small>储罐与输送</small></button><button type="button" data-stage="3">炼化<small>分离与转化</small></button><button type="button" data-stage="4">产品去向<small>燃料与材料原料</small></button></nav>
-<div class="explanation"><span class="chapter" id="chapter">地下开采</span><p id="explanation"></p><a class="tower-link" id="tower-link" href="tower.html" hidden>看分馏塔剖面 →</a><button type="button" class="next" id="next">继续查看 →</button></div>
+<section class="cover">
+  <div class="stage" id="stage" role="img" aria-label="常减压蒸馏装置三维模型，绕塔缓慢旋转；可拖动查看">
+    <img class="poster" src="assets/tower/hero-poster.jpg" alt="">
+    <video id="loop" muted loop playsinline preload="auto" poster="assets/tower/hero-poster.jpg">
+      <source src="assets/tower/hero-loop.mp4?v=1" type="video/mp4">
+    </video>
+  </div>
+  <div class="top">
+    <div class="wrap">
+      <a class="brand" href="index.html"><b>油见未来</b><span>石油 · 科学 · 阅读</span></a>
+      <span class="issue">演示版 · 2026.11</span>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="wrap">
+      <h1>油不在湖里<br><em>在石头缝里</em></h1>
+      <p class="sub">六章，从油藏到加油站。</p>
+      <div class="foot">
+        <span style="display:flex;align-items:center;gap:var(--s-5);flex-wrap:wrap">
+          <a class="btn" href="#doors">开始探索 →</a>
+          <a class="quiet" href="ask.html">直接提问</a>
+        </span>
+        <span class="side">
+          <span class="stage-ui">
+            <span class="hint">拖动旋转</span>
+            <button id="toggle" class="stage-btn" type="button" aria-pressed="true">暂停</button>
+          </span>
+          <span class="cap">常减压蒸馏装置 · 半剖<br>教学示意模型</span>
+        </span>
+      </div>
+    </div>
+  </div>
 </section>
-<aside class="side">
-<div class="task-section"><div class="task-top"><strong id="task-label">探究任务</strong><span id="task-state">待观察</span></div><h2 id="question"></h2><div class="choices" id="choices" role="group" aria-label="探究问题选项"></div><p class="feedback" id="feedback" role="status" aria-live="polite"></p><div class="read-actions"><button type="button" id="read-more">展开原理</button><button type="button" id="speak">朗读讲解</button></div></div>
-<div class="source"><h3>真实现场与知识依据</h3><button type="button" class="source-photo" id="photo"><img src="assets/reservoir-lab.jpg" alt="科研人员在实验室通过扫描电镜观察储层"><span>扫描电镜观察现场 · 中国石油报<br>点击查看照片与资料</span></button><a id="source-link" href="https://news.cnpc.com.cn/system/2025/09/08/030173060.shtml" target="_blank" rel="noopener noreferrer">查看本环节的参考资料 ↗</a><p class="context">模型用来观察流程关系，照片与原始资料用于进一步研读。</p></div>
-</aside>
-</div>
-<div class="foot"><div class="progress"><span id="progress-text">五关进度 0 / 5</span><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div><span>可自由选择环节，也可以沿流程逐段探索。</span><a class="kblink" href="kb.html">石油知识库 →</a> <button type="button" id="export">导出探索记录</button></div>
-<p class="live" id="live" role="status" aria-live="polite"></p>
-<p class="note"><b>本页状态</b> 问答：演示知识包（20 条）· 拒答为真实逻辑<br>文案生成：<b>真实模型</b>（DeepSeek），未审校<br>三维：原理级示意，非真实工艺比例 · 数据为示意值<br><b>构建</b> wide6 · 2026-11-20 15:52</p>
-</main>
-<dialog id="details"><header><h2 id="details-title">原理与资料</h2><button type="button" id="close-dialog" aria-label="关闭资料">关闭</button></header><div id="details-content"></div></dialog>
 
-<dialog id="origin-dialog" class="originbar-dialog" aria-labelledby="origin-title">
-  <header><h2 id="origin-title">第一站 · 石油从哪来</h2><button type="button" id="close-origin" aria-label="关闭前置章">关闭</button></header>
-  <p class="origin-lead">这一页只看四件事：有机质怎么沉下来、怎么被埋、怎么变成油、又怎么聚到一起。看完再进三维场景，五个环节就有起点。</p>
-  <ol class="origin-timeline">
-    <li><b>1 · 沉积</b>藻类、浮游生物和细小有机质随泥沙沉到浅海或湖底，和泥一起埋起来。</li>
-    <li><b>2 · 埋深</b>上面不断堆积新地层，下面的泥越埋越深，温度和压力慢慢升高。</li>
-    <li><b>3 · 生烃</b>在合适的温度和时间内，有机质逐步转化成油和气——这一步叫生烃。</li>
-    <li><b>4 · 聚集成藏</b>油气从致密岩层挤进多孔的储层，往上浮，被盖层挡住、被圈闭扣住，才聚成藏。</li>
-  </ol>
-  <figure class="origin-figure">
-    <svg viewBox="0 0 640 200" role="img" aria-label="生油层、储层、盖层与圈闭的剖面示意：油气从生油层运移到储层，被盖层封住形成油气藏">
-      <defs>
-        <pattern id="og-src" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#1b2a33"/><path d="M0 8L8 0" stroke="#3f5d6b" stroke-width="1"/></pattern>
-        <pattern id="og-res" width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="#243b46"/><circle cx="2" cy="2" r="1" fill="#6f9dae"/><circle cx="5" cy="5" r="1" fill="#6f9dae"/></pattern>
-        <pattern id="og-cap" width="10" height="6" patternUnits="userSpaceOnUse"><rect width="10" height="6" fill="#33424a"/><path d="M0 5H10" stroke="#718b96" stroke-width="1.4"/></pattern>
-        <marker id="og-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#48d7f0"/></marker>
-      </defs>
-      <rect x="0" y="0" width="640" height="200" fill="#0b1620"/>
-      <path d="M0 150 L80 120 L150 108 L230 118 L300 92 L360 92 L420 116 L500 108 L570 122 L640 150 L640 200 L0 200 Z" fill="#16232b"/>
-      <path d="M0 150 L80 120 L150 108 L230 118 L300 92 L360 92 L420 116 L500 108 L570 122 L640 150" fill="none" stroke="#4d6874" stroke-width="1.4"/>
-      <path d="M0 176 L120 160 L230 168 L300 140 L360 140 L430 166 L540 158 L640 176 L640 200 L0 200 Z" fill="url(#og-src)"/>
-      <path d="M296 146 L300 132 L360 132 L364 146 L430 160 L360 168 L296 160 Z" fill="url(#og-res)"/>
-      <path d="M284 130 L300 112 L360 112 L376 130 L360 132 L300 132 Z" fill="url(#og-cap)"/>
-      <path d="M330 170 L330 134" stroke="#48d7f0" stroke-width="1.6" stroke-dasharray="4 4" marker-end="url(#og-arrow)"/>
-      <text x="16" y="166" fill="#8fa9b4" font-size="11">生油层（致密，有机质在这里转化）</text>
-      <text x="386" y="140" fill="#a9c3cb" font-size="11">储层（多孔，能存油和气）</text>
-      <text x="386" y="106" fill="#c4d4da" font-size="11">盖层（致密，挡住油气）</text>
-      <text x="336" y="180" fill="#48d7f0" font-size="10.5">运移</text>
-      <text x="16" y="24" fill="#e0b071" font-size="11.5">圈闭：盖层 + 储层组成的“盖子 + 容器”</text>
-    </svg>
-    <figcaption>原理示意，不代表任何具体油田的构造与比例；颜色仅作教学区分。</figcaption>
-  </figure>
-  <ul class="origin-points">
-    <li>石油不是“一滩地下湖”，多数是藏在岩石的微小孔隙和裂缝里。</li>
-    <li>生成、运移、聚集是三件事，缺一件就成不了藏。</li>
-    <li>找油找的往往不是油本身，而是“能成藏的地方”——圈闭。</li>
-  </ul>
-  <p class="origin-myth">常见误区：石油不是恐龙尸体变的。主要来源是海洋和湖泊里的浮游生物、藻类等有机质。</p>
-  <footer>
-    <span>本章为 2D 前置章，不占三维场景；正式讲解以专业审核稿为准。</span>
-    <button type="button" id="origin-go">进入第一环节 · 地下开采 →</button>
-  </footer>
-</dialog>
+<nav class="doors" id="doors" aria-label="入口">
+  <div class="wrap">
+    <a href="explore.html"><span class="t">六章旅程</span><span class="d">形成 → 开采 → 集输 → 储运 → 炼化 → 终端</span></a>
+    <a href="ask.html"><span class="t">问一句</span><span class="d">带章节上下文，三档深度</span></a>
+    <a href="tower.html"><span class="t">塔剖面</span><span class="d">可切半剖 / 全剖，五个热点</span></a>
+  </div>
+</nav>
 
-<script src="origin.js?v=1"></script>
-<script src="assets/three.browser.js"></script>
-<script src="immersion.js?v=fix22"></script>
-<style>
-  .view-hint{font-size:12px}
-  .stage-navigation small{font-size:12px}
-  #question{font-size:19px}
-  #source-link,#read-more,#speak{min-height:26px;display:inline-flex;align-items:center}
-  .lm{font-size:12.5px}
-  .leadai__h em{font-size:12px}
-  .source-photo span{font-size:12px}
-  .source a{font-size:12px}
-  .source .context{font-size:12px}
-  .note{font-size:12px;line-height:1.7}
-  .leadai{border-top:1px solid var(--line);margin-top:14px;display:flex;flex-direction:column;min-height:0}
-  .leadai__h{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0 8px;font-size:12px;color:var(--muted)}
-  .leadai__h span{color:var(--cyan);letter-spacing:.1em}
-  .leadai__h em{font-style:normal;font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#8fa3b0}
-  .leadai__log{height:148px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:4px;font-size:12.5px;line-height:1.72}
-  .lm{color:#c3d1d6}
-  .lm b{color:#e7edf0;font-weight:600}
-  .lm .who{display:block;font-size:10.5px;letter-spacing:.1em;color:#7f929b;margin-bottom:2px}
-  .lm.me{align-self:flex-end;background:#1a2b35;border:1px solid #2a4150;padding:6px 9px;border-radius:3px;max-width:88%;color:#d5e4e8}
-  .lm.warn{color:#f0b0a0}
-  .lm.ok{color:#9fd8a8}
-  .lm .cite{margin-top:6px;border-top:1px dashed #2b3f4a;padding-top:5px;font-size:12px;color:#8197a0;display:flex;flex-direction:column;gap:2px}
-  .lm .cite i{font-style:normal;color:#edbd60;margin-right:6px;font-family:ui-monospace,Consolas,monospace}
-  .leadai__ask{display:flex;gap:6px;margin-top:8px}
-  .leadai__ask input{flex:1;min-width:0;height:34px;padding:0 10px;background:#0d1a22;border:1px solid var(--line);color:var(--text);font:inherit;font-size:12.5px}
-  .leadai__ask input:focus{outline:2px solid var(--cyan);outline-offset:-1px}
-  .leadai__ask button{width:36px;height:34px;border:0;background:var(--amber);color:#1b1508;font-size:15px;cursor:pointer}
-  .genbtn{border:1px solid var(--amber);color:var(--amber);background:transparent;font-size:12px;padding:6px 12px;margin-right:10px;cursor:pointer}
-  .genbtn:hover{background:#edbd6022}
-  .gendialog{width:min(680px,90vw);border:1px solid #2a3a44;background:#0d161d;color:var(--text);padding:0}
-  .gendialog::backdrop{background:#04080bcc}
-  .gendialog header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #22323c}
-  .gendialog h2{font-size:16px;font-weight:600;margin:0}
-  .gendialog header button{background:transparent;border:1px solid #2a3e49;color:#93a6b2;padding:5px 12px;cursor:pointer;font-size:12px}
-  .genres{display:flex;gap:6px;margin-bottom:12px}
-  .genres button{border:1px solid #2a3e49;background:transparent;color:#93a6b2;font-size:12.5px;padding:6px 12px;cursor:pointer}
-  .genres button[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);background:#edbd6011}
-  .genbody{padding:16px 18px;max-height:52vh;overflow:auto}
-  .genmeta{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#7f929b;margin-bottom:10px}
-  #gen-text{white-space:pre-wrap;font-size:13.5px;line-height:1.95;color:#d2e0e4}
-  .gendialog footer{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid #22323c}
-  .gendialog footer button{border:1px solid var(--amber);background:transparent;color:var(--amber);padding:7px 14px;font-size:12.5px;cursor:pointer}
-  .gendialog footer #gen-run{background:var(--amber);color:#1b1508;font-weight:600}
-  #gen-note{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#7f929b;margin-left:auto}
-</style>
-<script src="kb-sources.js?v=3"></script>
-<script src="ai.js?v=kb8"></script>
-<style id="level-css">
-  .lvl-entries{position:absolute;left:16px;top:16px;z-index:6;display:flex;flex-direction:column;gap:8px}
-  .lvl-entry{display:flex;gap:7px;align-items:center;
-    height:30px;padding:0 12px;border:1px solid #4a6a75;background:#0d2029cc;color:#bfe6ee;
-    font:12px/1 "Microsoft YaHei UI",sans-serif;cursor:pointer;letter-spacing:.02em}
-  .lvl-entry:hover{border-color:var(--amber);color:var(--amber)}
-  .lvl-entries__tip{display:block;font-size:12px;color:#7f929b;margin-bottom:8px;letter-spacing:.02em}
-  .lvl-entry i{font-style:normal;color:var(--amber);font-size:12px}
-  .leadai__log{height:210px}
-  .lm-sug{display:inline-block;margin:6px 6px 0 0;padding:6px 10px;font:inherit;font-size:12px;color:#c9d6dc;background:#122029;border:1px solid #2b3c47;border-radius:999px;cursor:pointer}
-  .lm-sug:hover{border-color:#48d7f0;color:#e8f4f8}
-  .genbtn--side{display:flex;flex-direction:column;gap:3px;width:100%;margin:12px 0 4px;padding:11px 14px;text-align:left;font:inherit;color:#0a1118;background:#f0a22e;border:0;border-radius:2px;cursor:pointer}
-  .genbtn--side b{font-size:13px;font-weight:600}
-  .genbtn--side span{font-size:11.5px;opacity:.72}
-  .genbtn--side:hover{background:#ffb843}
-  .lm-read{display:inline-block;margin-top:7px;font-size:12px;color:#48d7f0;text-decoration:none;border-bottom:1px solid rgba(72,215,240,.4)}
-  .lm-read:hover{border-bottom-color:#48d7f0}
-  .lext{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
-  .lext h3{margin:0 0 8px;font-size:12px;font-weight:600;color:var(--muted);display:flex;justify-content:space-between}
-  .lext h3 em{font-style:normal;font-family:ui-monospace,Consolas,monospace;font-size:11px;color:#6b8593}
-  .lext ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-  .lext a{display:block;padding:9px 10px;background:#0d1a22;border:1px solid #1b2b35;text-decoration:none}
-  .lext a:hover{border-color:#48d7f0}
-  .lext b{display:block;font-size:12.5px;font-weight:600;color:#dbe7ec}
-  .lext span{display:block;margin-top:3px;font-size:11.5px;line-height:1.55;color:#8fa3b0}
-  .lext i{display:block;margin-top:5px;font-style:normal;font-size:11px;color:#5f7d8a}
-  .enter-level{display:block;width:100%;margin:12px 0 4px;padding:11px 14px;font:600 13px/1 "Microsoft YaHei UI",sans-serif;color:#0a1118;background:#f0a22e;border:0;border-radius:2px;cursor:pointer}
-  .enter-level:hover{background:#ffb843}
-  .task-section .choices[style*="none"] + .feedback{margin-top:8px}
-  .all-done{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(4,10,14,.72);z-index:9;backdrop-filter:blur(3px)}
-  .all-done.on{display:flex}
-  .all-done__card{max-width:520px;background:#0b1620;border:1px solid #2b3c47;padding:26px 30px 22px;box-shadow:0 24px 60px rgba(0,0,0,.55)}
-  .all-done__eyebrow{margin:0 0 10px;font-size:12px;letter-spacing:.14em;color:#f0a22e}
-  .all-done__card h3{margin:0 0 14px;font-size:22px;line-height:1.35;color:#e8f1f5}
-  .all-done__list{margin:0 0 20px;padding:0;list-style:none;font-size:13px;line-height:1.9;color:#a9bcc6}
-  .all-done__list li::before{content:'✓';color:#7fd6a8;margin-right:8px}
-  .all-done__row{display:flex;gap:10px}
-  .all-done__row button{font:600 13px/1 inherit;padding:10px 18px;border-radius:2px;cursor:pointer;border:1px solid #2b3c47;background:#111e28;color:#c9d6dc}
-  .all-done__row button:first-child{border-color:#f0a22e;background:#f0a22e;color:#0a1118}
-  .lvl-entry--ghost{order:9;margin-top:8px;font-size:12px;color:#7f929b;border-color:transparent;background:transparent;padding:4px 0}
-  .lvl-entry--ghost:hover{color:#f0a22e;border-color:transparent}
-  .lvl--bottom .lvl__act{left:14px;right:156px;bottom:14px;max-width:none}
-  .lvl__chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 6px}
-  .lvl__chip{font:600 13px/1 "Microsoft YaHei UI",sans-serif;color:#c9d6dc;background:#0e1b24;border:1px solid #2b3c47;border-radius:999px;padding:8px 15px;cursor:pointer;pointer-events:auto}
-  .lvl__chip:hover{border-color:#48d7f0;color:#e8f4f8}
-  .lvl__chip.on{border-color:#f0a22e;color:#f0a22e;background:#1a1408}
-  .lvl__chip.done{border-color:#2c6d51;color:#7fd6a8;cursor:default;opacity:.8}
-  .viewport.in-level .lvl-entry{display:none}
-  .viewport.in-level .view-hint{display:none}
+<footer>
+  <div class="wrap">
+    <span>示意模型，非真实装置比例 · 讲解要点人工撰写 · <a href="kb.html">来源与边界</a></span>
+    <span>油见未来 · V3 重构</span>
+  </div>
+</footer>
 
-  .lvl{position:absolute;inset:0;z-index:7;pointer-events:none;display:none;flex-direction:column;justify-content:space-between;padding:14px}
-  .lvl.on{display:flex}
-  .lvl__bar{display:flex;align-items:baseline;gap:10px;pointer-events:none;position:relative;z-index:2;background:linear-gradient(90deg,#070f16f5,#070f16d0 70%,#070f1600);padding:2px 6px 6px 0}
-  .lvl__step{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#7f929b}
-  .lvl__bar b{font-size:17px;color:#e7edf0;letter-spacing:.04em}
-  .lvl__hint{margin-left:auto;font-size:12px;color:#edbd60}
-  .lvl__hint{background:rgba(7,15,22,.82);padding:3px 8px;border-radius:2px;text-shadow:0 1px 2px rgba(0,0,0,.8)}
-  body.in-level .explanation{display:none}
-  /* 操作示意动画 */
-  .lvl__demo{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:9px 11px;border:1px solid rgba(72,215,240,.28);border-radius:8px;background:rgba(9,26,36,.72)}
-  .lvl__demo-t{font-size:12px;color:#9fd6e4;letter-spacing:.02em}
-  .lvl__demo-track{position:relative;flex:0 0 104px;height:8px;border-radius:99px;background:rgba(72,215,240,.16)}
-  .lvl__demo-knob{position:absolute;top:50%;left:0;width:16px;height:16px;margin-top:-8px;border-radius:99px;background:#f0a22e;box-shadow:0 0 0 3px rgba(240,162,46,.22)}
-  .lvl__demo--drag .lvl__demo-knob{animation:lvlDrag 2.4s ease-in-out infinite}
-  .lvl__demo--tap .lvl__demo-knob{width:12px;height:12px;margin-top:-6px;left:46px;background:#48d7f0;box-shadow:0 0 0 2px rgba(72,215,240,.25);animation:lvlTap 1.8s ease-in-out infinite}
-  .lvl__demo-ripple{position:absolute;top:50%;left:58px;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:99px;border:1.5px solid rgba(72,215,240,.75);animation:lvlRipple 1.8s ease-out infinite}
-  @keyframes lvlDrag{0%,8%{left:0}52%,60%{left:88px}100%{left:0}}
-  @keyframes lvlTap{0%,35%{transform:translateY(-7px);opacity:.5}55%,75%{transform:translateY(0);opacity:1}100%{transform:translateY(-7px);opacity:.5}}
-  @keyframes lvlRipple{0%,50%{transform:scale(.5);opacity:0}62%{opacity:.9}100%{transform:scale(2.6);opacity:0}}
-  @media (prefers-reduced-motion: reduce){.lvl__demo-knob,.lvl__demo-ripple{animation:none}}  .lvl__dragtip{margin:8px 0 0;font-size:11.5px;color:#5f7d8a}
-  .lvl__skip{position:absolute;right:14px;bottom:56px;pointer-events:auto;font:600 12px/1 "Microsoft YaHei UI",sans-serif;color:#c9d6dc;background:#0b1620e6;border:1px solid #2b3c47;border-radius:2px;padding:9px 14px;cursor:pointer}
-  .lvl__skip:hover{border-color:#f0a22e;color:#f0a22e}
-  .lvl__act{pointer-events:auto;position:absolute;left:14px;bottom:58px;max-width:430px;background:#0b1620e6;border:1px solid #24353f;padding:13px 15px}
-  .lvl__act p{font-size:13px;line-height:1.75;color:#c3d1d6;margin-bottom:10px}
-  .lvl__act p b{color:#edbd60}
-  .lvl__row{display:flex;align-items:center;gap:10px}
-  .lvl__row input{flex:1;accent-color:#edbd60;cursor:pointer}
-  .lvl__row b{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#edbd60;width:44px;text-align:right}
-  .lvl__out{margin-top:8px;font-size:12px;color:#8fa3b0}
-  .lvl__back{pointer-events:auto;position:absolute;right:14px;bottom:14px;height:32px;padding:0 14px;border:1px solid #3d5561;
-    background:#0b1620cc;color:#c3d1d6;font:12.5px/1 "Microsoft YaHei UI",sans-serif;cursor:pointer}
-  .lvl__back:hover{border-color:var(--amber);color:var(--amber)}
-  .lvl.done .lvl__back{border-color:var(--amber);color:#1b1508;background:var(--amber);font-weight:600}
-  .lvl__back.pulse{animation:lvlpulse 1.4s ease-in-out infinite}
-  @keyframes lvlpulse{0%,100%{box-shadow:0 0 0 0 #edbd6000}50%{box-shadow:0 0 0 4px #edbd6055}}
-  #stages .done-level{border-color:#edbd60;color:#edbd60}
-  #stages .done-level small{color:#a8884a}
-  
-  body.in-level .object-label{display:none!important}
-  body.in-level .scene-head{display:none!important}
-  body.in-level #next{display:none!important}
-  .object-label{pointer-events:none}
-  body.in-level .view-hint{display:none}
-</style>
-<script src="levels/entry.js?v=demo3"></script>
-<script src="levels/l1.js?v=grp1"></script>
-<script src="levels/l2.js?v=grp1"></script>
-<script src="levels/l3.js?v=grp1"></script>
-<script src="levels/l4.js?v=grp1"></script>
-<script src="levels/l5.js?v=grp1"></script>
-</body>
+<script>
+(function () {
+  var v = document.getElementById('loop');
+  var stage = document.getElementById('stage');
+  var btn = document.getElementById('toggle');
+  if (!v || !stage || !btn) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var dragging = false, sx = 0, st = 0, timer = null;
+
+  function play() {
+    if (reduce) return;
+    v.play().catch(function () {});
+    btn.textContent = '暂停';
+    btn.setAttribute('aria-pressed', 'true');
+  }
+  function pause() {
+    v.pause();
+    btn.textContent = '播放';
+    btn.setAttribute('aria-pressed', 'false');
+  }
+
+  v.addEventListener('error', function () { stage.classList.add('no-video'); });
+  btn.addEventListener('click', function () { v.paused ? play() : pause(); });
+
+  if (!reduce) play(); else pause();
+
+  stage.addEventListener('pointerdown', function (e) {
+    dragging = true; sx = e.clientX; st = v.currentTime || 0; pause();
+    try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  stage.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    var r = stage.getBoundingClientRect();
+    var dur = v.duration || 6;
+    var t = (st - (e.clientX - sx) / r.width * dur) % dur;
+    if (t < 0) t += dur;
+    v.currentTime = t;
+  });
+  function endDrag() {
+    if (!dragging) return;
+    dragging = false;
+    clearTimeout(timer);
+    timer = setTimeout(function () { if (!dragging) play(); }, 1200);
+  }
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
+  stage.addEventListener('pointerenter', function () { if (!dragging) v.pause(); });
+  stage.addEventListener('pointerleave', function () { if (!dragging) play(); });
+})();
+</script></body>
 </html>
