@@ -110,7 +110,7 @@
 - 第一轮返修（大改 11 文件）：`172f283`；交接记录一行提交：`c9a02ea`
 - 第二轮返修内容：`73f6bfb`；记录提交：`aa57e0e`；tag `phase-02-rev2` → `aa57e0e`
 - 第三轮返修内容：`fe2e896c360cc80c43afdea30e613341117d5e47`；记录提交：`e066322c7f67109737714ba1ea92432387b326cc`；tag `phase-02-rev3` → `e066322c7f67109737714ba1ea92432387b326cc`
-- 第四轮返修（本轮）内容提交：`<REV4_COMMIT>`（完整 40 位；提交后填写）
+- 第四轮返修（本轮）内容提交：`6dca10b7b7c528bca4e5ee03d979c61d3cb95634`（完整 40 位；提交后填写）
 - 本轮开始时：`git rev-parse HEAD` = `e066322c7f67109737714ba1ea92432387b326cc`；`git status --short` = 空；分支 `main`
 - 第四轮最终记录提交/最终 branch HEAD：由 tag `phase-02-rev4` 指向；完整 SHA 以 `git rev-parse refs/tags/phase-02-rev4^{}` 校验，最终交付消息同时列出
 - 最终工作区：`git status --short` 为空（0 行）
