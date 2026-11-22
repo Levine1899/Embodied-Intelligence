@@ -1,5 +1,7 @@
 const http = require('http');
 
+const CDP_PORT = process.env.CDP_PORT || '9333';
+
 function getJson(url) {
   return new Promise((resolve, reject) => {
     http.get(url, (r) => {
@@ -11,7 +13,7 @@ function getJson(url) {
 }
 
 (async () => {
-  const list = await getJson('http://127.0.0.1:9333/json/list');
+  const list = await getJson('http://127.0.0.1:' + CDP_PORT + '/json/list');
   const page = list.find((t) => t.type === 'page' && t.url.includes('sandbox.html'));
   if (!page) throw new Error('sandbox page not found');
   const ws = new WebSocket(page.webSocketDebuggerUrl);

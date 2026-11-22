@@ -10,6 +10,16 @@
 - 证据：1440/1920 全景、六区截图、`detail-continuity-1440.mp4`；均标注程序化占位，不是 Hero 验收。
 - **Hero Asset Gate 仍未通过（BLOCKED）**；阶段 03 不宣称视觉/PASS。产品版本仍 3.4.0。
 
+## 阶段 03 rev2 — 2026-11-22 · 审查返修
+
+- 修复设备状态 Store：bind 即时应用、切换重置旧设备 structure/animation、overview/detail 可见性分离、setOverviewVisible 全量重应用。
+- 区域镜头改为消费 `CAMERAS` position/lookAt；地下/储运/炼化按 1440 截图重新校准。
+- `enterDetail/exitDetail` 恢复 stage/章节/任务面板/`__sceneContext`/进入前选择；清空选择不重置设备状态。
+- 地面 Mesh 保留 `layerType=environment` 且不参与静态合并；合并桶保留 layerTypes；图层计数可断言。
+- 清理五关/完成弹窗/AI/chapters/kb-sources 中的浮顶零损耗、四种产品、产品绝对化表述。
+- 真实浏览器 l1–l5 进入/操作/退出、#stage 0–4、章节回链、塔页、context-loss fallback 回归；新增 `state-contract.json`、`level-e2e.json`、`fallback.json`。
+- 阶段 02 用户签收记录为 ACCEPTED（用户原话「签收阶段02。」）；Hero 仍归 04–06，不作为阶段 03 P0。
+
 
 ## 设计基线 — 2026-11-22 · 阶段 02 体验设计（文档基线，非产品运行版本）
 

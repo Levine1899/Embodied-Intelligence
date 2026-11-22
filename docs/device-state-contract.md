@@ -41,7 +41,7 @@ objectId (stable)
 1. 只有 `PETRO_DEVICE_STATE.set()` 改状态；总览/近景不得各自维护一套 `selected/structure/animation`。
 2. 切设备：旧设备 `selection=default, structure=external, animation=idle`；新设备 `selected`。
 3. 切近景：保留用户已完成操作与选择；只改变相机/可见表示，不清状态。
-4. 返回总览：恢复同一 `objectId` 的选中/结构/运行状态；镜头恢复进入前上下文；不得无说明重置。
+4. 返回总览：恢复进入前的 stage、章节链接、任务面板、`__sceneContext`、镜头和**进入前的选择**；若进入前无选择则恢复为空；当前设备的结构/动画保留在同一 `objectId` 的 Store 中。
 5. 不支持的 `structure` 能力：按钮禁用/说明，不得用“按钮存在”冒充结构可用。
 6. 页面刷新：相机/结构/动画回默认，但 batch/task/exploration 按 `interaction-spec.md` 恢复；阶段 07 验证。
 
@@ -63,7 +63,7 @@ __stage.deviceState.snapshot()
   3. 保存当前 orbit；
   4. 以对象包围盒中心/尺寸计算近景；
   5. `PETRO_DEVICE_STATE.select(objectId)`、`cameraMode='focus'`。
-- `exitDetail()`：恢复保存 orbit、清选择、`cameraMode='free'`。
+- `exitDetail()`：恢复进入前 stage/章节/任务面板/`__sceneContext`/orbit；恢复进入前选择（无选择则空）；`cameraMode='free'`。清空选择不等于重置设备结构/动画。
 - 阶段 04–06 接入 `detailRepresentation` 后，进入/退出必须调用同一 `bind(id,'detail',root)` 和保留/恢复规则；不得在关卡脚本里另建 `detailState`。
 - 用户输入接管：pointer drag/wheel 清相机过渡；近景仍可旋转/缩放。
 
@@ -75,8 +75,8 @@ __stage.deviceState.snapshot()
 | overview 绑定 | 已实现 | 13/13 有 `overview` 表示（`snapshot()` 实测） |
 | detail 表示 | 未实现（阶段 04–06） | `detailRepresentation=null`；不冒充 |
 | 状态单一来源 | 已实现骨架 | `state.js`；`set/select/snapshot` |
-| 总览→近景→返回 | 已实现相机级验证 | `enterDetail('three_phase_separator')` / `exitDetail()` 实测 true |
-| 连续录屏 | **未执行** | 本机未完成录屏；阶段 04–06/09 必须补；handoff 记为未执行 |
+| 总览→近景→返回 | 已实现相机级验证 | `enterDetail('three_phase_separator')` / `exitDetail()` 实测 true；stage/context/选择恢复见 phase-03-rev2 证据 |
+| 连续录屏 | **已补（相机级）** | `detail-continuity-1440.mp4`；高模 detail/完整业务状态继承仍待 04–06 |
 | 近景状态继承 | 未验证（无 detail 表示） | 阶段 04–06 接入后必须回归 |
 
 ## 5. 阶段 04–06 强制契约

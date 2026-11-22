@@ -1,193 +1,148 @@
-# Phase 03 交接报告 · 世界骨架
+# Phase 03 交接报告 · 世界骨架（rev2 返修）
 
 日期：2026-11-22
-阶段：03_SCENE_SKELETON
-状态建议：**REVISE**
-用户签收：**待用户签收**
-起始 Commit：`605d97a3f9affb477bf54cf551e8dea5ac97d463`
-结束 Commit（真实 SHA）：`a7028a73131c2ac039d20784a7d38e17a29eacec`（本报告内容提交；最终记录提交见 tag `phase-03-rev1`）
+阶段：03_SCENE_SKELETON（返修轮 2）
+状态建议：**PASS（阶段 03 技术范围）**
+用户签收：**阶段 03 待用户签收**；阶段 02 已由用户签收 **ACCEPTED**
+起始 Commit：`b5989e99dac6c96e08fdbae59fbc5c450e223355`（rev1 最终记录；原始阶段 03 起点 `605d97a`）
+结束 Commit（真实 SHA）：`<PHASE03_REV2_SHA>`（本报告内容提交；最终 tag `phase-03-rev2`）
 分支：`main`
-工作区 `git status --short`：空（提交后复核）
 
-## 1. 前置检查
+## 1. 本轮审查处理
 
-已读：
+审查报告（用户 2026-11-22）判定 `REVISE`，P1-01–P1-06 已逐项处理；Hero 资产按 `00_MASTER.md` §5 归还阶段 04–06，**不再作为阶段 03 的 P0**。
 
-- `docs/agent-prompts/00_MASTER.md`
-- `docs/agent-prompts/PHASE_HANDOFF_TEMPLATE.md`
-- 本阶段 Prompt（用户 2026-11-22 下发）
-- `docs/phase-reports/phase-02-handoff.md`
-- `docs/audit-baseline.md`、`docs/asset-inventory.md`
-- `docs/experience-design.md`、`docs/scene-map.md`、`docs/interaction-spec.md`
-
-缺失项：无文件缺失。
-
-门禁说明：
-
-- 阶段 02 签收页仍为“待用户签收”；Agent 未代签。
-- 本次用户下发阶段 03 Prompt，按用户指令进入阶段 03；**不把该动作写成阶段 02 已签收**。
-- 阶段 02 的 Hero 规格/阶段门禁继续有效；阶段 03 只搭骨架，Hero 视觉验收 `BLOCKED`。
-
-## 2. 任务逐项
-
-| 任务 | 状态 | 证据 |
+| 项 | 处理 | 结果 |
 |---|---|---|
-| A 连续产业链概念沙盘 | **通过（骨架）** | 五 stage 保留；六视觉区；真实地面开口 `x −33..−15/z 1..15`；台地 y 0.6/1.6/2.6/0.9；S 形对角管线；`overview-1440.png` |
-| B 场景图层/代码组织 | **部分通过** | 新增 `world/registry.js`、`world/state.js`；`sceneRoot.userData.layers` 提供 environment/infrastructure/equipment/processLines/flowEffects/labels 归属；`immersion.js` 未全量拆模块（按“局部抽取、不形式重构”） |
-| C 设备/知识语义注册表 | **通过** | 6 zone / 13 device / 5 route / 3 endpoint；`window.PETRO_REGISTRY`；objectId/zoneId/stageId/knowledgeIds/asset/anchor/capability/chapter |
-| D 基础镜头/导航 | **通过（基础）** | 总览、`focusZone`、`enterDetail/exitDetail`、`focusOverview`；用户 pointer drag 清相机过渡；`__stage.frame` |
-| E 资产质量策略 | **通过（策略）** | 复用/精修/必须新建/暂缺分级；`docs/asset-gaps.md`；程序化占位不冒充高模 |
-| F Blender/Hero 工作流 | **部分通过** | `docs/asset-pipeline.md`、`tools/blender/export_glb.py`、`assets-source/`/`web/assets/models/` 目录；**Blender 可执行文件本次未定位，未执行导出**；无 Hero `.blend/.glb` |
-| G 逻辑设备/LOD/状态 | **部分通过** | `state.js` 单一状态源；13/13 overview 绑定；`enterDetail/exitDetail` 实测 true；`detailRepresentation=null`，近景高模/状态继承待 04–06 |
-| H 场景工程设施核验 | **通过（核验+局部修复）** | RAF/delta/document.hidden/context lost/资源 dispose 有代码证据；Raycaster 仅 pointerup；`ai.js` 面板 insertBefore 回归已修复 |
-| I 视觉构图 | **通过（占位）** | 1440×900、1920×1080 全景；六区截图；标签遮挡由现有逻辑处理；`tokens.css` 未改 |
+| P1-01 Store | `bind` 注册后立即 `apply`；`select` 切换到新设备时重置旧设备 structure/animation，清空选择时保留状态；overview/detail 可见性分离；`setOverviewVisible` 重新应用全部表示 | **已修复** |
+| P1-02 区域镜头 | `focusZone` 读取 `CAMERAS.position/lookAt` 转 orbit；六区预设逐区校准；1440/1920 复核 | **已修复** |
+| P1-03 近景返回 | 保存/恢复 stage、章节链接、任务面板、`__sceneContext`、进入前选择、orbit；清空选择不重置设备结构/动画；文档统一 | **已修复** |
+| P1-04 图层元数据 | 地面 Mesh 设 `layerType=environment` + `skipMerge`；合并桶保留 `layerTypes`；`__stage.layers` 可查；断言 environment=4 | **已修复** |
+| P1-05 科学文案 | 修改 LEVEL_BRIEF、完成弹窗、AI、chapters、kb-sources、l5/entry 等重复文案；全仓搜索旧表述 | **已修复** |
+| P1-06 五关回归 | l1–l5 真实浏览器“进入→核心操作→退出”；深链、章节、塔页、fallback | **已执行** |
+| P0-01 阶段 02 签收 | 用户明确回复「签收阶段02。」，阶段 02 记录 `ACCEPTED`；不代填未说过的逐字签收语 | **已关闭** |
+| P0-02 Hero 分类 | Hero 未达 ≠ 阶段 03 P0；阶段 04/05/06 分别负责，阶段 09 全局验收 | **已纠正** |
 
-### 必须交付物
+## 2. 修改文件
 
-| 交付 | 状态 | 路径 |
-|---|---|---|
-| 可运行统一沙盘 | **通过** | `web/sandbox.html`（静态服务实测 200/无脚本错误） |
-| 场景对象/锚点注册表 | **通过** | `web/world/registry.js` |
-| 更新 scene-map | **通过** | `docs/scene-map.md` §10 |
-| scene-architecture | **通过** | `docs/scene-architecture.md` |
-| asset-gaps | **通过** | `docs/asset-gaps.md` |
-| asset-pipeline | **通过** | `docs/asset-pipeline.md`、`tools/blender/export_glb.py` |
-| 设备注册表/状态接口 | **通过** | `PETRO_REGISTRY`、`PETRO_DEVICE_STATE` |
-| device-state-contract | **通过** | `docs/device-state-contract.md` |
-| 全景/各区域真实浏览器截图 | **通过** | `docs/phase-reports/evidence/phase-03/*.png` |
-| 总览→近景→操作→返回连续录屏 | **通过（相机级）** | `detail-continuity-1440.mp4`；进入/剖切/退出；不是高模 detail 验收 |
+### 代码
 
-## 3. 修改文件
+- `web/world/state.js`：bind 即时 apply、select 重置旧设备、overview/detail 可见性、setOverviewVisible 重应用。
+- `web/immersion.js`：selectStage 同步逻辑选择；detail 上下文保存/恢复；focusZone 使用注册表相机；图层元数据与计数；科学文案。
+- `web/world/registry.js`：六区相机预设校准。
+- `web/sandbox.html`：脚本缓存版本、概念空间标注。
+- `web/ai.js`、`web/chapters.js`、`web/kb-sources.js`、`web/levels/l5.js`、`web/levels/entry.js`、`web/chapter.html`：科学文案/缓存版本。
+- `CHANGELOG.md`：阶段 03 rev2 条目。
 
-### 修改
+### 文档/证据
 
-- `web/immersion.js`：S 形坐标/台地/地面开口/对角管线/相机/注册表绑定/图层索引/detail API/帧信息。
-- `web/sandbox.html`：加载 registry/state；版本号；概念空间声明；AI 版本。
-- `web/ai.js`：修复 `.side` 插入回归；AI/延伸阅读归入 `.side__body`，不再撑破侧栏。
-- `CHANGELOG.md`：阶段 03 条目。
-- `docs/scene-map.md`：实现校准 §10。
-
-### 新增
-
-- `web/world/registry.js`
-- `web/world/state.js`
-- `docs/scene-architecture.md`
-- `docs/asset-gaps.md`
-- `docs/asset-pipeline.md`
-- `docs/device-state-contract.md`
-- `tools/blender/export_glb.py`
-- `assets-source/README.md`、`assets-source/blender/.gitkeep`
-- `web/assets/models/.gitkeep`
-- `docs/phase-reports/evidence/phase-03/*`（9 PNG + 1 MP4 + README）
+- `docs/scene-architecture.md`、`docs/scene-map.md`、`docs/device-state-contract.md`、`docs/asset-gaps.md`
+- `docs/phase-reports/phase-02-handoff.md`、`docs/experience-design-signoff.md`（阶段 02 签收记录）
+- `docs/phase-reports/evidence/phase-03/`：八张 1440/1920 截图、连续录屏、`state-contract.json`、`level-e2e.json`、`fallback.json`、README
 - 本报告
 
-### 删除
+## 3. 执行命令与结果
 
-- 无。
-
-## 4. 执行命令与结果
-
-```bash
-# 语法
-node --check web/immersion.js          # exit 0
-node --check web/world/registry.js     # exit 0
-node --check web/world/state.js        # exit 0
-node --check web/ai.js                 # exit 0
-
-# 静态页面
-GET /index.html 200
-GET /sandbox.html 200
-GET /explore.html 200
-GET /chapter.html?id=drill 200
-GET /tower.html 200
-GET /ask.html 200
-GET /write.html 200
-GET /kb.html 200
-
-# 浏览器（Chrome 157，headless/CDP）
-window.__auditErrors -> []
-window.__stage.zones.length -> 6
-window.__stage.devices.length -> 13
-window.__stage.stats() -> 139 calls / 52,892 triangles
-13/13 devices have overview representation
-enterDetail('three_phase_separator') -> true; exitDetail() -> true
-#stage=0..4 -> drill/gather/store/refine/use; zone=oilfield/gathering/storage/refining/city
-# 截图：1440x900 七张 + 1920x1080 一张；录屏：CDP screencast 120 帧 -> MP4
-
-# 资产/Blender
-where blender -> 未找到可执行文件（未执行 .blend/.glb 导出）
+```text
+node --check web/immersion.js / web/world/state.js / web/world/registry.js / web/ai.js -> exit 0
+GET /index.html, /sandbox.html, /chapter.html?id=drill, /tower.html 等 -> 200
+浏览器 Chrome 157（headless/CDP，1440×900）：
+  stats -> 142 calls / 52,892 triangles / 327 geometries / 8 textures
+  zones=6, devices=13, __auditErrors=[]
+  layers={environment:4, infrastructure:10, equipment:5, processLines:1, flowEffects:4, labels:6}
+  #stage=0..4 -> drill/gather/store/refine/use；zone 对应 oilfield/gathering/storage/refining/city
+  chapter.html?id=store -> 标题“储运调配”，回链 sandbox.html#stage=2
+  tower.html -> window.__tower.loaded=true
+  canvas 派发 webglcontextlost -> sandbox/tower 均显示 2D fallback 文案
+五关 E2E：
+  l1 adjust_pressure, l2 choose_outlet, l3 change_liquid_level,
+  l4 choose_fraction, l5 select_product；均 interaction 写入，退出后 levelId=null
+状态断言（state-contract.json）：
+  bind 后 detail 立即得到 half/running；切换后旧设备 external/idle；
+  overviewVisible=false 时 overview 隐藏、detail 仍可见；
+  返回后 stage=store/zone=storage/selected=floating_roof_tank/structure=full/animation=paused
 ```
 
-## 5. 证据
+## 4. 证据
 
 | 证据 | 结果 | 路径 |
 |---|---|---|
-| 总览 1440 | 六区、台地、管线、城市前景可读 | `overview-1440.png` |
-| 总览 1920 | 大屏构图 | `overview-1920.png` |
-| 地下 1440 | 地面开口、层理、井筒/井口/抽油机 | `subsurface-1440.png` |
-| 油田/集输/储运/炼化/城市 | 各区近景 | `oilfield-1440.png` 等 |
-| 总览→近景→剖切→返回 | 相机连续，现有塔剖切可见 | `detail-continuity-1440.mp4` |
-| 控制台 | 无 boot/audit errors | `window.__auditErrors=[]` |
-| 五关入口 | 5 个 hooks 存在；`#enter-level` 存在 | 未逐关完整重跑 |
+| 总览 1440/1920 | 六区/五 stage、S 形、高差、管线、概念空间声明 | `overview-1440.png`、`overview-1920.png` |
+| 六区镜头 | 区域设备成为主视觉；地下见开口/层理/井筒 | `subsurface/oilfield/gathering/storage/refining/city-1440.png` |
+| 连续录屏 | 总览→设备近景→现有塔剖切→返回 | `detail-continuity-1440.mp4` |
+| 状态契约 | bind/select/可见性/图层/返回上下文 | `state-contract.json` |
+| 五关回归 | l1–l5 进入/操作/退出 | `level-e2e.json` |
+| 2D fallback | 上下文丢失后 sandbox/tower 均降级 | `fallback.json` |
+| 深链/章节/塔页 | #stage 0–4、章节回链、塔页加载 | 本节命令记录 |
 
-## 6. P0 / P1 / P2
+**未提供**：高模 detail 的真实状态继承录屏、FPS/内存长跑、跨浏览器、真实用户测试、移动端。不得把这些写成已通过。
 
-### P0（未关闭则不得 PASS）
+## 5. P0 / P1 / P2
 
-- **P0-01 Hero Asset 视觉门禁未通过**：地下地质/井筒、分离器内部、塔全剖仍为程序化/现有中低模；本阶段按 Prompt 明确标 `BLOCKED`，不得以占位图作为阶段 PASS。阶段 04/05/06 分别承担达标。
-- **P0-02 阶段 02 用户签收仍缺**：签收页/phase-02 handoff 仍为待签收；本次阶段 03 Prompt 是用户执行指令，但未写入“已签收”，Agent 不代签。阶段 04 前需用户明确确认。
+### P0
 
-### P1
+- **无阶段 03 技术 P0 剩余。**
+- 阶段 02 用户签收：**已关闭**（用户原话 `签收阶段02。`，2026-11-22；记录在 `phase-02-handoff.md` §8 与 `experience-design-signoff.md`）。
+- Hero Asset Gate：**未来阶段视觉门禁 BLOCKED**（04 地下、05 分离器、06 塔；09 全局证据），不是阶段 03 P0。
 
-- P1-01 `detailRepresentation` 全部为 null；总览/近景状态继承只有相机级验证，没有高模/剖切状态继承。
-- P1-02 五关只验证 hooks/入口存在，未逐关“进入→操作→退出”重跑；需阶段 04/09 回归。
-- P1-03 Blender 可执行文件未定位，`.blend`/`.glb` 导出流程未实跑；资产管线目前是文档+脚本+目录。
-- P1-04 AI 面板已能挂载，但 AI 请求/无 Key 降级/面板开关未在本阶段测试。
-- P1-05 阶段 03 录屏是相机级连续性，不是“操作后状态保留/恢复”的完整业务验收。
+### P1（本轮已关闭）
 
-### P2
+- P1-01 Store：bind/select/overviewVisible 三项断言通过。
+- P1-02 区域镜头：`focusZone` 消费注册表相机，六区 1440 复核。
+- P1-03 返回上下文：stage/章节/任务面板/context/选择恢复；无选择时恢复空。
+- P1-04 图层：地面不参与合并并保留 layerType，environment=4。
+- P1-05 科学文案：旧“压到接近零/蒸发最少/四种产品/都来自石油/压没”已清理；仅保留“不是零损耗”等限定句。
+- P1-06 五关回归：l1–l5 E2E 通过；深链/章节/塔页/fallback 通过。
 
-- 地形/台地为程序化方块，视觉粗糙；这是占位策略，不在阶段 03 美化。
-- 区域标签在部分斜视角与设备重叠；阶段 07 统一处理。
-- `geology-close.png` 为早期调试图，保留作过程证据；最终以 `subsurface-1440.png` 为准。
-- 页面仍无 API；`/api/ask`/`/api/gen` 不在本阶段范围。
+### P2（后续）
 
-## 7. 资产与许可
+- P2-01 视觉仍偏低模展台；阶段 04–06/07 做地形过渡、台地边缘、远景轮廓、光照层次，不推翻坐标。
+- P2-02 性能仅单场景快照（142 calls/52,892 tris），阶段 09 做 FPS/内存长跑与切换泄漏检查。
+- P2-03 Blender 可执行文件未定位；`.blend→.glb` 导出未实跑；阶段 04 前必须验证。
+- P2-04 AI 面板已挂载，但 `/api/ask`/`/api/gen` 的 Key 缺失/代理不可用未测试；阶段 08 验收。
+- P2-05 真实用户测试、跨浏览器、移动端不在阶段 03 范围。
 
-| 资产 | 状态 | 说明 |
+## 6. 验收矩阵（更新）
+
+| 验收项 | 判断 | 说明 |
 |---|---|---|
-| 地下地质/井筒 | 暂缺 | 程序化开口+分层；阶段 04 |
-| 三相分离器 | 需精修 | 现有 OBJ 无内部结构；阶段 05 |
-| 常减压塔 | 需精修 | 现有塔半剖可用，全剖差异弱；阶段 06 |
-| 抽油机/井口/储罐/加热炉 | 需精修/可复用 | 现有 OBJ；无 `.blend`/UV/授权记录 |
-| 环境/地形/道路 | 程序化占位 | 允许；不是 Hero |
-| `.blend/.glb` | 无 | Blender 未定位；未执行导出 |
-| 来源/许可 | 未补齐 | 项目自产脚本不等于书面授权；阶段 04–06/09 补 |
+| 连续产业链概念沙盘 | **通过（骨架）** | 六区/五 stage/开口/高差/管线；低模视觉列 P2 |
+| 场景图层组织 | **通过** | layerType 保留；environment=4；合并桶记录 layerTypes |
+| 设备/知识注册表 | **通过** | 6 zone/13 device/5 route/3 endpoint |
+| 设备状态 Store | **通过** | bind/select/可见性断言 |
+| 区域镜头 | **通过** | 注册表 CAMERAS；六区截图 |
+| 设备近景/返回 | **通过（相机/上下文）** | stage/章节/context/选择恢复；高模 detail 待 04–06 |
+| 五关/深链/塔页兼容 | **通过** | l1–l5 E2E、#stage 0–4、chapter、tower |
+| 科学表达 | **通过** | 旧表述已清理；保留限定句 |
+| 静态无 API | **通过** | 静态服务可用；API 能力不在本阶段 |
+| 资产缺口/工作流 | **通过（策略）** | 责任区分；Blender 未实跑列 P2 |
+| 浏览器证据 | **通过（范围）** | 1440/1920 截图、状态/五关/fallback 证据；录屏为相机级 |
+| Hero Asset Gate | **未来阶段 BLOCKED** | 阶段 04/05/06 各自验收 |
+| 前置阶段 02 签收 | **ACCEPTED** | 用户 2026-11-22 原话记录 |
 
-## 8. 设计—研发追踪
+## 7. 追溯
 
 - zoneId：`subsurface/oilfield/gathering/storage/refining/city`
 - stageId：`drill/gather/store/refine/use`（#stage=0..4 保留）
-- objectId：13 个，注册表 `web/world/registry.js`
-- knowledgeId：沿用 `kb_formation/kb_drill/kb_gather/kb_store/kb_refine/kb_use`
-- actionId：既有五关动作不变；新增 `enterDetail/exitDetail/focusZone/focusOverview` 仅骨架 API
-- 影响深链/fallback：`#stage=N` 保持；新增 `?view=` 仅证据/聚焦；2D fallback 保留
-- 未改 `/api/ask` 契约；`__sceneContext` 只增 `registrySceneId/zoneId/deviceName`
+- objectId：13 个；知识 ID `kb_formation/kb_drill/kb_gather/kb_store/kb_refine/kb_use`
+- 新增 API：`enterDetail/exitDetail/focusZone/focusOverview`；不改变既有五关 actionId
+- 深链/fallback/章节/塔页保留；`__sceneContext` 只增字段，不改旧字段
+- `/api/ask` 契约未改
 
-## 9. Agent recommendation
+## 8. Agent recommendation
 
-- 建议：**REVISE**
-- 理由：世界骨架/注册表/状态接口/证据已可运行，但 Hero Asset Gate 明确 `BLOCKED`，且 detail 表示/五关逐关回归/Blender 导出未完成；按 Prompt 不能把占位当阶段 PASS。
-- 未关闭项：P0-01、P0-02、P1-01–05。
+**PASS（阶段 03 技术范围）。**
 
-## 10. User acceptance
+理由：审查报告的 P1-01–P1-06 均有代码修改与浏览器证据；五关、深链、章节、塔页、fallback 实测；阶段 02 已用户签收；Hero 按 MASTER 归 04–06，不再作为阶段 03 P0。
 
-- 状态：**待用户签收**
-- 用户原话：无（本次只有阶段 03 执行指令，不是签收语句）
-- 日期：无
+保留限制：Hero 视觉门禁 `BLOCKED` 属于未来阶段；detail 高模/状态继承未实现；性能/Blender/API/真实用户测试未完成，已列 P2，不冒充通过。
 
-## 11. 停止声明
+## 9. User acceptance
 
-- 本阶段是否停止：**是**
-- 下一阶段是否允许开始：**否**
-- 等待事项：用户审阅阶段 03 交付并明确是否放行；Hero 资产门禁按阶段 04–06 处理；阶段 02 签收页仍需用户本人确认。
+- 阶段 02：**ACCEPTED**；用户原话 `签收阶段02。`；日期 2026-11-22。
+- 阶段 03：**待用户签收**。请审阅本报告及 `docs/phase-reports/evidence/phase-03/`；Agent 不代签。
+- 阶段 04 未开始；取得阶段 03 用户签收后再进入。
+
+## 10. 停止声明
+
+**阶段 03 rev2 已停止，等待用户签收；不执行阶段 04。**

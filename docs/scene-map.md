@@ -241,6 +241,6 @@ flowchart LR
 
 - 世界仍为 `x −36..42 / z −17..17`；五 stage group 仍按 `0 drill / 1 gather / 2 store / 3 refine / 4 use` 排列。
 - 工艺路径实现为 4 段对角 CatmullRom 管线：`path_oil_gather`、`path_gather_store`、`path_store_refine`、`path_refine_city`；`path_sub_oil` 是井筒内部教学路径，不单独建地面管。
-- 相机实际：初始总览 `target(2,1.8,−1), radius 58, azimuth .52, elevation .40`；`focusZone` 使用注册表 zone 中心与偏移；地下特写使用 `target(−25,−1,7), radius 17`。
+- 相机实际：初始总览 `target(2,1.8,−1), radius 58, azimuth .52, elevation .40`；`focusZone` 读取 `CAMERAS` 的 position/lookAt 转换为 orbit；六区预设已按 1440×900 复核（地下 `position[-12,2.4,18]`/lookAt `[-24,-1.5,7]`，储运 `[15,10,7]`/`[10,2.5,-5]`，炼化 `[28,15,8]`/`[24,5.5,-11]`）。
 - 代码偏差：场景为程序化地形/基础几何体占位，不是最终 Hero 资产；地下剖面为开口 + 分层体块，不是可下潜的 Hero 井筒。
-- 证据：`docs/phase-reports/evidence/phase-03/overview-1440.png`、`subsurface-1440.png`、各区域图、`overview-1920.png`。
+- 证据：`docs/phase-reports/evidence/phase-03/overview-1440.png`、`subsurface-1440.png`、各区域图、`overview-1920.png`；五关 E2E 见 `level-e2e.json`。

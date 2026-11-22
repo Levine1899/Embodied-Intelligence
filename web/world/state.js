@@ -35,6 +35,7 @@
     d.representations[representation].push(object3d);
     object3d.userData.logicalObjectId = id;
     object3d.userData.representation = representation;
+    apply(d);
     return d;
   }
 
@@ -42,7 +43,7 @@
     Object.keys(d.representations).forEach(function (rep) {
       d.representations[rep].forEach(function (obj) {
         if (!obj) return;
-        obj.visible = d.visible && overviewVisible !== false ? true : d.visible;
+        obj.visible = d.visible && (rep === 'overview' ? overviewVisible : true);
         obj.userData.logicalState = {
           selection: d.selection,
           structure: d.structure,
@@ -65,8 +66,13 @@
   }
 
   function select(id) {
-    if (selectedId && selectedId !== id) set(selectedId, { selection: 'default' }, 'selection');
-    selectedId = id || null;
+    const next = id || null;
+    if (selectedId && next && selectedId !== next) {
+      set(selectedId, { selection: 'default', structure: 'external', animation: 'idle' }, 'selection');
+    } else if (selectedId && !next) {
+      set(selectedId, { selection: 'default' }, 'selection');
+    }
+    selectedId = next;
     if (selectedId) set(selectedId, { selection: 'selected' }, 'selection');
     emit({ type: 'selection', objectId: selectedId });
     return selectedId ? snapshotDevice(ensure(selectedId)) : null;
@@ -107,6 +113,7 @@
 
   function setOverviewVisible(v) {
     overviewVisible = !!v;
+    Object.keys(devices).forEach(function (id) { apply(devices[id]); });
     emit({ type: 'overview', visible: overviewVisible });
   }
 

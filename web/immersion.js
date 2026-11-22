@@ -13,9 +13,9 @@
   const LEVEL_BRIEF = [
     { goal: '油藏在孔隙里，怎么把它“挤”出来？', take: '油不在“油湖”里，它藏在岩石孔隙中，靠压力被顶出来。' },
     { goal: '井口出来的混在一起的东西，怎么分开？', take: '油、气、水密度不同，三相分离器把它们送进各自的罐。' },
-    { goal: '同样装一罐油，哪种罐更不漏油气？', take: '外浮顶的盖板贴着油面，油气空间被压到接近零，蒸发最少。' },
-    { goal: '一塔原油，凭什么分出四种产品？', take: '沸点不同，出来的高度就不同：越轻越靠上。' },
-    { goal: '石油除了烧，还能变成什么？', take: '塑料、沥青、石蜡都来自石油，它不只是燃料。' }
+    { goal: '同样装一罐油，哪种罐更能减少油气空间？', take: '外浮顶的浮盘贴着油面，油气空间更小；实际损耗仍受密封、附件与操作影响，不等于零损耗。' },
+    { goal: '一塔原油，凭什么分出不同馏分？', take: '按沸程不同，在不同高度切出不同馏分；馏分还需后续加工/精制/调和，不等于成品油。' },
+    { goal: '石油除了烧，还能变成什么？', take: '塑料、沥青、石蜡等可通过石油路线生产；部分产品也有天然气、煤基或生物基路线。' }
   ];
 
   function levelDone(i) {
@@ -165,7 +165,7 @@
   let levelPivotDist = 7;   // 关卡内旋转的绕点距离
   let levelPivot = null;    // 按下时锁定的轴心，拖动中不再重算
   let cameraTransition = null;
-  let detailSavedOrbit = null;
+  let detailSavedContext = null;
   let detailObjectId = null;
   const orbit = {
     azimuth: 0.52,
@@ -268,6 +268,7 @@
     updateTask();
     syncChapterLink(index);
     syncSceneContext(index, objectId || null, null);
+    if (window.PETRO_DEVICE_STATE) window.PETRO_DEVICE_STATE.select(objectId || null);
     if (objectId) showDeviceCard(objectId, index, anchor); else hideDeviceCard();
     if (focus && modelGroups[index]) {
       const p = modelGroups[index].position;
@@ -429,8 +430,9 @@
           if (mat) {
             const key = (mat.name || '') + '|' + (mat.color ? mat.color.getHexString() : '') + '|' +
               mat.metalness + '|' + mat.roughness + '|' + mat.transparent + '|' + mat.opacity + '|' + (mat.emissive ? mat.emissive.getHexString() : '') + '|' + (mat.map ? mat.map.uuid : '');
-            if (!buckets.has(key)) buckets.set(key, { mat: mat, position: [], normal: [], index: [], offset: 0 });
+            if (!buckets.has(key)) buckets.set(key, { mat: mat, position: [], normal: [], index: [], offset: 0, layerTypes: new Set() });
             const bucket = buckets.get(key);
+            bucket.layerTypes.add((node.userData && node.userData.layerType) || 'infrastructure');
             const rel = new THREE.Matrix4().copy(rootInv).multiply(node.matrixWorld);
             const normalMatrix = new THREE.Matrix3().getNormalMatrix(rel);
             const pos = geom.attributes.position;
@@ -477,6 +479,7 @@
       const mesh = new THREE.Mesh(geo, bucket.mat);
       mesh.name = 'merged_' + (bucket.mat.name || 'material');
       mesh.userData.mergedStatic = true;
+      mesh.userData.layerTypes = Array.from(bucket.layerTypes);
       root.add(mesh);
     });
   }
@@ -501,6 +504,9 @@
     function groundSlab(cx, cz, w, d) {
       const slab = box(sceneRoot, w, 0.6, d, concrete, cx, -0.32, cz);
       slab.userData.surface = 'environment-ground';
+      slab.userData.layerType = 'environment';
+      /* 地面是语义层锚点：不参与静态合并，保证 environment 可追溯。 */
+      slab.userData.skipMerge = true;
       return slab;
     }
     groundSlab(-34.5, 0, 3.2, 34);                         // 西侧
@@ -917,11 +923,12 @@
     const layerIndex = { environment: [], infrastructure: [], equipment: modelGroups.slice(), processLines: [pipeGroup], flowEffects: particles.slice(), labels: [] };
     sceneRoot.children.forEach(function (child) {
       if (modelGroups.indexOf(child) >= 0 || child === pipeGroup || particles.indexOf(child) >= 0) return;
-      if (child.userData && child.userData.surface === 'environment-ground') layerIndex.environment.push(child);
+      if (child.userData && (child.userData.layerType === 'environment' || child.userData.surface === 'environment-ground')) layerIndex.environment.push(child);
       else if (child.isMesh && child.material && child.material.isMeshBasicMaterial) layerIndex.labels.push(child);
       else if (child.isMesh || child.isGroup) layerIndex.infrastructure.push(child);
     });
     sceneRoot.userData.layers = layerIndex;
+    sceneRoot.userData.layerCounts = Object.keys(layerIndex).reduce(function (acc, k) { acc[k] = layerIndex[k].length; return acc; }, {});
 
     /* 逻辑设备绑定：overview 与 detail 共用 objectId/状态，不各建一套 */
     if (window.PETRO_REGISTRY && window.PETRO_DEVICE_STATE) {
@@ -1818,8 +1825,8 @@
         '<ul class="all-done__list">',
         '<li>地下开采 · 推压力把油从孔隙里挤出来</li>',
         '<li>地面处理 · 把油、气、水分开</li>',
-        '<li>储运 · 浮顶把油气空间压没</li>',
-        '<li>炼化 · 按沸点分成四种产品</li>',
+        '<li>储运 · 浮顶减少油气空间，但非零损耗</li>',
+        '<li>炼化 · 按沸程分出不同馏分（非最终产品）</li>',
         '<li>产品去向 · 石油不只是燃料</li>',
         '</ul>',
         '<div class="all-done__row">',
@@ -1896,15 +1903,27 @@
     get devices() { return window.PETRO_REGISTRY ? window.PETRO_REGISTRY.devices : []; },
     get deviceState() { return window.PETRO_DEVICE_STATE || null; },
     get baseRoot() { return worldRoot; },
+    get layers() { return worldRoot && worldRoot.userData ? (worldRoot.userData.layerCounts || null) : null; },
     get frame() { return { delta: lastDelta, elapsed: frameElapsed, playing: playing, hidden: document.hidden }; },
     focusZone(zoneId) {
       const z = window.PETRO_REGISTRY && window.PETRO_REGISTRY.getZone(zoneId);
       if (!z) return false;
       selectStage(z.stageIndex, false);
-      if (zoneId === 'subsurface') {
-        moveCamera({ targetX: -25, targetY: -1.0, targetZ: 7, radius: 17, elevation: 0.20, azimuth: 0.9 });
+      const reg = window.PETRO_REGISTRY;
+      const cam = reg && z.camera ? reg.cameras[z.camera] : null;
+      if (cam && cam.position && cam.lookAt) {
+        const p = new THREE.Vector3().fromArray(cam.position);
+        const t = new THREE.Vector3().fromArray(cam.lookAt);
+        const off = p.clone().sub(t);
+        const radius = off.length();
+        moveCamera({
+          targetX: t.x, targetY: t.y, targetZ: t.z,
+          radius: radius,
+          elevation: Math.asin(Math.max(-1, Math.min(1, off.y / radius))),
+          azimuth: Math.atan2(off.x, off.z)
+        });
       } else {
-        moveCamera({ targetX: z.center[0], targetY: z.center[1] + 2.4, targetZ: z.center[2], radius: Math.max(28, Math.max(z.size[0], z.size[1]) * 2.6), elevation: 0.32, azimuth: 0.18 });
+        moveCamera({ targetX: z.center[0], targetY: z.center[1] + 2.4, targetZ: z.center[2], radius: Math.max(16, Math.max(z.size[0], z.size[1]) * 1.6), elevation: 0.32, azimuth: 0.18 });
       }
       window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.setCameraMode('focus');
       return true;
@@ -1918,7 +1937,12 @@
         if (!target && obj.userData && obj.userData.objectId === objectId) target = obj;
       });
       if (!target) return false;
-      detailSavedOrbit = Object.assign({}, orbit);
+      detailSavedContext = {
+        stage: currentStage,
+        selected: window.PETRO_DEVICE_STATE ? window.PETRO_DEVICE_STATE.selectedObjectId : null,
+        orbit: Object.assign({}, orbit),
+        sceneContext: window.__sceneContext ? JSON.parse(JSON.stringify(window.__sceneContext)) : null
+      };
       detailObjectId = objectId;
       const box = new THREE.Box3().setFromObject(target);
       const center = box.getCenter(new THREE.Vector3());
@@ -1931,11 +1955,22 @@
       return true;
     },
     exitDetail() {
-      if (!detailSavedOrbit) return false;
-      moveCamera(detailSavedOrbit);
-      detailSavedOrbit = null;
+      if (!detailSavedContext) return false;
+      const saved = detailSavedContext;
+      detailSavedContext = null;
       detailObjectId = null;
-      window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.select(null);
+      /* 先恢复 stage/章节/任务面板/上下文，再恢复原选择与相机；不清掉当前设备结构/运行状态。 */
+      selectStage(saved.stage, false, saved.selected || null);
+      if (saved.selected) {
+        window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.select(saved.selected);
+      } else {
+        window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.select(null);
+      }
+      moveCamera(saved.orbit);
+      if (saved.sceneContext) {
+        window.__sceneContext = saved.sceneContext;
+        document.dispatchEvent(new CustomEvent('scene-context', { detail: window.__sceneContext }));
+      }
       window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.setCameraMode('free');
       return true;
     },

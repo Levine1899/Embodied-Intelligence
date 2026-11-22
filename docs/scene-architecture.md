@@ -79,7 +79,7 @@ endpoints[3]: gas_recovery_header, flare_stack, produced_water_treatment
 - 每个设备：`selection(default/hover/selected)`、`structure(external/half/full/transparent)`、`animation(idle/running/paused)`、`level`、`visible`；
 - `bind(objectId, 'overview'|'detail', object3d)` 绑定表示；状态只在本 store 改；
 - `select` 清旧设备、设新设备；`set` 广播；`snapshot/reset` 供调试/会话；
-- `enterDetail/exitDetail`（`__stage`）保存/恢复相机与选择，演示“总览→近景→返回”连续关系；
+- `enterDetail/exitDetail`（`__stage`）保存/恢复相机、stage、章节/任务面板、`__sceneContext` 与进入前选择；清空选择不重置设备结构/动画，演示“总览→近景→返回”连续关系；
 - 当前只有 `overview` 表示；`detail` 待阶段 04–06 接入，阶段 03 不假装已有高细节模型。
 
 详见 `docs/device-state-contract.md`。
@@ -112,7 +112,7 @@ endpoints[3]: gas_recovery_header, flare_stack, produced_water_treatment
 ## 8. 兼容与未完成
 
 - 保留：五个区域入口、五个关卡入口、`#stage=N`、章节回链、塔页、2D fallback、无 API 三维运行。
-- 五关逐关进入/退出本轮未完全重跑；只验证了入口 hooks 存在与场景上下文；阶段 03 handoff 标为“部分验证”。
+- 五关逐关回归已执行（l1–l5 进入/操作/退出），结果与证据见 phase-03 handoff；深链/塔页/fallback 另列。
 - `ai.js` 的 `insertBefore` 回归已修复为 `src.parentNode.insertBefore`，面板可挂载；AI 请求/无 Key 降级未在本阶段测试。
 - 未实现完整导览故事（阶段 07）、Hero 内部结构（04–06）、全套真实资产（04–06/09）。
 - 程序化地形/基础几何体是**明确占位**，不是高精度工业模型。

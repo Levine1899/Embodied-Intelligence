@@ -18,11 +18,11 @@
 
   var CAMERAS = {
     cam_vista: { position: [2, 18, 40], lookAt: [1, 1.5, 0], zoneId: null },
-    cam_subsurface: { position: [-20, 8, 24], lookAt: [-24, -1.5, 8], zoneId: 'subsurface' },
+    cam_subsurface: { position: [-12, 2.4, 18], lookAt: [-24, -1.5, 7], zoneId: 'subsurface' },
     cam_wellhead: { position: [-18, 7, 21], lookAt: [-24, 1.2, 8], zoneId: 'oilfield' },
     cam_separator: { position: [1, 6, 15], lookAt: [-6, 2.2, 2], zoneId: 'gathering' },
-    cam_tank: { position: [11, 7, 3], lookAt: [10, 3.0, -5], zoneId: 'storage' },
-    cam_tower: { position: [25, 13, 2], lookAt: [24, 6.5, -11], zoneId: 'refining' },
+    cam_tank: { position: [15, 10, 7], lookAt: [10, 2.5, -5], zoneId: 'storage' },
+    cam_tower: { position: [28, 15, 8], lookAt: [24, 5.5, -11], zoneId: 'refining' },
     cam_city: { position: [28, 6, 20], lookAt: [27, 2.2, 8], zoneId: 'city' }
   };
 

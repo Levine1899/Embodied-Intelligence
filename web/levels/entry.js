@@ -37,7 +37,7 @@
         '点一下分离器的出口',
         '按住液位条，往右拖',
         '点一个产品，再点它出现的位置',
-        '点出来自石油的那一个'
+        '点出石油化工常见下游产品'
       ];
       window.__demoMount = function () {
         const panel = document.querySelector('.lvl.on');

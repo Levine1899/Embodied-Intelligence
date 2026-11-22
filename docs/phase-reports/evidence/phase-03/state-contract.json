@@ -1,0 +1,14 @@
+{
+  "date": "2026-11-22",
+  "browser": "Chrome 157 headless via CDP",
+  "page": "http://127.0.0.1:8796/sandbox.html",
+  "assertions": {
+    "bindAppliesCurrentState": {"stateBeforeBind": {"structure": "half", "animation": "running"}, "detailVisibleAfterBind": true, "result": "passed"},
+    "switchResetsOldDevice": {"oldStructure": "external", "oldAnimation": "idle", "newSelection": "selected", "result": "passed"},
+    "overviewVisibility": {"overviewVisible": false, "detailVisible": true, "result": "passed"},
+    "layerCounts": {"environment": 4, "infrastructure": 10, "equipment": 5, "processLines": 1, "flowEffects": 4, "labels": 6, "result": "passed"},
+    "detailContextRestore": {"stage": "store", "zone": "storage", "selectedBefore": "floating_roof_tank", "selectedAfter": "floating_roof_tank", "structureAfter": "full", "animationAfter": "paused", "chapterHref": "chapter.html?id=store", "result": "passed"},
+    "detailContextRestoreNoSelection": {"selectedAfter": null, "structureAfter": "full", "stage": "use", "zone": "city", "result": "passed"}
+  },
+  "notes": "Mock Object3D used for bind/visibility isolation; actual pumpjack group used for overview visibility. Detail context test used actual page."
+}
