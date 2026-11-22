@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 阶段 03 — 2026-11-22 · 世界骨架（代码，未通过 Hero 视觉门禁）
+
+- 六区概念空间：真实地面开口 + 台地高差 + S 形对角管线，五 stage/深链保持；页面标注“产业链空间示意 / 非真实地理比例”。
+- 新增 `web/world/registry.js`（6 zone / 13 device / 5 route）与 `web/world/state.js`（单一逻辑设备状态、overview/detail 绑定）。
+- 相机：总览/区域/设备近景/返回；`enterDetail/exitDetail` 相机级连续；用户拖动可接管。
+- 新增 `scene-architecture.md`、`asset-gaps.md`、`asset-pipeline.md`、`device-state-contract.md`、Blender 导出脚本与目录约定。
+- 修复 `ai.js` 右栏 AI 面板 `insertBefore` 回归；AI 内容归入 `.side__body`，不再撑破侧栏。
+- 证据：1440/1920 全景、六区截图、`detail-continuity-1440.mp4`；均标注程序化占位，不是 Hero 验收。
+- **Hero Asset Gate 仍未通过（BLOCKED）**；阶段 03 不宣称视觉/PASS。产品版本仍 3.4.0。
+
+
 ## 设计基线 — 2026-11-22 · 阶段 02 体验设计（文档基线，非产品运行版本）
 
 - 方向 C《批次 YJ-001：一张能源通行证》；六区、三层地图、三个 Hero Moments、T0–T7 任务/五关映射。

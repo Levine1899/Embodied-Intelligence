@@ -225,3 +225,22 @@ flowchart LR
 - 首次入场与总览构图分离，城市在 T6 才完整显现；
 - 所有可交互设备有稳定 objectId；不可交互终点有明确视觉落点；
 - 页面标注“产业链空间示意 / 非真实地理比例”。
+
+## 10. 阶段 03 实现校准（2026-11-22）
+
+以下为真实代码坐标，替代 §1.1 的设计近似值；后续阶段若改地形，必须同步本表与 `web/world/registry.js`。
+
+| zoneId | 代码 center (x,z) | 宽×深 | 台地高程 y | 说明 |
+|---|---|---|---|---|
+| `subsurface` | (−24, 8) | 17×13 | −5..0 | 真实地面开口 `x −33..−15 / z 1..15`；井筒/储层/层理在开口内 |
+| `oilfield` | (−24, 8) | 17×13 | 0 | 与地下共用 drill group；井口/抽油机在井场平台 |
+| `gathering` | (−6, 2) | 13×10 | 0.6 | 低洼站场，分离器/泵撬 |
+| `storage` | (10, −5) | 13×10 | 1.6 | 抬高台地，双罐/防火堤 |
+| `refining` | (24, −11) | 16×11 | 2.6 | 最高台地，双塔/加热炉/管廊 |
+| `city` | (27, 8) | 14×10 | 0.9 | 前景产品台，与炼化隔开 |
+
+- 世界仍为 `x −36..42 / z −17..17`；五 stage group 仍按 `0 drill / 1 gather / 2 store / 3 refine / 4 use` 排列。
+- 工艺路径实现为 4 段对角 CatmullRom 管线：`path_oil_gather`、`path_gather_store`、`path_store_refine`、`path_refine_city`；`path_sub_oil` 是井筒内部教学路径，不单独建地面管。
+- 相机实际：初始总览 `target(2,1.8,−1), radius 58, azimuth .52, elevation .40`；`focusZone` 使用注册表 zone 中心与偏移；地下特写使用 `target(−25,−1,7), radius 17`。
+- 代码偏差：场景为程序化地形/基础几何体占位，不是最终 Hero 资产；地下剖面为开口 + 分层体块，不是可下潜的 Hero 井筒。
+- 证据：`docs/phase-reports/evidence/phase-03/overview-1440.png`、`subsurface-1440.png`、各区域图、`overview-1920.png`。

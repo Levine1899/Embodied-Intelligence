@@ -88,6 +88,7 @@
 
   /* ---------- 面板 DOM ---------- */
   const side = document.querySelector('.side');
+  const sideBody = side ? (side.querySelector('.side__body') || side) : null;
   if (!side) return;
 
   const box = document.createElement('div');
@@ -101,7 +102,7 @@
     '<div class="leadai__foot"><span id="leadai-pending">待审补库 0 条</span><span class="leadai__tiers" id="leadai-tiers">档位：<button type="button" data-tier="kid">童话</button><button type="button" data-tier="mid" aria-pressed="true" class="on">通俗</button><button type="button" data-tier="pro">工程</button></span></div>'
   ].join('');
   const src = side.querySelector('.source');
-  if (src) side.insertBefore(box, src); else side.appendChild(box);
+  if (src && src.parentNode) src.parentNode.insertBefore(box, src); else sideBody.appendChild(box);
 
   const logEl = box.querySelector('#leadai-log');
 
@@ -131,7 +132,7 @@
   const ext = document.createElement('div');
   ext.className = 'lext';
   ext.innerHTML = '<h3>延伸阅读 <em id="lext-n"></em></h3><ul id="lext-list"></ul>';
-  side.appendChild(ext);
+  sideBody.appendChild(ext);
 
   function renderExt() {
     const i = stageIndex();
@@ -404,7 +405,7 @@
   genBtn.className = 'genbtn genbtn--side';
   genBtn.innerHTML = '<b>生成本场材料</b><span>讲解词 / 推文 / 短视频脚本</span>';
   genBtn.onclick = () => { dlg.showModal(); runGen(); };
-  if (src) side.insertBefore(genBtn, src); else side.appendChild(genBtn);
+  if (src) sideBody.insertBefore(genBtn, src); else sideBody.appendChild(genBtn);
 
   dlg.querySelectorAll('#gen-genres [data-genre]').forEach(b => {
     b.onclick = () => {

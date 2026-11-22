@@ -2,6 +2,7 @@
   'use strict';
 
   const viewport = document.getElementById('viewport');
+  let worldRoot = null;
   const stageButtons = Array.from(document.querySelectorAll('[data-stage]'));
   const depthSelect = document.getElementById('depth');
   const feedback = document.getElementById('feedback');
@@ -149,7 +150,7 @@
   const unitState = { half: [], full: [], cut: false, loaded: false, group: null };
   let atmTowerGroup = null;
   let vacTowerGroup = null;
-  let autoOrbit = true;
+  let autoOrbit = false;
   let pumpAnim = null;
   let contextLostAt = 0;
   let particles = [];
@@ -157,18 +158,22 @@
   let raycaster;
   let THREE;
   let lastFrame = 0;
+  let lastDelta = 0;
+  let frameElapsed = 0;
   let phase = 0;
   let dragging = null;
   let levelPivotDist = 7;   // 关卡内旋转的绕点距离
   let levelPivot = null;    // 按下时锁定的轴心，拖动中不再重算
   let cameraTransition = null;
+  let detailSavedOrbit = null;
+  let detailObjectId = null;
   const orbit = {
-    azimuth: 0.30,
-    elevation: 0.50,
-    radius: 44,
+    azimuth: 0.52,
+    elevation: 0.40,
+    radius: 58,
     targetX: 2,
-    targetY: 3.0,
-    targetZ: 0
+    targetY: 1.8,
+    targetZ: -1
   };
 
   function updateTask() {
@@ -235,11 +240,11 @@
 
   // 环节机位预设：随流程逐级下降（高度 2.6 → 0.9，仰角同步压低）
   const CAM_PRESETS = [
-    { targetY: -0.5, radius: 17, elevation: 0.42, azimuth: -0.05 },
-    { targetY: 2.2, radius: 13, elevation: 0.30, azimuth: 0.10, dx: 0.2, dz: 0 },
-    { targetY: 2.2, radius: 14, elevation: 0.30, azimuth: 0.16, dx: 0, dz: -0.4 },
-    { targetY: 2.6, radius: 18, elevation: 0.32, azimuth: 0.16, dx: -1.6, dz: 1.4 },
-    { targetY: 1.9, radius: 11, elevation: 0.24, azimuth: 0.30 }
+    { targetY: 0.8, radius: 21, elevation: 0.34, azimuth: -0.22, dx: 0, dz: 0 },
+    { targetY: 2.2, radius: 16, elevation: 0.30, azimuth: 0.18, dx: 0.2, dz: 0 },
+    { targetY: 3.1, radius: 17, elevation: 0.30, azimuth: 0.14, dx: 0, dz: -0.4 },
+    { targetY: 4.8, radius: 21, elevation: 0.30, azimuth: 0.18, dx: -1.2, dz: 1.2 },
+    { targetY: 2.0, radius: 14, elevation: 0.26, azimuth: 0.30, dx: 0, dz: 0 }
   ];
   // 环节 → 章节（第 1 章「形成与勘探」没有 3D 环节）
   const STAGE_CHAPTER = [
@@ -346,13 +351,16 @@
   }
 
   /* ---------- 连续产业链数字沙盘 ---------- */
+  /* 阶段 03：六区概念空间。五个 stage 仍按 0..4 排列，坐标改为 S 形纵深 + 高差；
+     地下剖面与油田同属 stage 0，使用同一 group，不新增 #stage=5。 */
   const REGIONS = [
-    { id: 'drill', x: -26, z: 0, w: 13, d: 12, name: '地下开采' },
-    { id: 'gather', x: -11, z: 0, w: 11, d: 12, name: '地面处理' },
-    { id: 'store', x: 4, z: 0, w: 12, d: 12, name: '储运' },
-    { id: 'refine', x: 19, z: 0, w: 14, d: 14, name: '炼化' },
-    { id: 'use', x: 33, z: 0, w: 12, d: 12, name: '产品去向' }
+    { id: 'drill', zoneId: 'oilfield', x: -24, z: 8, w: 17, d: 13, y: 0, name: '地下开采' },
+    { id: 'gather', zoneId: 'gathering', x: -6, z: 2, w: 13, d: 10, y: 0.6, name: '地面处理' },
+    { id: 'store', zoneId: 'storage', x: 10, z: -5, w: 13, d: 10, y: 1.6, name: '储运' },
+    { id: 'refine', zoneId: 'refining', x: 24, z: -11, w: 16, d: 11, y: 2.6, name: '炼化' },
+    { id: 'use', zoneId: 'city', x: 27, z: 8, w: 14, d: 10, y: 0.9, name: '产品去向' }
   ];
+  const GEOLOGY_HOLE = { x0: -33, x1: -15, z0: 1, z1: 15 };
 
   function groundLabel(text, width, color) {
     const cv = document.createElement('canvas');
@@ -486,53 +494,70 @@
     const wallMat = material(rock[5], false);
     const sceneRoot = new THREE.Group();
     sceneRoot.name = 'industry-sandbox';
+    worldRoot = sceneRoot;
     scene.add(sceneRoot);
 
-    /* 地形：一整块连续基底（x -36..42 / z -17..17），不再是五块漂浮底座 */
-    box(sceneRoot, 78, 0.6, 34, concrete, 3, -0.32, 0);
-    /* 边缘压条与等高线，给地平线一个可读的收边 */
+    /* 地形：连续基底在 drill 区留出真实剖面开口（不是贴图假洞） */
+    function groundSlab(cx, cz, w, d) {
+      const slab = box(sceneRoot, w, 0.6, d, concrete, cx, -0.32, cz);
+      slab.userData.surface = 'environment-ground';
+      return slab;
+    }
+    groundSlab(-34.5, 0, 3.2, 34);                         // 西侧
+    groundSlab(13.5, 0, 57.2, 34);                          // 东侧
+    groundSlab(-24, 16, 18.2, 2);                           // 北侧窄条
+    groundSlab(-24, -8, 18.2, 18);                          // 南侧
+    const hole = GEOLOGY_HOLE;
+    /* 开口内壁：让地下剖面有可见的垂直边界 */
+    box(sceneRoot, 0.45, 3.2, 14.2, wallMat, hole.x0, -1.45, 8);
+    box(sceneRoot, 0.45, 3.2, 14.2, wallMat, hole.x1, -1.45, 8);
+    box(sceneRoot, 18.2, 3.2, 0.45, wallMat, -24, -1.45, hole.z0);
+    box(sceneRoot, 18.2, 3.2, 0.45, wallMat, -24, -1.45, hole.z1);
+    box(sceneRoot, 18.4, 0.18, 0.7, darkSteel, -24, 0.05, hole.z1 + 0.2);
+    box(sceneRoot, 18.4, 0.18, 0.7, darkSteel, -24, 0.05, hole.z0 - 0.2);
+    /* 地下剖面南壁：分层色带，让“地上/地下”在同一画面可读 */
+    for (let i = 0; i < 6; i += 1) {
+      box(sceneRoot, 17.6, 0.62, 0.18, material(rock[i], false), -24, -3.7 + i * 0.66, hole.z0 + 0.18);
+    }
+
+    /* 边缘压条；等高线只画在开口外，避免悬空 */
     box(sceneRoot, 78.6, 0.12, 0.5, darkSteel, 3, 0.02, 17);
     box(sceneRoot, 78.6, 0.12, 0.5, darkSteel, 3, 0.02, -17);
     box(sceneRoot, 0.5, 0.12, 34.4, darkSteel, -36, 0.02, 0);
     box(sceneRoot, 0.5, 0.12, 34.4, darkSteel, 42, 0.02, 0);
-    for (let i = 0; i < 3; i += 1) {
-      box(sceneRoot, 78, 0.04, 0.08, roadMat, 3, 0.005, -13 + i * 1.1);
-      box(sceneRoot, 78, 0.04, 0.08, roadMat, 3, 0.005, 13 - i * 1.1);
-    }
+    box(sceneRoot, 3, 0.04, 0.08, roadMat, -34.5, 0.005, -13);
+    box(sceneRoot, 57, 0.04, 0.08, roadMat, 13.5, 0.005, -13);
+    box(sceneRoot, 3, 0.04, 0.08, roadMat, -34.5, 0.005, 13);
+    box(sceneRoot, 57, 0.04, 0.08, roadMat, 13.5, 0.005, 13);
 
-    /* 五个区域的可读分区：嵌在地形里的浅台 + 地面标签 */
+    /* 区域台地：每个区落在不同高程；drill 保留剖面开口，不铺整块台面 */
     REGIONS.forEach(function (region) {
-      const plate = box(sceneRoot, region.w, 0.16, region.d, padMat, region.x, 0.06, region.z);
-      plate.userData.region = region.id;
-      railLine(sceneRoot, region.w - 0.4, region.d - 0.4, 0.15, darkSteel);
+      if (region.y > 0.01) {
+        box(sceneRoot, region.w + 0.8, region.y, region.d + 0.8, material(0x4a4235, false), region.x, region.y / 2, region.z);
+        box(sceneRoot, region.w + 0.9, 0.18, region.d + 0.9, material(0x6b5a3a, false), region.x, region.y - 0.1, region.z);
+        box(sceneRoot, region.w + 1.0, 0.16, 0.5, darkSteel, region.x, region.y + 0.02, region.z + (region.d + 0.8) / 2);
+        box(sceneRoot, region.w + 1.0, 0.16, 0.5, darkSteel, region.x, region.y + 0.02, region.z - (region.d + 0.8) / 2);
+      }
+      if (region.id !== 'drill') {
+        const plate = box(sceneRoot, region.w, 0.16, region.d, padMat, region.x, region.y + 0.06, region.z);
+        plate.userData.region = region.id;
+        railLine(sceneRoot, region.w - 0.4, region.d - 0.4, region.y + 0.15, darkSteel);
+      }
       const label = groundLabel(region.name, Math.min(8, region.w - 2));
-      label.position.set(region.x, 0.17, region.z + region.d / 2 - 1.4);
+      label.position.set(region.x, region.y + 0.19, region.z + region.d / 2 - 0.7);
       sceneRoot.add(label);
     });
+    const geoTitle = groundLabel('地下地质剖面 · 教学示意', 6.8, '#c7b48b');
+    geoTitle.position.set(-24, 0.25, 15.25);
+    sceneRoot.add(geoTitle);
 
-    /* 区域之间的工艺脊线：管路 + 支架 + 地面路径（产业链的连接，而不是厂区道路） */
-    for (let i = 0; i < REGIONS.length - 1; i += 1) {
-      const a = REGIONS[i], b = REGIONS[i + 1];
-      const x0 = a.x + a.w / 2, x1 = b.x - b.w / 2;
-      const mid = (x0 + x1) / 2;
-      box(sceneRoot, x1 - x0, 0.05, 1.6, roadMat, mid, 0.08, 0);
-      for (let x = x0 + 1; x < x1 - 0.6; x += 2.2) {
-        box(sceneRoot, 0.9, 0.02, 0.1, amber, x, 0.12, 0);
-      }
-      const rackY = 2.35;
-      for (let x = x0 + 0.8; x <= x1; x += 3) {
-        rod(sceneRoot, [x, 0.2, 2.4], [x, rackY, 2.4], 0.07, darkSteel);
-        rod(sceneRoot, [x, 0.2, 3.1], [x, rackY - 0.5, 3.1], 0.07, darkSteel);
-      }
-      rod(sceneRoot, [x0, rackY, 2.4], [x1, rackY, 2.4], 0.11, amber);
-      rod(sceneRoot, [x0, rackY - 0.35, 2.75], [x1, rackY - 0.35, 2.75], 0.09, steel);
-    }
-
-    /* 五个区域的 group（关卡仍然按 group.position 取锚点） */
+    /* 五个 stage group（关卡仍按 group.position 取锚点） */
     REGIONS.forEach(function (region, index) {
       const group = new THREE.Group();
-      group.position.set(region.x, 0.14, region.z);
+      group.position.set(region.x, region.y + 0.14, region.z);
       group.userData.stage = index;
+      group.userData.zoneId = region.zoneId;
+      group.userData.stageId = region.id;
       sceneRoot.add(group);
       modelGroups.push(group);
     });
@@ -570,13 +595,18 @@
     const stratumLabel = groundLabel('地质剖面 · 教学示意', 6.4, '#b6b0a2');
     stratumLabel.position.set(0, 0.2, 4.9);
     pit.add(stratumLabel);
+    /* 井场平台：让抽油机/井口有落脚面，地下剖面从其南侧打开 */
+    box(drill, 10.4, 0.24, 3.2, concrete, -1.0, 0.12, 3.9);
+    box(drill, 2.8, 0.2, 2.0, concrete, -0.6, 0.1, -2.2);
+    rod(drill, [-6.0, 0.28, 3.9], [-6.0, 1.0, 3.9], 0.05, darkSteel);
+    rod(drill, [4.1, 0.28, 3.9], [4.1, 1.0, 3.9], 0.05, darkSteel);
 
     cylinder(drill, 0.16, 7.4, teal, -0.6, 1.4, -2.2);
     /* 井口：采油树 + 阀组 */
     const wellhead = new THREE.Group();
     wellhead.userData.objectId = 'wellhead';
     wellhead.userData.skipMerge = true;
-    wellhead.position.set(-0.6, 1.4, -2.2);
+    wellhead.position.set(-0.6, 0.28, -2.2);
     drill.add(wellhead);
     box(wellhead, 0.9, 0.35, 0.9, darkSteel, 0, 0.1, 0);
     cylinder(wellhead, 0.34, 0.5, steel, 0, 0.55, 0);
@@ -775,7 +805,7 @@
     products.add(productLabel);
 
     /* ---------- 区域标签（HTML，可点击） ---------- */
-    const labelY = [3.2, 4.2, 5.2, 9.6, 3.4];
+    const labelY = [4.6, 5.2, 6.6, 12.2, 4.6];
     modelGroups.forEach(function (group, index) {
       const button = document.createElement('button');
       button.type = 'button';
@@ -791,27 +821,73 @@
       });
     });
 
-    /* ---------- 工艺流程：区域之间的物料连接（不再是悬空光管） ---------- */
+    /* ---------- 工艺流程：沿 S 形空间连接，而不是单一直线 ---------- */
     const pipeGroup = new THREE.Group();
+    pipeGroup.name = 'processLines';
     sceneRoot.add(pipeGroup);
-    const anchors = modelGroups.map(function (group, index) {
-      return group.position.clone().add(new THREE.Vector3(-REGIONS[index].w / 2 + 0.6, 1.9, 0));
-    });
-    for (let i = 0; i < anchors.length - 1; i += 1) {
-      const a = anchors[i].clone();
-      const b = anchors[i + 1].clone();
-      b.x = modelGroups[i + 1].position.x - REGIONS[i + 1].w / 2 + 0.6;
-      const curve = new THREE.CatmullRomCurve3([
-        a,
-        a.clone().lerp(b, 0.3).setY(1.5),
-        a.clone().lerp(b, 0.7).setY(1.5),
-        b
-      ]);
-      const pipe = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 0.1, 8, false), amber.clone());
+    function routeEndpoints(i) {
+      const a = REGIONS[i], b = REGIONS[i + 1];
+      const dx = b.x - a.x, dz = b.z - a.z;
+      const len = Math.max(0.001, Math.sqrt(dx * dx + dz * dz));
+      const ux = dx / len, uz = dz / len;
+      const start = new THREE.Vector3(
+        a.x + ux * (a.w * 0.36),
+        a.y + 2.15,
+        a.z + uz * (a.d * 0.36)
+      );
+      const end = new THREE.Vector3(
+        b.x - ux * (b.w * 0.36),
+        b.y + 2.15,
+        b.z - uz * (b.d * 0.36)
+      );
+      return { a: a, b: b, start: start, end: end, ux: ux, uz: uz };
+    }
+    function roadSegment(a, b, width, mat) {
+      const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
+      const len = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      if (len < 0.01) return null;
+      const road = new THREE.Mesh(new THREE.BoxGeometry(len, 0.07, width), mat);
+      road.position.copy(a.clone().add(b).multiplyScalar(0.5));
+      road.quaternion.setFromUnitVectors(new THREE.Vector3(1, 0, 0), new THREE.Vector3(dx, dy, dz).normalize());
+      sceneRoot.add(road);
+      return road;
+    }
+    const routeIds = ['path_oil_gather', 'path_gather_store', 'path_store_refine', 'path_refine_city'];
+    for (let i = 0; i < REGIONS.length - 1; i += 1) {
+      const e = routeEndpoints(i);
+      const midY = Math.max(e.start.y, e.end.y) + 1.2;
+      const midA = e.start.clone().lerp(e.end, 0.36);
+      midA.y = midY;
+      const midB = e.start.clone().lerp(e.end, 0.68);
+      midB.y = midY;
+      /* 平面路径略微弯曲，避免与管架完全重合 */
+      const side = new THREE.Vector3(-e.uz, 0, e.ux).multiplyScalar(1.7);
+      midA.add(side);
+      midB.sub(side);
+      const curve = new THREE.CatmullRomCurve3([e.start, midA, midB, e.end]);
+      const pipe = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.11, 8, false), amber.clone());
+      pipe.userData.pathId = routeIds[i];
       pipeGroup.add(pipe);
-      pipes.push({ curve: curve, object: pipe });
-      const particle = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 10), new THREE.MeshBasicMaterial({ color: 0x9fd3c6 }));
+      pipes.push({ curve: curve, object: pipe, pathId: routeIds[i] });
+      /* 支架：从地面/台地到工艺管，强调高差 */
+      for (let k = 1; k <= 6; k += 1) {
+        const t = k / 7;
+        const p = curve.getPoint(t);
+        const groundY = e.a.y + (e.b.y - e.a.y) * t;
+        rod(pipeGroup, [p.x, groundY + 0.05, p.z], [p.x, p.y, p.z], 0.055, darkSteel);
+        box(pipeGroup, 0.35, 0.12, 0.35, concrete, p.x, groundY + 0.06, p.z);
+      }
+      /* 地面物流带：分段贴合高差，不横穿台地 */
+      for (let k = 0; k < 4; k += 1) {
+        const t0 = k / 4, t1 = (k + 1) / 4;
+        const q0 = curve.getPoint(t0), q1 = curve.getPoint(t1);
+        q0.y = e.a.y + (e.b.y - e.a.y) * t0 + 0.03;
+        q1.y = e.a.y + (e.b.y - e.a.y) * t1 + 0.03;
+        roadSegment(q0, q1, 1.5, roadMat);
+      }
+      const particle = new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 10), new THREE.MeshBasicMaterial({ color: 0x9fd3c6 }));
       particle.position.copy(curve.getPoint(0.3));
+      particle.userData.pathId = routeIds[i];
       sceneRoot.add(particle);
       particles.push(particle);
     }
@@ -820,6 +896,11 @@
     if (mergedPipe) pipes.forEach(function (item) { item.object = mergedPipe; });
     pipeGroup.userData.skipMerge = true;
     particles.forEach(function (particle) { particle.userData.skipMerge = true; });
+
+    if (window.PETRO_REGISTRY) {
+      sceneRoot.userData.sceneId = window.PETRO_REGISTRY.sceneId;
+      sceneRoot.userData.registryVersion = window.PETRO_REGISTRY.version;
+    }
 
     /* ---------- 远景：低对比的工业轮廓，给场景纵深，不与主设备争焦点 ---------- */
     for (let i = 0; i < 7; i += 1) {
@@ -831,6 +912,28 @@
     box(sceneRoot, 78, 0.8, 1.2, material(0x14140f, false), 3, 0.2, -24);
     modelGroups.forEach(function (group) { mergeStaticMeshes(group); group.userData.skipMerge = true; });
     mergeStaticMeshes(sceneRoot);
+
+    /* 逻辑图层索引：不强行重排所有对象，但为环境/基础设施/设备/管线/流效/标签建立可查询归属。 */
+    const layerIndex = { environment: [], infrastructure: [], equipment: modelGroups.slice(), processLines: [pipeGroup], flowEffects: particles.slice(), labels: [] };
+    sceneRoot.children.forEach(function (child) {
+      if (modelGroups.indexOf(child) >= 0 || child === pipeGroup || particles.indexOf(child) >= 0) return;
+      if (child.userData && child.userData.surface === 'environment-ground') layerIndex.environment.push(child);
+      else if (child.isMesh && child.material && child.material.isMeshBasicMaterial) layerIndex.labels.push(child);
+      else if (child.isMesh || child.isGroup) layerIndex.infrastructure.push(child);
+    });
+    sceneRoot.userData.layers = layerIndex;
+
+    /* 逻辑设备绑定：overview 与 detail 共用 objectId/状态，不各建一套 */
+    if (window.PETRO_REGISTRY && window.PETRO_DEVICE_STATE) {
+      sceneRoot.traverse(function (obj) {
+        if (obj.userData && obj.userData.objectId) {
+          window.PETRO_DEVICE_STATE.bind(obj.userData.objectId, 'overview', obj);
+        }
+      });
+      window.PETRO_REGISTRY.devices.forEach(function (d) {
+        if (!window.PETRO_DEVICE_STATE.get(d.objectId)) window.PETRO_DEVICE_STATE.ensure(d.objectId);
+      });
+    }
   }
 
 
@@ -896,6 +999,8 @@
     }
     const delta = Math.min(50, timestamp - lastFrame);
     lastFrame = timestamp;
+    lastDelta = delta;
+    frameElapsed = timestamp;
     if (playing && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) phase = (phase + delta / 2800) % 1;
     updateCamera(timestamp);
     particles.forEach(function (particle, index) {
@@ -1056,7 +1161,7 @@
   });
   depthSelect.addEventListener('change', updateTask);
   document.getElementById('overview').addEventListener('click', function () {
-    moveCamera({ targetX: 4, targetY: 2.8, targetZ: 0, radius: 54, azimuth: 0.28, elevation: 0.54 });
+    moveCamera({ targetX: 2, targetY: 2.0, targetZ: -1, radius: 58, azimuth: 0.52, elevation: 0.40 });
   });
   document.getElementById('focus').addEventListener('click', function () { selectStage(currentStage, true); });
   document.getElementById('next').addEventListener('click', function () {
@@ -1331,16 +1436,26 @@
   }
 
   /* ---------- 场景上下文：AI / 写作 / 测试共用 ---------- */
-  const SCENE_ID = 'oil_industry_journey';
+  const SCENE_ID = 'oil_industry_journey'; // stable legacy alias; registrySceneId is new
   const STAGE_IDS = ['drill', 'gather', 'store', 'refine', 'use'];
   let mode = 'free';
   function syncSceneContext(index, objectId, action) {
+    var reg = window.PETRO_REGISTRY;
+    var zone = null;
+    if (reg && index != null) {
+      zone = reg.zones.filter(function (z) { return z.stageIndex === index; })[0] || null;
+      if (index === 0) zone = reg.getZone('oilfield');
+    }
+    var device = reg && objectId ? reg.getDevice(objectId) : null;
     var ctx = {
       sceneId: SCENE_ID,
+      registrySceneId: reg ? reg.sceneId : null,
       stageId: index == null ? 'overview' : STAGE_IDS[index],
+      zoneId: zone ? zone.zoneId : null,
       levelId: null,
       selectedObjectId: objectId || null,
-      knowledgeIds: index == null ? [] : ['kb_' + STAGE_IDS[index]],
+      deviceName: device ? device.displayName : null,
+      knowledgeIds: device ? device.knowledgeIds.slice() : (index == null ? [] : ['kb_' + STAGE_IDS[index]]),
       experienceMode: mode,
       interaction: action || null
     };
@@ -1557,7 +1672,7 @@
     if (!step) { stopTour(); return; }
     tourIndex = index;
     if (step.stage == null) {
-      moveCamera({ targetX: 4, targetY: 2.8, targetZ: 0, radius: 54, azimuth: 0.28, elevation: 0.54 });
+      moveCamera({ targetX: 2, targetY: 2.0, targetZ: -1, radius: 58, azimuth: 0.52, elevation: 0.40 });
       syncSceneContext(null);
     } else {
       selectStage(step.stage, true);
@@ -1775,6 +1890,60 @@
     get pump() { return pumpAnim; },
     get towerGroups() { return [atmTowerGroup, vacTowerGroup]; },
     setAutoOrbit(on) { setAutoOrbit(on); },
+    get sceneId() { return SCENE_ID; },
+    get registry() { return window.PETRO_REGISTRY || null; },
+    get zones() { return window.PETRO_REGISTRY ? window.PETRO_REGISTRY.zones : []; },
+    get devices() { return window.PETRO_REGISTRY ? window.PETRO_REGISTRY.devices : []; },
+    get deviceState() { return window.PETRO_DEVICE_STATE || null; },
+    get baseRoot() { return worldRoot; },
+    get frame() { return { delta: lastDelta, elapsed: frameElapsed, playing: playing, hidden: document.hidden }; },
+    focusZone(zoneId) {
+      const z = window.PETRO_REGISTRY && window.PETRO_REGISTRY.getZone(zoneId);
+      if (!z) return false;
+      selectStage(z.stageIndex, false);
+      if (zoneId === 'subsurface') {
+        moveCamera({ targetX: -25, targetY: -1.0, targetZ: 7, radius: 17, elevation: 0.20, azimuth: 0.9 });
+      } else {
+        moveCamera({ targetX: z.center[0], targetY: z.center[1] + 2.4, targetZ: z.center[2], radius: Math.max(28, Math.max(z.size[0], z.size[1]) * 2.6), elevation: 0.32, azimuth: 0.18 });
+      }
+      window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.setCameraMode('focus');
+      return true;
+    },
+    setCamera(values) { moveCamera(values); },
+    enterDetail(objectId) {
+      const info = window.PETRO_REGISTRY && window.PETRO_REGISTRY.getDevice(objectId);
+      if (!info || !worldRoot) return false;
+      let target = null;
+      worldRoot.traverse(function (obj) {
+        if (!target && obj.userData && obj.userData.objectId === objectId) target = obj;
+      });
+      if (!target) return false;
+      detailSavedOrbit = Object.assign({}, orbit);
+      detailObjectId = objectId;
+      const box = new THREE.Box3().setFromObject(target);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const radius = Math.max(6, Math.max(size.x, size.y, size.z) * 2.4);
+      selectStage(info.stageIndex, false);
+      moveCamera({ targetX: center.x, targetY: center.y, targetZ: center.z, radius: radius, elevation: 0.28, azimuth: 0.35 });
+      window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.select(objectId);
+      window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.setCameraMode('focus');
+      return true;
+    },
+    exitDetail() {
+      if (!detailSavedOrbit) return false;
+      moveCamera(detailSavedOrbit);
+      detailSavedOrbit = null;
+      detailObjectId = null;
+      window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.select(null);
+      window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.setCameraMode('free');
+      return true;
+    },
+    get detailObjectId() { return detailObjectId; },
+    focusOverview() {
+      moveCamera({ targetX: 2, targetY: 2.0, targetZ: -1, radius: 58, azimuth: 0.52, elevation: 0.40 });
+      window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.setCameraMode('free');
+    },
     stats() {
       const info = renderer.info.render;
       return { calls: info.calls, triangles: info.triangles,
@@ -1792,6 +1961,15 @@
   }
   stageFromHash();
   window.addEventListener("hashchange", stageFromHash);
+  /* Phase 03 evidence/deep-link view: allows fixed-size browser capture of each zone. */
+  function viewFromQuery() {
+    const v = new URLSearchParams(location.search).get('view');
+    if (!v || !window.__stage) return;
+    if (v === 'overview') window.__stage.focusOverview();
+    else if (v === 'geology') window.__stage.setCamera({ targetX: -25, targetY: -1.0, targetZ: 7, radius: 14, elevation: 0.20, azimuth: 0.9 });
+    else window.__stage.focusZone(v);
+  }
+  setTimeout(viewFromQuery, 450);
   syncChapterLink(currentStage);
   resizeHooks.forEach(function (fn) { fn(); });
 
