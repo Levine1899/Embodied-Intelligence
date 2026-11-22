@@ -168,6 +168,28 @@ def join_by_material(asset_id):
     return merged
 
 
+def join_by_prefix(asset_id):
+    groups = {}
+    for obj in [o for o in bpy.context.scene.objects if o.type == "MESH"]:
+        prefix = obj.name.split("__")[0] if "__" in obj.name else "static"
+        groups.setdefault(prefix, []).append(obj)
+    merged = []
+    for prefix, objects in groups.items():
+        bpy.ops.object.select_all(action="DESELECT")
+        for obj in objects:
+            obj.select_set(True)
+        bpy.context.view_layer.objects.active = objects[0]
+        if len(objects) > 1:
+            bpy.ops.object.join()
+        joined = bpy.context.object
+        joined.name = "%s_%s" % (asset_id, prefix)
+        merged.append(joined)
+    bpy.ops.object.select_all(action="SELECT")
+    bpy.context.view_layer.objects.active = merged[0]
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    return merged
+
+
 def asset_stats(asset_id, anchors, budget):
     triangles = 0
     vertices = 0
@@ -356,7 +378,16 @@ def build_pumpjack():
         rod_between("walk_rail_%02d" % i, dark, (-0.9 + i * 0.32, 1.62, 1.0), (-0.9 + i * 0.32, 1.62, 1.7), 0.02, 6)
     rod_between("walk_top", dark, (-0.9, 1.62, 1.7), (1.6, 1.62, 1.7), 0.025, 8)
 
-    join_by_material("pumpjack")
+    beam_names = {"beam", "beam_rear", "horsehead", "horsehead_mount", "horsehead_back", "bridle", "carrier_bar"}
+    for obj in [o for o in bpy.context.scene.objects if o.type == "MESH"]:
+        name = obj.name
+        if name.split(".")[0] in beam_names or name.startswith(("beam", "horsehead", "bridle", "carrier")):
+            obj.name = "beam__" + name
+        elif name.startswith(("crank", "counterweight")):
+            obj.name = "crank__" + name
+        else:
+            obj.name = "static__" + name
+    join_by_prefix("pumpjack")
     anchors = [
         {"id": "horsehead", "name": "驴头", "pos": [2.7, 0, 3.45]},
         {"id": "beam", "name": "游梁", "pos": [0.3, 0, 3.5]},

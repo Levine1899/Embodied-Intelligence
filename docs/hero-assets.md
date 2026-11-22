@@ -128,3 +128,18 @@ blender -b -P tools/make_hero_assets.py -- --render
 ```
 
 无 `--render` 时只导出 OBJ/MTL/meta/stats，不跑 Cycles。
+
+
+## 常减压装置接入（2026-11-22）
+
+- 把 `assets/tower/tower.obj`（常压塔 + 减压塔 + 塔盘/平台/梯子/管线，54 个对象）接入炼化区，替换程序化双塔；剔除 Ground、Heater、Pump、Condenser、产品箱，避免与已有 hero 加热炉/产品重复；
+- 缩放到 0.46、常压塔对准原程序化塔位；
+- 新增「半剖」按钮：整壳/半壳两组按开关切换，塔盘常显；实测炼化视角 87 calls / 49,270 面，剖开后塔盘与内件可见；
+- 新增「自动旋转」按钮：总览缓慢环绕，和原有管线粒子一起让画面持续运动；
+- 总览 105 → 147 calls / 67,230 面（装置本体对象未合批，按对象保留以便半剖切换）。
+
+## 抽油机运动（2026-11-22）
+
+- Blender 导出由“按材质合并 4 个 mesh”改为“按功能合并 3 个 mesh”：`pumpjack_static / pumpjack_beam / pumpjack_crank`；
+- 浏览器端按前缀拆成 static、beam（绕游梁支点摆动 ±0.05 rad）、crank（绕曲柄轴连续旋转）三组，抽油机在总览和地下开采视角持续工作；
+- 地下开采相机从 radius 13 / targetY -1.7 调到 radius 17 / targetY -0.5，抽油机与井口不再被裁切。

@@ -146,6 +146,11 @@
   let activeCamera = null;  // 关卡相机
   let modelGroups = [];
   let pipes = [];
+  const unitState = { half: [], full: [], cut: false, loaded: false, group: null };
+  let atmTowerGroup = null;
+  let vacTowerGroup = null;
+  let autoOrbit = false;
+  let pumpAnim = null;
   let particles = [];
   let labels = [];
   let raycaster;
@@ -229,7 +234,7 @@
 
   // 环节机位预设：随流程逐级下降（高度 2.6 → 0.9，仰角同步压低）
   const CAM_PRESETS = [
-    { targetY: -1.7, radius: 13, elevation: 0.34, azimuth: -0.05 },
+    { targetY: -0.5, radius: 17, elevation: 0.42, azimuth: -0.05 },
     { targetY: 2.2, radius: 13, elevation: 0.30, azimuth: 0.10, dx: 0.2, dz: 0 },
     { targetY: 2.2, radius: 14, elevation: 0.30, azimuth: 0.16, dx: 0, dz: -0.4 },
     { targetY: 2.6, radius: 18, elevation: 0.32, azimuth: 0.16, dx: -1.6, dz: 1.4 },
@@ -281,6 +286,7 @@
   }
 
   function updateCamera(timestamp) {
+    if (autoOrbit && !activeScene && !dragging) orbit.azimuth += 0.0016;
     if (activeScene) return;   // 关卡自己管相机，别用总览轨道覆盖它
     if (cameraTransition) {
       const progress = Math.min(1, (timestamp - cameraTransition.start) / cameraTransition.duration);
@@ -591,7 +597,7 @@
     beam.rotation.z = 0.12;
     mesh(pump, new THREE.CylinderGeometry(0.55, 0.55, 0.22, 20, 1, false, 0, Math.PI), steel, 2.0, 2.95, 0).rotation.z = Math.PI / 2;
     box(pump, 0.7, 0.6, 0.9, darkSteel, -1.9, 2.0, 0);
-    loadHeroAsset(pump, 'pumpjack', 'pumpjack', 0.55);
+    loadAnimatedPumpjack(pump);
 
     /* ---------- 02 地面处理：三相分离器 + 泵撬 + 缓冲罐 ---------- */
     const gather = modelGroups[1];
@@ -701,8 +707,9 @@
       }
       return g;
     }
-    distillationTower(-2.4, -0.6, 11.5, 1.45, '常压塔');
-    distillationTower(1.8, -1.4, 7.6, 1.7, '减压塔');
+    atmTowerGroup = distillationTower(-2.4, -0.6, 11.5, 1.45, '常压塔');
+    vacTowerGroup = distillationTower(1.8, -1.4, 7.6, 1.7, '减压塔');
+    loadRefineryUnit(refine);
     /* 加热炉 + 烟囱 */
     const heater = new THREE.Group();
     heater.userData.objectId = 'heater';
@@ -885,6 +892,11 @@
       particle.position.copy(pipes[index].curve.getPoint((phase + index * 0.19) % 1));
       particle.visible = playing;
     });
+    if (pumpAnim) {
+      const at = timestamp * 0.001;
+      pumpAnim.beam.rotation.z = Math.sin(at * 1.6) * 0.05;
+      pumpAnim.crank.rotation.z = at * 0.9;
+    }
     updateLabels();
     renderer.render(activeScene || scene, activeCamera || camera);
   }
@@ -1026,6 +1038,10 @@
   document.getElementById('next').addEventListener('click', function () {
     selectStage((currentStage + 1) % stageNames.length, true);
   });
+  const cutBtn = document.getElementById('cut');
+  if (cutBtn) cutBtn.addEventListener('click', function () { applyUnitCut(!unitState.cut); });
+  const spinBtn = document.getElementById('spin');
+  if (spinBtn) spinBtn.addEventListener('click', function () { setAutoOrbit(!autoOrbit); });
   document.getElementById('play').addEventListener('click', function () {
     playing = !playing;
     this.setAttribute('aria-pressed', String(playing));
@@ -1193,6 +1209,96 @@
     window.__sceneContext = ctx;
     document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
   }
+  function loadAnimatedPumpjack(container) {
+    if (!window.ObjLite) return;
+    window.ObjLite.load('assets/hero/pumpjack/pumpjack.obj', 'assets/hero/pumpjack/pumpjack.mtl').then(function (root) {
+      const statics = [];
+      const beam = [];
+      const crank = [];
+      root.children.slice().forEach(function (node) {
+        const name = node.name || '';
+        if (name.indexOf('beam') >= 0) beam.push(node);
+        else if (name.indexOf('crank') >= 0) crank.push(node);
+        else statics.push(node);
+      });
+      const g = new THREE.Group();
+      statics.forEach(function (node) {
+        node.userData.objectId = 'pumpjack';
+        node.userData.heroAsset = 'pumpjack';
+        g.add(node);
+      });
+      const beamPivot = new THREE.Group();
+      beamPivot.position.set(-0.2, 3.6, 0);
+      beam.forEach(function (node) {
+        node.position.set(0.2, -3.6, 0);
+        node.userData.objectId = 'pumpjack';
+        beamPivot.add(node);
+      });
+      g.add(beamPivot);
+      const crankPivot = new THREE.Group();
+      crankPivot.position.set(-2.35, 2.0, 0);
+      crank.forEach(function (node) {
+        node.position.set(2.35, -2.0, 0);
+        node.userData.objectId = 'pumpjack';
+        crankPivot.add(node);
+      });
+      g.add(crankPivot);
+      g.scale.setScalar(0.55);
+      container.children.slice().forEach(function (child) {
+        container.remove(child);
+        child.traverse(function (node) {
+          if (node.geometry) node.geometry.dispose();
+          if (node.material) node.material.dispose();
+        });
+      });
+      container.add(g);
+      pumpAnim = { beam: beamPivot, crank: crankPivot };
+    }).catch(function () {});
+  }
+
+  function loadRefineryUnit(refine) {
+    if (!window.ObjLite) return;
+    window.ObjLite.load('assets/tower/tower.obj', 'assets/tower/tower.mtl').then(function (unit) {
+      const drop = /^(Ground|Heater|Heater_Chimney|Pump_|Condenser|Box_)/;
+      unit.traverse(function (node) {
+        if (!node.isMesh) return;
+        if (drop.test(node.name)) { node.visible = false; return; }
+        if (/ShellHalf$|DomeHalf$/.test(node.name)) {
+          node.visible = false;
+          unitState.half.push(node);
+          node.userData.noMerge = true;
+        } else if (/Shell$|Dome$/.test(node.name)) {
+          unitState.full.push(node);
+          node.userData.noMerge = true;
+        }
+        if (/^Tower_Atmospheric_/.test(node.name)) node.userData.objectId = 'atmospheric_tower';
+        if (/^Tower_Vacuum_/.test(node.name)) node.userData.objectId = 'vacuum_tower';
+      });
+      unit.scale.setScalar(0.46);
+      unit.position.set(-2.4, 0.2, -0.6);
+      unit.userData.skipMerge = true;
+      refine.add(unit);
+      unitState.group = unit;
+      unitState.loaded = true;
+      if (atmTowerGroup) atmTowerGroup.visible = false;
+      if (vacTowerGroup) vacTowerGroup.visible = false;
+    }).catch(function () {});
+  }
+
+  function applyUnitCut(cut) {
+    unitState.cut = !!cut;
+    unitState.half.forEach(function (node) { node.visible = unitState.cut; });
+    unitState.full.forEach(function (node) { node.visible = !unitState.cut; });
+    const btn = document.getElementById('cut');
+    if (btn) btn.setAttribute('aria-pressed', String(unitState.cut));
+  }
+
+  function setAutoOrbit(on) {
+    autoOrbit = !!on;
+    const btn = document.getElementById('spin');
+    if (btn) btn.setAttribute('aria-pressed', String(autoOrbit));
+  }
+
   function loadHeroAsset(container, assetId, objectId, scale) {
     if (!window.ObjLite || !container) return;
     var base = 'assets/hero/' + assetId + '/' + assetId;
@@ -1502,6 +1608,9 @@
     levelHook(i) { const h = (window.__levelHooks && window.__levelHooks[i]) || null; if (h) markLevel(i); return h; },
     refreshTaskPanel() { syncTaskPanel(); },
     get camera() { return activeCamera || camera; },
+    setCut(on) { applyUnitCut(on); },
+    get pump() { return pumpAnim; },
+    setAutoOrbit(on) { setAutoOrbit(on); },
     stats() {
       const info = renderer.info.render;
       return { calls: info.calls, triangles: info.triangles,
