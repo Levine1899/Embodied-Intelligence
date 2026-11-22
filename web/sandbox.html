@@ -59,9 +59,13 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 <div class="heading"><div><h1>原油，怎样<span>走出地下？</span></h1><p>沿着生产流程，观察设备、物料与加工过程。</p></div><label class="reading">理解深度<select id="depth"><option value="0">亲子与青少年</option><option value="1" selected>普通公众</option><option value="2">科技／石油爱好者</option><option value="3">专业人士</option></select></label></div>
 <div class="layout">
 <section class="scene" aria-label="三维动态流程">
-<div class="scene-head"><p><strong>原油生产与加工</strong> · 流向示意</p><div class="tools"><button type="button" id="overview">流程总览</button><button type="button" id="focus">聚焦当前环节</button><button type="button" id="play" aria-pressed="false">播放流向</button><button type="button" id="cut" aria-pressed="false">半剖</button><button type="button" id="spin" aria-pressed="false">自动旋转</button></div></div>
+<div class="scene-head"><p><strong>原油生产与加工</strong> · 流向示意</p><div class="tools"><button type="button" id="overview">流程总览</button><button type="button" id="focus">聚焦当前环节</button><button type="button" id="play" aria-pressed="false">播放流向</button><button type="button" id="cut" aria-pressed="false">半剖</button><button type="button" id="spin" aria-pressed="false">自动旋转</button><button type="button" id="device-list-btn" aria-expanded="false" aria-controls="device-list">设备列表</button></div></div>
 <div class="viewport" id="viewport" role="group" aria-label="可旋转的原油开采、处理、储运、炼化和产品流程三维模型">
 <div class="view-hint"><b>拖动</b> 旋转 · <b>滚轮</b> 缩放 · 点击节点查看</div>
+<div class="device-list" id="device-list" hidden aria-label="设备列表">
+  <div class="device-list__head"><b>设备列表</b><button type="button" id="device-list-close" aria-label="关闭设备列表">关闭</button></div>
+  <div class="device-list__body" id="device-list-body"></div>
+</div>
 <div class="fallback" id="fallback" hidden>三维场景正在准备。</div>
 </div>
 <div class="modebar" role="group" aria-label="体验模式"><button type="button" data-mode="tour">沉浸导览</button><button type="button" data-mode="free" aria-pressed="true">自由探索</button><button type="button" data-mode="task">任务关卡</button><span class="modehint" id="mode-hint">拖动旋转 · 滚轮缩放 · 点击设备查看</span></div>
@@ -96,7 +100,7 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 
 <script src="assets/three.browser.js"></script>
 <script src="assets/obj-lite.js?v=1"></script>
-<script src="immersion.js?v=fix48"></script>
+<script src="immersion.js?v=fix49"></script>
 <link rel="stylesheet" href="assets/site/tokens.css">
 <style>
   .view-hint{font-size:12px}
@@ -262,6 +266,15 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 .device-actions button:hover{border-color:var(--amber);color:var(--amber)}
 .device-actions a{font-size:12px;color:#9a948a;border-bottom:1px solid #3d3a33}
 .device-actions a:hover{color:var(--amber)}
+.device-list{position:absolute;right:14px;top:14px;width:min(300px,calc(100% - 28px));max-height:calc(100% - 28px);display:flex;flex-direction:column;background:rgba(10,14,16,.94);border:1px solid #3d3a33;z-index:8}
+.device-list[hidden]{display:none}
+.device-list__head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid #2a2722;font-size:13px;color:#e8e1d4}
+.device-list__head button{background:transparent;border:1px solid #3d3a33;color:#cfc8ba;font-size:12px;padding:4px 8px;cursor:pointer}
+.device-list__body{overflow:auto;padding:6px}
+.device-list__group{font-size:11px;color:#8fa39c;letter-spacing:.08em;padding:8px 8px 4px}
+.device-item{display:block;width:100%;text-align:left;background:transparent;border:1px solid transparent;color:#d9d2c4;font-size:13px;padding:8px;cursor:pointer}
+.device-item:hover,.device-item:focus-visible{border-color:#d8a24a;color:#f0e6d2;outline:none}
+@media(max-width:640px){.device-list{left:14px;right:14px;top:auto;bottom:14px;width:auto;max-height:52%}}
 .modebar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
 .modebar button{background:#141816;border:1px solid #3d3a33;color:#cfc8ba;font-size:12px;padding:6px 11px;min-height:32px;cursor:pointer}
 .modebar button[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);background:#26221a}

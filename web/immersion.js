@@ -1149,6 +1149,60 @@
     lubricant_can: { name: '润滑油', stage: 4, ask: '润滑油是怎么从原油里得到的？', text: '由适合的馏分经精制、调配与添加剂处理得到，用于减少摩擦与磨损。' },
     asphalt_slab: { name: '沥青路面', stage: 4, ask: '沥青是炼厂的哪个部分来的？', text: '沥青主要来自减压渣油等重质组分，经处理满足道路或建筑用途。' }
   };
+
+  function buildDeviceList() {
+    const body = document.getElementById('device-list-body');
+    if (!body) return;
+    body.textContent = '';
+    [0, 1, 2, 3, 4].forEach(function (stage) {
+      const ids = Object.keys(DEVICE_INFO).filter(function (id) { return DEVICE_INFO[id].stage === stage; });
+      if (!ids.length) return;
+      const group = document.createElement('div');
+      group.className = 'device-list__group';
+      group.textContent = '第 ' + (stage + 1) + ' 环节 · ' + stageNames[stage];
+      body.appendChild(group);
+      ids.forEach(function (id) {
+        const info = DEVICE_INFO[id];
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'device-item';
+        btn.textContent = info.name;
+        btn.setAttribute('aria-label', '查看设备：' + info.name + '，' + stageNames[stage]);
+        btn.addEventListener('click', function () {
+          selectStage(info.stage, true, id);
+          const list = document.getElementById('device-list');
+          if (list) list.hidden = true;
+        });
+        body.appendChild(btn);
+      });
+    });
+  }
+
+  function setDeviceList(open) {
+    const list = document.getElementById('device-list');
+    const btn = document.getElementById('device-list-btn');
+    if (!list) return;
+    list.hidden = !open;
+    if (btn) btn.setAttribute('aria-expanded', String(open));
+    if (open) {
+      const first = list.querySelector('.device-item');
+      if (first) first.focus();
+    } else if (btn) {
+      btn.focus();
+    }
+  }
+
+  buildDeviceList();
+  const listBtn = document.getElementById('device-list-btn');
+  if (listBtn) listBtn.addEventListener('click', function () { setDeviceList(true); });
+  const listClose = document.getElementById('device-list-close');
+  if (listClose) listClose.addEventListener('click', function () { setDeviceList(false); });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      const list = document.getElementById('device-list');
+      if (list && !list.hidden) setDeviceList(false);
+    }
+  });
   let deviceCardEl = null;
   let deviceAnchor = null;
   const history = [];
