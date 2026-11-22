@@ -879,8 +879,8 @@
     let y = (1 - point.y) * h / 2;
     x = Math.max(cw / 2 + 8, Math.min(w - cw / 2 - 8, x));
     y = Math.max(ch + 30, Math.min(h - 18, y));
-    deviceCardEl.style.left = x + 'px';
-    deviceCardEl.style.top = y + 'px';
+    deviceCardEl.style.left = '';
+    deviceCardEl.style.top = '';
   }
 
   function render(timestamp) {
@@ -1069,6 +1069,61 @@
   }
   const spinDefault = document.getElementById('spin');
   if (spinDefault) spinDefault.setAttribute('aria-pressed', String(autoOrbit));
+
+  const layoutEl = document.querySelector('.layout');
+  function applyModeLayout(modeName) {
+    if (!layoutEl) return;
+    layoutEl.classList.toggle('rail-open', modeName === 'task');
+    layoutEl.classList.toggle('side-hidden', modeName === 'tour');
+  }
+  function setRail(open, section) {
+    if (!layoutEl) return;
+    layoutEl.classList.toggle('rail-open', open);
+    if (open && section === 'source') {
+      const src = document.querySelector('.source');
+      if (src) src.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    }
+  }
+  document.querySelectorAll('[data-rail]').forEach(function (btn) {
+    btn.addEventListener('click', function () { setRail(true, btn.getAttribute('data-rail')); });
+  });
+  const railClose = document.getElementById('rail-close');
+  if (railClose) railClose.addEventListener('click', function () { setRail(false); });
+
+  const moreBtn = document.getElementById('more-btn');
+  const moreMenu = document.getElementById('more-menu');
+  if (moreBtn && moreMenu) {
+    moreBtn.addEventListener('click', function () {
+      const open = moreMenu.hidden;
+      moreMenu.hidden = !open;
+      moreBtn.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('click', function (event) {
+      if (moreMenu.hidden) return;
+      if (moreBtn.contains(event.target) || moreMenu.contains(event.target)) return;
+      moreMenu.hidden = true;
+      moreBtn.setAttribute('aria-expanded', 'false');
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !moreMenu.hidden) {
+        moreMenu.hidden = true;
+        moreBtn.setAttribute('aria-expanded', 'false');
+        moreBtn.focus();
+      }
+    });
+  }
+
+  const aboutOpen = document.getElementById('about-open');
+  const aboutDlg = document.getElementById('about');
+  if (aboutOpen && aboutDlg) {
+    aboutOpen.addEventListener('click', function () { aboutDlg.showModal(); });
+    const aboutClose = document.getElementById('about-close');
+    if (aboutClose) aboutClose.addEventListener('click', function () { aboutDlg.close(); });
+    aboutDlg.addEventListener('click', function (event) {
+      if (event.target === aboutDlg) aboutDlg.close();
+    });
+  }
+
   const soundBtn = document.getElementById('sound');
   if (soundBtn) soundBtn.addEventListener('click', function () {
     if (!window.Ambient) { soundBtn.textContent = '声音不可用'; return; }
@@ -1525,6 +1580,7 @@
     mode = 'tour';
     tourPlaying = !reduceMotion;
     tourIndex = 0;
+    if (typeof applyModeLayout === 'function') applyModeLayout('tour');
     paintModes();
     showTourStep(0);
   }
@@ -1542,6 +1598,7 @@
     if (tourCard) tourCard.hidden = true;
     mode = 'free';
     paintModes();
+    if (typeof applyModeLayout === 'function') applyModeLayout('free');
   }
 
   document.querySelectorAll('.modebar [data-mode]').forEach(function (btn) {
@@ -1551,6 +1608,7 @@
       if (tourCard && !tourCard.hidden) stopTour();
       mode = next;
       paintModes();
+      applyModeLayout(next);
       if (next === 'task' && window.__stage && window.__stage.levelHook) {
         live.textContent = '任务关卡：从右栏进入当前环节，完成动手任务。';
       }
