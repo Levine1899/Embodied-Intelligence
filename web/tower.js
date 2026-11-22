@@ -31,10 +31,12 @@
     if (list) list.innerHTML = '<p style="color:#8fa9b4;font-size:12.5px">2D 模式：请直接阅读右侧文字说明。</p>';
   }
 
+  /* Three.js r180 只支持 WebGL2，检测必须对齐运行时能力 */
   function webglOK() {
     try {
+      if (!window.WebGL2RenderingContext) return false;
       var c = document.createElement('canvas');
-      return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+      return !!c.getContext('webgl2');
     } catch (e) { return false; }
   }
   if (!window.THREE || !webglOK()) { showFallback('WebGL 不可用'); return; }
@@ -42,9 +44,17 @@
   var state = { level: 0, selected: null, loaded: false, frames: 0, cutEnabled: false };
   window.__tower = state;
 
-  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+  var renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+  } catch (e) {
+    showFallback('三维渲染器初始化失败：' + (e && e.message || e));
+    return;
+  }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.localClippingEnabled = true;
+  canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); showFallback('三维上下文已丢失，正在等待恢复…'); });
+  canvas.addEventListener('webglcontextrestored', function () { window.location.reload(); });
   if ('outputColorSpace' in renderer && THREE.SRGBColorSpace) renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   var scene = new THREE.Scene();
@@ -391,6 +401,7 @@
     var obj = parseOBJ(res[0], parseMTL(res[1] || ''));
     scene.add(obj);
     state.loaded = true;
+    setLevel(0);   // 显式初始化外观：整壳显示、半剖壳隐藏
 
     HOTSPOTS.forEach(function (h) {
       obj.traverse(function (o) {

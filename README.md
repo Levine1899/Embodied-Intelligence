@@ -4,7 +4,7 @@
 
 前端零构建：原生 HTML / CSS / JS，Three.js 走本地文件；后端只有一个 Node 代理，把请求转给 DeepSeek，Key 只留在服务器。
 
-**当前版本 3.3.2**（2026-11-21）· 详见 [CHANGELOG.md](CHANGELOG.md)
+**当前版本 3.4.0**（2026-11-21）· 详见 [CHANGELOG.md](CHANGELOG.md)
 
 ---
 

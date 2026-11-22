@@ -64,8 +64,23 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 <div class="view-hint"><b>拖动</b> 旋转 · <b>滚轮</b> 缩放 · 点击节点查看</div>
 <div class="fallback" id="fallback" hidden>三维场景正在准备。</div>
 </div>
+<div class="modebar" role="group" aria-label="体验模式"><button type="button" data-mode="tour">沉浸导览</button><button type="button" data-mode="free" aria-pressed="true">自由探索</button><button type="button" data-mode="task">任务关卡</button><span class="modehint" id="mode-hint">拖动旋转 · 滚轮缩放 · 点击设备查看</span></div>
 <nav class="stage-navigation" id="stages" aria-label="流程环节"><button type="button" data-stage="0" aria-current="step">地下开采<small>储层与井筒</small></button><button type="button" data-stage="1">地面处理<small>产出物的处理</small></button><button type="button" data-stage="2">储运<small>储罐与输送</small></button><button type="button" data-stage="3">炼化<small>分离与转化</small></button><button type="button" data-stage="4">产品去向<small>燃料与材料原料</small></button></nav>
-<div class="explanation"><span class="chapter" id="chapter">地下开采</span><p id="explanation"></p><a class="chapter-link" id="chapter-link" href="#">读本章知识 →</a><a class="tower-link" id="tower-link" href="tower.html">看塔剖面 →</a><button type="button" class="next" id="next">继续查看 →</button></div>
+<div class="tour-card" id="tour-card" hidden>
+  <div class="tour-top"><span id="tour-step">01 / 06</span><button type="button" id="tour-exit">退出</button></div>
+  <h2 id="tour-title">石油产业链数字展馆</h2>
+  <p id="tour-text"></p>
+  <div class="tour-actions"><button type="button" id="tour-pause">暂停</button><button type="button" id="tour-next">下一步 →</button></div>
+</div>
+<div class="device-card" id="device-card" hidden>
+  <div class="device-top"><span id="device-stage">本环节</span><button type="button" id="device-close" aria-label="关闭设备卡片">关闭</button></div>
+  <h3 id="device-name"></h3>
+  <p id="device-text"></p>
+  <div class="device-actions">
+    <button type="button" id="device-ask">问 AI</button>
+    <a id="device-chapter" href="#">读本章知识 →</a>
+  </div>
+</div><div class="explanation"><span class="chapter" id="chapter">地下开采</span><p id="explanation"></p><a class="chapter-link" id="chapter-link" href="#">读本章知识 →</a><a class="tower-link" id="tower-link" href="tower.html">看塔剖面 →</a><button type="button" class="next" id="next">继续查看 →</button></div>
 </section>
 <aside class="side">
 <div class="task-section"><div class="task-top"><strong id="task-label">探究任务</strong><span id="task-state">待观察</span></div><h2 id="question"></h2><div class="choices" id="choices" role="group" aria-label="探究问题选项"></div><p class="feedback" id="feedback" role="status" aria-live="polite"></p><div class="read-actions"><button type="button" id="read-more">展开原理</button><button type="button" id="speak">朗读讲解</button></div></div>
@@ -80,7 +95,7 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 
 
 <script src="assets/three.browser.js"></script>
-<script src="immersion.js?v=fix25"></script>
+<script src="immersion.js?v=fix27"></script>
 <link rel="stylesheet" href="assets/site/tokens.css">
 <style>
   .view-hint{font-size:12px}
@@ -228,13 +243,38 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 .chapter-link{align-self:center;flex-shrink:0;font-size:12.5px;color:var(--amber);border:1px solid var(--line);padding:7px 13px;text-decoration:none;white-space:nowrap;margin-right:10px}.chapter-link:hover{border-color:var(--amber);color:#efc684}
 .tower-link,.chapter-link{font-size:12px}
 </style>
-<script src="levels/entry.js?v=demo3"></script>
-<script src="levels/l1.js?v=grp1"></script>
-<script src="levels/l2.js?v=grp1"></script>
-<script src="levels/l3.js?v=grp1"></script>
-<script src="levels/l4.js?v=grp1"></script>
-<script src="levels/l5.js?v=grp1"></script>
+<script src="levels/entry.js?v=v35"></script>
+<script src="levels/l1.js?v=v35"></script>
+<script src="levels/l2.js?v=v35"></script>
+<script src="levels/l3.js?v=v35"></script>
+<script src="levels/l4.js?v=v35"></script>
+<script src="levels/l5.js?v=v35"></script>
 <style>
+.device-card{position:absolute;left:0;top:0;transform:translate(-50%,-100%);z-index:8;width:min(280px,calc(100% - 24px));border:1px solid #3d3a33;background:rgba(11,15,17,.96);padding:12px 14px;box-shadow:0 10px 28px rgba(0,0,0,.38)}
+.device-card[hidden]{display:none}
+.device-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#8b867d}
+.device-top button{background:none;border:0;color:#9a948a;font-size:12px;cursor:pointer;min-height:28px}
+.device-card h3{margin:2px 0 4px;font-family:var(--font-display);font-size:20px;font-weight:400;color:#e8e1d4}
+.device-card p{margin:0 0 8px;font-size:13px;line-height:1.8;color:#b6b0a2}
+.device-actions{display:flex;gap:10px;align-items:center}
+.device-actions button{border:1px solid #3d3a33;background:#141816;color:#cfc8ba;font-size:12px;padding:6px 12px;min-height:32px;cursor:pointer}
+.device-actions button:hover{border-color:var(--amber);color:var(--amber)}
+.device-actions a{font-size:12px;color:#9a948a;border-bottom:1px solid #3d3a33}
+.device-actions a:hover{color:var(--amber)}
+.modebar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
+.modebar button{background:#141816;border:1px solid #3d3a33;color:#cfc8ba;font-size:12px;padding:6px 11px;min-height:32px;cursor:pointer}
+.modebar button[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);background:#26221a}
+.modehint{margin-left:auto;font-size:12px;color:#8b867d}
+.tour-card{position:absolute;left:18px;bottom:74px;z-index:6;width:min(360px,calc(100% - 36px));padding:14px 16px;border:1px solid #3d3a33;background:rgba(11,15,17,.94);backdrop-filter:blur(4px)}
+.tour-card[hidden]{display:none}
+.tour-top{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#8b867d;letter-spacing:.08em}
+.tour-top button{background:none;border:0;color:#9a948a;font-size:12px;cursor:pointer;min-height:28px}
+.tour-card h2{margin:6px 0 6px;font-family:var(--font-display);font-weight:400;font-size:22px;color:#e8e1d4}
+.tour-card p{margin:0 0 10px;font-size:13px;line-height:1.8;color:#b6b0a2}
+.tour-actions{display:flex;gap:8px}
+.tour-actions button{border:1px solid #3d3a33;background:#141816;color:#cfc8ba;font-size:12px;padding:6px 12px;min-height:32px;cursor:pointer}
+.tour-actions button:hover{border-color:var(--amber);color:var(--amber)}
+@media(max-width:640px){.modehint{display:none}.tour-card{bottom:64px}}
 /* 统一到首页排版体系 */
 .nav--main a{font-size:13px}
 .object-label{font-size:12px}

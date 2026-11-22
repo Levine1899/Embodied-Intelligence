@@ -1,0 +1,19 @@
+{
+  "asset": "three_phase_separator",
+  "source": "tools/spike_separator.py",
+  "blender": "4.5.16 LTS",
+  "triangles": 10412,
+  "vertices": 5252,
+  "objects": 27,
+  "size_m": {
+    "length": 5.2,
+    "diameter": 2.1,
+    "height": 2.9
+  },
+  "files": {
+    "glb_bytes": 500448,
+    "obj_bytes": 697848,
+    "blend_bytes": 1130677
+  },
+  "note": "Spike asset for pipeline validation; not final production art."
+}

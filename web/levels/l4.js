@@ -41,10 +41,11 @@
 
   /* 产品：从塔顶往下 */
   const PRODUCTS = [
-    { key: 'lpg', name: '液化气', y: 7.9, color: 0x9fd3c6, hint: '最轻 · 塔顶' },
-    { key: 'gasoline', name: '汽油', y: 6.2, color: 0x7fd6a8, hint: '较轻' },
-    { key: 'diesel', name: '柴油', y: 4.4, color: 0xd8a24a, hint: '较重' },
-    { key: 'residue', name: '渣油', y: 2.2, color: 0xb9772e, hint: '最重 · 塔底' }
+    { key: 'topgas', name: '塔顶油气', y: 8.0, color: 0xbfd8cf, hint: '最轻 · 塔顶' },
+    { key: 'naphtha', name: '石脑油馏分', y: 6.5, color: 0x9fd3c6, hint: '较轻 · 上部' },
+    { key: 'kerosene', name: '煤油馏分', y: 5.1, color: 0xd8c9a0, hint: '中等 · 中部' },
+    { key: 'diesel', name: '柴油馏分', y: 3.7, color: 0xd8a24a, hint: '较重 · 下部' },
+    { key: 'residue', name: '常压渣油', y: 2.0, color: 0xb38a4a, hint: '最重 · 塔底' }
   ];
 
   function build() {
@@ -195,11 +196,15 @@
   }
 
   let running = false;
+  let lastT = performance.now();
   function loop() {
     if (!running) return;
     requestAnimationFrame(loop);
     if (!stage.isLevel()) return;
-    flows.forEach(function (f) { f.update(0.016); });
+    const now = performance.now();
+    const dt = Math.min(0.05, (now - lastT) / 1000 || 0.016);
+    lastT = now;
+    flows.forEach(function (f) { f.update(dt); });
   }
 
   /* ---------- UI ---------- */
@@ -208,13 +213,13 @@
   ui.innerHTML = [
     '<div class="lvl__bar"><span class="lvl__step">04 / 05</span><b>炼化 · 分馏</b><span class="lvl__hint" id="l4-hint">镜头正在靠近分馏塔…</span></div>',
     '<div class="lvl__act" id="l4-act" hidden>',
-    '<p>原油被加热后进塔，<b>沸点低的往上走</b>。先点一个产品，再点它该出来的位置。</p>',
+    '<p>原油被加热后进塔，<b>沸点低的往上走</b>。先点一个馏分，再点它该出来的位置。</p><p style="color:#9a948a;font-size:12px;margin:4px 0 8px">馏分不等于成品油：后续还要裂化、重整、加氢、精制与调和；塔上位置为教学示意。</p>',
     '<div class="lvl__chips" id="l4-chips">',
     PRODUCTS.map(function (p, i) {
       return '<button type="button" class="lvl__chip" data-p="' + p.key + '">' + p.name + '</button>';
     }).join(''),
     '</div>',
-    '<div class="lvl__out"><span id="l4-note">未选择产品</span></div>',
+    '<div class="lvl__out"><span id="l4-note">未选择馏分</span></div>',
     '</div>',
     '<button type="button" class="lvl__back" id="l4-back">返回总览</button>'
   ].join('');
@@ -235,13 +240,14 @@
     const b = e.target.closest('[data-p]');
     if (!b || b.disabled) return;
     picked = b.getAttribute('data-p');
+    if (stage.setInteraction) stage.setInteraction('choose_fraction', picked);
     Array.from(chips.children).forEach(function (c) { c.classList.toggle('on', c === b); });
     const pr = PRODUCTS.find(function (x) { return x.key === picked; });
     note.textContent = '已选「' + pr.name + '」，点塔上它该出来的位置';
   });
 
   function pickTray(index) {
-    if (!picked) { note.textContent = '先在上面选一个产品'; return; }
+    if (!picked) { note.textContent = '先在上面选一个馏分'; return; }
     const want = PRODUCTS.findIndex(function (x) { return x.key === picked; });
     const pr = PRODUCTS[want];
     if (index === want) {
@@ -259,7 +265,8 @@
       hint.textContent = '对了 · ' + pr.name + ' 从' + (index === 0 ? '塔顶' : index === 3 ? '塔底' : '第 ' + (index + 1) + ' 层') + '出来';
       const chip = chips.querySelector('[data-p="' + pr.key + '"]');
       if (chip) { chip.classList.add('done'); chip.disabled = true; }
-      if (doneCount === PRODUCTS.length) complete();
+      if (stage.setInteraction) stage.setInteraction('place_fraction', PRODUCTS[want] ? PRODUCTS[want].name : picked);
+    if (doneCount === PRODUCTS.length) complete();
     } else {
       hint.textContent = '不对 · ' + pr.name + ' 应该更' + (index < want ? '靠下' : '靠上');
       note.textContent = pr.name + ' 不从这里出来';
@@ -271,10 +278,10 @@
   function complete() {
     completed = true;
     ui.classList.add('done');
-    hint.textContent = '已完成 · 四种产品各归其位';
+    hint.textContent = '已完成 · 五种馏分各归其位';
     const log = (window.__leadai && window.__leadai.ledger) || [];
     log.push({ k: '看', t: '炼化：分馏塔的四个抽出口' });
-    log.push({ k: '动手', t: '把四种产品放到对的塔位', d: '全对' });
+    log.push({ k: '动手', t: '把五种馏分放到对的塔位', d: '全对' });
     if (stage.setNodeDone) stage.setNodeDone(3, true);
     back.classList.add('pulse');
     back.textContent = '完成，返回总览 →';
@@ -323,7 +330,7 @@
 
     fly(startPos, startT,
       new THREE.Vector3(anchor.x + 7.2, 10.2, anchor.z + 16.5), new THREE.Vector3(anchor.x + 1.2, 4.4, anchor.z), 1800, function () {
-        hint.textContent = '越轻的产品 · 从越高的位置出来';
+        hint.textContent = '越轻的馏分 · 从越高的位置出来';
         act.hidden = false;
       });
   }

@@ -16,7 +16,7 @@
     { name: '柴油', oil: true, shape: 'cyl' },
     { name: '航空煤油', oil: true, shape: 'cone' },
     { name: '沥青', oil: true, shape: 'sphere' },
-    { name: '塑料', oil: true, shape: 'box' },
+    { name: '塑料制品', oil: true, shape: 'box' },
     { name: '石蜡', oil: true, shape: 'cyl' },
     { name: '玻璃', oil: false, shape: 'box' },
     { name: '棉花', oil: false, shape: 'sphere' },
@@ -85,7 +85,7 @@
       it.ringMat = ring.material;
     });
 
-    const title = window.__lvlLabel('哪些来自石油？', '#f0a22e');
+    const title = window.__lvlLabel('哪些是常见石油路线产品？', '#f0a22e');
     title.scale.set(3.1, 0.72, 1);
     title.position.set(0, 4.2, -1.5);
     G.add(title);
@@ -152,6 +152,7 @@
       it.mesh.scale.setScalar(1.14);
     }
     refreshCount();
+    if (stage.setInteraction) stage.setInteraction('select_product', it.name, picked.size + ' 件');
     note.textContent = '已选 ' + picked.size + ' 件';
   }
 
@@ -188,7 +189,7 @@
     back.classList.add('pulse');
     back.textContent = '完成，返回总览 →';
     checkBtn.disabled = true;
-    note.textContent = '六件石油制品 · 四件不是';
+    note.textContent = '六件常见石油路线产品；塑料等也可能来自天然气、煤基或生物基原料';
   }
 
   /* ---------- 拾取 ---------- */

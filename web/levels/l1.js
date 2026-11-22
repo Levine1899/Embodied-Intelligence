@@ -203,12 +203,16 @@
 
   const animations = [];
   let running = false;
+  let lastT = performance.now();
 
   function loop() {
     if (!running) return;
     requestAnimationFrame(loop);
     if (!stage.isLevel()) return;
-    animations.forEach(function (a) { a.update(0.016); });
+    const now = performance.now();
+    const dt = Math.min(0.05, (now - lastT) / 1000 || 0.016);
+    lastT = now;
+    animations.forEach(function (a) { a.update(dt); });
   }
 
   /* ---------- 相机 ---------- */
@@ -244,8 +248,8 @@
   ui.innerHTML = [
     '<div class="lvl__bar"><span class="lvl__step">01 / 05</span><b>地下开采 · 井筒剖面</b><span class="lvl__hint" id="l1-hint">镜头正在下沉…</span></div>',
     '<div class="lvl__act" id="l1-act" hidden>',
-    '<p>油不在“油湖”里，它躲在<b>岩石孔隙</b>中。把压力推上去，看它怎么被顶出来。</p>',
-    '<div class="lvl__row"><input type="range" min="0" max="100" value="0" id="l1-press" aria-label="压力"><b id="l1-pct">0%</b></div>',
+    '<p>油不在“油湖”里，它躲在<b>岩石孔隙</b>中。拖动“压力差示意”，看油被推向井底。</p><p style="color:#9a948a;font-size:12px;margin:4px 0 8px">教学示意：滑块不代表真实井底压力、注入量或采收率。</p>',
+    '<div class="lvl__row"><input type="range" min="0" max="100" value="0" id="l1-press" aria-label="压力差示意（教学控制量）"><b id="l1-pct">0%</b></div>',
     '<div class="lvl__out"><span id="l1-note">孔隙里的油还没动</span></div>',
     '</div>',
     '<button type="button" class="lvl__back" id="l1-back">返回总览</button>'
@@ -265,6 +269,7 @@
 
   press.addEventListener('input', function () {
     pressure = +press.value;
+    if (stage.setInteraction) stage.setInteraction('adjust_pressure', pressure, '示意百分比');
     pct.textContent = pressure + '%';
     if (built) {
       built.droplets.children.forEach(function (d) {
@@ -278,19 +283,19 @@
       (built.extra || []).forEach(function (f) { f.speed = 0.03 + (pressure / 100) * 0.5; });
     }
     if (pressure < 30) note.textContent = '孔隙里的油还没动';
-    else if (pressure < 60) note.textContent = '油开始往井筒方向移动';
-    else if (pressure < 90) note.textContent = '大部分油被顶出孔隙';
-    else note.textContent = '油基本出完了 —— 这就是“采”';
+    else if (pressure < 60) note.textContent = '油开始向井底方向运移';
+    else if (pressure < 90) note.textContent = '更多油向井底运移（示意）';
+    else note.textContent = '教学示意：压差推动油向井底流动；真实采收率还受储层与开发条件影响';
     if (pressure >= 90 && !completed) complete();
   });
 
   function complete() {
     completed = true;
     ui.classList.add('done');
-    hint.textContent = '已完成 · 油被顶出孔隙';
+    hint.textContent = '已完成 · 观察压差驱动';
     const log = (window.__leadai && window.__leadai.ledger) || [];
     log.push({ k: '看', t: '地下开采：井筒剖面与孔隙' });
-    log.push({ k: '动手', t: '推压力把油从孔隙里挤出来', d: pressure + '%' });
+    log.push({ k: '动手', t: '调节压力差示意，观察油向井底流动', d: pressure + '%（示意）' });
     if (stage.setNodeDone) stage.setNodeDone(0, true);
     back.classList.add('pulse');
     back.textContent = '完成，返回总览 →';
@@ -307,7 +312,7 @@
     if (flyHandle) cancelAnimationFrame(flyHandle);
     camera.position.copy(END_POS());
     camera.lookAt(END_T());
-    hint.textContent = '油层 · 拖下面的压力';
+    hint.textContent = '油层 · 拖动压力差示意';
     act.hidden = false;
     const b = ui.querySelector('#l1-skip'); if (b) b.remove();
   }
@@ -351,7 +356,7 @@
               later(500, function () {
                 fly(camera.position.clone(), new THREE.Vector3(p0.x, -8.5, p0.z),
                   new THREE.Vector3(p0.x + 4.6, WELL_BOTTOM + 4.2, p0.z + 10.5), new THREE.Vector3(p0.x, WELL_BOTTOM + 1.2, p0.z), 2400, function () {
-                    hint.textContent = '油层 · 拖下面的压力';
+                    hint.textContent = '油层 · 拖动压力差示意';
               const sb = ui.querySelector('#l1-skip'); if (sb) sb.remove();
                     act.hidden = false;
                   });

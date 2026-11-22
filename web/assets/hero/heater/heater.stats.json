@@ -1,0 +1,52 @@
+{
+  "asset": "heater",
+  "triangles": 1364,
+  "vertices": 748,
+  "meshes": 4,
+  "materials": 4,
+  "size_m": {
+    "x": 6.3,
+    "y": 4.2,
+    "z": 9.11
+  },
+  "anchors": [
+    {
+      "id": "stack",
+      "name": "烟囱",
+      "pos": [
+        1.2,
+        0,
+        9.0
+      ]
+    },
+    {
+      "id": "outlet",
+      "name": "出口",
+      "pos": [
+        2.3,
+        0,
+        1.0
+      ]
+    },
+    {
+      "id": "burner",
+      "name": "燃烧器",
+      "pos": [
+        -1.8,
+        0,
+        1.4
+      ]
+    }
+  ],
+  "budget": {
+    "triangles": 8000,
+    "drawCalls": 6
+  },
+  "units": "meters",
+  "up_axis_after_export": "Y",
+  "note": "Teaching-grade medium detail; not an engineering model.",
+  "files": {
+    "obj_bytes": 66996,
+    "mtl_bytes": 781
+  }
+}

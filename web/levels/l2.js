@@ -194,11 +194,15 @@
   }
 
   let running = false;
+  let lastT = performance.now();
   function loop() {
     if (!running) return;
     requestAnimationFrame(loop);
     if (!stage.isLevel()) return;
-    flows.forEach(function (f) { f.update(0.016); });
+    const now = performance.now();
+    const dt = Math.min(0.05, (now - lastT) / 1000 || 0.016);
+    lastT = now;
+    flows.forEach(function (f) { f.update(dt); });
   }
 
   /* ---------- UI ---------- */
@@ -226,6 +230,7 @@
 
   function pickOutlet(key) {
     picked = key;
+    if (stage.setInteraction) stage.setInteraction('choose_outlet', key);
     built.OUTLETS.forEach(function (o) {
       o.ring.scale.setScalar(o.key === key ? 1.5 : 1);
       o.ring.material.emissiveIntensity = o.key === key ? 2.2 : 1.0;

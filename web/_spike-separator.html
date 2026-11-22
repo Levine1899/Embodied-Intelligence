@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GLB 加载 spike · 三相分离器</title>
+<style>
+  :root{--bg:#0b0f11;--panel:#0d1215;--line:#242a2d;--text:#e8e1d4;--muted:#9a948a;--amber:#d8a24a}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.7 "PingFang SC","Microsoft YaHei",sans-serif}
+  header{padding:14px 22px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:baseline}
+  h1{font-size:18px;margin:0;font-weight:400}
+  header span{color:var(--muted);font-size:12px}
+  main{display:grid;grid-template-columns:minmax(0,1fr) 330px;min-height:calc(100vh - 60px)}
+  #stage{position:relative;min-height:520px}
+  canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+  aside{border-left:1px solid var(--line);padding:18px;background:var(--panel)}
+  aside h2{font-size:13px;letter-spacing:.14em;color:var(--muted);font-weight:400;margin:0 0 10px}
+  dl{margin:0 0 18px;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px}
+  dt{color:var(--muted)}
+  dd{margin:0;color:var(--text);font-variant-numeric:tabular-nums}
+  .ok{color:#9fd3c6}.warn{color:var(--amber)}
+  #note{font-size:12px;color:var(--muted);line-height:1.8;border-top:1px solid var(--line);padding-top:12px}
+  #err{color:#e08b74;font-size:13px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<header><h1>三相分离器 · GLB 加载 spike</h1><span>Blender 4.5 导出 · MiniGLB 解析 · 真实渲染实测</span></header>
+<main>
+  <div id="stage"><canvas id="scene"></canvas></div>
+  <aside>
+    <h2>加载与渲染</h2>
+    <dl id="metrics"><dt>状态</dt><dd class="warn">加载中…</dd></dl>
+    <h2>说明</h2>
+    <p id="note">这是管线验证页面，不是生产页面。GLB 由 <code>tools/spike_separator.py</code> 生成；解析器是 spike 专用最小实现，不支持贴图/骨骼/动画/Draco。</p>
+    <p id="err"></p>
+  </aside>
+</main>
+<script src="assets/three.browser.js"></script>
+<script src="assets/spike/glb-mini.js"></script>
+<script>
+(function () {
+  const canvas = document.getElementById('scene');
+  const stage = document.getElementById('stage');
+  const metricsEl = document.getElementById('metrics');
+  const errEl = document.getElementById('err');
+
+  const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  if ('outputColorSpace' in renderer) renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0b0f11);
+  scene.fog = new THREE.Fog(0x0b0f11, 22, 42);
+  const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 200);
+  camera.position.set(7.2, 5.0, 8.6);
+
+  scene.add(new THREE.HemisphereLight(0xf2ead9, 0x0b0f11, 1.1));
+  const key = new THREE.DirectionalLight(0xfff3df, 2.4); key.position.set(6, 9, 7); scene.add(key);
+  const rim = new THREE.DirectionalLight(0x8fb6ad, 1.0); rim.position.set(-7, 4, -6); scene.add(rim);
+  const warm = new THREE.PointLight(0xd8a24a, 6, 16, 2); warm.position.set(-3, 4, 3); scene.add(warm);
+
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshStandardMaterial({ color: 0x14140f, roughness: 1 }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = -0.02;
+  scene.add(floor);
+  const grid = new THREE.GridHelper(40, 40, 0x4a4437, 0x2a271f);
+  scene.add(grid);
+
+  const orbit = { az: 0.68, el: 0.36, dist: 10.5, targetY: 1.4 };
+  function applyCamera() {
+    const ce = Math.cos(orbit.el), se = Math.sin(orbit.el);
+    camera.position.set(orbit.dist * ce * Math.sin(orbit.az), orbit.targetY + orbit.dist * se, orbit.dist * ce * Math.cos(orbit.az));
+    camera.lookAt(0, orbit.targetY, 0);
+  }
+  applyCamera();
+
+  let dragging = false, lastX = 0, lastY = 0;
+  canvas.addEventListener('pointerdown', function (e) { dragging = true; lastX = e.clientX; lastY = e.clientY; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    orbit.az -= (e.clientX - lastX) * 0.006;
+    orbit.el = Math.max(0.08, Math.min(1.1, orbit.el + (e.clientY - lastY) * 0.004));
+    lastX = e.clientX; lastY = e.clientY;
+    applyCamera();
+  });
+  canvas.addEventListener('pointerup', function () { dragging = false; });
+  canvas.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    orbit.dist = Math.max(5, Math.min(20, orbit.dist * (e.deltaY > 0 ? 1.08 : 0.92)));
+    applyCamera();
+  }, { passive: false });
+
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const spike = {
+    asset: 'three_phase_separator',
+    bytes: 0, fetchMs: null, parseMs: null, triangles: 0, meshes: 0, materials: 0,
+    drawCalls: 0, fpsAvg: null, fpsMin: null, frames: 0, loadMs: null
+  };
+  window.__spike = spike;
+
+  function row(label, value, cls) {
+    const dt = document.createElement('dt'); dt.textContent = label;
+    const dd = document.createElement('dd'); dd.textContent = value;
+    if (cls) dd.className = cls;
+    metricsEl.appendChild(dt); metricsEl.appendChild(dd);
+  }
+
+  const t0 = performance.now();
+  MiniGLB.load('assets/spike/separator.glb').then(function (result) {
+    scene.add(result.root);
+    spike.bytes = result.bytes;
+    spike.fetchMs = result.fetchMs;
+    spike.parseMs = result.parseMs;
+    spike.triangles = result.triangles;
+    spike.meshes = result.meshes;
+    spike.materials = result.materials;
+    spike.loadMs = Math.round(performance.now() - t0);
+    metricsEl.replaceChildren();
+    row('状态', '已加载', 'ok');
+    row('GLB', (result.bytes / 1024).toFixed(0) + ' KB');
+    row('fetch', result.fetchMs + ' ms');
+    row('解析', result.parseMs + ' ms');
+    row('总加载', spike.loadMs + ' ms');
+    row('三角面', result.triangles.toLocaleString());
+    row('mesh 数', String(result.meshes));
+    row('材质数', String(result.materials));
+    document.getElementById('note').textContent = '加载完成。拖动旋转、滚轮缩放；右侧数字来自本次真实运行。';
+  }).catch(function (error) {
+    errEl.textContent = '加载失败：' + (error && error.message || error);
+    metricsEl.replaceChildren();
+    row('状态', '失败', 'warn');
+  });
+
+  const samples = [];
+  let last = performance.now();
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = now - last;
+    last = now;
+    renderer.render(scene, camera);
+    spike.drawCalls = renderer.info.render.calls;
+    if (spike.loadMs != null && spike.frames < 600) {
+      spike.frames += 1;
+      if (dt > 0 && dt < 500) {
+        samples.push(dt);
+        if (samples.length > 240) samples.shift();
+        if (samples.length >= 10) {
+          const avg = samples.reduce(function (a, b) { return a + b; }, 0) / samples.length;
+          const min = samples.reduce(function (a, b) { return Math.min(a, b); }, Infinity);
+          spike.fpsAvg = Math.round(1000 / avg * 10) / 10;
+          spike.fpsMin = Math.round(1000 / min * 10) / 10;
+        }
+      }
+    }
+  }
+  requestAnimationFrame(frame);
+
+  setInterval(function () {
+    if (spike.loadMs == null) return;
+    const rows = document.querySelectorAll('#metrics dd');
+    if (!rows.length) return;
+    const extra = 'calls ' + spike.drawCalls + ' · FPS ' + (spike.fpsAvg || '…');
+    document.title = 'GLB spike · ' + extra;
+  }, 1000);
+})();
+</script>
+</body>
+</html>

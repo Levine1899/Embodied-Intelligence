@@ -1,0 +1,61 @@
+{
+  "asset": "separator",
+  "triangles": 8236,
+  "vertices": 4160,
+  "meshes": 5,
+  "materials": 5,
+  "size_m": {
+    "x": 5.74,
+    "y": 3.1,
+    "z": 3.18
+  },
+  "anchors": [
+    {
+      "id": "inlet",
+      "name": "原油进口",
+      "pos": [
+        -2.83,
+        0,
+        1.35
+      ]
+    },
+    {
+      "id": "outlet",
+      "name": "油出口",
+      "pos": [
+        2.83,
+        0,
+        1.1
+      ]
+    },
+    {
+      "id": "gas",
+      "name": "气出口",
+      "pos": [
+        0,
+        0,
+        2.9
+      ]
+    },
+    {
+      "id": "water",
+      "name": "水出口",
+      "pos": [
+        0,
+        0,
+        0.15
+      ]
+    }
+  ],
+  "budget": {
+    "triangles": 12000,
+    "drawCalls": 8
+  },
+  "units": "meters",
+  "up_axis_after_export": "Y",
+  "note": "Teaching-grade medium detail; not an engineering model.",
+  "files": {
+    "obj_bytes": 463275,
+    "mtl_bytes": 960
+  }
+}

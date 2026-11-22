@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 3.4.0 — 2026-11-21 · 连续产业链数字展馆（沙盘重构 + 导览 + 科学修正）
+
+- **空间重构**：五块漂浮底座改为一块 78×34 连续地形 + 五个嵌地分区 + 工艺脊线（物流带/管架/管线）+ 远景轮廓；新增下沉式地质剖面台阶（6 层岩性、储层油点、井筒/井口/抽油机）。
+- **设备升级**：三相分离器（封头/鞍座/接管/阀轮）、固定顶 vs 外浮顶罐（浮盘/密封圈/导向杆）、常压塔/减压塔（平台/护栏/梯子/侧线）、加热炉+烟囱、加油机/塑料瓶/纤维卷/润滑油桶/沥青样块。
+- **体验模式**：沉浸导览（7 步、约 90 秒、可暂停/跳过、输入即接管）、自由探索、任务关卡；reduced-motion 不自动播放。
+- **上下文与 AI**：`window.__sceneContext`（scene/stage/object/knowledge/mode/interaction/history）；设备 objectId + 按三维锚点定位的设备卡片（名称/用途/问 AI/读本章）；关卡压力差、液位、出口、馏分、产品选择回写 interaction 并保留 12 条历史；`/api/ask` 的 `ctx` 追加场景行，契约保持兼容。
+- **科学修正**：l1 压力差示意边界；l3 删除排放量推断与“压没”；l4 改为五种馏分并说明馏分≠成品油；l5 产品路线不绝对化。
+- **稳定性**：l1–l4 真实 deltaTime；塔页 WebGL2 检测、上下文丢失处理、加载后 `setLevel(0)`。
+- **文档**：新增 audit-baseline / asset-inventory / experience-design / scene-map / scene-sandbox / implementation-report，重写塔场景文档；版本号统一 3.4.0。
+- **Hero 资产 v1**：Blender 脚本生成五台设备（分离器 8,236 / 抽油机 1,208 / 井口 3,948 / 外浮顶罐 5,448 / 加热炉 1,364 三角面），按材质合并为 4–5 个对象，输出 OBJ/MTL/meta/stats 与 Cycles 预览；抽油机与加热炉标记“需美术复审/重做”，未接入沙盘。
+- **GLB spike**：Blender 三相分离器（10.4k 面 / 500 KB）导出并在真实浏览器加载（72 ms / 29 draw calls）；确认现有 three 包缺 GLTFLoader，近期推荐 OBJ 管线，见 `docs/asset-spike-separator.md`。
+
 ## 3.3.2 — 2026-11-21 · 问答页统一暖墨；导航文案收口
 
 - **问答页统一**：远端新版问答页（含 science-logo.png）由冷蓝 `#0b141c` 改为暖墨 `#0b0f11`；强调色改灰青/赭黄；标题与品牌改得意黑；大标题去掉「，。」；输入条与气泡圆角收到 4–8px；`shortcut-label` 提到 12px。
