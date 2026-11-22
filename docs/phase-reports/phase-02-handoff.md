@@ -1,7 +1,7 @@
-# Phase 02 交接报告 · 体验设计（第四轮返修 / phase-02-rev4）
+# Phase 02 交接报告 · 体验设计（第五轮返修 / phase-02-rev5）
 
 日期：2026-11-22
-阶段：02_EXPERIENCE_DESIGN（返修轮 4；本轮 tag phase-02-rev4）
+阶段：02_EXPERIENCE_DESIGN（返修轮 5；本轮 tag phase-02-rev5）
 状态建议：**REVISE**（等待用户签收；不得进入阶段 03）
 用户签收：**待用户签收**
 
@@ -39,7 +39,7 @@
 
 ## 3. 本轮审查问题对应修订（按正文证据）
 
-### 3.1 第四轮 P1/P2
+### 3.0 第五轮 P0/P1/P2（本轮）
 
 | 编号 | 状态 | 修订位置/证据 |
 |---|---|---|
@@ -47,7 +47,7 @@
 | P1-02 canonical 状态/Skipped | **已解决** | `task-design.md` §7：完整 JSON schema；`task.status` 只整单；`task.steps[Tn].status` 才有 skipped；生命周期/上下文规则 |
 | P1-03 wellhead 坐标冲突 | **已解决** | `scene-map.md`：唯一 `wellhead(-22,0,10)`；地下用 `wellbore_top_anchor(-22,0,10)`；objectId/anchorId 区分；相机 lookAt 更新 |
 | P1-04 T6 中间加工反馈 | **已解决** | `task-design.md` §5/§6：解析 `resolvedProcessId/routeId`，路线节点依次点亮；`knowledge-visual-mapping.md` §6.1；`experience-design.md` T6 |
-| P1-05 handoff 轮次/SHA | **已修订** | 标题/头部为第四轮 rev4；§4 记录内容提交完整 SHA、最终 tag/HEAD 关系；最终工作区 clean |
+| P1-05 handoff 轮次/SHA | **已修订** | 标题/头部为第五轮 rev5；§4 记录各轮完整 SHA、第四轮最终 SHA `b479b7c...`、rev5 tag 关系与 clean 状态 |
 | P2-01 灰盒数量 | **已解决** | 统一为 5 张（entry/overview/subsurface/separator/tower） |
 | P2-02 T3/T4 储罐语义 | **已解决** | T3 油相到储运进料总管；T4 选具体罐并入罐 |
 | P2-03 priority 视觉 | **已解决** | `task-design.md` §5.1：fuel/material 高亮/弱化表；5 张必做卡不屏蔽 |
@@ -110,11 +110,13 @@
 - 第一轮返修（大改 11 文件）：`172f283`；交接记录一行提交：`c9a02ea`
 - 第二轮返修内容：`73f6bfb`；记录提交：`aa57e0e`；tag `phase-02-rev2` → `aa57e0e`
 - 第三轮返修内容：`fe2e896c360cc80c43afdea30e613341117d5e47`；记录提交：`e066322c7f67109737714ba1ea92432387b326cc`；tag `phase-02-rev3` → `e066322c7f67109737714ba1ea92432387b326cc`
-- 第四轮返修（本轮）内容提交：`6dca10b7b7c528bca4e5ee03d979c61d3cb95634`（完整 40 位；提交后填写）
-- 本轮开始时：`git rev-parse HEAD` = `e066322c7f67109737714ba1ea92432387b326cc`；`git status --short` = 空；分支 `main`
-- 第四轮最终记录提交/最终 branch HEAD：由 tag `phase-02-rev4` 指向；完整 SHA 以 `git rev-parse refs/tags/phase-02-rev4^{}` 校验，最终交付消息同时列出
+- 第四轮返修内容：`6dca10b7b7c528bca4e5ee03d979c61d3cb95634`；记录提交：`b479b7c49c519f76db51886354d7a66ba7e1bc16`；tag `phase-02-rev4` → `b479b7c49c519f76db51886354d7a66ba7e1bc16`
+- 第五轮返修（本轮）内容提交：`<REV5_COMMIT>`（完整 40 位；提交后填写）
+- 本轮开始时：`git rev-parse HEAD` = `b479b7c49c519f76db51886354d7a66ba7e1bc16`；`git status --short` = 空；分支 `main`
+- 第五轮最终记录提交/最终 branch HEAD：由 tag `phase-02-rev5` 指向；完整 SHA 以 `git rev-parse refs/tags/phase-02-rev5^{}` 校验，最终交付消息同时列出
 - 最终工作区：`git status --short` 为空（0 行）
-- 验收对应文档状态以 tag `phase-02-rev4` 为准；不以聊天或旧 tag 代替
+- 验收对应文档状态以 tag `phase-02-rev5` 为准；不以聊天或旧 tag 代替
+- 说明：Git 提交内容无法包含自身提交的 SHA；本报告记录设计内容提交的完整 SHA，最终记录提交由 tag 固定，避免伪造自引用 SHA。
 
 ## 5. 验证与测试边界
 
@@ -162,7 +164,7 @@
 
 **REVISE。**
 
-本轮已修正 P1-01–08、P1-10–12，并补齐总控文件、灰盒参考、会话复位、五组必做映射和六区 XZ 坐标。P1-09 的最终提交 SHA 以 tag `phase-02-rev3` 的 peeled SHA 为准（最终交付消息给出）。但阶段 02 用户签收（P0）仍未完成，按总控不得建议 PASS，也不得进入阶段 03。
+本轮已解除 P0 交付死锁（T6 配对→`stamp_l5`→T7 `batch.deliver`），并修正 T1/T2 节点、canonical 状态分层、井口唯一锚点、T6 中间路线反馈、灰盒计数与 T3/T4 储罐语义。设计内容提交与最终 tag 见 §4；阶段 02 用户签收（P0）仍未完成，按总控不得建议 PASS，也不得进入阶段 03。
 
 ## 8. User acceptance
 

@@ -38,7 +38,10 @@ Agent 审计建议：**REVISE**（保留当时 P0 发现与技术风险，不改
 
 - 起始：`be08acf`（`main`，工作区干净）
 - 审计文档提交：`41b69ed`（docs-only；提交信息 `docs: phase 01 audit baseline`）
-- 结束：本报告修订提交（docs-only，见 `git log -1`）
+- 阶段 01 原始报告结束：`437c8e283f553186e98831592105f0d4826f0979`（`docs: fill phase 01 handoff commit reference`）
+- 阶段 02 补录用户签收：`172f2835490d21957eef344a97e100cbd0753c77` 所在轮次（`docs: revise phase 02 experience blueprint`；具体提交以 `git show` 为准）
+- 阶段 02 状态字段修正：`73f6bfb0a50176138e6307e7205d287411e784c1`
+- 后续 §11 历史快照修正见阶段 02 rev5 handoff；不再使用“见 `git log -1`”作为最终状态。
 
 ## 4. 执行命令
 

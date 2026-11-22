@@ -85,7 +85,7 @@ actionId | objectId | 前置条件 | 输入方式 | 状态变化 | 视觉反馈 
 |---|---|---|---|---|---|---|
 | `subsurface.setDrive` | wellbore | T0 完成 | 滑块 | interaction，batch.node | 油点/牌移动 | <30 提示；回 0 |
 | `subsurface.revealLayer` | geo_* | 无 | 选择层 | 可见性 | 层理显隐 | 可复位 |
-| `wellhead.openValve` | wellhead | T0/T1 | 点阀组 | batch.node | 阀动/流动 | 未接单提示 |
+| `wellhead.openValve` | wellhead | T0已接单且 T1=completed/skipped，`batch.node='wellhead'` | 点阀组 | wellhead→separator | 阀动/流动 | 未接单/未到井口提示 |
 | `separator.cut` | separator | T2 | 按钮 | structure | 内部显现 | 合上复位 |
 | `separator.run` | separator | 剖开 | 按钮 | animation | 三相流动 | 暂停保留结构 |
 | `separator.setGasRoute` | separator | 运行 | 选择 | task.choices.gasRoute | 气网/火炬 | 可改选 |
@@ -97,7 +97,7 @@ actionId | objectId | 前置条件 | 输入方式 | 状态变化 | 视觉反馈 
 | `tower.placeFraction` | tower | 全剖 | 拖拽 | 放置 | 吸附/弹回 | 错误弹回 |
 | `tower.setPriority` | tower | 全放对 | 选择 | task.choices.priority | 侧线/下游 | 可改选 |
 | `city.assignProduct` | city | T5 | 拖拽 | 解析 `resolvedProcessId/routeId`，配对 | 路线节点依次点亮（馏分→加工→应用）→盖章；非法弹回 | 禁止直接成品；错误解释；结果带 routeId |
-| `batch.deliver` | city | 五章 | 按钮 | batch.node=delivered | 最后一章 | 缺章提示 |
+| `batch.deliver` | city | 五枚知识章+T6 completed | 按钮（T7） | delivered + process:deliver + task.complete | 交付反馈/最后一章 | 缺章禁用；成功后进入复盘 |
 
 ## 6. `__sceneContext` 向后兼容
 

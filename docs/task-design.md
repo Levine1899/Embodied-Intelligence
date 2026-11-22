@@ -13,7 +13,7 @@
 | 主任务 | 1 个：批次 YJ-001 交付 |
 | 既有关卡/任务段 | **5 个**：l1–l5，全部保留，不另起一套 |
 | 具体操作步骤 | **6 个**：T1–T6；T1/T2 共用 l1 |
-| 前置/复盘 | T0 接单前置；T7 交付复盘；不计入 6 个操作步骤 |
+| 前置/复盘 | T0 接单前置；T7 交付与复盘；不计入 6 个操作步骤 |
 | 知识章 | **5 枚**（l1–l5）；T0/T7 只记状态，不单独计章 |
 | Hero Moments | 3 个：HM-1 地下 / HM-2 分离 / HM-3 塔 |
 | 任务类型 | 主线 + 自主探索 + 观察 + 判断 + 隐藏发现；不是纯线性闯关 |
@@ -127,28 +127,29 @@
 
 ### T6 城市：交付与应用（对应 l5，延续 T5 重点）
 
-- 目标：把**五张必做应用卡**（汽油/柴油/航空煤油/塑料/沥青）匹配到城市对象，展示 T5 选择的燃料/材料重点，完成交付。纤维/润滑油/石蜡为可选探索卡，不计入 5 组必做。
+- 目标：把**五张必做应用卡**（汽油/柴油/航空煤油/塑料/沥青）匹配到城市对象，展示 T5 选择的燃料/材料重点，完成 T6 知识任务（**不执行交付**）。纤维/润滑油/石蜡为可选探索卡，不计入 5 组必做。
 - 前置：T5 完成或跳过。
 - 线索：城市街区、加油站、材料台、产品卡。
-- 动作：`city.assignProduct(fractionId, applicationId)`（仅 5 张必做卡计数）→ `batch.deliver`；城市按 `task.choices.priority` 显示权重，**不重复设置 priority**；如需改选，回 T5 改同一字段（需确认，不在 T6 新建选择）。
-- 状态变化：`batch.node='city'` → `'delivered'`；正确配对盖章；错误退回；城市权重由 `task.choices.priority` 决定；不写 `productSet`。
-- 可观察结果：5 组必做配对盖章；可选卡可继续查看但不计入 5/5；城市灯光/材料权重；批次牌到交付箱；最后一章。
-- 成功：**5 组必做配对正确**（汽油/柴油/航空煤油/塑料/沥青）+ 交付；T6 完成（重点已在 T5 选择）。
-- 失败：塑料配“只能来自石油”错误；提示可能来自天然气/煤基/生物基；不扣分；缺必做卡时“完成交付”按钮禁用并提示。
+- 动作：`city.assignProduct(fractionId, applicationId)`（仅 5 张必做卡计数），**不调用 `batch.deliver`**；城市按 `task.choices.priority` 显示权重，**不重复设置 priority**；如需改选，回 T5 改同一字段（需确认，不在 T6 新建选择）。
+- 状态变化：`batch.node='city'`（不改为 delivered）；正确配对盖章；第 5 组完成时 `task.steps.T6.status='completed'` 并发放 `stamp_l5`；错误退回；城市权重由 `task.choices.priority` 决定；不写 `productSet`。
+- 可观察结果：5 组必做配对盖章；第 5 组后出现“五枚知识章已齐，可前往交付”提示；可选卡可继续查看但不计入 5/5；城市灯光/材料权重；批次牌停在城市，不提前进交付箱。
+- 成功：**5 组必做配对正确**（汽油/柴油/航空煤油/塑料/沥青）；T6 完成并发放 `stamp_l5`；**不执行交付**（重点已在 T5 选择）。
+- 失败：塑料配“只能来自石油”错误；提示可能来自天然气/煤基/生物基；不扣分；缺必做卡时不发 `stamp_l5`，T7 交付按钮保持禁用。
 - 知识解释：燃料/材料/路面来自不同路线；T5 的重点决定城市显示权重；模型为典型示意，非唯一工艺路线。
 - 重试/跳过：可重配；可跳过。
 - 复位：清空配对，保留 `task.choices.priority`；可选卡发现记录保留。
 - 知识 ID：`kb_use`。
 
-### T7 交付复盘
+### T7 交付与复盘
 
-- 目标：回顾路线、选择、知识；形成“能源探索档案”。
-- 前置：**l1–l5 五枚知识章齐全**（T1/T2 共同完成 l1；T3/T4/T5/T6 分别完成 l2/l3/l4/l5）；T0 接收标记、T7 交付标记是流程标记，不计知识章。跳过段不计知识章但记录跳过。
-- 动作：`archive.review` → 点“完成交付”/“再走一次”/“自由探索”/“看塔”/“问 AI”。
-- 状态变化：`task.status='complete'`；`batch.node='delivered'`；`task.step='T7'`；`task.processStamps` 追加 `deliver`（不计知识章）。
+- 目标：在五枚知识章齐全后执行交付，再回顾路线/选择/知识，形成“能源探索档案”。
+- 前置：**l1–l5 五枚知识章齐全**（T1/T2 共同完成 l1；T3/T4/T5/T6 分别完成 l2/l3/l4/l5），且 `task.steps.T6.status='completed'`；T0 接收标记、T7 交付标记是流程标记，不计知识章。跳过段不计知识章但记录跳过。
+- **本步骤先交付、后复盘**：`batch.deliver` 成功后才进入 `archive.review`；不得把交付和发章互相作为前置。
+- 动作：`batch.deliver`（五章齐全才启用）→ 播放短交付反馈 → `archive.review` → 点“再走一次”/“自由探索”/“看塔”/“问 AI”。
+- 状态变化：`batch.deliver` 成功 → `task.status='complete'`、`batch.node='delivered'`、`task.processStamps` 追加 `deliver`（不计知识章）；随后 `archive.review`，`task.step='T7'`。
 - 可观察结果：路线图、5 枚知识章、2 个流程标记（接单/交付）、3 个选择（气/罐/炼化重点）、用时、发现清单；不是积分。
-- 成功：档案生成；允许导出/生成材料（可选，依赖 API 时标注预置稿）。
-- 失败：缺章时提示“还差哪一段”，不强制顺序。
+- 成功：交付成功 + 档案生成；允许导出/生成材料（可选，依赖 API 时标注预置稿）。
+- 失败：缺章时 `batch.deliver` 按钮禁用并提示“还差第 N 章”，不强制顺序；用户返回补做。
 - 知识解释：回顾每段一句边界；明确示意。
 - 复位：可“重走”清批次/选择，保留知识浏览。
 - 知识 ID：全部 5 个 + `kb_formation` 引导。
@@ -163,8 +164,8 @@
 | T3 | l2 | gathering | gather | three_phase_separator | kb_gather | `separator.cut/run/setGasRoute/assignPhase` |
 | T4 | l3 | storage | store | fixed_roof_tank/floating_roof_tank | kb_store | `tank.selectType/setLevel/confirm` |
 | T5 | l4 | refining | refine | atmospheric_tower/vacuum_tower/heater | kb_refine | `tower.cut/run/placeFraction/setPriority`（唯一 priority） |
-| T6 | l5 | city | use | fuel_dispenser/plastic_bottle/fiber_spool/lubricant_can/asphalt_slab/city_product_table | kb_use | `city.assignProduct/batch.deliver`（沿用 priority） |
-| T7 | — | city | use | archive（非设备） | 全部 | `archive.review` |
+| T6 | l5 | city | use | fuel_dispenser/plastic_bottle/fiber_spool/lubricant_can/asphalt_slab/city_product_table | kb_use | `city.assignProduct`（沿用 priority；不发交付） |
+| T7 | — | city | use | archive（非设备） | 全部 | `batch.deliver/archive.review` |
 
 
 ### 4.1 印章类型与映射（消除计数歧义）
@@ -190,11 +191,11 @@
 | 第2章 `stamp_l2` | l2 | T3 | T3 完成（气/油/水三路都有去向） |
 | 第3章 `stamp_l3` | l3 | T4 | T4 完成（选罐+液位变化+确认） |
 | 第4章 `stamp_l4` | l4 | T5 | T5 完成（五馏分全对+全剖查看+重点选择） |
-| 第5章 `stamp_l5` | l5 | T6 | T6 完成（5 组必做配对正确+交付） |
+| 第5章 `stamp_l5` | l5 | T6 | T6 完成（5 组必做配对正确；**不含交付**） |
 
 - 允许跳过以继续探索，但跳过/未完成的知识章**不发章**。
-- `batch.deliver` 前置为 5 枚知识章齐全；缺章时按钮禁用，提示“还差第 N 章”，用户可返回补做。
-- 不允许带缺章强行交付；T7 复盘只在交付后出现。
+- `batch.deliver` 前置为 **5 枚知识章齐全且 T6 completed**；缺章时按钮禁用，提示“还差第 N 章”，用户可返回补做。`stamp_l5` 只依赖 T6 的五组配对，不依赖 `batch.deliver`。
+- 不允许带缺章强行交付；T7 交付成功后才出现复盘。
 - T0 `accept`、T7 `deliver` 是流程标记，不是知识章。
 
 ### 4.2 自主/观察/判断/隐藏发现样例（阶段 07 细化）
@@ -291,7 +292,7 @@ actionId | objectId | 前置条件 | 输入方式 | 状态变化 | 视觉反馈 
 | `tower.setPriority` | 全正确 | 选择 | `task.choices.priority`（唯一） | 侧线/下游 | T6 沿用；改选回 T5 |
 | `city.assignProduct` | T5 | 拖拽 | 解析 `resolvedProcessId/routeId`；配对状态 | 路线节点依次点亮（馏分→加工→应用）+盖章/弹回 | 非法/禁止路线弹回并解释；不伪装唯一工艺 |
 | `city.applyPriority` | T5 已选 | 只读展示 | 无新选择 | 城市权重 | 不重复选择 |
-| `batch.deliver` | 五枚知识章 | 按钮 | batch.node=delivered | 最后一章/路线 | 缺章提示/按钮禁用 |
+| `batch.deliver` | 五枚知识章+T6 completed | 按钮（T7） | delivered + process:deliver + task.complete | 交付反馈/路线 | 缺章禁用；成功后进入复盘 |
 
 ## 7. 状态分离与会话（canonical schema）
 
