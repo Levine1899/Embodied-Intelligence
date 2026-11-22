@@ -691,6 +691,7 @@
     function distillationTower(x, z, height, radius, name) {
       const g = new THREE.Group();
       g.position.set(x, 0, z);
+      g.userData.skipMerge = true;
       refine.add(g);
       cylinder(g, radius, height, lightSteel, 0, height / 2 + 0.2, 0).userData.objectId = name === '常压塔' ? 'atmospheric_tower' : 'vacuum_tower';
       mesh(g, new THREE.SphereGeometry(radius, 26, 16), steel, 0, height + 0.2, 0).scale.y = 0.5;
@@ -1371,10 +1372,21 @@
       unit.position.set(-2.4, 0.2, -0.6);
       unit.userData.skipMerge = true;
       refine.add(unit);
-      unitState.group = unit;
-      unitState.loaded = true;
       if (atmTowerGroup) atmTowerGroup.visible = false;
       if (vacTowerGroup) vacTowerGroup.visible = false;
+      const feedPts = [
+        new THREE.Vector3(-6.4, 1.9, 0),
+        new THREE.Vector3(-5.2, 1.9, -0.25),
+        new THREE.Vector3(-5.2, 4.1, -0.45),
+        new THREE.Vector3(-5.62, 6.18, -0.6)
+      ];
+      const feedCurve = new THREE.CatmullRomCurve3(feedPts);
+      const feedMat = new THREE.MeshStandardMaterial({ color: 0xd8a24a, metalness: 0.6, roughness: 0.38, emissive: 0x2a1c08 });
+      const feedPipe = new THREE.Mesh(new THREE.TubeGeometry(feedCurve, 40, 0.12, 8, false), feedMat);
+      feedPipe.userData.skipMerge = true;
+      refine.add(feedPipe);
+      unitState.group = unit;
+      unitState.loaded = true;
     }).catch(function () {});
   }
 
@@ -1703,6 +1715,7 @@
     get camera() { return activeCamera || camera; },
     setCut(on) { applyUnitCut(on); },
     get pump() { return pumpAnim; },
+    get towerGroups() { return [atmTowerGroup, vacTowerGroup]; },
     setAutoOrbit(on) { setAutoOrbit(on); },
     stats() {
       const info = renderer.info.render;

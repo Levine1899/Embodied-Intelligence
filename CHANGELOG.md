@@ -9,6 +9,7 @@
 - **科学修正**：l1 压力差示意边界；l3 删除排放量推断与“压没”；l4 改为五种馏分并说明馏分≠成品油；l5 产品路线不绝对化。
 - **稳定性**：l1–l4 真实 deltaTime；塔页 WebGL2 检测、上下文丢失处理、加载后 `setLevel(0)`。
 - **文档**：新增 audit-baseline / asset-inventory / experience-design / scene-map / scene-sandbox / implementation-report，重写塔场景文档；版本号统一 3.4.0。
+- **主管线接入**：炼化区新增主管到装置进料口的连接管；程序化塔组 skipMerge 并隐藏，修复残留巨型楼梯。
 - **上下文恢复**：沙盘处理 `webglcontextlost/restored`，并用渲染帧数兜底隐藏提示；实测丢失提示出现、恢复后自动消失。
 - **录屏证据**：新增 100 秒导览与 65 秒自由探索录屏（CDP screencast + ffmpeg），并补充用户测试方案（未执行）。
 - **合成环境音**：新增 `assets/site/ambient.js` 与「声音」按钮，默认关闭、无音频资产、按环节变调、失败静默；明确标注非现场录音。
