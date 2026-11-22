@@ -542,6 +542,7 @@
     nozzle(sep, -2.6, 1.5, 0, amber, 0.2, 0.9, false);
     cylinder(sep, 0.1, 0.5, teal, 1.6, 2.95, 0.5);
     wheel(sep, -0.4, 1.4, 1.1, amber, 0.16);
+    loadHeroSeparator(sep);
     /* 泵撬 */
     const pumpSkid = new THREE.Group();
     pumpSkid.position.set(3.2, 0, 2.0);
@@ -908,9 +909,13 @@
           while (object && object.userData.stage === undefined) object = object.parent;
           if (object) {
             const idx = object.userData.stage;
+            if (objectId) {
+              selectStage(idx, true, objectId, hitPoint);
+              return;
+            }
             const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
             if (hook) { markLevel(idx); hook(); return; }
-            selectStage(idx, true, objectId, hitPoint);
+            selectStage(idx, true, null, hitPoint);
           }
         }
       }
@@ -1046,6 +1051,7 @@
     if (!deviceCardEl) return;
     if (deviceCardEl.parentNode !== viewport) viewport.appendChild(deviceCardEl);
     deviceAnchor = anchor && anchor.clone ? anchor.clone() : new THREE.Vector3(REGIONS[index].x, 3.4, REGIONS[index].z);
+    deviceAnchor.y += 0.9;
     deviceCardEl.hidden = false;
     document.getElementById('device-stage').textContent = '第 ' + (index + 1) + ' 环节 · ' + stageNames[index];
     document.getElementById('device-name').textContent = info.name;
@@ -1102,6 +1108,36 @@
     window.__sceneContext = ctx;
     document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
   }
+  function loadHeroSeparator(sep) {
+    if (!window.ObjLite) return;
+    window.ObjLite.load('assets/hero/separator/separator.obj', 'assets/hero/separator/separator.mtl').then(function (hero) {
+      hero.scale.setScalar(0.88);
+      hero.position.y = 0;
+      hero.traverse(function (node) {
+        if (!node.isMesh) return;
+        node.userData.objectId = 'three_phase_separator';
+        node.userData.heroAsset = 'separator';
+        node.castShadow = true;
+        node.receiveShadow = true;
+      });
+      sep.children.slice().forEach(function (child) {
+        sep.remove(child);
+        child.traverse(function (node) {
+          if (node.geometry) node.geometry.dispose();
+          if (node.material) {
+            if (Array.isArray(node.material)) node.material.forEach(function (m) { m.dispose(); });
+            else node.material.dispose();
+          }
+        });
+      });
+      sep.add(hero);
+      sep.userData.heroLoaded = true;
+      sep.userData.heroParseMs = hero.userData.parseMs;
+    }).catch(function () {
+      /* 保留程序化模型作为回退 */
+    });
+  }
+
   function setInteraction(action, value, unit) {
     const fallback = {
       sceneId: SCENE_ID,

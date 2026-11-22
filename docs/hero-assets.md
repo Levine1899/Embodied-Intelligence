@@ -66,7 +66,20 @@ Gauge | 表盘 | `#e8e1d4`，metalness 0.1，roughness 0.3 |
 
 对象名格式：`<assetId>__<material>`，一个材质一个对象，直接对应一次 draw call。
 
-## 5. 接入沙盘的前置工作（未做）
+## 5. 接入进度：分离器单台闭环（2026-11-22）
+
+已把 `separator` 真正接进沙盘：
+
+- 新增共享解析器 `web/assets/obj-lite.js`（v/vn/f、多边形三角化、o/g/usemtl、MTL Kd），只支持静态网格，不支持贴图/骨骼/压缩；
+- `immersion.js` 的 `loadHeroSeparator()` 异步加载 `assets/hero/separator/separator.obj` + `.mtl`，加载成功后替换程序化分离器，失败保留程序化模型作为回退；
+- 5 个材质对象（Steel/LightSteel/DarkSteel/Amber/Gauge），每个对象写入 `objectId=three_phase_separator`，点击可弹设备卡片；
+- 实测：OBJ 8 ms、MTL 5 ms（本机），5 个 mesh，`selectStage('gather')` 后点击弹卡片「三相分离器」。
+
+![分离器接入](../docs/screenshots/11-hero-separator.png)
+
+已知问题：进料/出料管线仍是程序化位置，与资产法兰不完全对齐；一根青色管线在画面上从筒体前穿过（遮挡，不是穿模）。其余四台尚未接入。
+
+## 6. 接入其余四台的前置工作（未做）
 
 1. **共享 OBJ 解析器**：塔页的 `parseOBJ` 目前内嵌在 `tower.js`，需要抽成 `assets/obj-lite.js` 或用本地化的 `OBJLoader`，否则每个页面复制一份解析器。
 2. **材质映射**：OBJ 的 MTL 颜色 → `MeshStandardMaterial` → tokens 色值；现在是 Blender 里的颜色，接入时要统一。
@@ -76,7 +89,7 @@ Gauge | 表盘 | `#e8e1d4`，metalness 0.1，roughness 0.3 |
 
 在这些完成前，沙盘仍使用程序化几何，不会出现“资产已上线”的假象。
 
-## 6. 复现
+## 7. 复现
 
 ```bash
 blender -b -P tools/make_hero_assets.py -- --render
