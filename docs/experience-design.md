@@ -198,9 +198,10 @@ knowledgeId: kb_formation, kb_drill, kb_gather, kb_store, kb_refine, kb_use
 session: {
   mode: tour|free|task,
   batch: { id:'YJ-001', node:'reservoir'|'wellbore'|'wellhead'|'separator'|
-           'oil_to_storage'|'tank'|'refinery_feed'|'fraction_split'|'city'|'delivered',
-           stamps:[], processStamps:[], choices:{gasRoute,tankType,priority} },
-  task: { status:'idle'|'active'|'help'|'error'|'complete', step:'T0'..'T7', hintLevel:0..3 },
+           'oil_to_storage'|'tank'|'refinery_feed'|'fraction_split'|'city'|'delivered' },
+  // canonical task schema 以 task-design.md §7 为准，不在此重复定义
+  task: { status, step, steps, knowledgeStamps, processStamps, choices, hintLevel, discoveries },
+  archive: { status:'idle'|'open'|'closed' },
   exploration: { visitedZones:[], inspectedObjects:[], knowledgeSeen:[] },
   interaction: { actionId, objectId, value, unit, result }|null,
   history: [...]

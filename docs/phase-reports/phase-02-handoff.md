@@ -1,7 +1,7 @@
-# Phase 02 交接报告 · 体验设计（第五轮返修 / phase-02-rev5）
+# Phase 02 交接报告 · 体验设计（第六轮返修 / phase-02-rev6）
 
 日期：2026-11-22
-阶段：02_EXPERIENCE_DESIGN（返修轮 5；本轮 tag phase-02-rev5）
+阶段：02_EXPERIENCE_DESIGN（返修轮 6；本轮 tag phase-02-rev6）
 状态建议：**REVISE**（等待用户签收；不得进入阶段 03）
 用户签收：**待用户签收**
 
@@ -39,7 +39,16 @@
 
 ## 3. 本轮审查问题对应修订（按正文证据）
 
-### 3.0 第五轮 P0/P1/P2（本轮）
+### 3.0 第六轮 P1/P2（本轮）
+
+| 编号 | 状态 | 证据 |
+|---|---|---|
+| P1-01 canonical JSON 发章矛盾 | **已解决** | `task-design.md` §7 示例 `knowledgeStamps=[]`；新增发章不变量：`stamp_l1` 当且仅当 T1+T2 completed；其余章一一对应 |
+| P1-02 跳过后补做/回退 | **已解决** | `task-design.md` §7.2：补做 S 时下游 completed→`needs_replay`；移除对应章；`batch.node` 回到 S 入口；choices 保留为草稿；取消恢复 snapshot |
+| P2-01 交付完成态/复盘 | **已解决** | 新增 `archive.status`；`archive.review` 只读，不修改 task/节点；T7 交付时 `task.step='T7'` |
+| P2-02 灰盒定位 | **保持** | 5 张灰盒仅为布局参考，非 Hero Asset/视觉质量证明 |
+
+### 3.1 第五轮 P0/P1/P2（历史）
 
 | 编号 | 状态 | 修订位置/证据 |
 |---|---|---|

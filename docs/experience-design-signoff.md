@@ -74,6 +74,8 @@
 - [ ] 三层地图与 S 形构图、首次入场/总览分离
 - [ ] 主线 + 自主探索 + 观察/判断/隐藏发现
 - [ ] T0–T7 统一口径与映射表（知识章 5 / 流程标记 2）
+- [ ] canonical schema 发章不变量、跳过后补做/回退规则
+- [ ] 交付完成后 archive.review 为只读，不修改 task.status
 - [ ] T5 单一 priority 贯穿 T6，不重复选择
 - [ ] T6 五组配对发第 5 章；T7 才交付，`stamp_l5` 与 `batch.deliver` 无循环依赖
 - [ ] 五种馏分 → 中间路线 → applicationId → cityObjectId 映射与禁止配对

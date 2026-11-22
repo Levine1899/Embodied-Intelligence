@@ -146,7 +146,7 @@
 - 前置：**l1–l5 五枚知识章齐全**（T1/T2 共同完成 l1；T3/T4/T5/T6 分别完成 l2/l3/l4/l5），且 `task.steps.T6.status='completed'`；T0 接收标记、T7 交付标记是流程标记，不计知识章。跳过段不计知识章但记录跳过。
 - **本步骤先交付、后复盘**：`batch.deliver` 成功后才进入 `archive.review`；不得把交付和发章互相作为前置。
 - 动作：`batch.deliver`（五章齐全才启用）→ 播放短交付反馈 → `archive.review` → 点“再走一次”/“自由探索”/“看塔”/“问 AI”。
-- 状态变化：`batch.deliver` 成功 → `task.status='complete'`、`batch.node='delivered'`、`task.processStamps` 追加 `deliver`（不计知识章）；随后 `archive.review`，`task.step='T7'`。
+- 状态变化：`task.step='T7'`（进入交付时）；`batch.deliver` 成功 → `task.status='complete'`、`batch.node='delivered'`、`task.processStamps` 追加 `deliver`（不计知识章）；`archive.status='open'`（只读复盘，不修改 task）。
 - 可观察结果：路线图、5 枚知识章、2 个流程标记（接单/交付）、3 个选择（气/罐/炼化重点）、用时、发现清单；不是积分。
 - 成功：交付成功 + 档案生成；允许导出/生成材料（可选，依赖 API 时标注预置稿）。
 - 失败：缺章时 `batch.deliver` 按钮禁用并提示“还差第 N 章”，不强制顺序；用户返回补做。
@@ -293,6 +293,7 @@ actionId | objectId | 前置条件 | 输入方式 | 状态变化 | 视觉反馈 
 | `city.assignProduct` | T5 | 拖拽 | 解析 `resolvedProcessId/routeId`；配对状态 | 路线节点依次点亮（馏分→加工→应用）+盖章/弹回 | 非法/禁止路线弹回并解释；不伪装唯一工艺 |
 | `city.applyPriority` | T5 已选 | 只读展示 | 无新选择 | 城市权重 | 不重复选择 |
 | `batch.deliver` | 五枚知识章+T6 completed | 按钮（T7） | delivered + process:deliver + task.complete | 交付反馈/路线 | 缺章禁用；成功后进入复盘 |
+| `archive.review` | task.status=complete | 打开/关闭 | archive.status open/closed | 只读复盘 | 不改 task.steps/batch.node |
 
 ## 7. 状态分离与会话（canonical schema）
 
@@ -318,12 +319,13 @@ actionId | objectId | 前置条件 | 输入方式 | 状态变化 | 视觉反馈 
       "T6": {"status": "idle"},
       "T7": {"status": "idle"}
     },
-    "knowledgeStamps": ["stamp_l1"],
+    "knowledgeStamps": [],
     "processStamps": ["accept"],
     "choices": {"gasRoute": null, "tankType": null, "priority": null},
     "hintLevel": 0,
     "discoveries": []
   },
+  "archive": {"status": "idle"},
   "interaction": {"actionId": "subsurface.setDrive", "value": 50, "unit": "演示控制值", "result": "flow"},
   "history": [],
   "exploration": {"visitedZones": [], "inspectedObjects": [], "knowledgeSeen": []}
@@ -338,25 +340,50 @@ actionId | objectId | 前置条件 | 输入方式 | 状态变化 | 视觉反馈 
 | `batch.node` | `reservoir/wellbore/wellhead/separator/oil_to_storage/tank/refinery_feed/fraction_split/city/delivered` | 新批次重置；只由任务步骤推进 |
 | `task.status` | **整单**：`idle/active/help/error/complete`；**不含 skipped** | 单次探索 |
 | `task.step` | 当前步骤 `T0`..`T7` | 单次探索 |
-| `task.steps[Tn].status` | `idle/active/completed/skipped/error`；跳过只在此层 | 单次探索；段重试清本段 |
-| `task.knowledgeStamps` | `stamp_l1`..`stamp_l5`（最多 5） | 完成对应关卡；整单重置清空 |
+| `task.steps[Tn].status` | `idle/active/completed/skipped/needs_replay/error`；跳过只在此层 | 单次探索；段重试清本段；补做时下游标记 `needs_replay` |
+| `task.knowledgeStamps` | `stamp_l1`..`stamp_l5`（最多 5；必须满足 §7.2 不变量） | 完成对应关卡；整单重置/回退清空 |
 | `task.processStamps` | `accept`/`deliver`（流程标记，不计知识章） | 接单/交付；整单重置清空 |
 | `task.choices` | `gasRoute:'recovery'|'flare'`、`tankType:'floating'|'fixed'`、`priority:'fuel'|'material'` | 对应步骤选择；整单重置清空 |
 | `task.hintLevel` | 0–3 | 本段重试可保留/清零（默认清零） |
 | `task.discoveries` | 观察/隐藏发现 ID 数组 | 会话；整单重置清空 |
+| `archive.status` | `idle/open/closed`；只读复盘视图，不改变 `task.status` | 交付后 open；退出复盘 closed |
 | `interaction` | 最近一次操作 `{actionId,objectId,value,unit,result}` | 每次动作覆盖 |
 | `history` | 最近 8–12 条操作/知识摘要 | 会话；整单重置清空 |
 | `exploration` | `visitedZones/inspectedObjects/knowledgeSeen` | 会话；整单重置清空 |
 
-### 7.2 跳过、重试、整单重置
+### 7.2 发章不变量、跳过与补做回退
+
+**发章不变量**（必须由状态校验强制）：
+
+- `stamp_l1 ∈ task.knowledgeStamps` **当且仅当** `T1.status='completed' AND T2.status='completed'`。
+- `stamp_l2` 当且仅当 `T3.status='completed'`；`stamp_l3` 当且仅当 `T4.status='completed'`；`stamp_l4` 当且仅当 `T5.status='completed'`；`stamp_l5` 当且仅当 `T6.status='completed'`。
+- 示例 JSON 是 T1 执行中、T2 未开始，因此 `knowledgeStamps=[]`；不得把已完成 l1 的章提前放入。
+- `batch.deliver` 只读取五章与 T6 completed；发章逻辑不得读取 `processStamps.deliver`。
+
+**补做/回退规则（唯一）**：
+
+1. 入口：T7 缺章提示“补做第 N 章”或任务面板“补做跳过步骤”；目标步骤 S = 最早缺失/跳过的步骤。
+2. 进入补做前保存 snapshot；`task.status='active'`、`task.step=S`、`steps[S]='active'`。
+3. 所有 `Tn (n>S)`：`completed` → `needs_replay`；`skipped` 保持 skipped；`idle` 保持 idle。`needs_replay` 不是完成，不能计入五章。
+4. 移除 S 及之后关卡的知识章（T1/T2 共享 l1：补做 T1 或 T2 都移除 `stamp_l1` 及后续章）；已得的更早章保留。
+5. `batch.node` 回到 S 的入口：T1→`reservoir`；T2→`wellhead`；T3→`separator`；T4→`oil_to_storage`；T5→`refinery_feed`；T6→`city`。
+6. `task.choices` 作为“草稿”保留，但不视为已生效；补做对应步骤时需重新确认。`interaction/history/exploration` 保留，便于复盘。
+7. 补做成功：发回对应知识章；下游 `needs_replay` 仍需逐段补做或跳过；T7 交付仅在五章齐全且无 `needs_replay` 时可用。
+8. 取消补做：恢复 snapshot，回到补做前状态；不得留下半回退状态。
+9. 不允许只改 `steps` 而不回退 `batch.node`；也不允许保留下游 `completed` 却显示缺章。
+
+### 7.3 跳过与重试
 
 - **跳过**：只写 `task.steps.Tn.status='skipped'`；不发知识章；不推进 `batch.node` 到该段完成点（T1 例外：跳过后为了进入 T2，`batch.node='wellhead'`，但仍不发章）。
 - **段重试**：清该段 `steps.Tn.status`、本段 `interaction`、本段提示；保留已得知识章与其他段选择。
-- **整单重置**：清 `batch`、`task`、`interaction`、`history`、`exploration`；保留匿名偏好（音量/减少动态，单独键）。
-- **T7 交付**：`task.status='complete'` 需 5 枚知识章齐全；缺章时 `batch.deliver` 禁用并提示缺哪章；允许返回补做。
+- **整单重置**：清 `batch`、`task`、`archive`、`interaction`、`history`、`exploration`；保留匿名偏好（音量/减少动态，单独键）。
+- **T7 交付**：`task.status='complete'` 需 5 枚知识章齐全且无 `needs_replay`；缺章时 `batch.deliver` 禁用并提示缺哪章；允许返回补做。
 - **新访客**：只有显式“结束本次参观”+确认才执行整单重置；普通刷新恢复 session。
+- **交付后复盘**：`batch.deliver` 成功即 `task.status='complete'`；`archive.review` 只把 `archive.status` 置 `open`，不修改 `task.status`/`task.steps`/`batch.node`；退出复盘置 `closed`。
 
-### 7.3 进入上下文/AI 的字段
+
+
+### 7.4 进入上下文/AI 的字段
 
 - `__sceneContext` 保留旧字段别名，并新增 `batch`/`task` 的结构化字段（见 `interaction-spec.md` §6）。
 - `/api/ask` 的 `ctx[]` **不直接塞 JSON**；只追加文本行：当前环节、设备、知识点、batch.node、task.step、最近选择。不得把完整历史/探索数组发给 API。
