@@ -9,6 +9,7 @@
 - **科学修正**：l1 压力差示意边界；l3 删除排放量推断与“压没”；l4 改为五种馏分并说明馏分≠成品油；l5 产品路线不绝对化。
 - **稳定性**：l1–l4 真实 deltaTime；塔页 WebGL2 检测、上下文丢失处理、加载后 `setLevel(0)`。
 - **文档**：新增 audit-baseline / asset-inventory / experience-design / scene-map / scene-sandbox / implementation-report，重写塔场景文档；版本号统一 3.4.0。
+- **真实帧率**：headed Chrome + CDP 实测 90 fps（105 calls / 50.5k 面 / DPR2 / AMD 集显），p95 11.3 ms；脚本 `tools/fps-probe.cjs`。
 - **静态合批**：按材质外观合并程序化杆件/栏杆/梯档，并把区域间管线与场景静态件并入，总览 draw calls 348 → 104（-70%），三角面基本不变；hero 容器 skipMerge 保证异步替换不被吞。
 - **性能基线**：新增 `__stage.stats()`；总览 348 draw calls / 49,010 面，地面处理 69 / 10,930，炼化 263 / 27,162。
 - **五台 Hero 资产接入**：抽油机/井口/外浮顶罐/加热炉也接入，合计 20 个材质 mesh，点击均弹对应卡片；缩放按场景校准。

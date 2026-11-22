@@ -94,7 +94,7 @@ heater | refine (-4.6,0,3.6) | 0.80 | 4 mesh，点击弹「加热炉」 |
 - 新增 `__stage.stats()`；
 - **静态合批**：按材质外观（颜色/金属度/粗糙度/透明/自发光）把程序化杆件、栏杆、梯档、管架合并为每个区域 5–8 个 mesh；分区内的 hero 容器标记 `skipMerge`，避免与异步替换冲突；
 - 总览 draw calls **348 → 104**（约 -70%，管线与场景静态件也合并），三角面 49k → 50k 基本不变；
-- FPS 仍无法在 headless 下测。
+- **真实 Chrome（headed，CDP）实测**：AMD Radeon 集显、DPR 2、105 calls / 50,534 面 → **90 fps**，p50 11.1 ms，p95 11.3 ms，4 秒内 0 个 >33 ms 长帧；首次采样 39.9 fps 是启动/着色器预热，稳定后 90 fps。复现脚本 `tools/fps-probe.cjs`（需先以 `--remote-debugging-port=9333` 启动 Chrome）。
 
 ### 上一轮收尾（2026-11-22）
 

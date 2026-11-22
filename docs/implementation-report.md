@@ -143,5 +143,5 @@ heater | 1,364 | 4 | 65 KB | 需重做结构 |
 炼化 | 约 120 | 约 27,000 |
 
 - Hero 资产本身只贡献 21 个 mesh；draw call 主要来自程序化杆件/塔环；
-- FPS 因 headless rAF 节流无法测，不能拿上述数字推断帧率；
+- 真实 headed Chrome（CDP，AMD 集显 / DPR 2）实测 **90 fps**（p95 11.3 ms，0 长帧），headless 数字不可用于推断；
 - 若上移动端，348 calls 偏高，需合并杆件或做实例化。
