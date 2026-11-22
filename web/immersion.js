@@ -137,7 +137,7 @@
   };
 
   let currentStage = 0;
-  let playing = false;
+  let playing = true;
   let scene;
   let camera;
   let renderer;
@@ -149,7 +149,7 @@
   const unitState = { half: [], full: [], cut: false, loaded: false, group: null };
   let atmTowerGroup = null;
   let vacTowerGroup = null;
-  let autoOrbit = false;
+  let autoOrbit = true;
   let pumpAnim = null;
   let particles = [];
   let labels = [];
@@ -1038,6 +1038,13 @@
   document.getElementById('next').addEventListener('click', function () {
     selectStage((currentStage + 1) % stageNames.length, true);
   });
+  const playBtn = document.getElementById('play');
+  if (playBtn) {
+    playBtn.setAttribute('aria-pressed', String(playing));
+    playBtn.textContent = playing ? '暂停流向' : '播放流向';
+  }
+  const spinDefault = document.getElementById('spin');
+  if (spinDefault) spinDefault.setAttribute('aria-pressed', String(autoOrbit));
   const cutBtn = document.getElementById('cut');
   if (cutBtn) cutBtn.addEventListener('click', function () { applyUnitCut(!unitState.cut); });
   const spinBtn = document.getElementById('spin');
@@ -1259,7 +1266,7 @@
   function loadRefineryUnit(refine) {
     if (!window.ObjLite) return;
     window.ObjLite.load('assets/tower/tower.obj', 'assets/tower/tower.mtl').then(function (unit) {
-      const drop = /^(Ground|Heater|Heater_Chimney|Pump_|Condenser|Box_)/;
+      const drop = /^(Ground|Heater|Heater_Chimney|Pump_|Condenser|Box_|Ladder|Railing_|Post_|Manway_|Nozzle_|Flange_)/;
       unit.traverse(function (node) {
         if (!node.isMesh) return;
         if (drop.test(node.name)) { node.visible = false; return; }

@@ -143,3 +143,11 @@ blender -b -P tools/make_hero_assets.py -- --render
 - Blender 导出由“按材质合并 4 个 mesh”改为“按功能合并 3 个 mesh”：`pumpjack_static / pumpjack_beam / pumpjack_crank`；
 - 浏览器端按前缀拆成 static、beam（绕游梁支点摆动 ±0.05 rad）、crank（绕曲柄轴连续旋转）三组，抽油机在总览和地下开采视角持续工作；
 - 地下开采相机从 radius 13 / targetY -1.7 调到 radius 17 / targetY -0.5，抽油机与井口不再被裁切。
+
+
+## 默认运动与楼梯清理（2026-11-22）
+
+- 流向粒子默认播放，管线青色标记持续移动；「自动旋转」默认开启，总览缓慢环绕；
+- 点选任一环节后自动旋转自动停下，避免与环节取景打架，按钮可再手动开；
+- 装置自带的 Ladder / Railing / Post / Manway / Nozzle / Flange 在总览尺度下变成悬空细线，已从炼化装置中剔除，只保留塔壳、穹顶、裙座、塔盘和主要管线；
+- 截图 `21-overview-clean.png`。
