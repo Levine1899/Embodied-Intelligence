@@ -150,3 +150,12 @@ heater | 1,364 | 4 | 65 KB | 需重做结构 |
 ## 附录 · 五关回归（2026-11-22）
 
 逐关刷新 + 真实入口 `levelHook(i)` 测试：五关均可进入、面板可见、`levelId` 正确；l1 压力、l3 液位、l4 馏分选择写回 interaction；l5 退出后 `levelId` 残留，已在 `__stage.back()` 清除。l2 出口点选、l5 产品点选与 l2 退出动画未自动化，详见 [scene-levels-qa.md](scene-levels-qa.md)。
+
+
+## 附录 · 录屏与用户测试（2026-11-22）
+
+- `docs/recordings/01-guided-tour.mp4`：真实 headed Chrome 通过 CDP `Page.startScreencast` 录制，100 秒，7 步导览自动播放；
+- `docs/recordings/02-free-explore.mp4`：65 秒，覆盖总览、环节切换、设备列表、半剖、产品区；
+- 录制方式：Chrome 1280×800 + 禁用后台节流，帧序列经 ffmpeg 以 12 fps 编码；不是后期合成；
+- 用户理解测试**尚未执行**，仅提供方案与记录表：`docs/user-test-protocol.md`；
+- 限制：录制环境是 Windows + Chrome + AMD 集显，非真机、非 Safari。
