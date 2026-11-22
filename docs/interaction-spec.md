@@ -27,7 +27,7 @@
 | `camera` | `free` / `focus` / `transition` | 自由观察、设备聚焦、镜头过渡 |
 | `structure` | `external` / `half` / `full` / `transparent` | 外观、半剖、全剖、透明 |
 | `animation` | `idle` / `running` / `paused` | 过程动画 |
-| `task` | `idle` / `active` / `help` / `error` / `complete` | 任务状态（全局，不是设备几何） |
+| `task` | `idle` / `active` / `help` / `error` / `complete` | 整单状态；步骤级 `task.steps[Tn].status` 见 `task-design.md` §7，`skipped` 只在步骤级 |
 | `ai` | `idle` / `loading` / `success` / `error` | AI 请求生命周期 |
 
 示例组合：
@@ -88,15 +88,15 @@ actionId | objectId | 前置条件 | 输入方式 | 状态变化 | 视觉反馈 
 | `wellhead.openValve` | wellhead | T0/T1 | 点阀组 | batch.node | 阀动/流动 | 未接单提示 |
 | `separator.cut` | separator | T2 | 按钮 | structure | 内部显现 | 合上复位 |
 | `separator.run` | separator | 剖开 | 按钮 | animation | 三相流动 | 暂停保留结构 |
-| `separator.setGasRoute` | separator | 运行 | 选择 | choices.gasRoute | 气网/火炬 | 可改选 |
+| `separator.setGasRoute` | separator | 运行 | 选择 | task.choices.gasRoute | 气网/火炬 | 可改选 |
 | `separator.assignPhase` | separator | 运行 | 点出口+终点 | 路径状态 | 路径/回流 | 错误回流 |
-| `tank.selectType` | tanks | T3 | 点罐 | choices.tankType | 高亮 | 未选提示 |
+| `tank.selectType` | tanks | T3 | 点罐 | task.choices.tankType | 高亮 | 未选提示 |
 | `tank.setLevel` | tanks | 选罐 | 滑块 | 液位 | 浮盘/空间 | 边界提示 |
 | `tower.cut` | tower | T4 | 按钮 | structure | 半/全剖 | 合壳复位 |
 | `tower.run` | tower | 全剖 | 按钮 | animation | 汽液粒子 | 暂停保留 |
 | `tower.placeFraction` | tower | 全剖 | 拖拽 | 放置 | 吸附/弹回 | 错误弹回 |
-| `tower.setPriority` | tower | 全放对 | 选择 | choices.cutPriority | 侧线/下游 | 可改选 |
-| `city.assignProduct` | city | T5 | 拖拽 | 配对 | 盖章/弹回 | 错误原因 |
+| `tower.setPriority` | tower | 全放对 | 选择 | task.choices.priority | 侧线/下游 | 可改选 |
+| `city.assignProduct` | city | T5 | 拖拽 | 解析 `resolvedProcessId/routeId`，配对 | 路线节点依次点亮（馏分→加工→应用）→盖章；非法弹回 | 禁止直接成品；错误解释；结果带 routeId |
 | `batch.deliver` | city | 五章 | 按钮 | batch.node=delivered | 最后一章 | 缺章提示 |
 
 ## 6. `__sceneContext` 向后兼容

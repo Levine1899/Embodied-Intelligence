@@ -17,7 +17,7 @@
 | 知识章 | **5 枚**（l1–l5）；T0/T7 只记状态，不单独计章 |
 | Hero Moments | 3 个：HM-1 地下 / HM-2 分离 / HM-3 塔 |
 | 任务类型 | 主线 + 自主探索 + 观察 + 判断 + 隐藏发现；不是纯线性闯关 |
-| 状态字段 | `batch.node`、`task.step`、`task.status`、`interaction`、`history` **五个分离字段** |
+| 状态字段 | 以 §7 canonical schema 为准：`batch`、`task`（含 `steps/knowledgeStamps/processStamps/choices/hintLevel/discoveries`）、`interaction`、`history`、`exploration`；不共用一个字段 |
 
 ## 2. 任务结构
 
@@ -41,7 +41,7 @@
 - 前置：无。
 - 线索：井口旁的黄铜批次牌；底部“待接收”；设备列表“批次 YJ-001”。
 - 动作：点批次牌 / Enter；`batch.accept`。
-- 状态变化：`task.status='active'`、`task.step='T0'`、`processStamps=['accept']`；**`batch.node` 保持 `reservoir`**（牌只是标记，不是物料位置）。`accept` 是流程标记，不计入五枚知识章。
+- 状态变化：`task.status='active'`、`task.step='T0'`、`task.processStamps=['accept']`；**`batch.node` 保持 `reservoir`**（牌只是标记，不是物料位置）。`accept` 是流程标记，不计入五枚知识章。
 - 可观察结果：牌被提起、盖“接收”章；路线从井口向地面延伸一段；档案打开。
 - 成功/失败：成功为点击确认；点空白提示“先找到那枚牌”，不扣分。
 - 知识解释：这批原油来自地下储层，接下来先看它怎么到井底/井口。
@@ -55,22 +55,22 @@
 - 前置：T0 完成。
 - 线索：岩芯孔隙油点、井筒、滑块“压差驱动示意（非真实压力值）”。
 - 动作：拖控制值 0–100；`subsurface.setDrive`；可切地层/放大储层（`subsurface.revealLayer`、`subsurface.zoomReservoir`）。
-- 状态变化：油向井底粒子加速；批次牌沿井筒外侧上升；`batch.node='wellbore'`（达到 30% 流动后）；`interaction={actionId:'subsurface.setDrive', value, unit:'演示控制值'}`。
+- 状态变化：油向井底粒子加速；批次牌沿井筒外侧上升；`batch.node='wellbore'`（达到 30% 流动后）；T1 成功时 `batch.node='wellhead'`（牌到井口）；`interaction={actionId:'subsurface.setDrive', value, unit:'演示控制值'}`。
 - 可观察结果：油点流动、速度变化、牌到井筒、提示“油开始向井底方向运移”。
-- 成功：控制值 ≥90（教学完成阈值）且至少看到一次流动变化；T1 完成。
+- 成功：控制值 ≥90（教学完成阈值）且至少看到一次流动变化；T1 完成，`batch.node='wellhead'`。
 - 失败/边界：<30 提示“孔隙里的油还没动”；不报错；≥90 时提示“这是示意，不代表真实井底压力/采收率”。
 - 知识解释：压差是驱动力之一；真实采收率受储层/开发条件影响。
-- 重试/跳过：可重来本段；可跳过到 T2（档案记“跳过”）。
+- 重试/跳过：可重来本段；可跳过到 T2：`task.steps.T1.status='skipped'`，`batch.node='wellhead'`（直接落到井口），**不发 l1 知识章**，档案记“跳过”。
 - 复位：控制值回 0，粒子回初始；保留章。
 - 知识 ID：`kb_formation`、`kb_drill`。
 
 ### T2 井口：接入地面（共用 l1）
 
 - 目标：把教学批次从井筒接到井口，再送入集输。
-- 前置：T1 完成或跳过。
+- 前置：T1 完成或跳过，且 `batch.node='wellhead'`。
 - 线索：井口采油树、阀组、管线方向；设备卡“打开阀组”。
 - 动作：点阀组 → 点“接入集输”；`wellhead.openValve`。
-- 状态变化：`batch.node='wellhead'` → `'separator'`；阀组微动；批次牌沿管线外侧到分离器。
+- 状态变化：从 `batch.node='wellhead'` 开始 → 成功转 `'separator'`；阀组微动；批次牌沿管线外侧到分离器。
 - 可观察结果：阀组动作、管线出现流动、牌到分离器、章“已举升”。
 - 成功：`batch.node='separator'`；T2 完成。
 - 失败：未接单开阀提示“先接收批次再开阀”；不扣进度。
@@ -81,27 +81,27 @@
 
 ### T3 分离：三路去向（对应 l2，含分支）
 
-- 目标：剖开分离器，认清气/油/水三出口；为气选择回收/火炬；油去储运、水去水处理。
+- 目标：剖开分离器，认清气/油/水三出口；为气选择回收/火炬；油相送到储运进料总管、水去水处理。
 - 前置：T2 完成或跳过。
 - 线索：三出口、颜色/文字标签、设备卡“剖开”；水处理终点在集输区东侧。
 - 动作：`separator.cut`（半剖/全剖）→ `separator.run` → `separator.setGasRoute('recovery'|'flare')` → `separator.assignPhase`（油→罐、水→水处理）。
 - 状态变化：内部挡板/堰板/三出口显现；气/油/水三条路径分开；`batch.node='oil_to_storage'`（仅油相主线）；气/水有独立路径节点，不推批次牌。
-- 可观察结果：回收→燃料气管线；火炬→受控火焰；水→可见水处理池/罐；油→储罐；错误出口回流并给原因。
-- 成功：气明确去向 + 油入罐 + 水入水处理；三路都完成。
+- 可观察结果：回收→燃料气管线；火炬→受控火焰；水→可见水处理池/罐；油→储运进料总管/罐区入口（尚未选定具体罐）；错误出口回流并给原因。
+- 成功：气明确去向 + 油相到达储运进料总管 + 水入水处理；三路都完成。具体罐型由 T4 选择。
 - 失败：气进油罐“气不能进常压油罐”，回流；油进水罐同理；可改选。
 - 知识解释：按相态/密度分离，不是过滤；火炬是安全泄放，回收优先；不估算排放。
 - 重试/跳过：可重来本段；可跳过。
-- 复位：合上分离器，清空本段分流；保留章；`choices.gasRoute` 可保留显示。
+- 复位：合上分离器，清空本段分流；保留章；`task.choices.gasRoute` 可保留显示。
 - 知识 ID：`kb_gather`。
-- 目的地 ID：`gas_recovery_header`（非交互终点，集输区北侧）、`flare_stack`（非交互远景，炼化区，阶段 06）、`produced_water_treatment`（非交互终点，集输区东侧）、`oil_to_storage`（路径，终点为所选罐）。
+- 目的地 ID：`gas_recovery_header`（非交互终点，集输区北侧）、`flare_stack`（非交互远景，炼化区，阶段 06）、`produced_water_treatment`（非交互终点，集输区东侧）、`oil_to_storage`（路径，终点为储运进料总管，不是具体罐）。
 
 ### T4 储运：选罐型（对应 l3，含分支）
 
-- 目标：为批次选择储罐，理解浮顶/固定顶的油气空间差异。
+- 目标：为批次选择具体储罐，完成入罐，理解浮顶/固定顶的油气空间差异。
 - 前置：T3 完成或跳过。
 - 线索：两个罐、浮盘、液位滑块、防火堤。
 - 动作：`tank.selectType('floating'|'fixed')` → `tank.setLevel(0–100)` → `tank.confirm`。
-- 状态变化：`batch.node='tank'`；所选罐高亮；批次牌到罐区外侧（不进罐内）；`choices.tankType` 记录。
+- 状态变化：`batch.node='tank'`；所选罐高亮；批次牌到罐区外侧（不进罐内）；`task.choices.tankType` 记录。
 - 可观察结果：浮盘随液位；固定顶油气空间变化；罐选择与解释不同。
 - 成功：选罐 + 至少一次液位变化 + 确认；两种罐型都可成功，但解释不同。
 - 失败：不选罐确认提示“先选一个罐”；液位极端只提示边界。
@@ -115,8 +115,8 @@
 - 目标：把批次送入常压塔，识别五种馏分，查看全剖，选择燃料/材料重点。
 - 前置：T4 完成或跳过。
 - 线索：加热炉、常压塔、侧线、塔板、五种馏分卡。
-- 动作：`refinery.feed` → `tower.cut('half'|'full')` → `tower.run` → `tower.placeFraction(fractionId, position)` → `tower.setPriority('fuel'|'material')`；保存**唯一** `choices.priority`，贯穿 T6。
-- 状态变化：`batch.node='refinery_feed'` → `'fraction_split'`；半剖/全剖；侧线高亮；`choices.priority` 记录（单一选择，T6 不再重复选择）。
+- 动作：`refinery.feed` → `tower.cut('half'|'full')` → `tower.run` → `tower.placeFraction(fractionId, position)` → `tower.setPriority('fuel'|'material')`；保存**唯一** `task.choices.priority`，贯穿 T6。
+- 状态变化：`batch.node='refinery_feed'` → `'fraction_split'`；半剖/全剖；侧线高亮；`task.choices.priority` 记录（单一选择，T6 不再重复选择）。
 - 可观察结果：全剖见塔板/降液管/侧线/汽液粒子；馏分放置正确/错误反馈；不同重点下游管线不同。
 - 成功：五种馏分全对 + 全剖至少查看一次 + 选一个重点；T5 完成。T6 只沿用该选择。
 - 失败：馏分放错弹回 + “更轻的在上”；不扣分。
@@ -130,14 +130,14 @@
 - 目标：把**五张必做应用卡**（汽油/柴油/航空煤油/塑料/沥青）匹配到城市对象，展示 T5 选择的燃料/材料重点，完成交付。纤维/润滑油/石蜡为可选探索卡，不计入 5 组必做。
 - 前置：T5 完成或跳过。
 - 线索：城市街区、加油站、材料台、产品卡。
-- 动作：`city.assignProduct(fractionId, applicationId)`（仅 5 张必做卡计数）→ `batch.deliver`；城市按 `choices.priority` 显示权重，**不重复设置 priority**；如需改选，回 T5 改同一字段（需确认，不在 T6 新建选择）。
-- 状态变化：`batch.node='city'` → `'delivered'`；正确配对盖章；错误退回；城市权重由 `choices.priority` 决定；不写 `productSet`。
+- 动作：`city.assignProduct(fractionId, applicationId)`（仅 5 张必做卡计数）→ `batch.deliver`；城市按 `task.choices.priority` 显示权重，**不重复设置 priority**；如需改选，回 T5 改同一字段（需确认，不在 T6 新建选择）。
+- 状态变化：`batch.node='city'` → `'delivered'`；正确配对盖章；错误退回；城市权重由 `task.choices.priority` 决定；不写 `productSet`。
 - 可观察结果：5 组必做配对盖章；可选卡可继续查看但不计入 5/5；城市灯光/材料权重；批次牌到交付箱；最后一章。
 - 成功：**5 组必做配对正确**（汽油/柴油/航空煤油/塑料/沥青）+ 交付；T6 完成（重点已在 T5 选择）。
 - 失败：塑料配“只能来自石油”错误；提示可能来自天然气/煤基/生物基；不扣分；缺必做卡时“完成交付”按钮禁用并提示。
 - 知识解释：燃料/材料/路面来自不同路线；T5 的重点决定城市显示权重；模型为典型示意，非唯一工艺路线。
 - 重试/跳过：可重配；可跳过。
-- 复位：清空配对，保留 `choices.priority`；可选卡发现记录保留。
+- 复位：清空配对，保留 `task.choices.priority`；可选卡发现记录保留。
 - 知识 ID：`kb_use`。
 
 ### T7 交付复盘
@@ -145,7 +145,7 @@
 - 目标：回顾路线、选择、知识；形成“能源探索档案”。
 - 前置：**l1–l5 五枚知识章齐全**（T1/T2 共同完成 l1；T3/T4/T5/T6 分别完成 l2/l3/l4/l5）；T0 接收标记、T7 交付标记是流程标记，不计知识章。跳过段不计知识章但记录跳过。
 - 动作：`archive.review` → 点“完成交付”/“再走一次”/“自由探索”/“看塔”/“问 AI”。
-- 状态变化：`task.status='complete'`；`batch.node='delivered'`；`task.step='T7'`；`processStamps` 追加 `deliver`（不计知识章）。
+- 状态变化：`task.status='complete'`；`batch.node='delivered'`；`task.step='T7'`；`task.processStamps` 追加 `deliver`（不计知识章）。
 - 可观察结果：路线图、5 枚知识章、2 个流程标记（接单/交付）、3 个选择（气/罐/炼化重点）、用时、发现清单；不是积分。
 - 成功：档案生成；允许导出/生成材料（可选，依赖 API 时标注预置稿）。
 - 失败：缺章时提示“还差哪一段”，不强制顺序。
@@ -246,6 +246,26 @@
 - **T6 计数**：只计 5 张“本期必做”卡（汽油/柴油/航空煤油/塑料/沥青）；纤维/润滑油/石蜡为可选探索，不计入 5/5。航空煤油共用加油机，但以独立卡+机场/加注提示区分，不新增独立模型。
 - **topgas** 不进入城市配对，只走燃料气/火炬路径。
 
+**动作层的中间路线反馈（`city.assignProduct`）**：
+
+1. 用户放下卡时，按 `fractionId + applicationId` 查 §5 表，得到唯一/允许的 `intermediateProcessId` 与 `routeId`；没有合法路线则弹回。
+2. 正确时先播放路线节点：`fraction` → `process`（如重整/加氢/调和/脱蜡）→ `application` → `cityObject`；管线/卡片依次点亮 1.2–1.8s，再盖章。
+3. 结果写入 `interaction.result = {resolvedProcessId, routeId, applicationId, cityObjectId}`；知识说明同时出现“馏分≠成品油/需后续加工”。
+4. 多路线（如石脑油→汽油或塑料）由 `applicationId` 决定路线；允许一对多，不把一条路线说成唯一真实工艺。
+5. 塑料/纤维提示“也可能来自天然气、煤基或生物基”；topgas 无城市路线。
+
+
+### 5.1 `task.choices.priority` 的城市视觉效果
+
+| priority | 重点高亮 | 弱化但仍可完成 | 禁止 |
+|---|---|---|---|
+| `fuel` | `fuel_dispenser` 的汽油/柴油/航空煤油卡与加注路线、燃料相关管线 | 塑料/沥青/纤维/润滑油/石蜡卡仍可查看和完成 | 不屏蔽任何必做卡 |
+| `material` | 塑料瓶、沥青、纤维、润滑油、石蜡展示卡与材料路线 | 加油机三张燃料卡仍可完成 | 不把燃料卡判错 |
+
+- 5 张必做卡（汽油/柴油/航空煤油/塑料/沥青）在两种 priority 下都必须可完成；priority 只改变高亮/镜头权重/讲解顺序。
+- 选择在 T5 做出；T6 只读取，不重复选择。
+
+
 >T6 拖拽对象是“馏分/产品”的教学卡，不等于常压塔直接产出成品；文案始终提示“馏分≠成品油”。
 
 ## 6. 动作契约
@@ -262,31 +282,84 @@ actionId | objectId | 前置条件 | 输入方式 | 状态变化 | 视觉反馈 
 | `subsurface.setDrive` | T0 | 滑块 | interaction，batch.node | 油点加速/牌上移 | <30 提示；恢复 0 |
 | `wellhead.openValve` | T1/T0 | 点阀组 | batch.node=wellhead/separator | 阀动/管线流 | 未接单提示 |
 | `separator.cut` | T2 | 按钮 | 结构维度 half/full | 内部显现 | 合上复位 |
-| `separator.setGasRoute` | 剖开 | 选择 | choices.gasRoute | 气网/火炬 | 可改选 |
+| `separator.setGasRoute` | 剖开 | 选择 | task.choices.gasRoute | 气网/火炬 | 可改选 |
 | `separator.assignPhase` | 运行 | 点出口+终点 | 三路状态 | 路径/回流 | 错误回流 |
-| `tank.selectType` | T3 | 点罐 | choices.tankType | 罐高亮 | 未选提示 |
+| `tank.selectType` | T3 | 点罐 | task.choices.tankType | 罐高亮 | 未选提示 |
 | `tank.setLevel` | 选罐 | 滑块 | 液位 | 浮盘/空间 | 边界提示 |
 | `tower.cut` | T4 | 按钮 | 结构维度 | 半/全剖 | 合壳复位 |
 | `tower.placeFraction` | 全剖 | 拖拽 | 放置状态 | 吸附/弹回 | 错误弹回 |
-| `tower.setPriority` | 全正确 | 选择 | `choices.priority`（唯一） | 侧线/下游 | T6 沿用；改选回 T5 |
-| `city.assignProduct` | T5 | 拖拽 | 配对状态 | 盖章/弹回 | 错误原因 |
+| `tower.setPriority` | 全正确 | 选择 | `task.choices.priority`（唯一） | 侧线/下游 | T6 沿用；改选回 T5 |
+| `city.assignProduct` | T5 | 拖拽 | 解析 `resolvedProcessId/routeId`；配对状态 | 路线节点依次点亮（馏分→加工→应用）+盖章/弹回 | 非法/禁止路线弹回并解释；不伪装唯一工艺 |
 | `city.applyPriority` | T5 已选 | 只读展示 | 无新选择 | 城市权重 | 不重复选择 |
 | `batch.deliver` | 五枚知识章 | 按钮 | batch.node=delivered | 最后一章/路线 | 缺章提示/按钮禁用 |
 
-## 7. 状态分离与会话
+## 7. 状态分离与会话（canonical schema）
 
-| 字段 | 含义 | 示例 | 生命周期 |
-|---|---|---|---|
-| `batch.node` | 教学批次标记当前追踪节点 | `reservoir`/`wellbore`/`wellhead`/`separator`/`oil_to_storage`/`tank`/`refinery_feed`/`fraction_split`/`city`/`delivered` | 新批次重置 |
-| `task.step` | 当前操作步骤 | `T0`..`T7` | 单次探索 |
-| `task.status` | 任务总体状态 | `idle/active/help/error/complete` | 单次探索 |
-| `interaction` | 最近一次用户操作及结果 | `{actionId, objectId, value, result}` | 每次动作更新 |
-| `history` | 最近操作/知识记录 | 最近 8–12 条 | 会话 |
-| `exploration` | 已访问区域/设备/知识 | 数组 | 会话 |
+**唯一状态结构**（UI/上下文/存档实现均以此为准；旧简称 `choices.*` 视为 `task.choices.*`）：
 
-- 新批次/展厅下一位用户：清空 batch/task/interaction/history；保留匿名偏好（音量/减少动态）另存。
-- 退出再进：sessionStorage 恢复 batch/task/exploration；不保存 API Key、个人数据。
-- 跳过段：`task.status` 记录 skipped，不伪造完成章；复盘明确标注。
+```json
+{
+  "mode": "task",
+  "batch": {
+    "id": "YJ-001",
+    "node": "reservoir"
+  },
+  "task": {
+    "status": "active",
+    "step": "T1",
+    "steps": {
+      "T0": {"status": "completed"},
+      "T1": {"status": "active"},
+      "T2": {"status": "idle"},
+      "T3": {"status": "idle"},
+      "T4": {"status": "idle"},
+      "T5": {"status": "idle"},
+      "T6": {"status": "idle"},
+      "T7": {"status": "idle"}
+    },
+    "knowledgeStamps": ["stamp_l1"],
+    "processStamps": ["accept"],
+    "choices": {"gasRoute": null, "tankType": null, "priority": null},
+    "hintLevel": 0,
+    "discoveries": []
+  },
+  "interaction": {"actionId": "subsurface.setDrive", "value": 50, "unit": "演示控制值", "result": "flow"},
+  "history": [],
+  "exploration": {"visitedZones": [], "inspectedObjects": [], "knowledgeSeen": []}
+}
+```
+
+### 7.1 字段与枚举
+
+| 路径 | 含义/枚举 | 生命周期 |
+|---|---|---|
+| `batch.id` | 批次号，如 `YJ-001` | 新批次重置 |
+| `batch.node` | `reservoir/wellbore/wellhead/separator/oil_to_storage/tank/refinery_feed/fraction_split/city/delivered` | 新批次重置；只由任务步骤推进 |
+| `task.status` | **整单**：`idle/active/help/error/complete`；**不含 skipped** | 单次探索 |
+| `task.step` | 当前步骤 `T0`..`T7` | 单次探索 |
+| `task.steps[Tn].status` | `idle/active/completed/skipped/error`；跳过只在此层 | 单次探索；段重试清本段 |
+| `task.knowledgeStamps` | `stamp_l1`..`stamp_l5`（最多 5） | 完成对应关卡；整单重置清空 |
+| `task.processStamps` | `accept`/`deliver`（流程标记，不计知识章） | 接单/交付；整单重置清空 |
+| `task.choices` | `gasRoute:'recovery'|'flare'`、`tankType:'floating'|'fixed'`、`priority:'fuel'|'material'` | 对应步骤选择；整单重置清空 |
+| `task.hintLevel` | 0–3 | 本段重试可保留/清零（默认清零） |
+| `task.discoveries` | 观察/隐藏发现 ID 数组 | 会话；整单重置清空 |
+| `interaction` | 最近一次操作 `{actionId,objectId,value,unit,result}` | 每次动作覆盖 |
+| `history` | 最近 8–12 条操作/知识摘要 | 会话；整单重置清空 |
+| `exploration` | `visitedZones/inspectedObjects/knowledgeSeen` | 会话；整单重置清空 |
+
+### 7.2 跳过、重试、整单重置
+
+- **跳过**：只写 `task.steps.Tn.status='skipped'`；不发知识章；不推进 `batch.node` 到该段完成点（T1 例外：跳过后为了进入 T2，`batch.node='wellhead'`，但仍不发章）。
+- **段重试**：清该段 `steps.Tn.status`、本段 `interaction`、本段提示；保留已得知识章与其他段选择。
+- **整单重置**：清 `batch`、`task`、`interaction`、`history`、`exploration`；保留匿名偏好（音量/减少动态，单独键）。
+- **T7 交付**：`task.status='complete'` 需 5 枚知识章齐全；缺章时 `batch.deliver` 禁用并提示缺哪章；允许返回补做。
+- **新访客**：只有显式“结束本次参观”+确认才执行整单重置；普通刷新恢复 session。
+
+### 7.3 进入上下文/AI 的字段
+
+- `__sceneContext` 保留旧字段别名，并新增 `batch`/`task` 的结构化字段（见 `interaction-spec.md` §6）。
+- `/api/ask` 的 `ctx[]` **不直接塞 JSON**；只追加文本行：当前环节、设备、知识点、batch.node、task.step、最近选择。不得把完整历史/探索数组发给 API。
+- `task.status`/`steps` 不进入 AI 回答正文，只用于 UI 与调试；AI 只接收“当前步骤/是否跳过”的文本摘要。
 
 ## 8. 分级提示
 

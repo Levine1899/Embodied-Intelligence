@@ -25,7 +25,7 @@
 
 | zoneId | centerX | centerZ | width | depth | elevationRange | primaryObjectAnchors | entry/exitAnchor | connectingPathId |
 |---|---|---|---|---|---|---|---|---|
-| `subsurface` | −25 | 4 | 14 | 10 | y −12…0 | reservoir(−27,−3,4)、wellhead(−22,0,2) | 南侧 z=9 / `cam_subsurface` | `path_sub_oil` |
+| `subsurface` | −25 | 4 | 14 | 10 | y −12…0 | reservoir(−27,−3,4)、wellbore_top_anchor(−22,0,10) | 南侧 z=9 / `cam_subsurface` | `path_sub_oil` |
 | `oilfield` | −21 | 11 | 14 | 8 | y 0…3 | pumpjack(−24,0,12)、pumpjack2(−20,0,13)、wellhead(−22,0,10) | 南侧 z=15 / `cam_wellhead` | `path_oil_gather` |
 | `gathering` | −2 | 3 | 12 | 10 | y 0…4 | separator(0,2,3)、gas header(−4,2,7)、water treatment(3,0,6) | 西侧 x=−8 / `cam_separator` | `path_gather_store`、`path_gas`、`path_water` |
 | `storage` | 12 | −5 | 12 | 10 | y 0…5 | fixed tank(10,1.6,−5)、floating tank(15,1.6,−4) | 南侧 z=0 / `cam_tank` | `path_store_refine` |
@@ -37,14 +37,15 @@
 | anchorId | position (x,y,z) | lookAt (x,y,z) | 用途 |
 |---|---|---|---|
 | `cam_vista` | (10,12,24) | (0,2,0) | 总览/回顾 |
-| `cam_subsurface` | (−24,−1,20) | (−25,−4,4) | HM-1 地下 |
-| `cam_wellhead` | (−19,3,17) | (−21,1,10) | 井口/地面 |
+| `cam_subsurface` | (−24,−1,20) | (−25,−3,8) | HM-1 地下 |
+| `cam_wellhead` | (−19,3,17) | (−22,1,10) | 井口/地面（权威 wellhead） |
 | `cam_separator` | (−5,3,10) | (0,2,3) | HM-2 分离 |
 | `cam_tank` | (11,5,5) | (12,2,−4) | 储运 |
 | `cam_tower` | (28,10,1) | (24,8,−11) | HM-3 炼化 |
 | `cam_city` | (28,5,16) | (29,2,9) | 城市交付 |
 
 - 以上 anchor 与 §1.1 的 zone 中心/设备锚点配套使用；阶段 03 若调整地形，先更新本表再改代码。
+- **objectId 与 anchorId 不同**：`wellhead` 是唯一可交互井口对象，权威坐标 `(-22,0,10)`；`wellbore_top_anchor(-22,0,10)` 是地下剖面/镜头使用的非交互锚点，不是第二个井口对象。二者 X/Z 同轴。
 - 旧五区 `REGIONS`（x −26/−11/4/19/33）只作为迁移线索；新坐标不改变 `stageId`、`objectId` 和深链。
 - 五个旧 stage 仍为 `drill/gather/store/refine/use`；`subsurface` 与 `oilfield` 共用 `drill`。
 
@@ -193,7 +194,8 @@ flowchart LR
 
 ## 6. 垂直关系与空间连续性
 
-- 地下剖面从南侧开口看入，层理水平，井筒垂直；地面井口与剖面井筒同轴，镜头沿井筒上升不穿模。
+- 地下剖面从南侧开口看入，层理水平，井筒垂直；唯一可交互井口 `wellhead` 在 `(-22,0,10)`，剖面用 `wellbore_top_anchor(-22,0,10)` 表示同轴顶部，镜头沿该轴上升不穿模。
+- 对象注册表只实例化一个 `wellhead`；`wellbore_top_anchor` 只出现在锚点/相机数据，不参与射线拾取、设备卡或 AI objectId。
 - 管线/管廊/地形连接：集输→储运用抬升管廊；储运→炼化用坡道/管架；炼化→城市用产品管线顺坡下降。
 - 区域间用“工艺脊线”（管架 + 地面物流带 + 批次教学轨迹）连接，不是厂区道路。
 - 道路只在城市区出现，避免把产业链伪装成同一厂区路网。
