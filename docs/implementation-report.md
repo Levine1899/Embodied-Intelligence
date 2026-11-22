@@ -145,3 +145,8 @@ heater | 1,364 | 4 | 65 KB | 需重做结构 |
 - Hero 资产本身只贡献 21 个 mesh；draw call 主要来自程序化杆件/塔环；
 - 真实 headed Chrome（CDP，AMD 集显 / DPR 2）实测 **90 fps**（p95 11.3 ms，0 长帧），headless 数字不可用于推断；
 - 若上移动端，348 calls 偏高，需合并杆件或做实例化。
+
+
+## 附录 · 五关回归（2026-11-22）
+
+逐关刷新 + 真实入口 `levelHook(i)` 测试：五关均可进入、面板可见、`levelId` 正确；l1 压力、l3 液位、l4 馏分选择写回 interaction；l5 退出后 `levelId` 残留，已在 `__stage.back()` 清除。l2 出口点选、l5 产品点选与 l2 退出动画未自动化，详见 [scene-levels-qa.md](scene-levels-qa.md)。

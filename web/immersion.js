@@ -1471,6 +1471,11 @@
     back() {
       activeScene = null; activeCamera = null;
       viewport.classList.remove('in-level');
+      if (window.__sceneContext) {
+        window.__sceneContext.levelId = null;
+        window.__sceneContext.interaction = null;
+        document.dispatchEvent(new CustomEvent('scene-context', { detail: window.__sceneContext }));
+      }
       document.dispatchEvent(new CustomEvent('stage-level'));
     },
     isLevel() { return !!activeScene; },
