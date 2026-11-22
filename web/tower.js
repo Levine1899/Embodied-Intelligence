@@ -42,6 +42,7 @@
   if (!window.THREE || !webglOK()) { showFallback('WebGL 不可用'); return; }
 
   var state = { level: 0, selected: null, loaded: false, frames: 0, cutEnabled: false };
+  var META = null;
   window.__tower = state;
 
   var renderer;
@@ -202,6 +203,45 @@
       ask: '常压塔抽出的馏分为什么还要继续加工'
     }
   ];
+
+
+  // ---------------------------------------------------------------- 语义锚点
+  var HOTSPOT_ANCHOR = {
+    hs_crude_feed: 'anchor_tower_feed',
+    hs_atm_tower: 'anchor_tower_overview',
+    hs_vacuum: 'anchor_tower_vacuum',
+    hs_products: 'anchor_tower_products'
+  };
+
+  function applyMeta(meta) {
+    META = meta;
+    var anchors = meta.anchor_web_y_up || {};
+    HOTSPOTS.forEach(function (h) {
+      var key = HOTSPOT_ANCHOR[h.id];
+      if (key && anchors[key]) h.pos.set(anchors[key][0], anchors[key][1], anchors[key][2]);
+      var names = meta.groups && meta.groups.hotspots && meta.groups.hotspots[h.id];
+      if (names) h.names = [].concat(names);
+    });
+    var bbox = meta.heater_bbox_obj_y_up;
+    var heater = HOTSPOTS.filter(function (h) { return h.id === 'hs_heater'; })[0];
+    if (heater && bbox) {
+      heater.pos.set((bbox[0] + bbox[3]) / 2, (bbox[1] + bbox[4]) / 2, (bbox[2] + bbox[5]) / 2);
+    }
+    labelsEl && Object.keys(labelEls).forEach(function (id) { /* 位置每帧投影，无需重排 */ });
+  }
+
+  function matchesHotspot(h, name) {
+    if (h.names && h.names.length) {
+      return h.names.some(function (n) {
+        return name === n || (n.charAt(n.length - 1) === '_' && name.indexOf(n) === 0);
+      });
+    }
+    return h.match.test(name);
+  }
+
+  fetch('assets/tower/tower.meta.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (m) {
+    if (m) applyMeta(m);
+  }).catch(function () {});
 
   var hotspotMeshes = [];
   var labelsEl = document.getElementById('labels');
@@ -406,7 +446,7 @@
     HOTSPOTS.forEach(function (h) {
       obj.traverse(function (o) {
         if (!o.isMesh) return;
-        if (h.match.test(o.name)) { o.userData.hotspot = h.id; hotspotMeshes.push(o); }
+        if (matchesHotspot(h, o.name)) { o.userData.hotspot = h.id; hotspotMeshes.push(o); }
       });
     });
 
