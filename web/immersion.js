@@ -399,6 +399,73 @@
     return n;
   }
 
+  function mergeStaticMeshes(root) {
+    const buckets = new Map();
+    root.updateWorldMatrix(true, true);
+    const rootInv = new THREE.Matrix4().copy(root.matrixWorld).invert();
+    const removals = [];
+
+    function walk(node) {
+      if (node !== root && node.userData && node.userData.skipMerge) return;
+      if (node.isMesh && !(node.userData && (node.userData.objectId || node.userData.heroAsset))) {
+        const geom = node.geometry;
+        if (geom && geom.attributes && geom.attributes.position) {
+          const mat = Array.isArray(node.material) ? node.material[0] : node.material;
+          if (mat) {
+            const key = (mat.name || '') + '|' + (mat.color ? mat.color.getHexString() : '') + '|' +
+              mat.metalness + '|' + mat.roughness + '|' + mat.transparent + '|' + mat.opacity + '|' + (mat.emissive ? mat.emissive.getHexString() : '');
+            if (!buckets.has(key)) buckets.set(key, { mat: mat, position: [], normal: [], index: [], offset: 0 });
+            const bucket = buckets.get(key);
+            const rel = new THREE.Matrix4().copy(rootInv).multiply(node.matrixWorld);
+            const normalMatrix = new THREE.Matrix3().getNormalMatrix(rel);
+            const pos = geom.attributes.position;
+            const nrm = geom.attributes.normal;
+            const v = new THREE.Vector3();
+            const n = new THREE.Vector3();
+            for (let i = 0; i < pos.count; i += 1) {
+              v.fromBufferAttribute(pos, i).applyMatrix4(rel);
+              bucket.position.push(v.x, v.y, v.z);
+              if (nrm) {
+                n.fromBufferAttribute(nrm, i).applyMatrix3(normalMatrix).normalize();
+                bucket.normal.push(n.x, n.y, n.z);
+              }
+            }
+            const idx = geom.index;
+            if (idx) {
+              for (let i = 0; i < idx.count; i += 1) bucket.index.push(bucket.offset + idx.getX(i));
+            } else {
+              for (let i = 0; i < pos.count; i += 1) bucket.index.push(bucket.offset + i);
+            }
+            bucket.offset += pos.count;
+            removals.push(node);
+          }
+        }
+      }
+      node.children.slice().forEach(walk);
+    }
+    walk(root);
+
+    removals.forEach(function (node) {
+      if (node.parent) node.parent.remove(node);
+      if (node.geometry) node.geometry.dispose();
+    });
+
+    buckets.forEach(function (bucket) {
+      if (!bucket.position.length) return;
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(bucket.position, 3));
+      if (bucket.normal.length === bucket.position.length) {
+        geo.setAttribute('normal', new THREE.Float32BufferAttribute(bucket.normal, 3));
+      }
+      geo.setIndex(bucket.index);
+      if (!bucket.normal.length) geo.computeVertexNormals();
+      const mesh = new THREE.Mesh(geo, bucket.mat);
+      mesh.name = 'merged_' + (bucket.mat.name || 'material');
+      mesh.userData.mergedStatic = true;
+      root.add(mesh);
+    });
+  }
+
   function buildModels() {
     const steel = material(0x9b968a, true);
     const lightSteel = material(0xcfc8ba, true);
@@ -501,6 +568,7 @@
     /* 井口：采油树 + 阀组 */
     const wellhead = new THREE.Group();
     wellhead.userData.objectId = 'wellhead';
+    wellhead.userData.skipMerge = true;
     wellhead.position.set(-0.6, 1.4, -2.2);
     drill.add(wellhead);
     box(wellhead, 0.9, 0.35, 0.9, darkSteel, 0, 0.1, 0);
@@ -513,6 +581,7 @@
     /* 抽油机：支架 + 游梁 + 驴头 */
     const pump = new THREE.Group();
     pump.userData.objectId = 'pumpjack';
+    pump.userData.skipMerge = true;
     pump.position.set(-4.6, 0.16, 3.2);
     drill.add(pump);
     box(pump, 1.6, 0.25, 1.1, concrete, 0, 0.12, 0);
@@ -527,6 +596,7 @@
     /* ---------- 02 地面处理：三相分离器 + 泵撬 + 缓冲罐 ---------- */
     const gather = modelGroups[1];
     const sep = new THREE.Group();
+    sep.userData.skipMerge = true;
     sep.position.set(0.2, 0, 0);
     gather.add(sep);
     const shell = mesh(sep, new THREE.CylinderGeometry(1.05, 1.05, 4.2, 32), lightSteel, 0, 1.9, 0);
@@ -559,6 +629,7 @@
     const store = modelGroups[2];
     function fixedRoofTank(x, z) {
       const g = new THREE.Group();
+      g.userData.skipMerge = true;
       g.position.set(x, 0, z);
       store.add(g);
       cylinder(g, 2.3, 3.4, steel, 0, 1.7, 0).userData.objectId = 'fixed_roof_tank';
@@ -635,6 +706,7 @@
     /* 加热炉 + 烟囱 */
     const heater = new THREE.Group();
     heater.userData.objectId = 'heater';
+    heater.userData.skipMerge = true;
     heater.position.set(-4.6, 0, 3.6);
     refine.add(heater);
     box(heater, 3.4, 2.6, 2.6, steel, 0, 1.3, 0);
@@ -741,6 +813,7 @@
       box(sceneRoot, w, h * 0.55, d, material(0x14140f, false), -30 + i * 11, h * 0.27 - 0.2, -23 - (i % 3) * 2.5);
     }
     box(sceneRoot, 78, 0.8, 1.2, material(0x14140f, false), 3, 0.2, -24);
+    modelGroups.forEach(function (group) { mergeStaticMeshes(group); });
   }
 
 
