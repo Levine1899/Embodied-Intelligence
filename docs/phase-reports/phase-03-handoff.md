@@ -5,7 +5,7 @@
 状态建议：**REVISE**
 用户签收：**待用户签收**
 起始 Commit：`605d97a3f9affb477bf54cf551e8dea5ac97d463`
-结束 Commit（真实 SHA）：`<PHASE03_CONTENT_SHA>`（本报告内容提交；最终记录提交见 tag `phase-03-rev1`）
+结束 Commit（真实 SHA）：`a7028a73131c2ac039d20784a7d38e17a29eacec`（本报告内容提交；最终记录提交见 tag `phase-03-rev1`）
 分支：`main`
 工作区 `git status --short`：空（提交后复核）
 
