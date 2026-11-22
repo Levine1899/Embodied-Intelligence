@@ -413,7 +413,7 @@
           const mat = Array.isArray(node.material) ? node.material[0] : node.material;
           if (mat) {
             const key = (mat.name || '') + '|' + (mat.color ? mat.color.getHexString() : '') + '|' +
-              mat.metalness + '|' + mat.roughness + '|' + mat.transparent + '|' + mat.opacity + '|' + (mat.emissive ? mat.emissive.getHexString() : '');
+              mat.metalness + '|' + mat.roughness + '|' + mat.transparent + '|' + mat.opacity + '|' + (mat.emissive ? mat.emissive.getHexString() : '') + '|' + (mat.map ? mat.map.uuid : '');
             if (!buckets.has(key)) buckets.set(key, { mat: mat, position: [], normal: [], index: [], offset: 0 });
             const bucket = buckets.get(key);
             const rel = new THREE.Matrix4().copy(rootInv).multiply(node.matrixWorld);
@@ -783,6 +783,8 @@
     });
 
     /* ---------- 工艺流程：区域之间的物料连接（不再是悬空光管） ---------- */
+    const pipeGroup = new THREE.Group();
+    sceneRoot.add(pipeGroup);
     const anchors = modelGroups.map(function (group, index) {
       return group.position.clone().add(new THREE.Vector3(-REGIONS[index].w / 2 + 0.6, 1.9, 0));
     });
@@ -797,13 +799,18 @@
         b
       ]);
       const pipe = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 0.1, 8, false), amber.clone());
-      sceneRoot.add(pipe);
+      pipeGroup.add(pipe);
       pipes.push({ curve: curve, object: pipe });
       const particle = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 10), new THREE.MeshBasicMaterial({ color: 0x9fd3c6 }));
       particle.position.copy(curve.getPoint(0.3));
       sceneRoot.add(particle);
       particles.push(particle);
     }
+    mergeStaticMeshes(pipeGroup);
+    const mergedPipe = pipeGroup.children.filter(function (child) { return child.isMesh; })[0] || null;
+    if (mergedPipe) pipes.forEach(function (item) { item.object = mergedPipe; });
+    pipeGroup.userData.skipMerge = true;
+    particles.forEach(function (particle) { particle.userData.skipMerge = true; });
 
     /* ---------- 远景：低对比的工业轮廓，给场景纵深，不与主设备争焦点 ---------- */
     for (let i = 0; i < 7; i += 1) {
@@ -813,7 +820,8 @@
       box(sceneRoot, w, h * 0.55, d, material(0x14140f, false), -30 + i * 11, h * 0.27 - 0.2, -23 - (i % 3) * 2.5);
     }
     box(sceneRoot, 78, 0.8, 1.2, material(0x14140f, false), 3, 0.2, -24);
-    modelGroups.forEach(function (group) { mergeStaticMeshes(group); });
+    modelGroups.forEach(function (group) { mergeStaticMeshes(group); group.userData.skipMerge = true; });
+    mergeStaticMeshes(sceneRoot);
   }
 
 
