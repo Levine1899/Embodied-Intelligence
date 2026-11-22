@@ -36,7 +36,8 @@
     overview:['六区世界总览 · 灰盒','前：城市/地下切口；中：集输/罐区；远：炼化高地。S 形路线与高差。'],
     subsurface:['地下 Hero · 灰盒','地层/储层/井筒/井口关系；垂直夸张，不是真实井深。'],
     separator:['三相分离器 Hero · 灰盒','半剖关系：壳体/挡板/堰板/三个出口；仅锁体量与可读性。'],
-    tower:['蒸馏塔 Hero · 灰盒','全剖关系：塔板/降液管/侧线；外观与内部同轴。']
+    tower:['蒸馏塔 Hero · 灰盒','全剖关系：塔板/降液管/侧线；外观与内部同轴。'],
+    entry:['首次入场 · 灰盒','地下剖面唯一主焦点；城市不进入高对比，留到 T6 揭示。']
   };
   document.getElementById('title').textContent = titles[view][0];
   document.getElementById('desc').textContent = titles[view][1];
@@ -109,12 +110,14 @@
   const field = new THREE.Group(); scene.add(field);
   for(let i=0;i<3;i++){
     const x=-26+i*4.2, z=16+(i%2)*2;
-    box(2.6,0.5,2.0,x,0.25,z,mid);
-    box(0.5,2.8,0.5,x-0.5,1.7,z,mid);
-    const beam=box(3.6,0.35,0.45,x+0.8,3.0,z,dark); beam.rotation.z=-0.15;
-    box(1.0,0.9,0.7,x+2.4,2.8,z,mid);
-    cyl(0.28,0.34,1.2,x-1.1,0.8,z,dark,10);
-    cyl(0.18,0.18,1.8,x-1.1,1.8,z,mid,8);
+    const parts=[];
+    parts.push(box(2.6,0.5,2.0,x,0.25,z,mid));
+    parts.push(box(0.5,2.8,0.5,x-0.5,1.7,z,mid));
+    const beam=box(3.6,0.35,0.45,x+0.8,3.0,z,dark); beam.rotation.z=-0.15; parts.push(beam);
+    parts.push(box(1.0,0.9,0.7,x+2.4,2.8,z,mid));
+    parts.push(cyl(0.28,0.34,1.2,x-1.1,0.8,z,dark,10));
+    parts.push(cyl(0.18,0.18,1.8,x-1.1,1.8,z,mid,8));
+    parts.forEach(o=>field.add(o));
   }
   // gathering
   const sepFull = new THREE.Group(); scene.add(sepFull);
@@ -182,13 +185,14 @@
     overview:{p:new THREE.Vector3(40,24,50), t:new THREE.Vector3(0,1,2)},
     subsurface:{p:new THREE.Vector3(-24,3,32), t:new THREE.Vector3(-24,-4,8)},
     separator:{p:new THREE.Vector3(-7,5.5,15), t:new THREE.Vector3(-1.8,2,4)},
-    tower:{p:new THREE.Vector3(31,12,-3), t:new THREE.Vector3(22,7,-17)}
+    tower:{p:new THREE.Vector3(31,12,-3), t:new THREE.Vector3(22,7,-17)},
+    entry:{p:new THREE.Vector3(-24,9,32), t:new THREE.Vector3(-25,-2,4)}
   }[view];
   camera.position.copy(cam.p); camera.lookAt(cam.t);
 
   if(view==='separator'){ sepFull.visible=false; sepCut.visible=true; }
   if(view==='tower'){ towerFull.visible=false; towerCut.visible=true; }
-  if(view==='subsurface'){ field.visible=false; }
+  if(view==='subsurface' || view==='entry'){ field.visible=false; }
 
   function project(v){
     const p=v.clone().project(camera);

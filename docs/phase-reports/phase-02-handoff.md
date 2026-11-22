@@ -37,30 +37,40 @@
 | 3D 灰盒参考 | **通过（设计证据）** | 4 张 PNG + `blockout.html`，§4.1 |
 | 用户设计签收 | **未执行** | `experience-design-signoff.md` |
 
-## 3. 本轮审查问题对应修订
+## 3. 本轮审查问题对应修订（按正文证据）
 
-| 编号 | 状态 | 修订位置 |
+| 编号 | 状态 | 修订位置/证据 |
 |---|---|---|
-| P1-01 阶段 01 摘要状态冲突 | **已解决** | `phase-01-handoff.md` 顶部拆分 Agent/用户状态；§13 保留原话 |
-| P1-02 T7 章计数错误 | **已解决** | `task-design.md` §4.1：知识章 5、流程标记 2；T7 前置改为五枚知识章 |
-| P1-03 T5/T6 重复选择 | **已解决（方案 A）** | T5 唯一 `choices.priority`；T6 只沿用，不重复设置；`tower.setPriority` 更新 |
-| P1-04 fraction→application→cityObject | **已解决** | `task-design.md` §5：中间路线、允许/禁止配对、`city_product_table` |
-| P1-05 样本数/阈值不兼容 | **已解决** | `experience-design-signoff.md` §5：正式 N=5；N=3 只试测 |
-| P1-06 下一位用户复位 | **已解决（设计）** | `interaction-spec.md` §7.2：显式“结束本次参观”+确认；刷新恢复；不自动超时 |
-| P1-07 Hero Gate 阶段归属 | **已澄清** | `00_MASTER.md` §5；本报告 §6：阶段 02 设计规格、阶段 03 可占位、04/05/06 各自硬门禁 |
-| P1-08 总控/模板缺失 | **已落库** | `docs/agent-prompts/00_MASTER.md`、`PHASE_HANDOFF_TEMPLATE.md`、`README.md`；含哈希/来源限制 |
-| P1-09 视觉参考仅 ASCII | **已补** | `visual-art-direction.md` §4.1；4 张真实浏览器灰盒 PNG + `blockout.html` |
-| P2 自主任务样例 | **已补样例** | `task-design.md` §4.2（OBS-01/JUDGE-01/HIDE-01），阶段 07 细化 |
+| P0-01 阶段 01 当前状态 | **已解决** | `phase-01-handoff.md` 顶部拆分 Agent/用户状态；§11 标为历史快照；§13 保留原话/日期；不再把历史“待签收”当当前状态 |
+| P1-02 T7 章数/发放 | **已解决** | `task-design.md` §4.1：五章发放表；l1 需 T1+T2 都完成；跳过失章；T7 前置五章；缺章禁止交付 |
+| P1-03 T5/T6 重复重点 | **已解决** | T5 唯一 `choices.priority`；T6 只沿用；`city.setPriority` 改为只读 `city.applyPriority` |
+| P1-04 应用/城市对象映射 | **已解决** | `task-design.md` §5：8 应用、6 城市宿主、5 张必做卡、topgas 不进城、航空煤油共用加油机、纤维/润滑油/石蜡可选 |
+| P1-05 测试样本/阈值 | **已解决** | `experience-design-signoff.md` §5：正式 N=5；N=3 仅试测；阈值按 5 人 |
+| P1-06 展厅复位 | **已解决（设计）** | `interaction-spec.md` §7：显式“结束本次参观”+确认；刷新恢复；不自动超时 |
+| P1-07 性能基线混用 | **已解决** | `visual-art-direction.md` §7：FPS probe 153/55,082/89.4 与总览 118/47,634、炼化 83/35,476 分开 |
+| P1-08 镜头运动枚举 | **已解决** | `camera-storyboard.md` §1–3：只允许 dolly/crane/orbit/follow + direction；rise/descend 为别名 |
+| P1-09 结束 Commit 记录 | **部分解决/待最终提交** | §4 记录 `aa57e0e` 及 tag；本轮新增修订提交后以 tag `phase-02-rev3` 的实际 peeled SHA 为准（最终消息给精确值） |
+| P1-10 交接过度乐观 | **已修正** | 本表按正文逐项核验；P1-09 明确标“待最终提交”，未再写全部已解决 |
+| P1-11 总控/模板落库 | **已解决（整理版）** | `docs/agent-prompts/00_MASTER.md`、`PHASE_HANDOFF_TEMPLATE.md`、`README.md`；含 SHA-256；非逐字官方版 |
+| P1-12 六区 XZ 坐标 | **已解决** | `scene-map.md` §1.1–1.2：六区 centerX/Z、宽深、高程、对象锚点、路径、相机锚点 |
+| Hero Asset Gate | **已澄清** | 阶段 02 只验收设计规格；阶段 03 可用标注占位；04/05/06 各自硬门禁；09 总验收；依据 `docs/agent-prompts/00_MASTER.md` §5 |
+| P2-01 视觉参考 | **已补** | `visual-art-direction.md` §4.1：4 张浏览器渲染灰盒 |
+| P2-02 README/CHANGELOG | **未处理（非阻断）** | 产品版本仍 3.4.0；设计基线不入产品版本，避免误标 |
+| P2-03 科学来源 | **待阶段 08/09** | `knowledge-visual-mapping.md` 明列审校要求，未伪造引用 |
 
 ## 4. 修改文件与 Commit
 
 修改：
 
 - `docs/experience-design.md`
+- `docs/scene-map.md`
 - `docs/task-design.md`
+- `docs/camera-storyboard.md`
 - `docs/interaction-spec.md`
 - `docs/visual-art-direction.md`
+- `docs/hero-asset-briefs.md`
 - `docs/experience-design-signoff.md`
+- `CHANGELOG.md`（设计基线条目，不改产品版本）
 - `docs/phase-reports/phase-01-handoff.md`
 - `docs/phase-reports/phase-02-handoff.md`（本文件）
 
@@ -71,6 +81,7 @@
 - `docs/agent-prompts/PHASE_HANDOFF_TEMPLATE.md`
 - `docs/agent-prompts/README.md`
 - `docs/phase-reports/evidence/phase-02/blockout.html`
+- `docs/phase-reports/evidence/phase-02/blockout-entry.png`
 - `docs/phase-reports/evidence/phase-02/blockout-overview.png`
 - `docs/phase-reports/evidence/phase-02/blockout-subsurface.png`
 - `docs/phase-reports/evidence/phase-02/blockout-separator.png`
@@ -80,9 +91,11 @@
 
 - 阶段 02 初版：`28d1bad`
 - 第一轮返修（大改 11 文件）：`172f283`；交接记录一行提交：`c9a02ea`
-- 第二轮返修（本文件所在提交）：`73f6bfb`
-- 分支：`main`；tag（本轮结束）：`phase-02-rev2`
-- 工作区：最终提交后 `git status --short` 为空（0 行）
+- 第二轮返修内容：`73f6bfb`；记录提交：`aa57e0e`；tag `phase-02-rev2` → `aa57e0e`
+- 第三轮返修（本轮定点修订）内容提交：`<REV3_COMMIT>`；记录提交及最终 branch head：见最终交付消息
+- 本轮开始时校验：`git rev-parse HEAD` = `aa57e0e`；`git rev-parse refs/tags/phase-02-rev2^{}` = `aa57e0e`；`git status --short` = 空
+- 分支：`main`；本轮结束 tag：`phase-02-rev3`（指向最终记录提交；peeled SHA 用 `git rev-parse refs/tags/phase-02-rev3^{}` 校验）
+- 验收对应文档状态以 tag `phase-02-rev3` 为准；不以聊天或旧 tag 代替
 
 ## 5. 验证与测试边界
 
@@ -90,7 +103,7 @@
 |---|---|
 | 代码语法/构建 | **未执行**（本阶段未改业务代码） |
 | 产品网页/WebGL/FPS/E2E | **未执行**（阶段 03–09） |
-| 3D 灰盒渲染 | **已执行**：Chrome headless + Three.js 基础几何体，1440×900，四视图；仅参考，不是产品实现 |
+| 3D 灰盒渲染 | **已执行**：Chrome headless + Three.js 基础几何体，1440×900，五视图；仅参考，不是产品实现 |
 | 设计文档交叉核对 | 已核对 T0–T7、五关、fractionId、applicationId、cityObjectId、状态字段、Hero ID |
 | 真实用户测试 | **未执行**（阶段 09；N=5 方案已定义） |
 | 资产制作 | **未执行**（阶段 04–06） |
@@ -130,7 +143,7 @@
 
 **REVISE。**
 
-本轮已修正上一轮列出的 P1-01–09 与 P1-03 等细节，并补齐总控文件、灰盒参考、会话复位和映射表。但阶段 02 用户签收（P0）仍未完成，按总控不得建议 PASS，也不得进入阶段 03。
+本轮已修正 P1-01–08、P1-10–12，并补齐总控文件、灰盒参考、会话复位、五组必做映射和六区 XZ 坐标。P1-09 的最终提交 SHA 以 tag `phase-02-rev3` 的 peeled SHA 为准（最终交付消息给出）。但阶段 02 用户签收（P0）仍未完成，按总控不得建议 PASS，也不得进入阶段 03。
 
 ## 8. User acceptance
 

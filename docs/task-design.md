@@ -127,17 +127,17 @@
 
 ### T6 城市：交付与应用（对应 l5，延续 T5 重点）
 
-- 目标：把五个馏分/产品匹配到城市应用，展示 T5 选择的燃料/材料重点，完成交付。
+- 目标：把**五张必做应用卡**（汽油/柴油/航空煤油/塑料/沥青）匹配到城市对象，展示 T5 选择的燃料/材料重点，完成交付。纤维/润滑油/石蜡为可选探索卡，不计入 5 组必做。
 - 前置：T5 完成或跳过。
 - 线索：城市街区、加油站、材料台、产品卡。
-- 动作：`city.assignProduct(fractionId, applicationId)` → `batch.deliver`；城市按 `choices.priority` 显示权重，**不重复设置 priority**；如需改选，回 T5 改同一字段（需确认，不在 T6 新建选择）。
+- 动作：`city.assignProduct(fractionId, applicationId)`（仅 5 张必做卡计数）→ `batch.deliver`；城市按 `choices.priority` 显示权重，**不重复设置 priority**；如需改选，回 T5 改同一字段（需确认，不在 T6 新建选择）。
 - 状态变化：`batch.node='city'` → `'delivered'`；正确配对盖章；错误退回；城市权重由 `choices.priority` 决定；不写 `productSet`。
-- 可观察结果：正确配对/错误原因；城市灯光/材料权重；批次牌到交付箱；最后一章。
-- 成功：5 个配对正确 + 交付；T6 完成（重点已在 T5 选择）。
-- 失败：塑料配“只能来自石油”错误；提示可能来自天然气/煤基/生物基；不扣分。
+- 可观察结果：5 组必做配对盖章；可选卡可继续查看但不计入 5/5；城市灯光/材料权重；批次牌到交付箱；最后一章。
+- 成功：**5 组必做配对正确**（汽油/柴油/航空煤油/塑料/沥青）+ 交付；T6 完成（重点已在 T5 选择）。
+- 失败：塑料配“只能来自石油”错误；提示可能来自天然气/煤基/生物基；不扣分；缺必做卡时“完成交付”按钮禁用并提示。
 - 知识解释：燃料/材料/路面来自不同路线；T5 的重点决定城市显示权重；模型为典型示意，非唯一工艺路线。
 - 重试/跳过：可重配；可跳过。
-- 复位：清空配对，保留 `choices.priority`。
+- 复位：清空配对，保留 `choices.priority`；可选卡发现记录保留。
 - 知识 ID：`kb_use`。
 
 ### T7 交付复盘
@@ -182,6 +182,21 @@
 
 **总账**：知识章 5 枚（stamp_l1–l5）；流程标记 2 枚（accept/deliver）。界面若显示印章总数，必须分开写“知识章 5/5 · 流程 2/2”，不得混称“五枚章/七枚章”。
 
+**章节发放规则（唯一）**：
+
+| knowledgeChapter | 关卡 | 覆盖步骤 | 发放条件 |
+|---|---|---|---|
+| 第1章 `stamp_l1` | l1 | T1、T2 | **T1 和 T2 都完成**才发；只完成一个不发；T2 完成时发放 |
+| 第2章 `stamp_l2` | l2 | T3 | T3 完成（气/油/水三路都有去向） |
+| 第3章 `stamp_l3` | l3 | T4 | T4 完成（选罐+液位变化+确认） |
+| 第4章 `stamp_l4` | l4 | T5 | T5 完成（五馏分全对+全剖查看+重点选择） |
+| 第5章 `stamp_l5` | l5 | T6 | T6 完成（5 组必做配对正确+交付） |
+
+- 允许跳过以继续探索，但跳过/未完成的知识章**不发章**。
+- `batch.deliver` 前置为 5 枚知识章齐全；缺章时按钮禁用，提示“还差第 N 章”，用户可返回补做。
+- 不允许带缺章强行交付；T7 复盘只在交付后出现。
+- T0 `accept`、T7 `deliver` 是流程标记，不是知识章。
+
 ### 4.2 自主/观察/判断/隐藏发现样例（阶段 07 细化）
 
 | taskId | 类型 | 触发 | 动作/反馈 | 成功 | 复位 |
@@ -210,24 +225,26 @@
 
 ### 终端应用与城市对象映射（典型示意，非唯一路线）
 
-| fractionId | intermediateProcessId | applicationId | cityObjectId | 用户可见反馈 | 允许直接配对？ |
-|---|---|---|---|---|---|
-| `topgas` | `proc_fuel_gas` | —（燃料气，不进入城市产品卡） | — | 燃料气管网/火炬路径 | 否（不作为汽油/柴油） |
-| `naphtha` | `proc_naphtha_reform` / `proc_olefin` | `app_gasoline` | `fuel_dispenser` | 重整/调和后进入汽油卡 | 需经过路线；不能直接当汽油 |
-| `naphtha` | `proc_olefin` | `app_plastic` | `plastic_bottle` | 乙烯/丙烯→聚合物→塑料卡 | 需经过路线；也可非石油基 |
-| `kerosene` | `proc_jet_hydro` | `app_jet` | `fuel_dispenser` | 精制/调和后航空煤油卡 | 需经过路线 |
-| `diesel` | `proc_diesel_hydro` | `app_diesel` | `fuel_dispenser` | 加氢/调和后柴油卡 | 需经过路线 |
-| `residue` | `proc_vacuum` / `proc_asphalt` | `app_asphalt` | `asphalt_slab` | 减压渣油→沥青卡 | 需经过路线；不能直接当汽油 |
-| `residue` | `proc_lube_baseoil` | `app_lubricant` | `lubricant_can` | 精制/调配→润滑油卡 | 需经过路线；不承诺收率 |
-| `residue` | `proc_wax_dewax` | `app_wax` | `city_product_table` | 脱蜡/精制→石蜡展示卡 | 需经过路线 |
-| `naphtha` | `proc_fiber` | `app_fiber` | `fiber_spool` | 芳烃/烯烃→聚合物→纤维卡 | 需经过路线；其他原料也可能 |
+| fractionId | intermediateProcessId | applicationId | cityObjectId | 本期必做 | 用户可见反馈 | 允许直接配对？ |
+|---|---|---|---|---|---|---|
+| `topgas` | `proc_fuel_gas` | —（燃料气，不进入城市产品卡） | — | 否 | 燃料气管网/火炬路径 | 否（不作为汽油/柴油） |
+| `naphtha` | `proc_naphtha_reform` / `proc_olefin` | `app_gasoline` | `fuel_dispenser`（同一加油机的汽油卡） | 是 | 重整/调和后进入汽油卡 | 需经过路线；不能直接当汽油 |
+| `naphtha` | `proc_olefin` | `app_plastic` | `plastic_bottle` | 是 | 乙烯/丙烯→聚合物→塑料卡 | 需经过路线；也可非石油基 |
+| `kerosene` | `proc_jet_hydro` | `app_jet` | `fuel_dispenser`（同一加油机的航空煤油卡；以机场/加注提示表现，不新增独立模型） | 是 | 精制/调和后航空煤油卡 | 需经过路线 |
+| `diesel` | `proc_diesel_hydro` | `app_diesel` | `fuel_dispenser`（同一加油机的柴油卡） | 是 | 加氢/调和后柴油卡 | 需经过路线 |
+| `residue` | `proc_vacuum` / `proc_asphalt` | `app_asphalt` | `asphalt_slab` | 是 | 减压渣油→沥青卡 | 需经过路线；不能直接当汽油 |
+| `residue` | `proc_lube_baseoil` | `app_lubricant` | `lubricant_can` | 否（可选） | 精制/调配→润滑油卡 | 需经过路线；不承诺收率 |
+| `residue` | `proc_wax_dewax` | `app_wax` | `city_product_table` | 否（可选） | 脱蜡/精制→石蜡展示卡 | 需经过路线 |
+| `naphtha` | `proc_fiber` | `app_fiber` | `fiber_spool` | 否（可选） | 芳烃/烯烃→聚合物→纤维卡 | 需经过路线；其他原料也可能 |
 
 **允许/禁止规则**：
 
 - 允许一对多：石脑油可走汽油或塑料路线；渣油可走沥青/润滑油/石蜡路线（均为典型示意）。
 - 禁止直接配对：塔顶油气→汽油/柴油/航空煤油；常压渣油→汽油；任何馏分→“成品油”且无后续加工。
 - 塑料不得标“只能来自石油”；合成纤维不得标“只能来自石油”。
-- 五个设备对象 + 一个非交互展示台承载八个应用：`fuel_dispenser` 承载汽油/柴油/航空煤油三张卡；`plastic_bottle` 塑料；`fiber_spool` 纤维；`lubricant_can` 润滑油；`asphalt_slab` 沥青；`city_product_table` 承载石蜡展示卡（非交互展台）。不为凑数强行新增五个设备。
+- 五个设备对象 + 一个非交互展示台承载八个应用：`fuel_dispenser` 承载汽油/柴油/航空煤油三张卡；`plastic_bottle` 塑料；`fiber_spool` 纤维；`lubricant_can` 润滑油；`asphalt_slab` 沥青；`city_product_table` 承载石蜡展示卡（非交互展台）。
+- **T6 计数**：只计 5 张“本期必做”卡（汽油/柴油/航空煤油/塑料/沥青）；纤维/润滑油/石蜡为可选探索，不计入 5/5。航空煤油共用加油机，但以独立卡+机场/加注提示区分，不新增独立模型。
+- **topgas** 不进入城市配对，只走燃料气/火炬路径。
 
 >T6 拖拽对象是“馏分/产品”的教学卡，不等于常压塔直接产出成品；文案始终提示“馏分≠成品油”。
 
@@ -254,7 +271,7 @@ actionId | objectId | 前置条件 | 输入方式 | 状态变化 | 视觉反馈 
 | `tower.setPriority` | 全正确 | 选择 | `choices.priority`（唯一） | 侧线/下游 | T6 沿用；改选回 T5 |
 | `city.assignProduct` | T5 | 拖拽 | 配对状态 | 盖章/弹回 | 错误原因 |
 | `city.applyPriority` | T5 已选 | 只读展示 | 无新选择 | 城市权重 | 不重复选择 |
-| `batch.deliver` | 五章 | 按钮 | batch.node=delivered | 最后一章/路线 | 缺章提示 |
+| `batch.deliver` | 五枚知识章 | 按钮 | batch.node=delivered | 最后一章/路线 | 缺章提示/按钮禁用 |
 
 ## 7. 状态分离与会话
 

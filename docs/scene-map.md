@@ -19,6 +19,36 @@
 
 `subsurface + oilfield` 共用 `drill` 深链；进入 `#stage=0` 先到地下剖面，再沿井筒升到油田地面；不新增 `#stage=5`。
 
+### 1.1 阶段 03 灰盒坐标表（设计近似值）
+
+世界边界按当前地形约 **78×34**（x −39…39，z −17…17）；以下为设计近似值，阶段 03 按实际地形校准并记录偏差，不得直接当成已实现坐标。
+
+| zoneId | centerX | centerZ | width | depth | elevationRange | primaryObjectAnchors | entry/exitAnchor | connectingPathId |
+|---|---|---|---|---|---|---|---|---|
+| `subsurface` | −25 | 4 | 14 | 10 | y −12…0 | reservoir(−27,−3,4)、wellhead(−22,0,2) | 南侧 z=9 / `cam_subsurface` | `path_sub_oil` |
+| `oilfield` | −21 | 11 | 14 | 8 | y 0…3 | pumpjack(−24,0,12)、pumpjack2(−20,0,13)、wellhead(−22,0,10) | 南侧 z=15 / `cam_wellhead` | `path_oil_gather` |
+| `gathering` | −2 | 3 | 12 | 10 | y 0…4 | separator(0,2,3)、gas header(−4,2,7)、water treatment(3,0,6) | 西侧 x=−8 / `cam_separator` | `path_gather_store`、`path_gas`、`path_water` |
+| `storage` | 12 | −5 | 12 | 10 | y 0…5 | fixed tank(10,1.6,−5)、floating tank(15,1.6,−4) | 南侧 z=0 / `cam_tank` | `path_store_refine` |
+| `refining` | 24 | −11 | 16 | 10 | y 2…14 | atm tower(23,8,−12)、vac tower(27,6,−13)、heater(20,2,−9)、flare(31,7,−15) | 南侧 z=−5 / `cam_tower` | `path_refine_city` |
+| `city` | 28 | 9 | 15 | 10 | y 0…6 | fuel dispenser(26,0.7,9)、plastic(29,0.5,11)、fiber(31,0.5,10)、lubricant(31,0.5,7)、asphalt(25,0.3,6)、product table(33,0.5,9) | 西侧 x=20 / `cam_city` | `path_refine_city` |
+
+### 1.2 相机锚点（设计近似）
+
+| anchorId | position (x,y,z) | lookAt (x,y,z) | 用途 |
+|---|---|---|---|
+| `cam_vista` | (10,12,24) | (0,2,0) | 总览/回顾 |
+| `cam_subsurface` | (−24,−1,20) | (−25,−4,4) | HM-1 地下 |
+| `cam_wellhead` | (−19,3,17) | (−21,1,10) | 井口/地面 |
+| `cam_separator` | (−5,3,10) | (0,2,3) | HM-2 分离 |
+| `cam_tank` | (11,5,5) | (12,2,−4) | 储运 |
+| `cam_tower` | (28,10,1) | (24,8,−11) | HM-3 炼化 |
+| `cam_city` | (28,5,16) | (29,2,9) | 城市交付 |
+
+- 以上 anchor 与 §1.1 的 zone 中心/设备锚点配套使用；阶段 03 若调整地形，先更新本表再改代码。
+- 旧五区 `REGIONS`（x −26/−11/4/19/33）只作为迁移线索；新坐标不改变 `stageId`、`objectId` 和深链。
+- 五个旧 stage 仍为 `drill/gather/store/refine/use`；`subsurface` 与 `oilfield` 共用 `drill`。
+
+
 ## 2. 地图 A：产业链世界总览图
 
 回答“世界由什么构成、各区在哪里、前后景是什么”。

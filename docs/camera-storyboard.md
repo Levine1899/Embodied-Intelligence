@@ -8,7 +8,7 @@
 
 - 主镜头使用 **Three.js `PerspectiveCamera` 垂直 FOV 40°**（若引擎按水平 FOV 配置，需换算并记录；阶段 03 统一用垂直 FOV 字段）。
 - 运动以低速度、长停留为主；每镜至少 1.2s 静止观察。
-- 转场只用 `dolly`（推/拉）、`crane`（升降）、`orbit`（≤25°）；不做 360° 旋转炫技。
+- 基础运动类型只允许 **`dolly` / `crane` / `orbit` / `follow`**；方向用独立字段 `direction: in|out|up|down|none` 表达。`rise/descend` 只是 `crane` 的方向别名，不是独立 `moveType`；`follow` 用于低空跟随，不做 360° 旋转炫技。
 - 用户 `pointerdown`/`wheel`/`touchstart` 立即暂停自动镜头并交还控制；不自动抢回。
 - `prefers-reduced-motion`：800ms 以上运动改瞬时/150ms 淡入；导览不自动播放。
 - 镜头不穿实体；地下剖面从南侧开口进入。
@@ -24,7 +24,9 @@
 | `to` | 是 | 相机目标锚点 |
 | `lookAt` | 是 | 注视目标（对象/锚点） |
 | `fov` | 是 | 垂直 FOV，默认 40° |
-| `moveType` | 是 | dolly/crane/orbit/rise/descend/follow |
+| `moveType` | 是 | 仅 `dolly` / `crane` / `orbit` / `follow` |
+| `direction` | 是 | `in` / `out` / `up` / `down` / `none`；与 moveType 组合 |
+| `orbitDeg` | 否 | orbit 或附带环绕时的角度，≤25° |
 | `duration/easing` | 是 | 毫秒 + 缓动；停留时长另列 |
 | `sceneAction` | 是 | 镜头过程中的设备/结构/流线变化 |
 | `narration` | 是 | 同步讲解/字幕要点 |
@@ -36,16 +38,18 @@
 
 | shotId | 章节 | from → to | 运动 | 时长/停留 | 场景动作 | 完成/接管 |
 |---|---|---|---|---|---|---|
-| `shot_overview` | 全景 | `cam_vista` → 前推 2m | dolly | 3–4s / 1.5s | 批次牌/路线淡入 | 拖动接管 |
-| `shot_descend` | 地下 | `cam_vista` → `cam_subsurface` | crane+descend | 3.5–4.5s / 2s | 地表退场、层理揭示 | 拖动/滚轮 |
-| `shot_lift` | 井筒 | `cam_subsurface` → `cam_wellhead` | rise | 3–4s / 1.5s | 套管/水泥环、抽油机 | 拖动 |
-| `shot_separate` | 分离 | `cam_wellhead` → `cam_separator` | dolly+orbit 15° | 3–4s / 2s | 切面打开、三出口 | 拖动 |
-| `shot_store` | 储运 | `cam_separator` → `cam_tank` | crane+orbit 20° | 3.5–4.5s / 2s | 浮盘/油气空间 | 拖动 |
-| `shot_refine` | 炼化 | `cam_tank` → `cam_tower` | rise+dolly | 4–5s / 2.5s | 半剖→全剖可切 | 拖动 |
-| `shot_city` | 城市 | `cam_tower` → `cam_city` | dolly+orbit 12° | 3.5–4.5s / 2s | 日光、交付箱 | 拖动 |
-| `shot_return` | 回顾 | `cam_city` → `cam_vista` | crane out | 2.5–3.5s / 2s | 路线/五章低亮 | 可跳过 |
+| `shot_overview` | 全景 | `cam_vista` → 前推 2m | dolly / in | 3–4s / 1.5s | 批次牌/路线淡入 | 拖动接管 |
+| `shot_descend` | 地下 | `cam_vista` → `cam_subsurface` | crane / down | 3.5–4.5s / 2s | 地表退场、层理揭示 | 拖动/滚轮 |
+| `shot_lift` | 井筒 | `cam_subsurface` → `cam_wellhead` | crane / up | 3–4s / 1.5s | 套管/水泥环、抽油机 | 拖动 |
+| `shot_separate` | 分离 | `cam_wellhead` → `cam_separator` | dolly / in + orbit 15° | 3–4s / 2s | 切面打开、三出口 | 拖动 |
+| `shot_store` | 储运 | `cam_separator` → `cam_tank` | crane / up + orbit 20° | 3.5–4.5s / 2s | 浮盘/油气空间 | 拖动 |
+| `shot_refine` | 炼化 | `cam_tank` → `cam_tower` | crane / up + dolly / in | 4–5s / 2.5s | 半剖→全剖可切 | 拖动 |
+| `shot_city` | 城市 | `cam_tower` → `cam_city` | dolly / in + orbit 12° | 3.5–4.5s / 2s | 日光、交付箱 | 拖动 |
+| `shot_return` | 回顾 | `cam_city` → `cam_vista` | crane / out | 2.5–3.5s / 2s | 路线/五章低亮 | 可跳过 |
 
 锚点为设计规格，阶段 03 用实际场景坐标校准；命名统一 `cam_*`，不把坐标散落在多个文件。
+
+**枚举校验**：上表所有镜头行只使用 `dolly/crane/orbit/follow` + `direction`；`rise/descend` 不再作为独立值。阶段 03 代码中的枚举必须与此一致，否则视为实现偏离设计。
 
 ## 4. 三个 Hero Moments 的六帧分镜
 
