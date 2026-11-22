@@ -56,7 +56,7 @@
     "up_axis_after_export": "Y",
     "note": "Teaching-grade medium detail; not an engineering model.",
     "files": {
-      "obj_bytes": 463275,
+      "obj_bytes": 463302,
       "mtl_bytes": 960
     }
   },
@@ -166,14 +166,14 @@
   },
   {
     "asset": "floating_roof_tank",
-    "triangles": 5400,
-    "vertices": 2760,
+    "triangles": 6976,
+    "vertices": 3592,
     "meshes": 4,
     "materials": 4,
     "size_m": {
       "x": 10.93,
       "y": 10.36,
-      "z": 6.44
+      "z": 6.825
     },
     "anchors": [
       {
@@ -212,14 +212,14 @@
     "up_axis_after_export": "Y",
     "note": "Teaching-grade medium detail; not an engineering model.",
     "files": {
-      "obj_bytes": 314730,
+      "obj_bytes": 406821,
       "mtl_bytes": 781
     }
   },
   {
     "asset": "heater",
-    "triangles": 1364,
-    "vertices": 748,
+    "triangles": 1492,
+    "vertices": 824,
     "meshes": 4,
     "materials": 4,
     "size_m": {
@@ -264,7 +264,7 @@
     "up_axis_after_export": "Y",
     "note": "Teaching-grade medium detail; not an engineering model.",
     "files": {
-      "obj_bytes": 66996,
+      "obj_bytes": 74831,
       "mtl_bytes": 781
     }
   }

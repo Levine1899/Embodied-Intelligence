@@ -230,9 +230,9 @@
   // 环节机位预设：随流程逐级下降（高度 2.6 → 0.9，仰角同步压低）
   const CAM_PRESETS = [
     { targetY: -1.7, radius: 13, elevation: 0.34, azimuth: -0.05 },
-    { targetY: 2.0, radius: 12, elevation: 0.28, azimuth: 0.12 },
-    { targetY: 2.4, radius: 13, elevation: 0.26, azimuth: 0.18 },
-    { targetY: 4.8, radius: 16, elevation: 0.20, azimuth: 0.22 },
+    { targetY: 2.2, radius: 13, elevation: 0.30, azimuth: 0.10, dx: 0.2, dz: 0 },
+    { targetY: 2.2, radius: 14, elevation: 0.30, azimuth: 0.16, dx: 0, dz: -0.4 },
+    { targetY: 2.6, radius: 18, elevation: 0.32, azimuth: 0.16, dx: -1.6, dz: 1.4 },
     { targetY: 1.9, radius: 11, elevation: 0.24, azimuth: 0.30 }
   ];
   // 环节 → 章节（第 1 章「形成与勘探」没有 3D 环节）
@@ -261,7 +261,7 @@
     if (focus && modelGroups[index]) {
       const p = modelGroups[index].position;
       const preset = CAM_PRESETS[index] || CAM_PRESETS[0];
-      moveCamera(Object.assign({ targetX: p.x, targetZ: p.z }, preset));
+      moveCamera(Object.assign({ targetX: p.x + (preset.dx || 0), targetZ: p.z + (preset.dz || 0) }, preset));
     }
   }
 
