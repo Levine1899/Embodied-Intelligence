@@ -70,7 +70,7 @@
 未修改 `web/`、`server/`、`tools/`；`git diff --stat -- web server tools` 为空。
 
 - 起始：`28d1bad`（阶段 02 初版设计提交）
-- 设计修订提交：`<REVISION_COMMIT>`（docs-only）
+- 设计修订提交：`172f283`（docs-only）
 - 结束：本报告记录提交（docs-only，branch head）；tag `phase-02-rev1`
 - 分支：`main`；工作区在最终提交后应为 clean（`git status --short` 为空，最终报告附结果）
 
