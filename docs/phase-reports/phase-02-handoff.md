@@ -1,125 +1,128 @@
-# Phase 02 交接报告 · 体验设计
+# Phase 02 交接报告 · 体验设计（返修版）
 
 日期：2026-11-22
-阶段：02_EXPERIENCE_DESIGN
-状态建议：**REVISE**（设计已交付，等待用户签收；未签收前不得进入阶段 03）
+阶段：02_EXPERIENCE_DESIGN（返修轮）
+状态建议：**REVISE**（等待用户签收；不得进入阶段 03）
 用户签收：**待用户签收**
 
-> 启动前置检查：`docs/phase-reports/phase-01-handoff.md` 与四份阶段 01 输入均存在并已重读。工作区仍没有 `00_MASTER.md`、`PHASE_HANDOFF_TEMPLATE.md` 实体文件；本阶段按用户此前提供的总控规则与阶段 01 报告格式执行，未伪造文件。该治理缺口保留为风险，不冒充“已读取实体文件”。
+## 1. 启动前置检查
 
-## 1. 任务逐项状态
+已重读：阶段 01 交接、四份审计输入、全部阶段 02 设计文档、本次审查报告。
+工作区仍无 `00_MASTER.md`、`PHASE_HANDOFF_TEMPLATE.md` 实体文件；按用户此前提供的总控规则与阶段 01 报告格式执行，未伪造文件。阶段 01 用户签收语句已补录到 `phase-01-handoff.md` §13。
 
-| 任务 | 状态 | 证据/文件 |
+## 2. 任务逐项状态
+
+| 任务 | 状态 | 证据 |
 |---|---|---|
-| 1. 三种创意方向与比较 | **通过** | `experience-design.md` §1–2：A 垂直潜入 / B 立体展馆 / C 批次通行证，8 维比较，选 C，说明舍弃 |
-| 2. 首要/次要用户与首次体验 | **通过** | `experience-design.md` §3–4：首要初高中学生；次要普通成年公众、教师/讲解员；10 秒—结束旅程 |
-| 3. 三种模式共享模型 | **通过** | `experience-design.md` §5：同一 scene/objectId/knowledgeId/session；模式只改镜头/UI/动作 |
-| 4. 场景地图与空间构图 | **通过** | `scene-map.md`：六视觉区、五 stage 兼容、S 形走廊 + 高差、Mermaid 流程、非真实地理声明 |
-| 5. 完整任务探索系统 | **通过** | `task-design.md`：主任务 + T0–T7、五子任务、分支、三级提示、失败/重置/复盘 |
-| 6. 四个标志性体验脚本 | **通过** | `experience-design.md` §6：地下穿越/管线追踪/塔展开/能源到生活，含用户动作、镜头、变化、知识、退出 |
-| 7. 镜头与声音脚本 | **通过** | `camera-storyboard.md`：7 章锚点/运动/时长/缓动/停留/接管/结束；声音默认关闭 |
-| 8. UI 密度与交互矩阵 | **通过** | `interaction-spec.md`：三种密度、13 设备状态矩阵、状态机、键盘/降级、阶段映射 |
-| 9. Hero Asset 参考板与签收标准 | **通过** | `hero-asset-briefs.md`：三类资产正/侧/45°/剖切、部件/比例/材质/语义节点/导出/授权/责任阶段 |
-| 交付物 6：实施风险清单 | **通过** | `experience-design.md` §7 边界 + 本报告 §6 |
-| 用户设计签收 | **未执行** | `experience-design-signoff.md`：待用户逐项确认并回复“体验设计通过，放行进入阶段 03” |
+| 三方向比较与主方向 | **通过** | `experience-design.md` §1–2 |
+| 用户身份/目标/叙事弧线/三个 Hero Moments | **通过** | `experience-design.md` §3–8 |
+| 三层场景地图与构图 | **通过** | `scene-map.md` §2–5（地图 A/B/C、首次入场/总览分离） |
+| 主线+自主探索+观察/判断/隐藏发现 | **通过** | `task-design.md` §2 |
+| T0–T7 口径与映射 | **通过** | `task-design.md` §1、§4 |
+| 五种馏分/终端应用/科学边界 | **通过** | `task-design.md` §5、`knowledge-visual-mapping.md` |
+| 四个体验脚本 + 三个 Hero Moments 六帧分镜 | **通过** | `experience-design.md` §9、`camera-storyboard.md` §4 |
+| 统一镜头字段/接管/降级/声音范围 | **通过** | `camera-storyboard.md` §2、§5–7 |
+| 六维正交状态/组合/复位/设备能力矩阵 | **通过** | `interaction-spec.md` §2–4 |
+| 动作契约 actionId | **通过** | `interaction-spec.md` §5 |
+| 旧 `__sceneContext`/`/api/ask` 兼容 | **通过** | `interaction-spec.md` §6 |
+| 视觉参考/UI 层级/Token 映射/性能预算 | **通过** | `visual-art-direction.md` §4–7 |
+| 科学知识—视觉映射 | **通过** | `knowledge-visual-mapping.md` |
+| Hero 参考板/格式/优先级/质量门槛 | **通过** | `hero-asset-briefs.md` §2–11 |
+| 体验验证标准 | **通过** | `experience-design-signoff.md` §5（未执行，仅方案） |
+| 用户设计签收 | **未执行** | `experience-design-signoff.md`：待用户逐项确认 |
 
-## 2. 修改文件
+## 3. 审查问题对应修订
 
-设计文档（仅文档，未改业务代码）：
+| 编号 | 状态 | 修订位置 |
+|---|---|---|
+| P0-01 阶段 01 状态矛盾 | **已解决** | `phase-01-handoff.md` §13 补录用户原话/日期；`experience-design.md` 头部引用；本报告 §1 |
+| P0-02 阶段 02 未签收 | **仍未解决（需用户）** | `experience-design-signoff.md` 保持待签收；本报告 §10 |
+| P0-03 体验蓝图深度不足 | **已修订** | 三 Hero Moments、三层地图、探索型任务、六帧分镜、正交状态、视觉/知识映射、验证标准、追踪表 |
+| P1-01 批次牌身份/节点 | **已修正** | `experience-design.md` §7；`task-design.md` §3/§7：牌为教学标记，T0 不推进 node，字段分离 |
+| P1-02 任务数量口径 | **已统一** | `task-design.md` §1/§4；`experience-design.md` §10 |
+| P1-03 五种馏分未列 | **已补** | `task-design.md` §5；`knowledge-visual-mapping.md` §4–6 |
+| P1-04 上下文字段兼容 | **已定义** | `interaction-spec.md` §6（只增不删/别名/ctx 契约） |
+| P1-05 分流目的地 | **已补** | `scene-map.md` §4；`task-design.md` §3 T3；目的地 ID/可交互性 |
+| P1-06 教学参数边界 | **已贯穿** | `experience-design.md` §9；`task-design.md` T1/提示/复盘；`knowledge-visual-mapping.md` |
+| P1-07 Token 单一来源 | **已补** | `visual-art-direction.md` §6 |
+| P1-08 整场景性能预算 | **已补** | `visual-art-direction.md` §7 |
+| P1-09 结束 Commit 可追溯 | **本轮修订** | 本报告 §4；返修提交 + tag `phase-02-rev1` |
 
-- `docs/experience-design.md`（重写）
-- `docs/scene-map.md`（重写）
-- `docs/camera-storyboard.md`（新增）
-- `docs/interaction-spec.md`（新增）
-- `docs/visual-art-direction.md`（新增）
-- `docs/task-design.md`（新增）
-- `docs/hero-asset-briefs.md`（新增）
-- `docs/experience-design-signoff.md`（新增）
+## 4. 修改文件与 Commit
+
+修改：
+
+- `docs/experience-design.md`
+- `docs/scene-map.md`
+- `docs/task-design.md`
+- `docs/camera-storyboard.md`
+- `docs/interaction-spec.md`
+- `docs/visual-art-direction.md`
+- `docs/hero-asset-briefs.md`
+- `docs/experience-design-signoff.md`
+- `docs/phase-reports/phase-01-handoff.md`（补录签收，不改原 P0 结论）
 - `docs/phase-reports/phase-02-handoff.md`（本文件）
 
-未修改 `web/`、`server/`、`tools/`；未删除/移动资产；未开始阶段 03。
+新增：
 
-## 3. 起止 Commit
+- `docs/knowledge-visual-mapping.md`
 
-- 起始：`437c8e2`（阶段 01 交接完成，工作区干净）
-- 设计文档提交：`25ba110`（docs-only）
-- 结束：本报告修订提交（docs-only，见 `git log -1`）
+未修改 `web/`、`server/`、`tools/`；`git diff --stat -- web server tools` 为空。
 
-## 4. 执行命令
+- 起始：`28d1bad`（阶段 02 初版设计提交）
+- 设计修订提交：`<REVISION_COMMIT>`（docs-only）
+- 结束：本报告记录提交（docs-only，branch head）；tag `phase-02-rev1`
+- 分支：`main`；工作区在最终提交后应为 clean（`git status --short` 为空，最终报告附结果）
 
-```bash
-# 前置检查
-Test-Path docs/phase-reports/phase-01-handoff.md
-Test-Path docs/audit-baseline.md docs/asset-inventory.md docs/interaction-inventory.md docs/test-baseline.md
-Get-ChildItem -Recurse -Filter 00_MASTER.md
-Get-ChildItem -Recurse -Filter PHASE_HANDOFF_TEMPLATE.md
-git status --short
-# 只写 docs；未运行构建/未改代码
-```
+## 5. 验证与测试边界
 
-## 5. 设计证据
-
-本阶段是设计阶段，不适用“浏览器截图证明 3D 已实现”。用以下可复核内容作为设计证据：
-
-| 设计项 | 可复核位置 |
+| 项 | 结果 |
 |---|---|
-| 三方向比较/选择 | `experience-design.md` §1–2 |
-| 用户与首次体验 | `experience-design.md` §3–4 |
-| 模式共享 | `experience-design.md` §5 |
-| 四种体验脚本 | `experience-design.md` §6 |
-| 空间图 | `scene-map.md` §2–3（Mermaid + ASCII） |
-| 任务系统 | `task-design.md` §2–4 |
-| 镜头/声音 | `camera-storyboard.md` §2–4 |
-| UI/状态机 | `interaction-spec.md` §1–3 |
-| 资产参考板 | `hero-asset-briefs.md` §2–5 |
+| 代码语法/构建 | **未执行**（本阶段未改代码） |
+| 浏览器/3D/截图/录屏 | **未执行**（设计阶段；不得声称已实现） |
+| 设计文档交叉核对 | 已人工核对 T0–T7、五关、fractionId、objectId、状态字段、Hero ID |
+| 真实用户测试 | **未执行**（阶段 09；签收页给方案） |
+| 资产制作 | **未执行**（阶段 04–06） |
 
-**未执行**：3D 实现、浏览器截图、录屏、真实用户测试；因此不能把本阶段设计当成已实现视觉/交互。
+本阶段不能把“文档已写”描述为“体验已验证”。
 
-## 6. P0 / P1 / 风险
+## 6. 遗留问题与风险
 
-### 本阶段 P0（未解决则不得进入阶段 03）
+### P0（未关闭）
 
-1. **用户未签收**：`experience-design-signoff.md` 尚未得到“体验设计通过，放行进入阶段 03”。这是阶段 02 的硬门禁。
-2. **资产 Gate 的现实缺口**：阶段 01 已确认五台 Hero/塔无 `.blend`、无部件语义、无授权；本阶段只给参考板与标准，**没有制作资产**。阶段 04–06 必须补齐，否则对应体验不得 PASS。
-3. **主方向 C 是否被接受**：批次牌/任务分支是产品级取舍，未获用户确认前不能当成已定稿。
+1. **用户未签收阶段 02**：必须用户本人确认；Agent 不代签。
+2. **Hero Asset Gate 仍未达**：本阶段只给参考板/标准；五台 Hero/塔缺 `.blend`、语义节点、授权，分离器内部/塔全剖需阶段 05/06 制作。
+3. **方向 C/批次牌/分支仍需用户确认**：签收页列 8 个待确认项。
 
 ### P1
 
-- `00_MASTER.md` / `PHASE_HANDOFF_TEMPLATE.md` 实体缺失，治理材料只能按对话规则执行；下阶段前应补文件。
-- 六区重排会改变 `REGIONS` 与关卡锚点；阶段 03 必须同步迁移，否则五关锚点偏移。
-- 任务分支的文案（火炬/回收、固定顶/浮顶、燃料/材料）需内容/合规复审，避免绝对化。
-- 资产参考板为自绘示意，不是模型；不得作为视觉验收。
+- 六区重排会影响 `REGIONS` 与五关锚点，阶段 03 必须同步迁移。
+- 上下文别名只增不删，阶段 03 若改字段将破坏 ai.js；必须按 `interaction-spec.md` §6。
+- 资产参考板是自绘示意，不是最终模型；不得作为视觉验收。
+- `00_MASTER.md`/`PHASE_HANDOFF_TEMPLATE.md` 实体缺失，治理材料依赖对话记录。
 
 ### P2
 
-- 声音仍只有合成氛围，无 AI 语音/真实录音；设计已明确非强制。
-- 移动端本期不适配；设计不承诺手机布局。
-- 阶段 03 起需要新增 `zoneId`/`batch`/`task` 到 `__sceneContext`，要保证旧字段兼容。
+- 声音仍只有合成氛围，无 AI 语音；默认关闭。
+- 移动端不承诺。
+- 阶段 09 需真实用户测试/跨浏览器/无 WebGL 基线。
 
-## 7. 关键设计决定（供用户确认）
-
-1. 主方向：C《批次 YJ-001：一张能源通行证》。
-2. 六视觉区、五 stage 兼容；S 形 + 高差，不做五框横排。
-3. 首要用户：初高中学生；次要：普通成年公众、教师/讲解员。
-4. 不加积分/排名；用批次章、路线、复盘。
-5. 分支：气回收/火炬、浮顶/固定顶、燃料/材料；均不编造收率/排放。
-6. 塔全剖必须显示塔板/降液管/侧线/汽液粒子，半剖只显示半壳+塔板。
-7. Hero Asset：地下必须新建；分离器/塔/储罐/井口/加热炉需精修并补 `.blend`/语义/授权。
-
-## 8. Agent recommendation
+## 7. Agent recommendation
 
 **REVISE。**
 
-设计交付物齐全，但阶段 02 的签收门禁未完成；按总控“用户未签收只能 REVISE/BLOCKED”，不建议 PASS，也不进入阶段 03。
+设计修订已覆盖审查的 P0-03 与 P1-01–09；P0-01 已有可追溯用户签收。但 P0-02（用户未签收）未关闭，Hero Asset Gate 仍是后续阶段硬缺口，按总控不得建议 PASS，也不得进入阶段 03。
 
-建议：用户逐项审阅 `experience-design-signoff.md`，确认或提出修改；确认后回复“体验设计通过，放行进入阶段 03”。若要求修改，阶段 02 保持 REVISE，更新对应设计文件与本报告，不跳到实现。
-
-## 9. User acceptance
+## 8. User acceptance
 
 **待用户签收。**
 
-Agent 不代替用户勾选。用户未明确签收前，本阶段保持 REVISE，不开始阶段 03。
+请用户审阅 `experience-design-signoff.md` 的 8 个待确认项与 16 个签收项；明确回复：
 
-## 10. 停止声明
+> **体验设计通过，放行进入阶段 03**
+
+未签收前，本阶段保持 REVISE，不开始阶段 03。
+
+## 9. 停止声明
 
 **本阶段已停止，等待用户签收与下一阶段 Prompt。**
