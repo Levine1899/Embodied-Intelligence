@@ -59,7 +59,7 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 <div class="heading"><div><h1>原油，怎样<span>走出地下？</span></h1><p>沿着生产流程，观察设备、物料与加工过程。</p></div><label class="reading">理解深度<select id="depth"><option value="0">亲子与青少年</option><option value="1" selected>普通公众</option><option value="2">科技／石油爱好者</option><option value="3">专业人士</option></select></label></div>
 <div class="layout">
 <section class="scene" aria-label="三维动态流程">
-<div class="scene-head"><p><strong>原油生产与加工</strong> · 流向示意</p><div class="tools"><button type="button" id="overview">流程总览</button><button type="button" id="focus">聚焦当前环节</button><button type="button" id="play" aria-pressed="false">播放流向</button><button type="button" id="cut" aria-pressed="false">半剖</button><button type="button" id="spin" aria-pressed="false">自动旋转</button><button type="button" id="device-list-btn" aria-expanded="false" aria-controls="device-list">设备列表</button></div></div>
+<div class="scene-head"><p><strong>原油生产与加工</strong> · 流向示意</p><div class="tools"><button type="button" id="overview">流程总览</button><button type="button" id="focus">聚焦当前环节</button><button type="button" id="play" aria-pressed="false">播放流向</button><button type="button" id="cut" aria-pressed="false">半剖</button><button type="button" id="spin" aria-pressed="false">自动旋转</button><button type="button" id="sound" aria-pressed="false">声音</button><button type="button" id="device-list-btn" aria-expanded="false" aria-controls="device-list">设备列表</button></div></div>
 <div class="viewport" id="viewport" role="group" aria-label="可旋转的原油开采、处理、储运、炼化和产品流程三维模型">
 <div class="view-hint"><b>拖动</b> 旋转 · <b>滚轮</b> 缩放 · 点击节点查看</div>
 <div class="device-list" id="device-list" hidden aria-label="设备列表">
@@ -100,7 +100,8 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 
 <script src="assets/three.browser.js"></script>
 <script src="assets/obj-lite.js?v=1"></script>
-<script src="immersion.js?v=fix49"></script>
+<script src="assets/site/ambient.js?v=1"></script>
+<script src="immersion.js?v=fix50"></script>
 <link rel="stylesheet" href="assets/site/tokens.css">
 <style>
   .view-hint{font-size:12px}

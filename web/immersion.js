@@ -1045,6 +1045,14 @@
   }
   const spinDefault = document.getElementById('spin');
   if (spinDefault) spinDefault.setAttribute('aria-pressed', String(autoOrbit));
+  const soundBtn = document.getElementById('sound');
+  if (soundBtn) soundBtn.addEventListener('click', function () {
+    if (!window.Ambient) { soundBtn.textContent = '声音不可用'; return; }
+    const result = window.Ambient.toggle();
+    if (!result.supported) { soundBtn.textContent = '声音不可用'; return; }
+    soundBtn.setAttribute('aria-pressed', String(result.on));
+    soundBtn.textContent = result.on ? '声音开' : '声音';
+  });
   const cutBtn = document.getElementById('cut');
   if (cutBtn) cutBtn.addEventListener('click', function () { applyUnitCut(!unitState.cut); });
   const spinBtn = document.getElementById('spin');
@@ -1207,6 +1215,7 @@
   let deviceAnchor = null;
   const history = [];
   function showDeviceCard(objectId, index, anchor) {
+    if (window.Ambient) window.Ambient.blip();
     const info = DEVICE_INFO[objectId];
     if (!info) return;
     if (!deviceCardEl) deviceCardEl = document.getElementById('device-card');
