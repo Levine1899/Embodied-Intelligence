@@ -553,7 +553,7 @@
     cylinder(pumpSkid, 0.42, 0.7, steel, -0.6, 0.55, 0);
     box(pumpSkid, 0.9, 0.7, 0.8, darkSteel, 0.7, 0.55, 0);
     rod(pumpSkid, [-1.3, 0.5, 0], [-1.3, 1.7, 0], 0.09, teal);
-    rod(pumpSkid, [-1.3, 1.7, 0], [-3.4, 1.7, 0], 0.09, teal);
+    rod(pumpSkid, [-1.3, 1.7, 0], [-0.6, 1.7, 0], 0.09, teal);
 
     /* ---------- 03 储运：固定顶罐 + 外浮顶罐 + 泵与管架 ---------- */
     const store = modelGroups[2];
@@ -1416,6 +1416,11 @@
     levelHook(i) { const h = (window.__levelHooks && window.__levelHooks[i]) || null; if (h) markLevel(i); return h; },
     refreshTaskPanel() { syncTaskPanel(); },
     get camera() { return activeCamera || camera; },
+    stats() {
+      const info = renderer.info.render;
+      return { calls: info.calls, triangles: info.triangles,
+               geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures };
+    },
     onResize(fn) { resizeHooks.push(fn); }
   };
   // 深链：#stage=N 直接定位到某环节；并同步右栏「读本章知识」

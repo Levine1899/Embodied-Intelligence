@@ -428,9 +428,9 @@ def build_floating_tank():
         cyl("ladder_side_%02d" % i, dark, 0.025, 0.7, (R + 0.15, -0.25, 0.6 + i * 0.75), verts=6)
     # front ladder (facing the default camera) + top guard rail
     for sx in (-0.35, 0.35):
-        cyl("front_ladder_rail_%.2f" % sx, dark, 0.035, H, (sx, R + 0.12, H / 2), verts=8)
+        cyl("front_ladder_rail_%.2f" % sx, dark, 0.035, H, (sx, -(R + 0.12), H / 2), verts=8)
     for i in range(10):
-        cyl("front_ladder_rung_%02d" % i, dark, 0.03, 0.8, (0, R + 0.12, 0.5 + i * 0.55), rot=(0, math.pi / 2, 0), verts=8)
+        cyl("front_ladder_rung_%02d" % i, dark, 0.03, 0.8, (0, -(R + 0.12), 0.5 + i * 0.55), rot=(0, math.pi / 2, 0), verts=8)
     for i in range(10):
         a = i / 9 * math.pi
         cyl("top_rail_%02d" % i, dark, 0.03, 0.55, (math.cos(a) * (R - 0.15), math.sin(a) * (R - 0.15), H + 0.55), verts=8)

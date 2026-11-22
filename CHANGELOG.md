@@ -9,6 +9,7 @@
 - **科学修正**：l1 压力差示意边界；l3 删除排放量推断与“压没”；l4 改为五种馏分并说明馏分≠成品油；l5 产品路线不绝对化。
 - **稳定性**：l1–l4 真实 deltaTime；塔页 WebGL2 检测、上下文丢失处理、加载后 `setLevel(0)`。
 - **文档**：新增 audit-baseline / asset-inventory / experience-design / scene-map / scene-sandbox / implementation-report，重写塔场景文档；版本号统一 3.4.0。
+- **性能基线**：新增 `__stage.stats()`；总览 348 draw calls / 49,010 面，地面处理 69 / 10,930，炼化 263 / 27,162。
 - **五台 Hero 资产接入**：抽油机/井口/外浮顶罐/加热炉也接入，合计 20 个材质 mesh，点击均弹对应卡片；缩放按场景校准。
 - **Hero 资产接入**：新增共享 OBJ 解析器 `obj-lite.js`；三相分离器已替换为 Blender 资产（5 材质 mesh、OBJ 8 ms），点击可弹设备卡片；其余四台未接入。
 - **Hero 资产 v1**：Blender 脚本生成五台设备（分离器 8,236 / 抽油机 1,208 / 井口 3,948 / 外浮顶罐 5,448 / 加热炉 1,364 三角面），按材质合并为 4–5 个对象，输出 OBJ/MTL/meta/stats 与 Cycles 预览；抽油机与加热炉标记“需美术复审/重做”，未接入沙盘。
