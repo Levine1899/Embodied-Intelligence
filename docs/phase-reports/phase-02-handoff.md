@@ -42,7 +42,7 @@
 ## 3. 起止 Commit
 
 - 起始：`437c8e2`（阶段 01 交接完成，工作区干净）
-- 设计文档提交：`<DESIGN_COMMIT>`（docs-only）
+- 设计文档提交：`25ba110`（docs-only）
 - 结束：本报告修订提交（docs-only，见 `git log -1`）
 
 ## 4. 执行命令
