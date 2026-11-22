@@ -120,11 +120,12 @@
 - 第二轮返修内容：`73f6bfb`；记录提交：`aa57e0e`；tag `phase-02-rev2` → `aa57e0e`
 - 第三轮返修内容：`fe2e896c360cc80c43afdea30e613341117d5e47`；记录提交：`e066322c7f67109737714ba1ea92432387b326cc`；tag `phase-02-rev3` → `e066322c7f67109737714ba1ea92432387b326cc`
 - 第四轮返修内容：`6dca10b7b7c528bca4e5ee03d979c61d3cb95634`；记录提交：`b479b7c49c519f76db51886354d7a66ba7e1bc16`；tag `phase-02-rev4` → `b479b7c49c519f76db51886354d7a66ba7e1bc16`
-- 第五轮返修（本轮）内容提交：`b50fbf801bc1dd5d873685213bf753ac8fe6bc87`（完整 40 位；提交后填写）
-- 本轮开始时：`git rev-parse HEAD` = `b479b7c49c519f76db51886354d7a66ba7e1bc16`；`git status --short` = 空；分支 `main`
-- 第五轮最终记录提交/最终 branch HEAD：由 tag `phase-02-rev5` 指向；完整 SHA 以 `git rev-parse refs/tags/phase-02-rev5^{}` 校验，最终交付消息同时列出
+- 第五轮返修内容：`b50fbf801bc1dd5d873685213bf753ac8fe6bc87`；记录提交：`7ec57cb4d5149edbcdb177b65caf390bfa435d68`；tag `phase-02-rev5` → `7ec57cb4d5149edbcdb177b65caf390bfa435d68`
+- 第六轮返修（本轮）内容提交：`29df3a2384849f73e09a2bb81d4b1dbbc894462c`（完整 40 位）
+- 本轮开始时：`git rev-parse HEAD` = `7ec57cb4d5149edbcdb177b65caf390bfa435d68`；`git status --short` = 空；分支 `main`
+- 第六轮最终记录提交/最终 branch HEAD：由 tag `phase-02-rev6` 指向；完整 SHA 以 `git rev-parse refs/tags/phase-02-rev6^{}` 校验，最终交付消息同时列出
 - 最终工作区：`git status --short` 为空（0 行）
-- 验收对应文档状态以 tag `phase-02-rev5` 为准；不以聊天或旧 tag 代替
+- 验收对应文档状态以 tag `phase-02-rev6` 为准；不以聊天或旧 tag 代替
 - 说明：Git 提交内容无法包含自身提交的 SHA；本报告记录设计内容提交的完整 SHA，最终记录提交由 tag 固定，避免伪造自引用 SHA。
 
 ## 5. 验证与测试边界
