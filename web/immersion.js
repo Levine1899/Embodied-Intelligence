@@ -151,6 +151,7 @@
   let vacTowerGroup = null;
   let autoOrbit = true;
   let pumpAnim = null;
+  let contextLostAt = 0;
   let particles = [];
   let labels = [];
   let raycaster;
@@ -884,6 +885,14 @@
   function render(timestamp) {
     requestAnimationFrame(render);
     if (document.hidden || !renderer) return;
+    if (contextLostAt && performance.now() - contextLostAt > 1200) {
+      const drawn = renderer.info && renderer.info.render && renderer.info.render.calls > 0;
+      if (drawn) {
+        contextLostAt = 0;
+        const fb = document.getElementById('fallback');
+        if (fb) fb.hidden = true;
+      }
+    }
     const delta = Math.min(50, timestamp - lastFrame);
     lastFrame = timestamp;
     if (playing && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) phase = (phase + delta / 2800) % 1;
@@ -924,6 +933,20 @@
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
     viewport.prepend(renderer.domElement);
+    renderer.domElement.addEventListener('webglcontextlost', function (event) {
+      event.preventDefault();
+      contextLostAt = performance.now();
+      const fb = document.getElementById('fallback');
+      if (fb) {
+        fb.hidden = false;
+        fb.textContent = '三维上下文丢失，正在尝试恢复；下方流程节点与讲解仍可使用。';
+      }
+    });
+    renderer.domElement.addEventListener('webglcontextrestored', function () {
+      const fb = document.getElementById('fallback');
+      if (fb) fb.hidden = true;
+      resize();
+    });
     renderer.domElement.setAttribute('role', 'img');
     renderer.domElement.setAttribute('aria-label', '井筒、处理设施、储罐、炼化单元和产品的三维模型');
     scene.add(new THREE.HemisphereLight(0xf2ead9, 0x29301e, 2.0));

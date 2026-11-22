@@ -159,3 +159,12 @@ heater | 1,364 | 4 | 65 KB | 需重做结构 |
 - 录制方式：Chrome 1280×800 + 禁用后台节流，帧序列经 ffmpeg 以 12 fps 编码；不是后期合成；
 - 用户理解测试**尚未执行**，仅提供方案与记录表：`docs/user-test-protocol.md`；
 - 限制：录制环境是 Windows + Chrome + AMD 集显，非真机、非 Safari。
+
+
+## 附录 · WebGL 上下文丢失与恢复（2026-11-22）
+
+- `webglcontextlost`：阻止默认行为、显示降级提示“三维上下文丢失，正在尝试恢复；下方流程节点与讲解仍可使用”；
+- `webglcontextrestored`：隐藏提示并 resize；
+- 兜底：恢复事件不一定触发（Chrome `WEBGL_lose_context` 实测只收到 lost），渲染循环在丢失 1.2 秒后若检测到 `renderer.info.render.calls > 0` 自动隐藏提示；
+- 实测：`loseContext()` 后提示出现；`restoreContext()` 后 3 秒内提示消失，calls 恢复 116、三角面 61,774；
+- 限制：这是沙盘主画布；塔页已有自己的 WebGL2 检测，但未做同样的恢复提示。
