@@ -122,10 +122,28 @@ actionId | objectId | 前置条件 | 输入方式 | 状态变化 | 视觉反馈 
 
 ## 7. 会话与复位
 
+### 7.1 普通刷新/继续
+
 - `sessionStorage` 键：`oil-journey-v1`；保存 batch/task/exploration/interaction/history。
-- 新批次/展厅下一位用户：清 `batch/task/interaction/history/exploration`；保留音量/减少动态偏好（单独键）。
-- 退出再进：恢复；相机/structure/animation 回默认。
+- 普通刷新、同一标签页返回：**恢复**当前 session；相机/structure/animation 回默认，但不提示“开始新会话”。
+- “再走一次”：只重置 `batch/task/interaction/history/exploration` 中的任务相关字段，保留音量/减少动态偏好；需用户确认。
+
+### 7.2 展厅下一位用户（显式）
+
+- 入口：档案页/页脚固定按钮 **“结束本次参观”**（或“开始新一轮”）；不得只靠隐式超时。
+- 点击 → 确认对话框“将清除本机当前批次的进度与选择，是否继续？” → 确认后：
+  - 清除 `oil-journey-v1` 的 batch/task/interaction/history/exploration；
+  - 保留独立键 `oil-journey-prefs`（音量、减少动态、字幕偏好）；
+  - 回到首屏/T0，不继承上一位用户的选择/AI 上下文。
+- 取消：不改变当前 session。
+- 闲置超时：**本期不自动复位**；由工作人员/用户点“结束本次参观”。若未来启用自动复位，必须单独设计并在阶段 09 验证连续参观。
+- 普通刷新绝不触发 7.2；只有显式按钮+确认才清。
+- 阶段 03 提供入口与状态；阶段 07/09 验证“刷新恢复 / 显式复位 / 下一位用户不继承”三种行为。
+
+### 7.3 不保存
+
 - 不保存 API Key、个人信息、自由文本输入原文（只保存最近操作摘要）。
+- AI 请求的历史上下文不跨 session 继承；新会话首问不带上一位用户的问题。
 
 ## 8. 键盘、无障碍、降级
 

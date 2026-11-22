@@ -143,6 +143,7 @@ flowchart LR
 | `vacuum_tower` | 设备 | refining | 减压塔 | 是 | 06 |
 | `heater` | 设备 | refining | 加热炉 | 是 | 06 |
 | `city` | 区域 | city | 街区/加油站/材料台 | 区域 | 06 |
+| `city_product_table` | 非交互展示台 | city | 产品台，承载石蜡等展示卡 | 否 | 06 |
 
 **规则**：不可交互终点必须有可观察几何/路径，不得只存在于成功条件文本；未确认资产/许可证不得列为可商用。
 

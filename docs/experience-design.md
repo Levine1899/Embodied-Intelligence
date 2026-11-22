@@ -114,7 +114,7 @@
 
 - 批次牌是**教学追踪标记/叙事道具**，不是原油、实际物流、设备零件或管线中的金属物件。
 - 它沿管线**外侧**或独立教学轨迹移动，不与设备内部真实物料粒子混为一体。
-- 每完成一个交接点，牌上盖一枚章；五枚章 + 交付章构成“能源探索档案”。
+- 每完成一个交接点，牌上盖一枚知识章；五枚知识章（l1–l5）加接单/交付两个流程标记构成“能源探索档案”。流程标记不计知识章。
 - 用户可随时查看“档案”：已到节点、已发现设备、已获得知识、做过的选择。
 
 ### 叙事弧线
@@ -199,7 +199,7 @@ session: {
   mode: tour|free|task,
   batch: { id:'YJ-001', node:'reservoir'|'wellbore'|'wellhead'|'separator'|
            'oil_to_storage'|'tank'|'refinery_feed'|'fraction_split'|'city'|'delivered',
-           stamps:[], choices:{gasRoute,tankType,cutPriority,productSet} },
+           stamps:[], processStamps:[], choices:{gasRoute,tankType,priority} },
   task: { status:'idle'|'active'|'help'|'error'|'complete', step:'T0'..'T7', hintLevel:0..3 },
   exploration: { visitedZones:[], inspectedObjects:[], knowledgeSeen:[] },
   interaction: { actionId, objectId, value, unit, result }|null,
@@ -309,7 +309,7 @@ session: {
 |---|---|---|---|---|---|---|
 | 1 | 沿产品管线去城市 | 塔顶→城市街区 | 清晨到日光；批次牌到交付箱 | 加油机数字轮/材料台亮起 | 燃料/材料/路面来自不同路线 | 可回塔 |
 | 2 | 把 5 个馏分/产品拖到应用 | 产品台近景 | 正确盖章；错误弹回 | 产品对象轻转 | 用途与原料；塑料也可能非石油基 | 可重试 |
-| 3 | 选“燃料优先/材料优先” | 拉远到城市 | 城市灯光/材料权重变化 | 产品台重排 | 同一批原油不同加工重点；下游不唯一 | 完成 |
+| 3 | 查看 T5 的“燃料/材料”重点；如需改选，回炼化改同一选择 | 拉远到城市 | 城市灯光/材料权重按 choices.priority 变化 | 产品台重排 | 同一批原油不同加工重点；T6 不重复选择；下游不唯一 | 完成 |
 | 4 | 点“完成交付” | 回全景 | 批次牌最后一章；路线低亮 | 抽油机继续 | 回顾：5 节点/3 选择/知识章 | 复盘/自由/塔/AI |
 
 ## 10. 统一口径
@@ -318,7 +318,7 @@ session: {
 - **5 个既有关卡/任务段**：l1–l5，全部保留。
 - **6 个具体操作步骤**：T1–T6；T1、T2 共用 l1。
 - **T0 接单前置、T7 交付复盘**：不计入操作步骤。
-- **5 枚关卡知识章**：l1–l5 各一枚；T0/T7 是否额外计章：不计，只记录接单/复盘状态。
+- **5 枚关卡知识章**：`stamp_l1`–`stamp_l5`；T0 `process:accept`、T7 `process:deliver` 是流程标记，不计知识章。界面分开显示“知识章 5/5 · 流程 2/2”。
 - **3 个 Hero Moments**：HM-1/HM-2/HM-3；与 T1/T3/T5 对齐。
 - **批次状态、任务状态、交互记录、探索记录分字段**：见 §7 与 `interaction-spec.md`。
 

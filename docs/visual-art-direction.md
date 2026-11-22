@@ -244,3 +244,30 @@
 - 无 WebGL fallback。
 
 每张至少 1440×900；1920×1080 加分；移动端本期不承诺。截图需能看出参考 1–6 的构图/层级被实现，而不是只堆设备。
+
+### 4.1 低保真 3D 灰盒参考（Phase 02 证据）
+
+以下四张是**真实浏览器渲染的灰盒 blockout**，使用基础几何体锁定六区体量、S 形路线、高差和三个 Hero 的空间/剖切关系。它们不是最终模型、不是网页实现、不得作为 Hero Asset 验收证据。
+
+![六区总览灰盒](phase-reports/evidence/phase-02/blockout-overview.png)
+
+- 六区总览：前中远景、S 形路线、炼化高地/罐区/城市/地下切口的关系；地下剖面在左侧切口，城市在右前。
+- 生成源：`docs/phase-reports/evidence/phase-02/blockout.html`（Three.js 基础几何体，1440×900，轴测灰模）。
+
+![地下 Hero 灰盒](phase-reports/evidence/phase-02/blockout-subsurface.png)
+
+- 地下 Hero：层理、储层带、井筒/井口与地表抽油机的垂直关系；垂直夸张，不是真实井深。
+- 该图只锁“可读关系”，不锁最终材质/结构细节。
+
+![三相分离器灰盒](phase-reports/evidence/phase-02/blockout-separator.png)
+
+- 分离器 Hero：半剖壳体、挡板/堰板、三个出口与储罐的相对位置；内部构件只到体量级。
+- 阶段 05 必须用正式资产重做，不得拿此图当验收。
+
+![蒸馏塔灰盒](phase-reports/evidence/phase-02/blockout-tower.png)
+
+- 蒸馏塔 Hero：全剖壳体、塔板/降液管/侧线；外观与内部同轴。
+- 阶段 06 必须让全剖与半剖有结构级差异；灰盒仅用于锁定关系。
+
+限制：灰盒由设计用 HTML 渲染，非 Blender/正式资产；灯光、材质、比例均为讨论用。阶段 03 若使用占位资产，必须沿用“占位”标识，不得声称达到阶段 04–06 的资产门禁。
+
