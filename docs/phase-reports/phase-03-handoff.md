@@ -5,7 +5,7 @@
 状态建议：**PASS（阶段 03 技术范围）**
 用户签收：**阶段 03 待用户签收**；阶段 02 已由用户签收 **ACCEPTED**
 起始 Commit：`b5989e99dac6c96e08fdbae59fbc5c450e223355`（rev1 最终记录；原始阶段 03 起点 `605d97a`）
-结束 Commit（真实 SHA）：`<PHASE03_REV2_SHA>`（本报告内容提交；最终 tag `phase-03-rev2`）
+结束 Commit（真实 SHA）：`751358a0a68d29263938baeedd2920899363d615`（本报告内容提交；最终 tag `phase-03-rev2`）
 分支：`main`
 
 ## 1. 本轮审查处理
