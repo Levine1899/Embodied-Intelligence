@@ -9,6 +9,7 @@
 - **科学修正**：l1 压力差示意边界；l3 删除排放量推断与“压没”；l4 改为五种馏分并说明馏分≠成品油；l5 产品路线不绝对化。
 - **稳定性**：l1–l4 真实 deltaTime；塔页 WebGL2 检测、上下文丢失处理、加载后 `setLevel(0)`。
 - **文档**：新增 audit-baseline / asset-inventory / experience-design / scene-map / scene-sandbox / implementation-report，重写塔场景文档；版本号统一 3.4.0。
+- **五关 E2E**：headed Chrome 下五关全部「进入→操作→退出」通过，l1 压力 / l2 出口 / l3 液位 / l4 馏分 / l5 产品均写回 interaction 且退出后 levelId 清空；新增 `tools/level-e2e.cjs` 与 l2/l5 测试钩子。
 - **五关回归**：l1/l2/l3/l4/l5 入口与面板全部可进，l1/l3/l4 控件写回 interaction；修复退出后 `levelId` 残留；l2 退出与 3D 点选仍未自动化，见 `docs/scene-levels-qa.md`。
 - **真实帧率**：headed Chrome + CDP 实测 90 fps（105 calls / 50.5k 面 / DPR2 / AMD 集显），p95 11.3 ms；脚本 `tools/fps-probe.cjs`。
 - **静态合批**：按材质外观合并程序化杆件/栏杆/梯档，并把区域间管线与场景静态件并入，总览 draw calls 348 → 104（-70%），三角面基本不变；hero 容器 skipMerge 保证异步替换不被吞。

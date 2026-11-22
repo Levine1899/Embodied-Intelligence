@@ -372,5 +372,5 @@
 
   back.onclick = exit;
   window.__lvlEntry(1, '进入 02 地面处理', enter);
-  window.__l2 = { enter: enter, exit: exit };
+  window.__l2 = { enter: enter, exit: exit, pickOutlet: pickOutlet };
 })();

@@ -1,23 +1,37 @@
 # 五关功能回归（2026-11-22）
 
-测试方式：本地 static server + ego headless Chromium，逐关刷新页面，调用真实入口 `window.__stage.levelHook(i)()`，再操作面板控件、读 `window.__sceneContext`。
+## 结论（headed Chrome + CDP，全通过）
 
-| 关卡 | 进入 | 面板 | levelId | 控件交互 → interaction | 退出 |
-|---|---|---|---|---|---|
-l1 地下开采 | ✅ | ✅ | l1 | 压力滑杆 → `adjust_pressure 50 示意百分比` | 未测 |
-l2 地面处理 | ✅ | ✅ | l2 | 需在 3D 里点出口，未自动化 | **未通过**（headless rAF 节流，飞行动画未走完；真浏览器待验） |
-l3 储运 | ✅ | ✅ | l3 | 液位滑杆 → `change_liquid_level 50 示意百分比` | 未测 |
-l4 炼化 | ✅ | ✅ | l4 | 馏分 chip → `choose_fraction topgas 示意` | 未测 |
-l5 产品去向 | ✅ | ✅ | l5 | 需点 3D 产品，未自动化 | ✅ 返回总览；**退出后 levelId 残留 l5 → 已修** |
+用真实浏览器（非 headless）跑完整「进入 → 操作 → 退出」：
 
-## 发现并修复
+| 关卡 | 进入 | 操作 → interaction | 退出 | 退出后上下文 |
+|---|---|---|---|---|
+l1 地下开采 | ✅ | 压力滑杆 → `adjust_pressure 50 示意百分比` | ✅ | level=false, levelId=null |
+l2 地面处理 | ✅ | 出口 oil → `choose_outlet oil 示意` | ✅ | level=false, levelId=null |
+l3 储运 | ✅ | 液位滑杆 → `change_liquid_level 50 示意百分比` | ✅ | level=false, levelId=null |
+l4 炼化 | ✅ | 馏分 chip → `choose_fraction topgas 示意` | ✅ | level=false, levelId=null |
+l5 产品去向 | ✅ | 产品 汽油 → `select_product 汽油 1 件` | ✅ | level=false, levelId=null |
 
-- `__stage.back()` 退出时只清 `activeScene`，没有清 `__sceneContext.levelId/interaction`，导致退出后 AI/上下文仍以为在关卡里。
-- 修复：`back()` 里把 `levelId`、`interaction` 置空并广播 `scene-context`；l5 退出后复测为 `levelId:null, interaction:null`。
-- 直接调用 `window.__lN.enter()` 不会经过 `levelHook`，因此 `levelId` 不写；这是测试写法问题，不是产品路径问题。
+复现：`tools/level-e2e.cjs`，配合以 `--remote-debugging-port=9333` 启动的 Chrome。
 
-## 未覆盖
+## 测试口径
 
-- l2 出口点选、l5 产品点选（都是 3D 拾取，需要画布坐标点击或暴露内部方法）；
-- l1/l3/l4 的退出（只有 l5 有直接可点的返回按钮，其余靠完成流程）；
-- 真浏览器下的退出动画（headless 帧率过低，飞行动画需要多帧）。
+- 入口用产品真实路径 `__stage.levelHook(i)()`，不是直接 `__lN.enter()`（后者不写 `levelId`，只适合单关调试）；
+- 为了自动化 3D 拾取，给关卡导出了两个测试钩子：`__l2.pickOutlet(key)`、`__l5.toggle(index)`；它们不是页面 UI，也不替代真实点击；
+- 退出统一调用各关 `__lN.exit()`，等飞行动画结束后读 `__stage.isLevel()` 与 `__sceneContext`。
+
+## 踩过的坑（不是产品 bug）
+
+- 第一轮 headed 测试五关全部卡在“退出未完成”：新开的 Chrome 窗口被终端遮挡，Chrome 对 occluded window 节流 rAF，1.5 s 飞行补间需要多帧、迟迟不结束；
+- 加 `--disable-background-timer-throttling --disable-renderer-backgrounding --disable-backgrounding-occluded-windows` 并 `Page.bringToFront` 后全部通过；
+- headless 下同样因为帧率过低，退出动画会“看起来没反应”，不能据此判失败。
+
+## 已修 bug
+
+`__stage.back()` 退出时未清 `__sceneContext.levelId/interaction`，导致退出后 AI 仍以为在关卡里；已在 `back()` 中清空并广播 `scene-context`，headed 复测五关退出后均为 `levelId:null`。
+
+## 仍未覆盖
+
+- 真实鼠标/触摸在画布上的 3D 拾取（自动化用的是测试钩子）；
+- 关卡内的完成判定（例如 l5 全选正确的“通关”提示）；
+- 移动端与低端机。
