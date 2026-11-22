@@ -92,7 +92,7 @@
 - 阶段 02 初版：`28d1bad`
 - 第一轮返修（大改 11 文件）：`172f283`；交接记录一行提交：`c9a02ea`
 - 第二轮返修内容：`73f6bfb`；记录提交：`aa57e0e`；tag `phase-02-rev2` → `aa57e0e`
-- 第三轮返修（本轮定点修订）内容提交：`<REV3_COMMIT>`；记录提交及最终 branch head：见最终交付消息
+- 第三轮返修（本轮定点修订）内容提交：`fe2e896`；记录提交及最终 branch head：见最终交付消息
 - 本轮开始时校验：`git rev-parse HEAD` = `aa57e0e`；`git rev-parse refs/tags/phase-02-rev2^{}` = `aa57e0e`；`git status --short` = 空
 - 分支：`main`；本轮结束 tag：`phase-02-rev3`（指向最终记录提交；peeled SHA 用 `git rev-parse refs/tags/phase-02-rev3^{}` 校验）
 - 验收对应文档状态以 tag `phase-02-rev3` 为准；不以聊天或旧 tag 代替
