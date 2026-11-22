@@ -28,15 +28,15 @@
 - `docs/test-baseline.md`（新增）
 - `docs/tooling-readiness.md`（新增）
 - `docs/phase-reports/phase-01-handoff.md`（本文件）
-- `docs/phase-reports/evidence/phase-01/*.png`（11 张浏览器证据）
+- `docs/phase-reports/evidence/phase-01/*.png`（14 张浏览器证据）
 
 未修改任何业务代码、未删除/移动/重命名资产。
 
 ## 3. 起止 Commit
 
 - 起始：`be08acf`（`main`，工作区干净）
-- 审计文档提交：`<AUDIT_COMMIT>`（docs-only；提交信息 `docs: phase 01 audit baseline`）
-- 结束：本报告所在提交（docs-only，见 `git log -1`）
+- 审计文档提交：`41b69ed`（docs-only；提交信息 `docs: phase 01 audit baseline`）
+- 结束：本报告修订提交（docs-only，见 `git log -1`）
 
 ## 4. 执行命令
 
