@@ -509,6 +509,7 @@
     wheel(wellhead, 0.52, 0.62, 0, amber, 0.2);
     rod(wellhead, [-0.45, 0.62, 0], [0.45, 0.62, 0], 0.09, amber);
     rod(wellhead, [0, 0.62, -0.45], [0, 0.62, 0.45], 0.09, amber);
+    loadHeroAsset(wellhead, 'wellhead', 'wellhead', 0.5);
     /* 抽油机：支架 + 游梁 + 驴头 */
     const pump = new THREE.Group();
     pump.userData.objectId = 'pumpjack';
@@ -521,6 +522,7 @@
     beam.rotation.z = 0.12;
     mesh(pump, new THREE.CylinderGeometry(0.55, 0.55, 0.22, 20, 1, false, 0, Math.PI), steel, 2.0, 2.95, 0).rotation.z = Math.PI / 2;
     box(pump, 0.7, 0.6, 0.9, darkSteel, -1.9, 2.0, 0);
+    loadHeroAsset(pump, 'pumpjack', 'pumpjack', 0.55);
 
     /* ---------- 02 地面处理：三相分离器 + 泵撬 + 缓冲罐 ---------- */
     const gather = modelGroups[1];
@@ -542,7 +544,7 @@
     nozzle(sep, -2.6, 1.5, 0, amber, 0.2, 0.9, false);
     cylinder(sep, 0.1, 0.5, teal, 1.6, 2.95, 0.5);
     wheel(sep, -0.4, 1.4, 1.1, amber, 0.16);
-    loadHeroSeparator(sep);
+    loadHeroAsset(sep, 'separator', 'three_phase_separator', 0.88);
     /* 泵撬 */
     const pumpSkid = new THREE.Group();
     pumpSkid.position.set(3.2, 0, 2.0);
@@ -588,6 +590,7 @@
         rod(g, [Math.cos(a) * 2.0, 0.2, Math.sin(a) * 2.0], [Math.cos(a) * 2.0, 3.4, Math.sin(a) * 2.0], 0.03, darkSteel);
       }
       stairRun(g, 2.55, -0.4, 3.4, darkSteel);
+      loadHeroAsset(g, 'floating_roof_tank', 'floating_roof_tank', 0.46);
       return g;
     }
     fixedRoofTank(-2.4, -1.6);
@@ -638,6 +641,7 @@
     cylinder(heater, 0.42, 4.6, darkSteel, 1.2, 4.8, 0);
     box(heater, 0.9, 0.8, 0.12, amber, 0, 1.2, 1.34);
     rod(heater, [-1.7, 2.0, 0], [-2.6, 2.0, 0], 0.12, amber);
+    loadHeroAsset(heater, 'heater', 'heater', 0.8);
     /* 管廊 */
     for (let x = -3.8; x <= 4; x += 2.6) {
       rod(refine, [x, 0.2, 3.0], [x, 3.4, 3.0], 0.07, darkSteel);
@@ -1108,20 +1112,21 @@
     window.__sceneContext = ctx;
     document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
   }
-  function loadHeroSeparator(sep) {
-    if (!window.ObjLite) return;
-    window.ObjLite.load('assets/hero/separator/separator.obj', 'assets/hero/separator/separator.mtl').then(function (hero) {
-      hero.scale.setScalar(0.88);
+  function loadHeroAsset(container, assetId, objectId, scale) {
+    if (!window.ObjLite || !container) return;
+    var base = 'assets/hero/' + assetId + '/' + assetId;
+    window.ObjLite.load(base + '.obj', base + '.mtl').then(function (hero) {
+      hero.scale.setScalar(scale);
       hero.position.y = 0;
       hero.traverse(function (node) {
         if (!node.isMesh) return;
-        node.userData.objectId = 'three_phase_separator';
-        node.userData.heroAsset = 'separator';
+        node.userData.objectId = objectId;
+        node.userData.heroAsset = assetId;
         node.castShadow = true;
         node.receiveShadow = true;
       });
-      sep.children.slice().forEach(function (child) {
-        sep.remove(child);
+      container.children.slice().forEach(function (child) {
+        container.remove(child);
         child.traverse(function (node) {
           if (node.geometry) node.geometry.dispose();
           if (node.material) {
@@ -1130,9 +1135,9 @@
           }
         });
       });
-      sep.add(hero);
-      sep.userData.heroLoaded = true;
-      sep.userData.heroParseMs = hero.userData.parseMs;
+      container.add(hero);
+      container.userData.heroLoaded = true;
+      container.userData.heroParseMs = hero.userData.parseMs;
     }).catch(function () {
       /* 保留程序化模型作为回退 */
     });

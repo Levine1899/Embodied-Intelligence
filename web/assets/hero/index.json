@@ -166,13 +166,13 @@
   },
   {
     "asset": "floating_roof_tank",
-    "triangles": 5448,
-    "vertices": 2792,
+    "triangles": 5400,
+    "vertices": 2760,
     "meshes": 4,
     "materials": 4,
     "size_m": {
-      "x": 13.5,
-      "y": 13.5,
+      "x": 10.93,
+      "y": 10.36,
       "z": 6.44
     },
     "anchors": [
@@ -212,7 +212,7 @@
     "up_axis_after_export": "Y",
     "note": "Teaching-grade medium detail; not an engineering model.",
     "files": {
-      "obj_bytes": 317062,
+      "obj_bytes": 314730,
       "mtl_bytes": 781
     }
   },

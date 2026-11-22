@@ -66,20 +66,37 @@ Gauge | 表盘 | `#e8e1d4`，metalness 0.1，roughness 0.3 |
 
 对象名格式：`<assetId>__<material>`，一个材质一个对象，直接对应一次 draw call。
 
-## 5. 接入进度：分离器单台闭环（2026-11-22）
+## 5. 接入进度：五台全部接入（2026-11-22）
 
-已把 `separator` 真正接进沙盘：
+五台资产已全部通过共享 `obj-lite.js` 接入沙盘，加载失败时保留程序化模型回退：
 
-- 新增共享解析器 `web/assets/obj-lite.js`（v/vn/f、多边形三角化、o/g/usemtl、MTL Kd），只支持静态网格，不支持贴图/骨骼/压缩；
-- `immersion.js` 的 `loadHeroSeparator()` 异步加载 `assets/hero/separator/separator.obj` + `.mtl`，加载成功后替换程序化分离器，失败保留程序化模型作为回退；
-- 5 个材质对象（Steel/LightSteel/DarkSteel/Amber/Gauge），每个对象写入 `objectId=three_phase_separator`，点击可弹设备卡片；
-- 实测：OBJ 8 ms、MTL 5 ms（本机），5 个 mesh，`selectStage('gather')` 后点击弹卡片「三相分离器」。
+| 资产 | 容器位置 | 缩放 | 接入后 |
+|---|---|---|---|
+separator | gather (0.2,0,0) | 0.88 | 5 mesh，点击弹「三相分离器」 |
+pumpjack | drill (-4.6,0.16,3.2) | 0.55 | 4 mesh，点击弹「抽油机」 |
+wellhead | drill (-0.6,1.4,-2.2) | 0.50 | 4 mesh，点击弹「井口采油树」 |
+floating_roof_tank | store (2.4,-1.6) | 0.46 | 4 mesh，点击弹「外浮顶储罐」 |
+heater | refine (-4.6,0,3.6) | 0.80 | 4 mesh，点击弹「加热炉」 |
 
-![分离器接入](../docs/screenshots/11-hero-separator.png)
+- 材质对象名 `<asset>__<material>`，每个 mesh 写入 `objectId`，点击优先于关卡 hook；
+- 实测 OBJ 8 ms / MTL 5 ms（本机），五台合计 20 个 mesh；
+- 设备卡片：`showDevice(id)` 五台名称全部正确。
 
-已知问题：进料/出料管线仍是程序化位置，与资产法兰不完全对齐；一根青色管线在画面上从筒体前穿过（遮挡，不是穿模）。其余四台尚未接入。
+![总览](../docs/screenshots/13-hero-overview.png)
+![地下开采](../docs/screenshots/12-hero-drill.png)
+![储运](../docs/screenshots/14-hero-store.png)
+![炼化](../docs/screenshots/15-hero-refine.png)
 
-## 6. 接入其余四台的前置工作（未做）
+### 已知问题（不掩盖）
+
+- 管线仍按程序化法兰位置，接入后**进出口未完全对齐**；
+- 分离器前方一根青色管线遮挡筒体；
+- 储罐资产比程序化罐更“素”：直梯/平台在背面，正面看不到；
+- 加热炉在炼化近景里仍偏小、被塔架挡住，构图没有为它调整；
+- 地下开采近景机位切掉抽油机上半部，井口立在管口上，视觉上像“悬空”；
+- 没有 LOD，远景仍是全量网格。
+
+## 6. 接入其余四台的前置工作（已过时，保留作记录）
 
 1. **共享 OBJ 解析器**：塔页的 `parseOBJ` 目前内嵌在 `tower.js`，需要抽成 `assets/obj-lite.js` 或用本地化的 `OBJLoader`，否则每个页面复制一份解析器。
 2. **材质映射**：OBJ 的 MTL 颜色 → `MeshStandardMaterial` → tokens 色值；现在是 Blender 里的颜色，接入时要统一。

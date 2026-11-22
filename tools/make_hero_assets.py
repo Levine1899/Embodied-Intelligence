@@ -429,11 +429,6 @@ def build_floating_tank():
     # inlet / outlet
     cyl("inlet", amber, 0.24, 0.8, (R + 0.35, 0, 1.2), rot=(0, math.pi / 2, 0), verts=24)
     cyl("outlet", amber, 0.24, 0.8, (R + 0.35, 0, 0.7), rot=(0, math.pi / 2, 0), verts=24)
-    # bund wall (teaching signal, low)
-    for sign in (-1, 1):
-        box("bund_%s" % sign, dark, (0.3, 12.0, 0.5), (sign * 6.6, 0, 0.25))
-        box("bund_%s_z" % sign, dark, (13.5, 0.3, 0.5), (0, sign * 6.6, 0.25))
-
     join_by_material("floating_roof_tank")
     anchors = [
         {"id": "deck", "name": "浮盘", "pos": [0, 0, H * 0.45]},
