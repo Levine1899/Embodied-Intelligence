@@ -11,6 +11,7 @@
     "height": 5.0
   },
   "origin": "separator centreline at local (0,0,0); vessel centre y=2.1",
+  "cutaway": "separator_cut_shell (back half) + separator_cut_edge_top/bottom; external shell hidden in structure mode",
   "files": {
     "blend": "assets-source/blender/separator_hero.blend",
     "obj": "web/assets/separator/separator.obj",
@@ -45,9 +46,9 @@
     ]
   },
   "stats": {
-    "triangles": 6924,
-    "vertices": 3536,
-    "meshObjects": 40
+    "triangles": 7364,
+    "vertices": 3790,
+    "meshObjects": 43
   },
   "objects": [
     {
@@ -81,6 +82,39 @@
         0.84,
         2.0,
         2.0
+      ]
+    },
+    {
+      "name": "separator_cut_shell",
+      "semanticId": "separator_cut_shell",
+      "objectId": "three_phase_separator",
+      "triangles": 56,
+      "dimensions": [
+        6.04,
+        1.006,
+        2.012
+      ]
+    },
+    {
+      "name": "separator_cut_edge_top",
+      "semanticId": "separator_cut_edge_top",
+      "objectId": "three_phase_separator",
+      "triangles": 36,
+      "dimensions": [
+        6.08,
+        0.05,
+        0.048
+      ]
+    },
+    {
+      "name": "separator_cut_edge_bottom",
+      "semanticId": "separator_cut_edge_bottom",
+      "objectId": "three_phase_separator",
+      "triangles": 36,
+      "dimensions": [
+        6.08,
+        0.05,
+        0.048
       ]
     },
     {
@@ -274,33 +308,33 @@
       "name": "separator_internal_water",
       "semanticId": "separator_internal_water",
       "objectId": "three_phase_separator",
-      "triangles": 12,
+      "triangles": 116,
       "dimensions": [
-        4.45,
-        1.45,
-        0.48
+        4.4,
+        1.723,
+        0.7
       ]
     },
     {
       "name": "separator_internal_oil",
       "semanticId": "separator_internal_oil",
       "objectId": "three_phase_separator",
-      "triangles": 12,
+      "triangles": 116,
       "dimensions": [
-        4.45,
-        1.45,
-        0.55
+        4.4,
+        1.74,
+        0.54
       ]
     },
     {
       "name": "separator_internal_gas",
       "semanticId": "separator_internal_gas",
       "objectId": "three_phase_separator",
-      "triangles": 12,
+      "triangles": 116,
       "dimensions": [
-        4.45,
-        1.35,
-        0.52
+        4.4,
+        1.524,
+        0.42
       ]
     },
     {

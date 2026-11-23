@@ -49,7 +49,7 @@ function getJson(url) {
   await send('Page.enable');
   await send('Runtime.enable');
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
-  await send('Page.navigate', { url: 'http://127.0.0.1:8796/sandbox.html?rev=record05#stage=1' });
+  await send('Page.navigate', { url: 'http://127.0.0.1:8796/sandbox.html?rev=record05-' + Date.now() + '#stage=1' });
   await sleep(1800);
   await send('Page.startScreencast', { format: 'jpeg', quality: 82, maxWidth: 1440, maxHeight: 900, everyNthFrame: 1 });
   await sleep(500);
@@ -60,18 +60,32 @@ function getJson(url) {
     window.__stage.selectStage(1,true); window.__stage.levelHook(1)();
     await sleep(4800);
     click('l2-structure');
-    await sleep(900);
-    window.__l2.startSeparation();
-    await sleep(2200);
-    window.__l2.pauseSeparation();
-    await sleep(700);
-    window.__l2.stepSeparation();
-    await sleep(700);
-    window.__l2.replaySeparation();
     await sleep(1000);
-    window.__l2.pickOutlet('oil');
+    click('l2-play');
+    await sleep(2200);
+    click('l2-play');
     await sleep(700);
-    window.__l2.assignTank('oil');
+    click('l2-step');
+    await sleep(700);
+    click('l2-replay');
+    await sleep(1000);
+    (function(){
+      var p = window.__l2.screenPoint('outlet','oil');
+      var el = document.getElementById('viewport');
+      if (p) {
+        el.dispatchEvent(new PointerEvent('pointerdown',{clientX:p.x,clientY:p.y,bubbles:true}));
+        el.dispatchEvent(new PointerEvent('pointerup',{clientX:p.x,clientY:p.y,bubbles:true}));
+      }
+    })();
+    await sleep(700);
+    (function(){
+      var p = window.__l2.screenPoint('tank','oil');
+      var el = document.getElementById('viewport');
+      if (p) {
+        el.dispatchEvent(new PointerEvent('pointerdown',{clientX:p.x,clientY:p.y,bubbles:true}));
+        el.dispatchEvent(new PointerEvent('pointerup',{clientX:p.x,clientY:p.y,bubbles:true}));
+      }
+    })();
     await sleep(1800);
     window.__l2.exit();
     await sleep(2200);
@@ -83,7 +97,7 @@ function getJson(url) {
     await sleep(900);
     click('l3-pumpstart');
     await sleep(2200);
-    window.__l3.selectTank('floating_roof_tank');
+    click('l3-float');
     await sleep(1400);
     click('l3-pumppause');
     await sleep(900);

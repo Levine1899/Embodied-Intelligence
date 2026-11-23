@@ -1941,6 +1941,10 @@
       pipes.forEach(function (p) { if (p.object) p.object.visible = v; });
       particles.forEach(function (p) { p.visible = v; });
       if (overviewWellbore) overviewWellbore.visible = v;
+      /* Material-merged overview heroes live outside modelGroups. */
+      scene.traverse(function (o) {
+        if (o.isMesh && /^separator__/.test(o.name || '')) o.visible = v;
+      });
     },
     setNodeDone(i, v) { if (v) doneSet.add(i); else doneSet.delete(i); saveDone(); applyBadge(i); syncStageTabs(); syncProgress(); syncTaskPanel(); maybeAllDone(); },
     resetProgress() {

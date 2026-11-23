@@ -27,7 +27,7 @@
 
 - Hero Asset：`assets-source/blender/separator_hero.blend`；网页 OBJ/MTL：`web/assets/separator/separator.obj`；GLB 备份。
 - 语义节点：`separator_shell/head_*`、`separator_inlet`、`separator_gas_outlet`、`separator_oil_outlet`、`separator_water_outlet`、`separator_internal_oil/water/gas`、`separator_internal_weir/baffle/inlet_distributor/mist_extractor`。
-- 打开内部：外壳材质半透明，内部油层/水层/气相空间/堰板/挡板/雾沫捕集器可见；恢复外壳可回到外部观察。
+- 打开内部：`.blend` 提供半壳 `separator_cut_shell` 和内部圆柱切片液层；网页用半透明外壳+内部件保证可读，恢复外壳回到外部观察。
 - 分离演示：粒子沿输入→气相上浮、油相水平、水相下沉到出口的三条教学路径移动；可暂停、单步、重播。
 - 出口选择：`gas/oil/water` 三出口与目标去向；选错给出解释并退回，不伪造工程控制。
 
@@ -93,14 +93,14 @@
 |---|---|---|
 | 总览/近景同一 objectId/状态源 | 通过 | `phase05-verify.json` 的 context + `PETRO_DEVICE_STATE` representations |
 | 分离过程启动/暂停/重播 | 通过 | `phase05-02`；`phase05-verify.json internal` |
-| 出口选择与原因 | 通过 | `phase05-03`；`choose_outlet` history |
+| 出口选择与原因 | 通过 | `phase05-03a` 错误、`phase05-03` 正确；`choose_outlet`/`assign_outlet_target` |
 | 储罐液位改变可见气相空间 | 通过 | `phase05-06`；`fixed_roof_tank.level=0.55` |
 | 管线追踪连续、方向清楚 | 通过（本地示意） | `phase05-06`；泵送粒子向右 |
 | 外浮顶无零排放误导 | 通过 | 顶部提示 + `l3` 文案：“减少油气空间，不等于零排放” |
 | 无真实仿真数据伪造 | 通过 | 页面文案 + 无工程数值 |
 | 分离器 Hero `.blend`/运行格式/语义/许可 | 最小通过 | `separator_hero.blend`、OBJ/MTL/GLB、manifest、5 检查视图 |
 | 分离器/储罐各 2–3 个真实状态变化 | 通过 | 本文矩阵；截图/录屏 |
-| 连续录屏 | 通过 | `production-storage-continuity.mp4`，75.4s，1440×900 |
+| 连续录屏 | 通过 | `production-storage-continuity.mp4`，66.15s，1440×900 |
 
 ## 6. 未覆盖 / 已知限制
 

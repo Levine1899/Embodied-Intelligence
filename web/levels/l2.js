@@ -7,9 +7,10 @@
   const THREE = window.THREE;
 
   let G = null, camera = null, baseScene = null, anchor = null;
+  let overviewSeparator = [];
   let assetRoot = null, assetLoaded = false, assetFailed = false;
   let procShell = null, structMode = false, runningSep = false, pausedSep = false;
-  let shellMats = [], internalMeshes = [], cutRim = null, phaseT = 0;
+  let shellMats = [], externalShell = [], cutShell = [], internalMeshes = [], internalLabels = [], cutRim = null, phaseT = 0;
   const phaseFlows = [];
   const flows = [];
 
@@ -193,16 +194,24 @@
     }, 'level');
   }
 
-  function applyStructure(show) {
+  function applyStructure(show, record) {
+    hideOverviewSeparator();
     structMode = !!show;
-    internalMeshes.forEach(function (m) { m.visible = structMode; });
-    shellMats.forEach(function (mat) {
-      mat.transparent = structMode;
-      mat.opacity = structMode ? 0.16 : 1;
-      mat.depthWrite = !structMode;
-      mat.side = THREE.DoubleSide;
-      mat.needsUpdate = true;
+    externalShell.forEach(function (m) {
+      m.visible = true;
+      if (m.material) {
+        m.material.transparent = structMode;
+        m.material.opacity = structMode ? 0.10 : 1;
+        m.material.depthWrite = !structMode;
+        m.material.side = THREE.DoubleSide;
+        m.material.needsUpdate = true;
+      }
     });
+    /* Use a ghost shell in the web view: it keeps the vessel silhouette without
+       hiding the cutaway internals. The exported half shell remains in the .blend. */
+    cutShell.forEach(function (m) { m.visible = false; });
+    internalMeshes.forEach(function (m) { m.visible = structMode; });
+    internalLabels.forEach(function (l) { l.visible = structMode; });
     if (cutRim) cutRim.visible = structMode;
     phaseFlows.forEach(function (f) { f.tube.visible = structMode; f.group.visible = structMode && runningSep; });
     var b = ui && ui.querySelector('#l2-structure');
@@ -210,8 +219,56 @@
       b.textContent = structMode ? '恢复外壳' : '打开内部结构';
       b.setAttribute('aria-pressed', String(structMode));
     }
+    syncUi();
     syncSeparatorState();
-    if (structMode) hint.textContent = '内部结构 · 油/水/气按密度与相态差异分离';
+    if (record !== false && stage.setInteraction) {
+      stage.setInteraction('inspect_separator_structure', structMode ? 'half' : 'external', '示意');
+    }
+    if (hint) hint.textContent = structMode ? '内部结构 · 油/水/气按密度与相态差异分离' : '外壳 · 点击出口观察去向';
+  }
+
+  function hideOverviewSeparator() {
+    if (!stage.baseScene) return;
+    var found = [];
+    stage.baseScene.traverse(function (o) {
+      if (o.isMesh && /^separator__/.test(o.name || '')) found.push(o);
+    });
+    found.forEach(function (o) {
+      if (!o.parent) return;
+      var rec = { object: o, parent: o.parent };
+      overviewSeparator.push(rec);
+      o.removeFromParent();
+    });
+  }
+
+  function syncUi() {
+    if (playBtn) {
+      playBtn.textContent = runningSep ? '暂停分离' : (pausedSep ? '继续分离' : '启动分离');
+      playBtn.setAttribute('aria-pressed', String(runningSep));
+    }
+    var b = ui && ui.querySelector('#l2-structure');
+    if (b) {
+      b.textContent = structMode ? '恢复外壳' : '打开内部结构';
+      b.setAttribute('aria-pressed', String(structMode));
+    }
+  }
+
+  function buildInternalLabels() {
+    if (internalLabels.length) return;
+    var defs = [
+      ['气相空间', [0, 3.45, 0.95], '#9fd3c6'],
+      ['油层', [-1.7, 2.35, 0.95], '#d8a24a'],
+      ['水层', [1.55, 1.55, 0.95], '#5aa7d8'],
+      ['堰板', [1.35, 2.85, 0.95], '#c9d6dc']
+    ];
+    defs.forEach(function (d) {
+      var l = window.__lvlLabel(d[0], d[2]);
+      l.position.set(d[1][0], d[1][1], d[1][2]);
+      l.scale.setScalar(0.66);
+      l.visible = false;
+      G.add(l);
+      internalLabels.push(l);
+    });
   }
 
   function addPhasePath(name, points, color) {
@@ -247,15 +304,19 @@
 
   function loadHero() {
     if (!window.ObjLite) { assetFailed = true; return; }
-    window.ObjLite.load('assets/separator/separator.obj?v=05', 'assets/separator/separator.mtl?v=05').then(function (root) {
+    window.ObjLite.load('assets/separator/separator.obj?v=08', 'assets/separator/separator.mtl?v=08').then(function (root) {
       assetLoaded = true;
       assetRoot = root;
       root.name = 'separator_hero';
       root.userData.objectId = 'three_phase_separator';
       root.userData.assetId = 'separator_three_phase';
       G.add(root);
+      hideOverviewSeparator();
       if (procShell) procShell.visible = false;
       internalMeshes = [];
+      externalShell = [];
+      cutShell = [];
+      internalLabels = [];
       shellMats = [];
       cutRim = null;
       root.traverse(function (o) {
@@ -266,12 +327,31 @@
           internalMeshes.push(o);
           o.visible = false;
         }
-        if (n === 'separator_shell' || n.indexOf('separator_head') === 0) shellMats.push(o.material);
+        if (n === 'separator_shell' || n.indexOf('separator_head') === 0) {
+          externalShell.push(o);
+          shellMats.push(o.material);
+        }
+        if (n.indexOf('separator_cut_') === 0) {
+          cutShell.push(o);
+          o.visible = false;
+          if (o.material) {
+            o.material.side = THREE.DoubleSide;
+            o.material.transparent = true;
+            o.material.opacity = 0.26;
+            o.material.depthWrite = false;
+          }
+        }
         if (n === 'separator_cutaway_rim') cutRim = o;
+        if (n === 'separator_internal_gas' && o.material) {
+          o.material.transparent = true;
+          o.material.opacity = 0.42;
+          o.material.depthWrite = false;
+        }
       });
       bindAssetState();
       buildPhasePaths();
-      applyStructure(false);
+      buildInternalLabels();
+      applyStructure(false, false);
       var b = ui && ui.querySelector('#l2-structure');
       if (b) b.disabled = false;
       if (ui) hint.textContent = '三相分离器 Hero · 可打开内部结构';
@@ -288,6 +368,7 @@
     pausedSep = false;
     if (phaseT >= 1) phaseT = 0;
     syncSeparatorState();
+    if (stage.setInteraction) stage.setInteraction('start_separation', 'started', '示意');
     var b = ui && ui.querySelector('#l2-play');
     if (b) { b.textContent = '暂停分离'; b.setAttribute('aria-pressed', 'true'); }
     hint.textContent = '分离演示 · 气上浮 / 油水按密度分层';
@@ -297,6 +378,7 @@
     runningSep = false;
     pausedSep = true;
     syncSeparatorState();
+    if (stage.setInteraction) stage.setInteraction('pause_separation', 'paused', '示意');
     var b = ui && ui.querySelector('#l2-play');
     if (b) { b.textContent = '继续分离'; b.setAttribute('aria-pressed', 'false'); }
     hint.textContent = '已暂停 · 可单步或重播';
@@ -308,6 +390,7 @@
     pausedSep = true;
     phaseT = Math.min(1, phaseT + 0.12);
     syncSeparatorState();
+    if (stage.setInteraction) stage.setInteraction('step_separation', 'step', '示意');
     hint.textContent = '单步 · 观察相态在出口附近的去向';
   }
 
@@ -317,6 +400,7 @@
     runningSep = true;
     pausedSep = false;
     syncSeparatorState();
+    if (stage.setInteraction) stage.setInteraction('replay_separation', 'replay', '示意');
     var b = ui && ui.querySelector('#l2-play');
     if (b) { b.textContent = '暂停分离'; b.setAttribute('aria-pressed', 'true'); }
     hint.textContent = '重播 · 气、油、水从同一进料分流';
@@ -383,7 +467,7 @@
     '<div class="lvl__act" id="l2-act" hidden>',
     '<p>井口出来的是<b>油、气、水混在一起</b>。先点一个出口，再点它该去的去向。</p>',
     '<div class="lvl__out"><span id="l2-note">未选择出口</span></div>',
-    '<div class="lvl__btns"><button type="button" class="lvl__btn" id="l2-structure" aria-pressed="false" disabled>打开内部结构</button><button type="button" class="lvl__btn" id="l2-play">暂停分离</button><button type="button" class="lvl__btn" id="l2-step">单步</button><button type="button" class="lvl__btn" id="l2-replay">重播</button></div>',
+    '<div class="lvl__btns"><button type="button" class="lvl__btn" id="l2-structure" aria-pressed="false" disabled>打开内部结构</button><button type="button" class="lvl__btn" id="l2-play">启动分离</button><button type="button" class="lvl__btn" id="l2-step">单步</button><button type="button" class="lvl__btn" id="l2-replay">重播</button></div>',
     '</div>',
     '<button type="button" class="lvl__back" id="l2-back">返回总览</button>'
   ].join('');
@@ -425,6 +509,7 @@
     const t = built.TANKS.find(x => x.key === key);
     const ok = picked === key;
     hint.textContent = ok ? '对了 · ' + o.name + ' → ' + t.name : '再看一眼：' + o.name + ' 不该进 ' + t.name;
+    if (stage.setInteraction) stage.setInteraction('assign_outlet_target', picked + '>' + key, ok ? '正确去向' : '错误去向');
 
     /* 一次性输送的粒子，走完落位 */
     const from = new THREE.Vector3(o.pos[0], o.pos[1] + (o.dir === 'up' ? 0.7 : o.dir === 'down' ? -0.7 : 0), o.pos[2] + (o.dir === 'front' ? 0.75 : 0));
@@ -499,6 +584,17 @@
     camera.updateProjectionMatrix();
   }
 
+  function screenPoint(kind, key) {
+    var list = built.pickables.filter(function (p) { return kind === 'tank' ? p.userData.tank === key : p.userData.outlet === key; });
+    var obj = list[0];
+    if (!obj) return null;
+    var p = new THREE.Vector3();
+    obj.getWorldPosition(p);
+    p.project(camera);
+    var rect = stage.viewport.getBoundingClientRect();
+    return { x: rect.left + (p.x + 1) / 2 * rect.width, y: rect.top + (-p.y + 1) / 2 * rect.height };
+  }
+
   function enter() {
     if (stage.isLevel()) return;
     if (!built) built = build();
@@ -511,12 +607,19 @@
 
     stage.use(baseScene, camera);
     if (stage.setOverviewVisible) stage.setOverviewVisible(false);
+    /* The overview hero is material-merged under separator__*; hide it so
+       the detail Hero does not render a second shell in the same place. */
+    overviewSeparator = [];
+    hideOverviewSeparator();
+    setTimeout(hideOverviewSeparator, 500);
+    setTimeout(hideOverviewSeparator, 1400);
     G.visible = true;
     if (stage.setContextObject) stage.setContextObject('three_phase_separator', 'gathering');
     if (stage.deviceState) stage.deviceState.select('three_phase_separator');
     window.__l2active = true;
     ui.classList.add('on');
     document.body.classList.add('in-level');
+    syncUi();
     hint.textContent = '镜头正在靠近分离器…';
     if (!running) { running = true; loop(); }
 
@@ -544,6 +647,8 @@
     document.body.classList.remove('in-level');
     window.__l2active = false;
     G.visible = false;
+    overviewSeparator.forEach(function (rec) { rec.parent.add(rec.object); rec.object.visible = true; });
+    overviewSeparator = [];
     if (stage.setContextObject) stage.setContextObject(null, 'gathering');
     if (stage.deviceState) stage.deviceState.select(null);
     fly(camera.position.clone(), new THREE.Vector3(anchor.x + 2.2, 1.7, anchor.z),
@@ -558,5 +663,8 @@
 
   back.onclick = exit;
   window.__lvlEntry(1, '进入 02 地面处理', enter);
-  window.__l2 = { enter: enter, exit: exit, pickOutlet: pickOutlet, assignTank: assignTank, applyStructure: applyStructure, startSeparation: startSeparation, pauseSeparation: pauseSeparation, stepSeparation: stepSeparation, replaySeparation: replaySeparation, get assetLoaded() { return assetLoaded; }, get assetFailed() { return assetFailed; }, get structMode() { return structMode; }, get running() { return runningSep; }, get paused() { return pausedSep; }, get phaseT() { return phaseT; } };
+  window.__l2 = { enter: enter, exit: exit, pickOutlet: pickOutlet, assignTank: assignTank, screenPoint: screenPoint, get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; }, applyStructure: applyStructure, startSeparation: startSeparation, pauseSeparation: pauseSeparation, stepSeparation: stepSeparation, replaySeparation: replaySeparation, get assetLoaded() { return assetLoaded; }, get assetFailed() { return assetFailed; }, get structMode() { return structMode; }, get running() { return runningSep; }, get paused() { return pausedSep; }, get phaseT() { return phaseT; } };
 })();
+
+
+

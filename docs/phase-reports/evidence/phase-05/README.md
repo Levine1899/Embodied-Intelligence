@@ -10,7 +10,8 @@
 |---|---|
 | `phase05-01-separator-external.png` | l2 分离器外部 / Hero 加载 / 出口 |
 | `phase05-02-separator-internal.png` | 内部油/水/气/堰板；分离粒子路径 |
-| `phase05-03-outlet-choice.png` | 油相出口→油储罐，`choose_outlet` 上下文 |
+| `phase05-03a-wrong-target.png` | 油相点错气回收：红色粒子/错误说明 |
+| `phase05-03-outlet-choice.png` | 油相出口→油储罐，真实 pointer；`choose_outlet`/`assign_outlet_target` 上下文 |
 | `phase05-04-back-overview.png` | 返回集输总览 |
 | `phase05-05-storage-external.png` | 储运区外部，双罐/泵组/管线 |
 | `phase05-06-storage-cut.png` | 液位 55%、罐体剖面、泵送 |
@@ -19,12 +20,12 @@
 
 ## 实时录屏
 
-`production-storage-continuity.mp4`：1440×900，75.4 s，CDP screencast；顺序为集输总览 → 分离器外部/内部 → 启动/暂停/单步/重播 → 出口选择 → 返回 → 储运 → 液位/剖面/泵送 → 外浮顶 → 返回。
-不是剪辑静帧；同一页面、真实操作。
+`production-storage-continuity.mp4`：1440×900，66.15 s，3,985,070 B，CDP screencast；顺序为集输总览 → 分离器外部/内部 → 启动/暂停/单步/重播 → 出口选择 → 返回 → 储运 → 液位/剖面/泵送 → 外浮顶 → 返回。
+不是剪辑静帧；同一页面、真实 pointer/按钮操作。
 
 ## 断言
 
-`phase05-verify.json`：`devices=17`；l2 `assetLoaded=true`、`structure=half`、`animation=running`；l3 `stage=store`、`zone=storage`、`level=0.55`、`pumpRunning=true`；`__auditErrors=[]`。
+`phase05-verify.json`：`devices=17`；l2 初始 `structure=external`，打开后 `half/running`；错误去向 `assign_outlet_target`；l3 `stage=store`、`zone=storage`、`level=0.55`、`pumpRunning=true`；`__auditErrors=[]`。
 
 ## Hero 资产检查
 

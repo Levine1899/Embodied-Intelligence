@@ -20,7 +20,7 @@
 
 ## 语义节点
 
-`separator_shell`、`separator_head_left/right`、`separator_inlet`、`separator_gas_outlet`、`separator_oil_outlet`、`separator_water_outlet`、`separator_internal_oil`、`separator_internal_water`、`separator_internal_gas`、`separator_internal_weir`、`separator_internal_baffle`、`separator_internal_inlet_distributor`、`separator_internal_mist_extractor`、`separator_internal_vortex_breaker`。
+`separator_shell`、`separator_head_left/right`、`separator_cut_shell`、`separator_cut_edge_top/bottom`、`separator_inlet`、`separator_gas_outlet`、`separator_oil_outlet`、`separator_water_outlet`、`separator_internal_oil`、`separator_internal_water`、`separator_internal_gas`、`separator_internal_weir`、`separator_internal_baffle`、`separator_internal_inlet_distributor`、`separator_internal_mist_extractor`、`separator_internal_vortex_breaker`。
 
 ## 尺度/原点
 

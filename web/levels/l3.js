@@ -7,7 +7,7 @@
   const THREE = window.THREE;
 
   let G = null, camera = null, baseScene = null, anchor = null;
-  let pumpFlow = null, pumpRunning = false, pumpPaused = false, cutMode = false, pumpMesh = null;
+  let pumpFlow = null, pumpRunning = false, pumpPaused = false, cutMode = false, pumpMesh = null, selectedTankId = 'fixed_roof_tank';
   const flows = [];
   const built = {};
 
@@ -94,8 +94,14 @@
         ]);
         ventFlow = makeFlowInGroup(curve, 0xd8e2e8, 10, 0.25, 0.07, 0.55);
       }
+      const selRing = new THREE.Mesh(new THREE.TorusGeometry(1.72, 0.035, 8, 40),
+        new THREE.MeshBasicMaterial({ color: 0xf0a22e, transparent: true, opacity: 0.9, depthWrite: false }));
+      selRing.rotation.x = Math.PI / 2;
+      selRing.position.y = 0.08;
+      selRing.visible = false;
+      g.add(selRing);
       G.add(g);
-      return { group: g, body: body, bodyMat: bodyMat, oil: oil, roof: roof, ventFlow: ventFlow, floating: floating, x: x, z: z };
+      return { group: g, body: body, bodyMat: bodyMat, oil: oil, roof: roof, ventFlow: ventFlow, selRing: selRing, floating: floating, x: x, z: z };
     }
 
     built.fixed = tank(-2.0, 0, false);
@@ -104,22 +110,22 @@
     /* 标签 */
     const l1 = window.__lvlLabel('固定顶罐', '#cfc8ba');
     l1.position.set(-2.0, 4.7, 0);
-    l1.scale.setScalar(0.72);
+    l1.scale.setScalar(0.9);
     G.add(l1);
     const l1s = window.__lvlLabel('油气空间大', '#9a948a');
     l1s.scale.set(1.5, 0.5, 1);
-    l1s.position.set(-2.0, 4.25, 0);
-    l1s.scale.setScalar(0.64);
+    l1s.position.set(-2.0, 4.15, 0);
+    l1s.scale.setScalar(0.76);
     G.add(l1s);
 
     const l2 = window.__lvlLabel('外浮顶罐', '#8fb6ad');
     l2.position.set(2.0, 4.7, 0);
-    l2.scale.setScalar(0.72);
+    l2.scale.setScalar(0.9);
     G.add(l2);
     const l2s = window.__lvlLabel('顶盖贴着油面', '#b6b0a2');
     l2s.scale.set(1.65, 0.5, 1);
-    l2s.position.set(2.0, 4.25, 0);
-    l2s.scale.setScalar(0.64);
+    l2s.position.set(2.0, 4.15, 0);
+    l2s.scale.setScalar(0.76);
     G.add(l2s);
 
     /* 地面 */
@@ -140,7 +146,7 @@
     motor.position.set(0.7, 0.58, 0); pumpMesh.add(motor);
     const wheel = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.035, 8, 18), new THREE.MeshStandardMaterial({ color: 0xd8a24a, roughness: 0.45 }));
     wheel.rotation.x = Math.PI / 2; wheel.position.set(-0.55, 1.18, 0); pumpMesh.add(wheel);
-    const pumpLabel = window.__lvlLabel('转输泵组', '#d8a24a'); pumpLabel.position.set(3.9, 2.4, 1.8); G.add(pumpLabel);
+    const pumpLabel = window.__lvlLabel('转输泵组', '#d8a24a'); pumpLabel.position.set(3.9, 2.7, 1.8); pumpLabel.scale.setScalar(0.78); G.add(pumpLabel);
 
     /* 泵送路径：罐区 → 炼化入口方向（教学示意） */
     const pumpCurve = new THREE.CatmullRomCurve3([
@@ -154,7 +160,7 @@
     pipe.name = 'store_transfer_pipe'; G.add(pipe);
     const valve = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.035, 8, 18), new THREE.MeshStandardMaterial({ color: 0xd8a24a, roughness: 0.45 }));
     valve.rotation.x = Math.PI / 2; valve.position.set(5.2, 1.4, 1.9); G.add(valve);
-    const valveLabel = window.__lvlLabel('出口阀', '#d8a24a'); valveLabel.position.set(5.2, 2.0, 1.9); valveLabel.scale.setScalar(0.6); G.add(valveLabel);
+    const valveLabel = window.__lvlLabel('出口阀', '#d8a24a'); valveLabel.position.set(5.2, 2.0, 1.9); valveLabel.scale.setScalar(0.72); G.add(valveLabel);
     pumpFlow = makeFlowInGroup(pumpCurve, 0x7fd6a8, 12, 0.28, 0.06, 0.8);
     pumpFlow.speed = 0;
 
@@ -210,11 +216,7 @@
       stage.deviceState.set('fixed_roof_tank', { level: k }, 'level');
       stage.deviceState.set('floating_roof_tank', { level: k }, 'level');
     }
-    const space = Math.round((1 - k) * 100);
-    const pct = Math.round(k * 100);
-    uiPct.textContent = pct + '%';
-    uiSpace.textContent = '油气空间 ' + space + '%（示意）';
-    uiSpace.style.color = space > 55 ? '#ff8a5c' : space > 25 ? '#f0a22e' : '#7fd6a8';
+    syncStorageUi();
   }
 
   /* ---------- UI ---------- */
@@ -242,30 +244,55 @@
   const cutBtn = ui.querySelector('#l3-cut');
   ui.querySelector('#l3-fixed').addEventListener('click', function () { selectTank('fixed_roof_tank'); });
   ui.querySelector('#l3-float').addEventListener('click', function () { selectTank('floating_roof_tank'); });
-  ui.querySelector('#l3-pump').addEventListener('click', function () { if (stage.setContextObject) stage.setContextObject('transfer_pump', 'storage'); if (stage.deviceState) stage.deviceState.select('transfer_pump'); hint.textContent = '转输泵组 · 把油相送往炼化入口'; });
+  ui.querySelector('#l3-pump').addEventListener('click', function () { if (stage.setContextObject) stage.setContextObject('transfer_pump', 'storage'); if (stage.deviceState) stage.deviceState.select('transfer_pump'); if (stage.setInteraction) stage.setInteraction('inspect_tank_structure', 'transfer_pump', '泵组'); hint.textContent = '转输泵组 · 把油相送往炼化入口'; });
   const pumpStart = ui.querySelector('#l3-pumpstart');
   const pumpPause = ui.querySelector('#l3-pumppause');
   const pumpReplay = ui.querySelector('#l3-pumpreplay');
   function selectTank(id) {
+    selectedTankId = id;
     if (stage.setContextObject) stage.setContextObject(id, 'storage');
     if (stage.deviceState) stage.deviceState.select(id);
+    if (built.fixed && built.fixed.selRing) built.fixed.selRing.visible = id === 'fixed_roof_tank';
+    if (built.float && built.float.selRing) built.float.selRing.visible = id === 'floating_roof_tank';
+    if (stage.setInteraction) stage.setInteraction('inspect_tank_structure', id, '罐型');
     hint.textContent = id === 'fixed_roof_tank' ? '固定顶罐 · 油气空间较大' : '外浮顶罐 · 浮盘贴着液面；减少油气空间，不等于零排放';
+  }
+
+  function syncStorageUi() {
+    if (!slider) return;
+    slider.value = String(Math.round(level * 100));
+    uiPct.textContent = Math.round(level * 100) + '%';
+    const space = Math.round((1 - level) * 100);
+    uiSpace.textContent = '油气空间 ' + space + '%（示意）';
+    uiSpace.style.color = space > 55 ? '#ff8a5c' : space > 25 ? '#f0a22e' : '#7fd6a8';
+    cutBtn.textContent = cutMode ? '恢复罐壁' : '罐体剖面';
+    cutBtn.setAttribute('aria-pressed', String(cutMode));
+  }
+
+  function storageHint() {
+    if (pumpRunning) return '泵送中 · 沿管线追踪到下一环节';
+    if (pumpPaused) return '泵送已暂停 · 可重播';
+    return selectedTankId === 'floating_roof_tank'
+      ? '外浮顶罐 · 浮盘贴着液面；减少油气空间，不等于零排放'
+      : '固定顶罐油气空间大 · 外浮顶减少油气空间，不等于零排放';
   }
   cutBtn.addEventListener('click', function () {
     cutMode = !cutMode; cutBtn.setAttribute('aria-pressed', String(cutMode));
     cutBtn.textContent = cutMode ? '恢复罐壁' : '罐体剖面';
     [built.fixed, built.float].forEach(function (t) {
       if (!t || !t.bodyMat) return;
-      t.bodyMat.transparent = true; t.bodyMat.opacity = cutMode ? 0.16 : 0.82; t.bodyMat.depthWrite = !cutMode; t.bodyMat.needsUpdate = true;
+      t.bodyMat.transparent = true; t.bodyMat.opacity = cutMode ? 0.28 : 0.82; t.bodyMat.depthWrite = !cutMode; t.bodyMat.needsUpdate = true;
     });
     if (stage.deviceState) {
       stage.deviceState.set('fixed_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
       stage.deviceState.set('floating_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
     }
+    if (stage.setInteraction) stage.setInteraction('inspect_tank_structure', 'tank_cut', cutMode ? 'on' : 'off');
+    syncStorageUi();
   });
-  pumpStart.addEventListener('click', function () { if (!pumpFlow) return; pumpRunning = true; pumpPaused = false; pumpFlow.speed = 0.3; if (stage.deviceState) stage.deviceState.set('transfer_pump', { animation: 'running' }, 'level'); hint.textContent = '泵送中 · 沿管线追踪到下一环节'; });
-  pumpPause.addEventListener('click', function () { pumpRunning = false; pumpPaused = true; if (pumpFlow) pumpFlow.speed = 0; if (stage.deviceState) stage.deviceState.set('transfer_pump', { animation: 'paused' }, 'level'); hint.textContent = '泵送已暂停'; });
-  pumpReplay.addEventListener('click', function () { pumpRunning = true; pumpPaused = false; if (pumpFlow) pumpFlow.speed = 0.3; if (stage.deviceState) stage.deviceState.set('transfer_pump', { animation: 'running' }, 'level'); hint.textContent = '泵送路径重播'; });
+  pumpStart.addEventListener('click', function () { if (!pumpFlow) return; pumpRunning = true; pumpPaused = false; pumpFlow.speed = 0.3; if (stage.deviceState) stage.deviceState.set('transfer_pump', { animation: 'running' }, 'level'); if (stage.setInteraction) stage.setInteraction('start_pump', 'transfer_pump', '示意'); hint.textContent = storageHint(); });
+  pumpPause.addEventListener('click', function () { pumpRunning = false; pumpPaused = true; if (pumpFlow) pumpFlow.speed = 0; if (stage.deviceState) stage.deviceState.set('transfer_pump', { animation: 'paused' }, 'level'); if (stage.setInteraction) stage.setInteraction('pause_pump', 'transfer_pump', '示意'); hint.textContent = storageHint(); });
+  pumpReplay.addEventListener('click', function () { pumpRunning = true; pumpPaused = false; if (pumpFlow) pumpFlow.speed = 0.3; if (stage.deviceState) stage.deviceState.set('transfer_pump', { animation: 'running' }, 'level'); if (stage.setInteraction) stage.setInteraction('replay_pump', 'transfer_pump', '示意'); hint.textContent = '泵送路径重播'; });
 
 
   slider.addEventListener('input', function () {
@@ -313,17 +340,18 @@
       stage.deviceState.bind('fixed_roof_tank', 'detail', built.fixed.group);
       stage.deviceState.bind('floating_roof_tank', 'detail', built.float.group);
       if (pumpMesh) stage.deviceState.bind('transfer_pump', 'detail', pumpMesh);
-      stage.deviceState.select('fixed_roof_tank');
     }
-    if (stage.setContextObject) stage.setContextObject('fixed_roof_tank', 'storage');
+    if (stage.setContextObject) stage.setContextObject(selectedTankId, 'storage');
+    selectTank(selectedTankId);
     ui.classList.add('on');
     document.body.classList.add('in-level');
+    syncStorageUi();
     hint.textContent = '镜头正在靠近罐区…';
     if (!running) { running = true; loop(); }
 
     fly(startPos, startT,
-      new THREE.Vector3(anchor.x + 7.0, 6.8, anchor.z + 16.5), new THREE.Vector3(anchor.x + 1.0, 2.0, anchor.z), 1700, function () {
-        hint.textContent = '固定顶罐油气空间大 · 外浮顶减少油气空间，不等于零排放';
+      new THREE.Vector3(anchor.x + 5.5, 6.2, anchor.z + 14.0), new THREE.Vector3(anchor.x + 0.8, 2.0, anchor.z), 1700, function () {
+        hint.textContent = storageHint();
         act.hidden = false;
       });
   }
@@ -347,5 +375,5 @@
 
   back.onclick = exit;
   window.__lvlEntry(2, '进入 03 储运', enter);
-  window.__l3 = { enter: enter, exit: exit, selectTank: selectTank, get cutMode() { return cutMode; }, get pumpRunning() { return pumpRunning; }, get pumpPaused() { return pumpPaused; }, get level() { return level; } };
+  window.__l3 = { enter: enter, exit: exit, selectTank: selectTank, get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; }, get cutMode() { return cutMode; }, get pumpRunning() { return pumpRunning; }, get pumpPaused() { return pumpPaused; }, get level() { return level; } };
 })();

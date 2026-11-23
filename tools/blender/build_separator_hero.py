@@ -92,6 +92,85 @@ def sphere(name, radius, loc, scale, mat, semantic=None):
     return add(ob, mat, semantic)
 
 
+def half_shell(name, radius, length, loc, mat, semantic=None, segments=28,
+               angle0=math.pi / 2, angle1=3 * math.pi / 2):
+    """Open half-cylinder used as the teaching cutaway shell.
+
+    The near/front half is removed so the camera can look into the vessel.
+    Backface culling is disabled on this material in the web layer.
+    """
+    verts = []
+    for x in (-length / 2.0, length / 2.0):
+        for i in range(segments + 1):
+            a = angle0 + (angle1 - angle0) * i / segments
+            verts.append((x, radius * math.cos(a), radius * math.sin(a)))
+    faces = []
+    for i in range(segments):
+        a = i
+        b = i + 1
+        c = segments + 1 + i
+        d = c + 1
+        faces.append((a, b, d, c))
+    mesh = bpy.data.meshes.new(name)
+    mesh.from_pydata(verts, [], faces)
+    mesh.update()
+    ob = bpy.data.objects.new(name, mesh)
+    bpy.context.collection.objects.link(ob)
+    ob.location = loc
+    bpy.ops.object.select_all(action='DESELECT')
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    smooth(ob)
+    return add(ob, mat, semantic)
+
+
+def liquid_slab(name, z0, z1, x0, x1, mat, semantic=None, radius=0.87,
+                centre_z=2.1, segments=14):
+    """Extrude a circular-segment cross-section along X.
+
+    This keeps the teaching liquid layers inside the cylindrical vessel
+    instead of looking like a rectangular box placed in a trough.
+    """
+    n = segments
+
+    def half_width(z):
+        d = z - centre_z
+        return math.sqrt(max(0.0004, radius * radius - d * d))
+
+    profile = [(-half_width(z0), z0), (half_width(z0), z0)]
+    for i in range(1, n + 1):
+        z = z0 + (z1 - z0) * i / n
+        profile.append((half_width(z), z))
+    profile.append((-half_width(z1), z1))
+    for i in range(n - 1, 0, -1):
+        z = z0 + (z1 - z0) * i / n
+        profile.append((-half_width(z), z))
+    verts = []
+    for x in (x0, x1):
+        for y, z in profile:
+            verts.append((x, y, z))
+    m = len(profile)
+    faces = []
+    for i in range(m):
+        j = (i + 1) % m
+        faces.append((i, j, m + j, m + i))
+    faces.append(tuple(range(m - 1, -1, -1)))
+    faces.append(tuple(range(m, 2 * m)))
+    mesh = bpy.data.meshes.new(name)
+    mesh.from_pydata(verts, [], faces)
+    mesh.validate()
+    mesh.update()
+    ob = bpy.data.objects.new(name, mesh)
+    bpy.context.collection.objects.link(ob)
+    bpy.ops.object.select_all(action='DESELECT')
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    smooth(ob)
+    return add(ob, mat, semantic)
+
+
 def nozzle(name, x, y, z, radius, length, axis, mat, semantic=None):
     cyl(name, radius, length, (x, y, z), mat, axis=axis, vertices=20, semantic=semantic)
     if axis == "z":
@@ -147,6 +226,7 @@ AMBER = material("Separator_Amber", (0.74, 0.48, 0.16), 0.35, 0.5)
 WATER = material("Separator_Water", (0.11, 0.33, 0.43), 0.1, 0.6)
 GAS = material("Separator_Gas", (0.55, 0.72, 0.68), 0.0, 0.9)
 GLASS = material("Separator_Glass", (0.42, 0.66, 0.65), 0.0, 0.25)
+CUTSTEEL = material("Separator_CutSteel", (0.57, 0.62, 0.56), 0.55, 0.45)
 
 # Shell and heads: axial X, center y=2.1, length 6.0, radius 1.0.
 cyl("separator_shell", 1.0, 6.0, (0, 0, 2.1), STEEL, axis="x", vertices=48,
@@ -155,6 +235,15 @@ sphere("separator_head_left", 1.0, (-3.0, 0, 2.1), (0.42, 1.0, 1.0), LIGHT,
        semantic="separator_head_left")
 sphere("separator_head_right", 1.0, (3.0, 0, 2.1), (0.42, 1.0, 1.0), LIGHT,
        semantic="separator_head_right")
+
+# Cutaway version of the shell: keep the back half, remove the near half.
+# Hidden in external views; revealed by the web structure mode.
+half_shell("separator_cut_shell", 1.006, 6.04, (0, 0, 2.1), CUTSTEEL,
+           semantic="separator_cut_shell", angle0=math.pi / 2, angle1=3 * math.pi / 2)
+# Longitudinal cut edges make the opening legible.
+for zsign, label in ((1, "top"), (-1, "bottom")):
+    cyl("separator_cut_edge_" + label, 0.025, 6.08, (0, 0, 2.1 + zsign * 1.006),
+        AMBER, axis="x", vertices=10, semantic="separator_cut_edge_" + label)
 
 # Saddle supports and skid.
 for sign, side in ((-1, "left"), (1, "right")):
@@ -192,12 +281,12 @@ add(wheel, AMBER, "separator_valve_wheel")
 # Internal structure: liquid volumes, weir, baffle, mist extractor, inlet distributor.
 # The oil/water/gas volumes are separate objects so the web layer can reveal and
 # animate them without pretending to be a real multiphase simulation.
-box("separator_internal_water", (4.45, 1.45, 0.48), (0.15, 0, 1.68), WATER,
-    semantic="separator_internal_water")
-box("separator_internal_oil", (4.45, 1.45, 0.55), (0.15, 0, 2.20), AMBER,
-    semantic="separator_internal_oil")
-box("separator_internal_gas", (4.45, 1.35, 0.52), (0.15, 0, 2.73), GAS,
-    semantic="separator_internal_gas")
+liquid_slab("separator_internal_water", 1.28, 1.98, -2.2, 2.2, WATER,
+            semantic="separator_internal_water")
+liquid_slab("separator_internal_oil", 1.98, 2.52, -2.2, 2.2, AMBER,
+            semantic="separator_internal_oil")
+liquid_slab("separator_internal_gas", 2.52, 2.94, -2.2, 2.2, GAS,
+            semantic="separator_internal_gas")
 box("separator_internal_weir", (0.08, 1.55, 0.9), (1.35, 0, 2.3), STEEL,
     semantic="separator_internal_weir")
 box("separator_internal_baffle", (0.08, 1.55, 1.15), (-1.25, 0, 2.45), STEEL,
@@ -230,9 +319,12 @@ bpy.context.view_layer.objects.active = bpy.data.objects.get('separator_shell')
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
 # Render inspection views; internal view hides the shell/heads to expose the cutaway.
-render_view('front', (0, 12.5, 4.6), (0, 0, 2.2))
-render_view('side', (12.0, 0.5, 5.0), (0, 0, 2.2))
-render_view('45', (9.0, 9.2, 6.4), (0, 0, 2.1))
+render_view('front', (0, 12.5, 4.6), (0, 0, 2.2),
+            hide={'separator_cut_shell', 'separator_cut_edge_top', 'separator_cut_edge_bottom'})
+render_view('side', (12.0, 0.5, 5.0), (0, 0, 2.2),
+            hide={'separator_cut_shell', 'separator_cut_edge_top', 'separator_cut_edge_bottom'})
+render_view('45', (9.0, 9.2, 6.4), (0, 0, 2.1),
+            hide={'separator_cut_shell', 'separator_cut_edge_top', 'separator_cut_edge_bottom'})
 render_view('internal', (8.2, 8.0, 6.8), (0, 0, 2.2),
             hide={'separator_shell', 'separator_head_left', 'separator_head_right'})
 render_view('internal-side', (12.0, 0.5, 5.0), (0, 0, 2.2),
@@ -285,6 +377,7 @@ manifest = {
     'units': 'metres; Blender Z-up; OBJ exported Y-up',
     'dimensions_m': {'length': 6.8, 'diameter': 2.0, 'height': 5.0},
     'origin': 'separator centreline at local (0,0,0); vessel centre y=2.1',
+    'cutaway': 'separator_cut_shell (back half) + separator_cut_edge_top/bottom; external shell hidden in structure mode',
     'files': {
         'blend': 'assets-source/blender/separator_hero.blend',
         'obj': 'web/assets/separator/separator.obj',

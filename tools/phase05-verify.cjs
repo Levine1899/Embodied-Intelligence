@@ -5,7 +5,7 @@ const path = require('path');
 
 const PORT = Number(process.env.CDP_PORT || 9229);
 const OUT = path.resolve(__dirname, '..', 'docs', 'phase-reports', 'evidence', 'phase-05');
-const URL = 'http://127.0.0.1:8796/sandbox.html?rev=phase05v#stage=1';
+const URL = 'http://127.0.0.1:8796/sandbox.html?rev=phase05v-' + Date.now() + '#stage=1';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 function getJson(url) {
@@ -73,12 +73,21 @@ function getJson(url) {
 
   await evalPage(`document.querySelector('#l2-structure').click()`);
   await wait(900);
-  await evalPage(`window.__l2.startSeparation()`);
-  await wait(1400);
+  await evalPage(`document.querySelector('#l2-play').click()`);
+  await wait(2400);
   await shot('phase05-02-separator-internal.png');
   const internal = await evalPage(`({struct:window.__l2.structMode,running:window.__l2.running,phaseT:window.__l2.phaseT,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),state:window.PETRO_DEVICE_STATE.get('three_phase_separator')})`);
 
-  await evalPage(`window.__l2.pickOutlet('oil'); window.__l2.assignTank('oil')`);
+  const click3d = async (kind, key) => evalPage(`(function(){var p=window.__l2.screenPoint('${kind}','${key}'); if(!p)return null; var el=document.getElementById('viewport'); el.dispatchEvent(new PointerEvent('pointerdown',{clientX:p.x,clientY:p.y,bubbles:true})); el.dispatchEvent(new PointerEvent('pointerup',{clientX:p.x,clientY:p.y,bubbles:true})); return p;})()`);
+  await click3d('outlet', 'oil');
+  await wait(600);
+  await click3d('tank', 'gas');
+  await wait(1100);
+  await shot('phase05-03a-wrong-target.png');
+  const wrong = await evalPage(`({ctx:JSON.parse(JSON.stringify(window.__sceneContext)),note:document.querySelector('#l2-note').textContent})`);
+  await click3d('outlet', 'oil');
+  await wait(500);
+  await click3d('tank', 'oil');
   await wait(1400);
   await shot('phase05-03-outlet-choice.png');
   const outlet = await evalPage(`({last:window.__l2.lastInteraction,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),note:document.querySelector('#l2-note').textContent})`);
@@ -93,12 +102,13 @@ function getJson(url) {
   await wait(900);
   await shot('phase05-05-storage-external.png');
   await evalPage(`(function(){var r=document.querySelector('#l3-level');r.value=55;r.dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('#l3-cut').click();document.querySelector('#l3-pumpstart').click();})()`);
+  await wait(400);
   await wait(1300);
   await shot('phase05-06-storage-cut.png');
   const storage = await evalPage(`({level:window.__stage.isLevel(),levelValue:window.__l3.level,cut:window.__l3.cutMode,pumpRunning:window.__l3.pumpRunning,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),state:window.PETRO_DEVICE_STATE.get('fixed_roof_tank')})`);
 
-  await evalPage(`window.__l3.selectTank('floating_roof_tank')`);
-  await wait(700);
+  await evalPage(`document.querySelector('#l3-float').click()`);
+  await wait(900);
   await shot('phase05-07-floating-tank.png');
   const floating = await evalPage(`({last:window.__l3.lastInteraction,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),state:window.PETRO_DEVICE_STATE.get('floating_roof_tank')})`);
 
