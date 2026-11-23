@@ -1174,6 +1174,15 @@
         1 - (event.clientY - bounds.top) / bounds.height * 2
       ), camera);
       const hits = raycaster.intersectObjects(modelGroups, true);
+      if (!hits.length) {
+        // 设备周围的地坪/厂房不一定在 modelGroups 里；补一次全场景射线。
+        // 只要点到当前环节场景里的实体，就进入当前环节，不按背景网格的 stage 走。
+        const bgHits = raycaster.intersectObjects(scene.children, true);
+        if (!bgHits.length) return;
+        const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(currentStage);
+        if (hook) { window.__stageDragAt = performance.now(); markLevel(currentStage); hook(); }
+        return;
+      }
       if (hits.length) {
         const hitPoint = hits[0].point.clone();
         let object = hits[0].object;
@@ -1183,9 +1192,14 @@
           if (probe.userData && probe.userData.objectId) { objectId = probe.userData.objectId; break; }
           probe = probe.parent;
         }
-        // 只有命中真实设备/节点才切换环节。地面、厂房等背景网格没有 objectId，
-        // 旧逻辑会把“空地”当成炼化地坪（stage=3）直接进入炼化，必须忽略。
-        if (!objectId) return;
+        // 设备本体没有精确点中时，允许把设备周围的地坪/厂房当作同一环节的点击区。
+        // 关键：进入的是“当前选中的环节”，绝不使用背景网格自己的 stage（地面曾被错误地继承成炼化 stage=3）。
+        if (!objectId) {
+          const idx = currentStage;
+          const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
+          if (hook) { window.__stageDragAt = performance.now(); markLevel(idx); hook(); }
+          return;
+        }
         while (object && object.userData.stage === undefined) object = object.parent;
         if (object) {
           const idx = object.userData.stage;
