@@ -7,7 +7,7 @@
 - 状态建议：**PASS（阶段 04 技术范围；Hero 最小门禁通过）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`b97816471bb2256b5245dd65f7ba21f1c46e642a`（阶段 03 签收后的 rev3）
-- 结束 Commit（真实 SHA）：<PHASE04_SHA2>
+- 结束 Commit（真实 SHA）：9b6ba64ec9bcc698d8a2128610567b85433f3304
 - 分支：`main`
 - 工作区 `git status --short`：见提交后记录（目标为空）
 
