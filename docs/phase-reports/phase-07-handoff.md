@@ -7,10 +7,10 @@
 - 状态建议：**PASS（复核修复后；技术/交互范围；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`f059728236711e410927dffd84f9004bf7efad22`（阶段 06 后、阶段 07 开始前）
-- 结束 Commit（真实 SHA）：`b1502c3150cd1fe382bec99ebd1bb84d9c74df8f`（阶段 07 修复/证据/安全清理提交）
+- 结束 Commit（真实 SHA）：`6047a59`（当前 main；含 feature/261121-cuiyue-dev 的问答来源新标签修复）
 - 分支：`main`
-- 线上：`http://120.26.198.46:8020/v18/`（根入口跳转 V18；备份 `index.html.bak-20261123-194210`）
-- 包：`dist/scienceagent-web-b1502c3.tgz`，SHA-256 `53b29f4894c355e620c88c06d24effdc6221d6d4e77e01129452cd3f5ff42aa8`
+- 线上：`http://120.26.198.46:8020/v19/`（根入口跳转 V19；备份 `index.html.bak-20261123-194428`）
+- 包：`dist/scienceagent-web-6047a59.tgz`，SHA-256 `e51194216ddae7439b8ec258e8a8e38468d394f8507b42fa4212d34d0558951a`
 - 工作区 `git status --short`：阶段 07 提交后为空；本报告为后置文档提交
 
 ## 1. 前置检查
