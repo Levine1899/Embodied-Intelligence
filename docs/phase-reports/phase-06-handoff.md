@@ -7,7 +7,7 @@
 - 状态建议：**PASS（技术/交互范围；P0-ASSET-01 已修复；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`34c7839abcfec13da75f55fe61d8a23b73a86c77`
-- 结束 Commit（真实 SHA）：`c6b9baa6dc85f6656a14fe73cb918bf8582147b2`（阶段 06 返修内容提交）
+- 结束 Commit（真实 SHA）：`d2b3b2bfb8ea64ab0b87907127007ad83f7dc248`（阶段 06 review 修复内容提交）
 - 分支：`main`
 - 工作区 `git status --short`：提交后记录（目标为空）
 
