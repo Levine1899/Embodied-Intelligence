@@ -6,7 +6,7 @@
 - 新增 `docs/refining-experience.md`（设备群/三状态/5 个互动矩阵/科学边界）；更新 `scene-distillation-tower.md`。
 - 新增 `tower_hero.blend` 可编辑源、资产 manifest（哈希/语义/锚点/限制）；保留 `tower.html` 旧入口/fallback。
 - 证据：5 张 1440×900 截图、41.3s 连续录屏、`phase06-verify.json`；E2E l1–l5 与 navcheck exit 0。
-- 结论：**阶段 06 技术/交互范围建议 PASS；P1 资产/3D 热点精修，P2 性能/用户测试未执行；用户签收待定。**
+- 结论：**阶段 06 交互正向路径可用，但 review 发现 P0-ASSET-01：运行塔仍是基础几何拼装的遗留 `tower.obj`，视觉资产门禁未通过；建议 REVISE，不是 PASS。** P1 源脚本/死代码/空动作/迟到回调/边界测试未关闭；P2 性能/用户测试未执行；用户签收待定。
 
 # CHANGELOG
 
