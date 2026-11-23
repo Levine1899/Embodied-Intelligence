@@ -84,9 +84,9 @@
       .ug-scale{font:11px/1.5 ui-monospace,Consolas,monospace;color:#89a1ab;background:rgba(8,17,24,.8);padding:6px 8px;border-left:2px solid #e3ad58;max-width:150px}
       .ug-readout{font:11.5px/1.5 "Microsoft YaHei UI",sans-serif;color:#adc0c8;border-top:1px solid #263a44;margin-top:8px;padding-top:7px}
       .ug-tag{display:inline-block;border:1px solid #385561;color:#9fc0cc;border-radius:2px;padding:1px 5px;font-size:10.5px;margin-right:4px}
-      .lvl.on .lvl__act{position:static;left:auto;right:auto;bottom:auto;max-width:none;background:transparent;border:0;padding:10px 0 4px;margin-top:8px;border-top:1px solid #263a44}
-      .lvl.on .lvl__act p{font-size:12px;line-height:1.65}
-      @media(max-width:900px){.ug-left{width:238px}.ug-controls{top:auto;bottom:108px}.ug-btn{min-width:104px}.lvl.on .lvl__act{max-width:none}}
+      .lvl.on #l1-act{position:static;left:auto;right:auto;bottom:auto;max-width:none;background:transparent;border:0;padding:10px 0 4px;margin-top:8px;border-top:1px solid #263a44}
+      .lvl.on #l1-act p{font-size:12px;line-height:1.65}
+      @media(max-width:900px){.ug-left{width:238px}.ug-controls{top:auto;bottom:108px}.ug-btn{min-width:104px}.lvl.on #l1-act{max-width:none}}
     `;
     document.head.appendChild(s);
   }
