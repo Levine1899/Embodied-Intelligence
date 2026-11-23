@@ -262,3 +262,15 @@ Phase 04 复用阶段 03 实际 `subsurface` 中心 `[-24, 0, 8]`，而不是本
 | 深链 | 仍为 `#stage=0`，不新增 stage/zone | `zoneId=subsurface` 显式写入上下文 |
 
 地下近景与总览井口共享 `wellhead` objectId；井筒/储层/层组使用新增稳定 ID `wellbore`、`reservoir`、`underground_geology`，详见 `docs/underground-experience.md`。
+
+
+## 12. Phase 05 实际近景锚点/语义
+
+| 对象 | 位置（世界/局部） | objectId | 近景表示 |
+|---|---|---|---|
+| 三相分离器 | gathering，世界约 (−6,0,2)，局部分离器中心 (0,0,2.1) | `three_phase_separator` | `separator_detail`（OBJ `separator_hero`） |
+| 固定顶罐 | storage，局部罐中心；世界约 (10,0,−5) | `fixed_roof_tank` | l3 程序化罐组 detail |
+| 外浮顶罐 | storage，局部罐中心；世界约 (15,0,−4) | `floating_roof_tank` | l3 程序化罐组 detail |
+| 转输泵组 | storage，局部 (3.9,0,1.8) | `transfer_pump` | l3 泵撬 detail |
+
+阶段 05 不新增 stage；`l2` 仍挂 `gather/gathering`，`l3` 挂 `store/storage`。总览与近景使用同一 objectId，`PETRO_DEVICE_STATE` 保存 structure/animation/level/selection。

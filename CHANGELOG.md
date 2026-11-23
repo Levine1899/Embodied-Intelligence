@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 阶段 05 — 2026-11-23 · 地面处理与储运
+
+- 新增三相分离器 Hero：Blender `.blend`、OBJ/MTL、GLB、内部油/水/气层、堰板/挡板/雾沫捕集器、语义节点、5 张检查视图与许可记录。
+- l2 复用同一 `three_phase_separator`：Hero 加载、外部/内部结构、启动/暂停/单步/重播、三相路径、出口选择/去向、返回总览。
+- l3 增补储罐剖面、固定顶/外浮顶对比、液位/气相空间、泵组/出口阀/管线、泵送暂停/重播/路径；新增稳定 `transfer_pump` objectId。
+- 修正外浮顶表达：减少油气空间但**不等于零排放**；液位不换算排放量。
+- 文档：`production-storage-experience.md`、矩阵、场景/状态/actionId 补充；证据见 `docs/phase-reports/evidence/phase-05/`。
+- 结论：**阶段 05 技术/交互范围建议 PASS；视觉细节 P1；用户签收待定。** 未执行阶段 06。
+
 ## 阶段 04 rev3 — 2026-11-23 · 交互一致性/导航语义返修
 
 - 增补 `updatePartChips()`，图层/部件在加载、reset、enter、exit-re-enter 后统一从实际 Mesh 反向同步按钮与 `aria-pressed`。

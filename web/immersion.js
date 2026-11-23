@@ -661,8 +661,11 @@
     loadHeroAsset(sep, 'separator', 'three_phase_separator', 0.88);
     /* 泵撬 */
     const pumpSkid = new THREE.Group();
+    pumpSkid.name = 'transfer_pump_overview';
+    pumpSkid.userData.objectId = 'transfer_pump';
     pumpSkid.position.set(3.2, 0, 2.0);
     gather.add(pumpSkid);
+    if (window.PETRO_DEVICE_STATE) window.PETRO_DEVICE_STATE.bind('transfer_pump', 'overview', pumpSkid);
     box(pumpSkid, 2.4, 0.2, 1.4, concrete, 0, 0.1, 0);
     cylinder(pumpSkid, 0.42, 0.7, steel, -0.6, 0.55, 0);
     box(pumpSkid, 0.9, 0.7, 0.8, darkSteel, 0.7, 0.55, 0);

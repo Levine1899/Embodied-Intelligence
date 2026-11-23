@@ -193,3 +193,16 @@ actionId | objectId | 前置条件 | 输入方式 | 状态变化 | 视觉反馈 
 | `adjust_pressure` | 压力差示意滑块 | 0–100 / 示意百分比 | 粒子速度 + 因果说明，保留旧 action |
 | `trace_up_wellbore` | 沿井筒上行 | `wellhead` / 教学动作 | 镜头到井口 + 管线 |
 | `inspect_wellhead` | 井口选择 | `wellhead` / 教学设备 | 井口/管线解释 |
+
+
+## Phase 05 actionId
+
+| actionId | value | 说明 |
+|---|---|---|
+| `inspect_separator_structure` | `half`/`external` | 分离器内部/外壳 |
+| `start_separation` / `pause_separation` / `step_separation` / `replay_separation` | `-` | 分离过程控制 |
+| `choose_outlet` | `gas`/`oil`/`water` | 相态出口选择（保留旧 action） |
+| `assign_outlet_target` | `gas`/`oil`/`water` | 出口去向选择；错误返回解释 |
+| `inspect_tank_structure` | `fixed_roof_tank`/`floating_roof_tank` | 罐体剖面/罐型选择 |
+| `change_liquid_level` | 0–100 | 液位示意（保留旧 action） |
+| `start_pump` / `pause_pump` / `replay_pump` | `transfer_pump` | 泵送路径控制 |

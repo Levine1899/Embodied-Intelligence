@@ -101,3 +101,11 @@ __stage.deviceState.snapshot()
   - `wellhead` 既有对象 → 地下 Hero 的井口树 mesh，同为 `wellhead` detail
 - 近景对象通过 OBJ 名称映射到稳定 semanticName；状态仍由 `PETRO_DEVICE_STATE` 单一来源控制。
 - 退出地下关卡时 `stage.back()` 清 `levelId/interaction`，恢复总览环境组；不销毁 Hero 对象，重进时恢复层/剖切/压力初始态。
+
+
+## Phase 05 近景表示
+
+- `three_phase_separator`：overview=`separator_overview`，detail=`separator_detail`（OBJ `separator_hero` + 内部子对象）；`structure half` 显示内部，`animation running/paused` 控制三相路径；退出保留。
+- `fixed_roof_tank` / `floating_roof_tank`：overview 已有；detail 为 `l3` 程序化罐组；`level` 0–1 表示教学液位，不换算排放。
+- `transfer_pump`：新增稳定 ID；overview 为集输区泵撬，detail 为 `l3` 泵组；`animation running/paused`。
+- l2/l3 进入调用 `bind(id,'detail',root)` 并 `select(id)`；退出 `select(null)` 但不清 structure/animation/level；stage/zone 由 `setContextObject` 同步。

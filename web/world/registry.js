@@ -70,6 +70,13 @@
       capabilities: ['select', 'structure', 'animation'], assetStatus: 'refine', interaction: ['select', 'cut', 'run', 'setGasRoute']
     },
     {
+      objectId: 'transfer_pump', displayName: '转输泵组', zoneId: 'storage', stageId: 'store', stageIndex: 2,
+      knowledgeIds: ['kb_store'], chapterId: 'store', levelIndex: 2,
+      modelPath: null, modelNode: 'transfer_pump',
+      overviewRepresentation: 'transfer_pump_overview', detailRepresentation: 'transfer_pump_detail', anchor: 'transfer_pump',
+      capabilities: ['select', 'pump'], assetStatus: 'reuse', interaction: ['select', 'startPump']
+    },
+    {
       objectId: 'fixed_roof_tank', displayName: '固定顶储罐', zoneId: 'storage', stageId: 'store', stageIndex: 2,
       knowledgeIds: ['kb_store'], chapterId: 'store', levelIndex: 2,
       modelPath: 'assets/hero/floating_roof_tank/floating_roof_tank.obj', modelNode: 'tank_shell',

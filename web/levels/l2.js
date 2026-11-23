@@ -7,6 +7,10 @@
   const THREE = window.THREE;
 
   let G = null, camera = null, baseScene = null, anchor = null;
+  let assetRoot = null, assetLoaded = false, assetFailed = false;
+  let procShell = null, structMode = false, runningSep = false, pausedSep = false;
+  let shellMats = [], internalMeshes = [], cutRim = null, phaseT = 0;
+  const phaseFlows = [];
   const flows = [];
 
   function makeFlowInGroup(curve, color, count, speed, size) {
@@ -45,6 +49,8 @@
     G.position.copy(anchor);
     baseScene.add(G);
     if (window.__lvlGroup) window.__lvlGroup(1, G);
+    procShell = new THREE.Group();
+    G.add(procShell);
 
     const mSteel = new THREE.MeshStandardMaterial({ color: 0x2b3a45, roughness: 0.5, metalness: 0.7 });
     const mPipe = new THREE.MeshStandardMaterial({ color: 0x252420, roughness: 0.65, metalness: 0.5 });
@@ -56,24 +62,25 @@
     const vessel = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.0, 6.0, 26), mSteel);
     vessel.rotation.z = Math.PI / 2;
     vessel.position.set(0, 2.1, 0);
-    G.add(vessel);
+    procShell.add(vessel);
     const capL = new THREE.Mesh(new THREE.SphereGeometry(1.0, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2), mSteel);
-    capL.rotation.z = -Math.PI / 2; capL.position.set(-3.0, 2.1, 0); G.add(capL);
+    capL.rotation.z = -Math.PI / 2; capL.position.set(-3.0, 2.1, 0); procShell.add(capL);
     const capR = new THREE.Mesh(new THREE.SphereGeometry(1.0, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2), mSteel);
-    capR.rotation.z = Math.PI / 2; capR.position.set(3.0, 2.1, 0); G.add(capR);
+    capR.rotation.z = Math.PI / 2; capR.position.set(3.0, 2.1, 0); procShell.add(capR);
     [-1.6, 1.2].forEach(function (x) {
       const leg = new THREE.Mesh(new THREE.BoxGeometry(0.45, 2.1, 1.5), mPipe);
       leg.position.set(x, 1.05, 0);
-      G.add(leg);
+      procShell.add(leg);
     });
 
     /* 进口 */
     const inlet = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 2.6, 14), mPipe);
     inlet.rotation.z = Math.PI / 2;
     inlet.position.set(-4.4, 2.1, 0);
-    G.add(inlet);
+    procShell.add(inlet);
     const inletLabel = window.__lvlLabel('混合产出物', '#93a6b2');
-    inletLabel.position.set(-4.6, 3.15, 0);
+    inletLabel.position.set(-4.9, 3.15, 0);
+    inletLabel.scale.setScalar(0.82);
     G.add(inletLabel);
 
     /* 出口 */
@@ -117,31 +124,35 @@
 
     /* 三个出口去向（几何仍为示意占位，不表示气/水都进罐） */
     const TANKS = [
-      { key: 'gas', name: '气回收/处理', x: 5.0, z: -3.4, mat: gasMat },
-      { key: 'oil', name: '油储罐', x: 7.0, z: 0.4, mat: oilMat },
-      { key: 'water', name: '采出水处理', x: 5.4, z: 4.0, mat: waterMat }
+      { key: 'gas', name: '气回收/处理', x: 8.0, z: -4.0, mat: gasMat },
+      { key: 'oil', name: '油储罐', x: 9.6, z: 0.8, mat: oilMat },
+      { key: 'water', name: '采出水处理', x: 8.2, z: 4.8, mat: waterMat }
     ];
 
     TANKS.forEach(function (t) {
       const body = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.1, 2.5, 22), mSteel);
       body.position.set(t.x, 1.25, t.z);
+      body.scale.setScalar(0.68);
       G.add(body);
       const band = new THREE.Mesh(new THREE.TorusGeometry(1.11, 0.06, 8, 26), t.mat);
       band.rotation.x = Math.PI / 2;
       band.position.set(t.x, 2.1, t.z);
+      band.scale.setScalar(0.68);
       G.add(band);
       const top = new THREE.Mesh(new THREE.SphereGeometry(1.1, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), mSteel);
       top.position.set(t.x, 2.5, t.z);
+      top.scale.setScalar(0.68);
       G.add(top);
 
       const lb = window.__lvlLabel(t.name, '#c3d1d6');
-      lb.position.set(t.x, 4.55, t.z);
+      lb.position.set(t.x, 3.55, t.z);
+      lb.scale.setScalar(0.72);
       G.add(lb);
 
       const fill = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 0.95, 2.1, 20), t.mat.clone());
       fill.material.emissiveIntensity = 0.5;
-      fill.position.set(t.x, 0.25, t.z);
-      fill.scale.y = 0.05;
+      fill.position.set(t.x, 0.18, t.z);
+      fill.scale.set(0.68, 0.03, 0.68);
       G.add(fill);
       t.fill = fill;
 
@@ -160,8 +171,157 @@
     ]);
     makeFlowInGroup(inletCurve, 0xffd27a, 9, 0.34, 0.055);
 
+        loadHero();
     return { OUTLETS: OUTLETS, TANKS: TANKS, pickables: pickables };
   }
+
+
+  /* ---------- Hero separator asset + internal structure ---------- */
+  function bindAssetState() {
+    if (!assetRoot) return;
+    assetRoot.userData.objectId = 'three_phase_separator';
+    assetRoot.userData.assetId = 'separator_three_phase';
+    if (stage.deviceState) stage.deviceState.bind('three_phase_separator', 'detail', assetRoot);
+  }
+
+  function syncSeparatorState() {
+    if (!stage.deviceState) return;
+    var animation = runningSep ? 'running' : (pausedSep ? 'paused' : 'idle');
+    stage.deviceState.set('three_phase_separator', {
+      structure: structMode ? 'half' : 'external',
+      animation: animation
+    }, 'level');
+  }
+
+  function applyStructure(show) {
+    structMode = !!show;
+    internalMeshes.forEach(function (m) { m.visible = structMode; });
+    shellMats.forEach(function (mat) {
+      mat.transparent = structMode;
+      mat.opacity = structMode ? 0.16 : 1;
+      mat.depthWrite = !structMode;
+      mat.side = THREE.DoubleSide;
+      mat.needsUpdate = true;
+    });
+    if (cutRim) cutRim.visible = structMode;
+    phaseFlows.forEach(function (f) { f.tube.visible = structMode; f.group.visible = structMode && runningSep; });
+    var b = ui && ui.querySelector('#l2-structure');
+    if (b) {
+      b.textContent = structMode ? '恢复外壳' : '打开内部结构';
+      b.setAttribute('aria-pressed', String(structMode));
+    }
+    syncSeparatorState();
+    if (structMode) hint.textContent = '内部结构 · 油/水/气按密度与相态差异分离';
+  }
+
+  function addPhasePath(name, points, color) {
+    var curve = new THREE.CatmullRomCurve3(points.map(function (p) { return new THREE.Vector3(p[0], p[1], p[2]); }));
+    var tube = new THREE.Mesh(
+      new THREE.TubeGeometry(curve, 36, 0.035, 6, false),
+      new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.7, depthWrite: false })
+    );
+    tube.name = 'sep_path_' + name;
+    tube.visible = false;
+    G.add(tube);
+    var group = new THREE.Group();
+    var count = 7;
+    var mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false });
+    var items = [];
+    for (var i = 0; i < count; i += 1) {
+      var dot = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 6), mat);
+      dot.userData.base = i / count;
+      group.add(dot);
+      items.push(dot);
+    }
+    group.visible = false;
+    G.add(group);
+    phaseFlows.push({ curve: curve, items: items, tube: tube, group: group, name: name });
+  }
+
+  function buildPhasePaths() {
+    addPhasePath('gas', [[-2.4, 2.15, 0], [-0.4, 3.0, 0], [0, 4.1, 0]], 0x9fd3c6);
+    addPhasePath('oil', [[-1.8, 2.1, 0], [1.6, 2.25, 0], [3.35, 2.1, 0.2]], 0xd8a24a);
+    addPhasePath('water', [[-1.8, 2.0, 0], [1.0, 1.75, -0.35], [2.6, 1.9, -0.9]], 0x5aa7d8);
+    phaseT = 0;
+  }
+
+  function loadHero() {
+    if (!window.ObjLite) { assetFailed = true; return; }
+    window.ObjLite.load('assets/separator/separator.obj?v=05', 'assets/separator/separator.mtl?v=05').then(function (root) {
+      assetLoaded = true;
+      assetRoot = root;
+      root.name = 'separator_hero';
+      root.userData.objectId = 'three_phase_separator';
+      root.userData.assetId = 'separator_three_phase';
+      G.add(root);
+      if (procShell) procShell.visible = false;
+      internalMeshes = [];
+      shellMats = [];
+      cutRim = null;
+      root.traverse(function (o) {
+        if (!o.isMesh) return;
+        var n = (o.name || '').toLowerCase();
+        o.userData.objectId = 'three_phase_separator';
+        if (n.indexOf('separator_internal') === 0) {
+          internalMeshes.push(o);
+          o.visible = false;
+        }
+        if (n === 'separator_shell' || n.indexOf('separator_head') === 0) shellMats.push(o.material);
+        if (n === 'separator_cutaway_rim') cutRim = o;
+      });
+      bindAssetState();
+      buildPhasePaths();
+      applyStructure(false);
+      var b = ui && ui.querySelector('#l2-structure');
+      if (b) b.disabled = false;
+      if (ui) hint.textContent = '三相分离器 Hero · 可打开内部结构';
+    }).catch(function () {
+      assetFailed = true;
+      if (ui) hint.textContent = '分离器 Hero 未加载，保留教学备用剖面';
+    });
+  }
+
+  function startSeparation() {
+    if (!assetLoaded) return;
+    if (!structMode) applyStructure(true);
+    runningSep = true;
+    pausedSep = false;
+    if (phaseT >= 1) phaseT = 0;
+    syncSeparatorState();
+    var b = ui && ui.querySelector('#l2-play');
+    if (b) { b.textContent = '暂停分离'; b.setAttribute('aria-pressed', 'true'); }
+    hint.textContent = '分离演示 · 气上浮 / 油水按密度分层';
+  }
+
+  function pauseSeparation() {
+    runningSep = false;
+    pausedSep = true;
+    syncSeparatorState();
+    var b = ui && ui.querySelector('#l2-play');
+    if (b) { b.textContent = '继续分离'; b.setAttribute('aria-pressed', 'false'); }
+    hint.textContent = '已暂停 · 可单步或重播';
+  }
+
+  function stepSeparation() {
+    if (!assetLoaded) return;
+    runningSep = false;
+    pausedSep = true;
+    phaseT = Math.min(1, phaseT + 0.12);
+    syncSeparatorState();
+    hint.textContent = '单步 · 观察相态在出口附近的去向';
+  }
+
+  function replaySeparation() {
+    if (!assetLoaded) return;
+    phaseT = 0;
+    runningSep = true;
+    pausedSep = false;
+    syncSeparatorState();
+    var b = ui && ui.querySelector('#l2-play');
+    if (b) { b.textContent = '暂停分离'; b.setAttribute('aria-pressed', 'true'); }
+    hint.textContent = '重播 · 气、油、水从同一进料分流';
+  }
+
 
   const streams = {};
   function addStream(key) {
@@ -203,6 +363,16 @@
     const dt = Math.min(0.05, (now - lastT) / 1000 || 0.016);
     lastT = now;
     flows.forEach(function (f) { f.update(dt); });
+    if (runningSep) phaseT = (phaseT + dt * 0.22) % 1;
+    phaseFlows.forEach(function (f) {
+      f.items.forEach(function (dot) {
+        var t = (phaseT + dot.userData.base) % 1;
+        dot.position.copy(f.curve.getPoint(t));
+        dot.visible = structMode && runningSep;
+      });
+      f.tube.visible = structMode;
+      f.group.visible = structMode && runningSep;
+    });
   }
 
   /* ---------- UI ---------- */
@@ -213,6 +383,7 @@
     '<div class="lvl__act" id="l2-act" hidden>',
     '<p>井口出来的是<b>油、气、水混在一起</b>。先点一个出口，再点它该去的去向。</p>',
     '<div class="lvl__out"><span id="l2-note">未选择出口</span></div>',
+    '<div class="lvl__btns"><button type="button" class="lvl__btn" id="l2-structure" aria-pressed="false" disabled>打开内部结构</button><button type="button" class="lvl__btn" id="l2-play">暂停分离</button><button type="button" class="lvl__btn" id="l2-step">单步</button><button type="button" class="lvl__btn" id="l2-replay">重播</button></div>',
     '</div>',
     '<button type="button" class="lvl__back" id="l2-back">返回总览</button>'
   ].join('');
@@ -222,6 +393,14 @@
   const act = ui.querySelector('#l2-act');
   const note = ui.querySelector('#l2-note');
   const back = ui.querySelector('#l2-back');
+  const structureBtn = ui.querySelector('#l2-structure');
+  const playBtn = ui.querySelector('#l2-play');
+  const stepBtn = ui.querySelector('#l2-step');
+  const replayBtn = ui.querySelector('#l2-replay');
+  structureBtn.addEventListener('click', function () { applyStructure(!structMode); });
+  playBtn.addEventListener('click', function () { if (runningSep) pauseSeparation(); else startSeparation(); });
+  stepBtn.addEventListener('click', stepSeparation);
+  replayBtn.addEventListener('click', replaySeparation);
 
   let built = null;
   let picked = null;
@@ -230,6 +409,7 @@
 
   function pickOutlet(key) {
     picked = key;
+    if (stage.setContextObject) stage.setContextObject('three_phase_separator', 'gathering');
     if (stage.setInteraction) stage.setInteraction('choose_outlet', key);
     built.OUTLETS.forEach(function (o) {
       o.ring.scale.setScalar(o.key === key ? 1.5 : 1);
@@ -331,6 +511,9 @@
 
     stage.use(baseScene, camera);
     if (stage.setOverviewVisible) stage.setOverviewVisible(false);
+    G.visible = true;
+    if (stage.setContextObject) stage.setContextObject('three_phase_separator', 'gathering');
+    if (stage.deviceState) stage.deviceState.select('three_phase_separator');
     window.__l2active = true;
     ui.classList.add('on');
     document.body.classList.add('in-level');
@@ -338,11 +521,11 @@
     if (!running) { running = true; loop(); }
 
     fly(startPos, startT,
-      new THREE.Vector3(anchor.x + 4.4, 7.6, anchor.z + 13.0), new THREE.Vector3(anchor.x - 1.0, 2.0, anchor.z), 1700, function () {
+      new THREE.Vector3(anchor.x + 7.0, 10.8, anchor.z + 19.0), new THREE.Vector3(anchor.x - 1.0, 2.1, anchor.z), 1700, function () {
         hint.textContent = '三相分离器 · 点击出口';
         setTimeout(function () {
           fly(camera.position.clone(), new THREE.Vector3(anchor.x + 1.2, 1.9, anchor.z),
-            new THREE.Vector3(anchor.x + 8.2, 7.9, anchor.z + 12.4), new THREE.Vector3(anchor.x - 1.2, 1.6, anchor.z + 0.3), 1300, function () {
+            new THREE.Vector3(anchor.x + 9.0, 10.8, anchor.z + 18.0), new THREE.Vector3(anchor.x - 1.0, 2.0, anchor.z + 0.3), 1300, function () {
               act.hidden = false;
     if (!ui.querySelector('.lvl__dragtip')) {
       const tip = document.createElement('p');
@@ -360,6 +543,9 @@
     ui.classList.remove('on', 'done');
     document.body.classList.remove('in-level');
     window.__l2active = false;
+    G.visible = false;
+    if (stage.setContextObject) stage.setContextObject(null, 'gathering');
+    if (stage.deviceState) stage.deviceState.select(null);
     fly(camera.position.clone(), new THREE.Vector3(anchor.x + 2.2, 1.7, anchor.z),
       new THREE.Vector3(anchor.x, 11, anchor.z + 20), new THREE.Vector3(0, 1.2, 0), 1500, function () {
         running = false;
@@ -372,5 +558,5 @@
 
   back.onclick = exit;
   window.__lvlEntry(1, '进入 02 地面处理', enter);
-  window.__l2 = { enter: enter, exit: exit, pickOutlet: pickOutlet };
+  window.__l2 = { enter: enter, exit: exit, pickOutlet: pickOutlet, assignTank: assignTank, applyStructure: applyStructure, startSeparation: startSeparation, pauseSeparation: pauseSeparation, stepSeparation: stepSeparation, replaySeparation: replaySeparation, get assetLoaded() { return assetLoaded; }, get assetFailed() { return assetFailed; }, get structMode() { return structMode; }, get running() { return runningSep; }, get paused() { return pausedSep; }, get phaseT() { return phaseT; } };
 })();

@@ -1,0 +1,328 @@
+{
+  "date": "2026-11-23",
+  "page": "http://127.0.0.1:8796/sandbox.html?rev=phase05v#stage=1",
+  "viewport": "1440x900",
+  "overview": {
+    "devices": 17,
+    "pump": true,
+    "stage": "gather"
+  },
+  "external": {
+    "level": true,
+    "asset": true,
+    "failed": false,
+    "struct": false,
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "gather",
+      "stage": 1,
+      "zoneId": "gathering",
+      "levelId": "l2",
+      "selectedObjectId": "three_phase_separator",
+      "object": "three_phase_separator",
+      "deviceName": "三相分离器",
+      "knowledgeIds": [
+        "kb_gather"
+      ],
+      "knowledge": "kb_gather",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": null,
+      "history": []
+    }
+  },
+  "internal": {
+    "struct": true,
+    "running": true,
+    "phaseT": 0.3587979999996721,
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "gather",
+      "stage": 1,
+      "zoneId": "gathering",
+      "levelId": "l2",
+      "selectedObjectId": "three_phase_separator",
+      "object": "three_phase_separator",
+      "deviceName": "三相分离器",
+      "knowledgeIds": [
+        "kb_gather"
+      ],
+      "knowledge": "kb_gather",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": null,
+      "history": []
+    },
+    "state": {
+      "objectId": "three_phase_separator",
+      "selection": "selected",
+      "structure": "half",
+      "animation": "running",
+      "level": 0,
+      "visible": true,
+      "representations": [
+        "overview",
+        "detail"
+      ]
+    }
+  },
+  "outlet": {
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "gather",
+      "stage": 1,
+      "zoneId": "gathering",
+      "levelId": "l2",
+      "selectedObjectId": "three_phase_separator",
+      "object": "three_phase_separator",
+      "deviceName": "三相分离器",
+      "knowledgeIds": [
+        "kb_gather"
+      ],
+      "knowledge": "kb_gather",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "choose_outlet",
+        "value": "oil",
+        "unit": "示意",
+        "actionId": "choose_outlet",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "choose_outlet",
+          "value": "oil",
+          "unit": "示意",
+          "actionId": "choose_outlet",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "10:20:51"
+        }
+      ]
+    },
+    "note": "油已进油储罐"
+  },
+  "back": {
+    "level": false,
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "gather",
+      "stage": 1,
+      "zoneId": "gathering",
+      "levelId": null,
+      "selectedObjectId": null,
+      "object": null,
+      "deviceName": null,
+      "knowledgeIds": [
+        "kb_gather"
+      ],
+      "knowledge": "kb_gather",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": null,
+      "history": [
+        {
+          "action": "choose_outlet",
+          "value": "oil",
+          "unit": "示意",
+          "actionId": "choose_outlet",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "10:20:51"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "level": true,
+    "levelValue": 0.55,
+    "cut": true,
+    "pumpRunning": true,
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "store",
+      "stage": 2,
+      "zoneId": "storage",
+      "levelId": "l3",
+      "selectedObjectId": "fixed_roof_tank",
+      "object": "fixed_roof_tank",
+      "deviceName": "固定顶储罐",
+      "knowledgeIds": [
+        "kb_store"
+      ],
+      "knowledge": "kb_store",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "change_liquid_level",
+        "value": 55,
+        "unit": "示意百分比",
+        "actionId": "change_liquid_level",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "choose_outlet",
+          "value": "oil",
+          "unit": "示意",
+          "actionId": "choose_outlet",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "10:20:51"
+        },
+        {
+          "action": "change_liquid_level",
+          "value": 55,
+          "unit": "示意百分比",
+          "actionId": "change_liquid_level",
+          "result": null,
+          "stageId": "store",
+          "levelId": "l3",
+          "time": "10:20:58"
+        }
+      ]
+    },
+    "state": {
+      "objectId": "fixed_roof_tank",
+      "selection": "selected",
+      "structure": "half",
+      "animation": "idle",
+      "level": 0.55,
+      "visible": true,
+      "representations": [
+        "overview",
+        "detail"
+      ]
+    }
+  },
+  "floating": {
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "store",
+      "stage": 2,
+      "zoneId": "storage",
+      "levelId": "l3",
+      "selectedObjectId": "floating_roof_tank",
+      "object": "floating_roof_tank",
+      "deviceName": "外浮顶储罐",
+      "knowledgeIds": [
+        "kb_store"
+      ],
+      "knowledge": "kb_store",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "change_liquid_level",
+        "value": 55,
+        "unit": "示意百分比",
+        "actionId": "change_liquid_level",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "choose_outlet",
+          "value": "oil",
+          "unit": "示意",
+          "actionId": "choose_outlet",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "10:20:51"
+        },
+        {
+          "action": "change_liquid_level",
+          "value": 55,
+          "unit": "示意百分比",
+          "actionId": "change_liquid_level",
+          "result": null,
+          "stageId": "store",
+          "levelId": "l3",
+          "time": "10:20:58"
+        }
+      ]
+    },
+    "state": {
+      "objectId": "floating_roof_tank",
+      "selection": "selected",
+      "structure": "half",
+      "animation": "idle",
+      "level": 0.55,
+      "visible": true,
+      "representations": [
+        "overview",
+        "detail"
+      ]
+    }
+  },
+  "exit": {
+    "level": false,
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "store",
+      "stage": 2,
+      "zoneId": "storage",
+      "levelId": null,
+      "selectedObjectId": null,
+      "object": null,
+      "deviceName": null,
+      "knowledgeIds": [
+        "kb_store"
+      ],
+      "knowledge": "kb_store",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": null,
+      "history": [
+        {
+          "action": "choose_outlet",
+          "value": "oil",
+          "unit": "示意",
+          "actionId": "choose_outlet",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "10:20:51"
+        },
+        {
+          "action": "change_liquid_level",
+          "value": 55,
+          "unit": "示意百分比",
+          "actionId": "change_liquid_level",
+          "result": null,
+          "stageId": "store",
+          "levelId": "l3",
+          "time": "10:20:58"
+        }
+      ]
+    },
+    "errors": []
+  },
+  "screenshots": [
+    "phase05-01-separator-external.png",
+    "phase05-02-separator-internal.png",
+    "phase05-03-outlet-choice.png",
+    "phase05-04-back-overview.png",
+    "phase05-05-storage-external.png",
+    "phase05-06-storage-cut.png",
+    "phase05-07-floating-tank.png",
+    "phase05-08-storage-overview.png"
+  ]
+}
