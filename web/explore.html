@@ -21,7 +21,8 @@ img{display:block;max-width:100%}
 /* header */
 .top{border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--s-5);height:66px}
-.brand{display:flex;align-items:baseline;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.brand img{width:30px;height:30px;object-fit:contain;display:block;flex:none}
 .brand b{font-family:var(--font-display);font-size:20px;letter-spacing:.1em;font-weight:400}
 .brand span{font-size:var(--fs-12);letter-spacing:.2em;color:var(--faint)}
 nav.main{display:flex;gap:var(--s-5)}
@@ -106,12 +107,12 @@ footer a:hover{color:var(--accent)}
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="index.html"><b>油见未来</b><span>石油 · 科学 · 阅读</span></a>
+    <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><b>油见未来</b><span>石油 · 科学 · 阅读</span></a>
     <nav class="main" aria-label="主菜单">
       <a href="index.html">首页</a>
-      <a href="explore.html" aria-current="page">探索</a>
-      <a href="ask.html">智能问答</a>
-      <a href="write.html">科普文案生成</a>
+<a href="ask.html">智能问答</a>
+<a href="sandbox.html">沉浸式讲解</a>
+<a href="write.html">科普文案</a>
     </nav>
     <span class="issue">六章</span>
   </div>

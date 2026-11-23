@@ -24,7 +24,7 @@
   .note{font-size:12px;line-height:1.7}
 :root{color-scheme:dark;--bg:#070a0c;--panel:#0d1215;--line:#242a2d;--text:#e8e1d4;--muted:#9a948a;--cyan:#8fb6ad;--amber:#d8a24a;--red:#d98b74}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 "Microsoft YaHei UI","Microsoft YaHei","PingFang SC",sans-serif}button,select{font:inherit}button,a,select{outline-offset:4px}button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--amber)}button{cursor:pointer}a{color:inherit;text-decoration:none}h1,h2,h3,p{margin:0}button{color:inherit}[hidden]{display:none!important}
-.top{height:72px;padding:0 38px;display:flex;align-items:center;border-bottom:1px solid var(--line);gap:35px;background:transparent}.brand{font-family:var(--font-display);font-size:22px;font-weight:400;letter-spacing:.1em;display:flex;align-items:center;gap:13px}.brand:before{content:"";display:block;width:10px;height:27px;background:var(--amber);box-shadow:5px -4px 0 -2px #4d7279}.brand small{font-size:12px;color:var(--muted);font-weight:400;letter-spacing:1px;margin-left:5px}.nav{display:flex;height:100%;gap:29px;align-items:center;font-size:13px}.nav .active{color:var(--cyan);height:100%;display:flex;align-items:center;border-bottom:2px solid var(--cyan)}.return{margin-left:auto;font-size:12px;color:var(--muted)}
+.top{height:72px;padding:0 38px;display:flex;align-items:center;border-bottom:1px solid var(--line);gap:35px;background:transparent}.brand{font-family:var(--font-display);font-size:22px;font-weight:400;letter-spacing:.1em;display:flex;align-items:center;gap:13px}.brand{color:inherit;text-decoration:none}.brand img{width:29px;height:29px;object-fit:contain;display:block;flex:none}.brand small{font-size:12px;color:var(--muted);font-weight:400;letter-spacing:1px;margin-left:5px}.nav{display:flex;height:100%;gap:29px;align-items:center;font-size:13px}.nav .active{color:var(--cyan);height:100%;display:flex;align-items:center;border-bottom:2px solid var(--cyan)}.return{margin-left:auto;font-size:12px;color:var(--muted)}
 .main{max-width:1800px;margin:auto;padding:25px 38px 20px}.heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px;gap:20px}.heading h1{font-family:var(--font-display);font-weight:400;letter-spacing:.01em;font-size:32px;letter-spacing:1px;font-weight:650;line-height:1.4}.heading h1 span{color:var(--amber)}.heading p{font-size:13px;color:var(--muted);margin-top:8px}.reading{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)}.reading select{color:var(--text);background:var(--panel);border:1px solid var(--line);padding:8px 26px 8px 11px;border-radius:0;font-size:13px}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px}.scene{border-top:1px solid #47616d;border-bottom:1px solid var(--line);position:relative;min-width:0;background:#0a151f}.scene-head{display:flex;align-items:center;justify-content:space-between;padding:12px 17px;border-bottom:1px solid #283b47;gap:14px}.scene-head p{font-size:12px;color:var(--muted)}.scene-head strong{color:var(--cyan);font-weight:500}.tools{display:flex;gap:14px;flex-wrap:wrap}.tools button{background:transparent;border:0;color:var(--muted);font-size:12px;padding:2px 0}.tools button:hover,.tools button[aria-pressed="true"]{color:var(--amber)}
 .viewport{height:485px;position:relative;overflow:hidden;touch-action:none;isolation:isolate}.viewport canvas{width:100%;height:100%;display:block}.viewport:after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,#718fa608 4px);opacity:.35}.object-label{position:absolute;left:0;top:0;transform:translate(-50%,-50%);border:1px solid #3d3a33;background:#0d1215e6;font-size:12px;color:#cfc8ba;padding:4px 10px;white-space:nowrap;z-index:2}.object-label.selected{border-color:var(--amber);color:var(--amber);background:#282318e8}.view-hint{position:absolute;left:17px;bottom:14px;color:#9a948a;font-size:12px;pointer-events:none}.view-hint b{color:#d8d2c4;font-weight:400}.fallback{padding:50px 30px;color:var(--amber);position:absolute;inset:0;text-align:center;display:grid;place-content:center}
@@ -47,12 +47,12 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 </head>
 <body>
 <header class="top">
-<span class="brand">油见未来 <small>石油科学</small></span>
+<a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><span>油见未来</span> <small>石油科学</small></a>
 <nav class="nav nav--main" aria-label="主菜单">
         <a href="index.html">首页</a>
-        <a href="explore.html" aria-current="page">探索</a>
-        <a href="ask.html">智能问答</a>
-        <a href="write.html">科普文案生成</a>
+<a href="ask.html">智能问答</a>
+<a href="sandbox.html" aria-current="page">沉浸式讲解</a>
+<a href="write.html">科普文案</a>
       </nav>
 
 </header>

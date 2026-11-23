@@ -14,8 +14,8 @@
   html,body{margin:0;min-height:100%}
   body{background:var(--bg);color:var(--text);font:14px/1.75 "Microsoft YaHei UI","PingFang SC",system-ui,sans-serif;overflow-x:hidden}
   header{display:flex;align-items:center;gap:18px;padding:14px 28px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#0b0f11ee;backdrop-filter:blur(6px);z-index:20}
-  .brand{font-family:var(--font-display);font-size:20px;font-weight:400;letter-spacing:.1em}
-  .brand i{display:inline-block;width:8px;height:8px;background:var(--amber);margin-right:9px;vertical-align:middle}
+  .brand{font-family:var(--font-display);font-size:20px;font-weight:400;letter-spacing:.1em;display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:inherit}
+  .brand img{width:27px;height:27px;object-fit:contain;display:block;flex:none}
   .brand small{color:var(--faint);font-size:12px;font-weight:400;margin-left:10px;letter-spacing:.14em}
   nav{margin-left:auto;display:flex;gap:4px}
   nav a{color:var(--muted);text-decoration:none;font-size:13px;padding:7px 13px;border:1px solid transparent;min-height:40px;display:inline-flex;align-items:center}
@@ -91,12 +91,12 @@
 </head>
 <body>
 <header>
-  <div class="brand"><i></i>油见未来<small>常减压蒸馏 · 剖面详解</small></div>
+  <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油">油见未来<small>常减压蒸馏 · 剖面详解</small></a>
   <nav aria-label="主菜单">
 <a href="index.html">首页</a>
-<a href="explore.html" aria-current="page">探索</a>
 <a href="ask.html">智能问答</a>
-<a href="write.html">科普文案生成</a>
+<a href="sandbox.html">沉浸式讲解</a>
+<a href="write.html">科普文案</a>
 </nav>
 </header>
 

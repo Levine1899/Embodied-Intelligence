@@ -15,8 +15,8 @@
        -webkit-font-smoothing:antialiased}
   a{color:inherit}
   header{border-bottom:1px solid var(--line);padding:18px 40px;display:flex;align-items:center;gap:18px}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:.02em}
-  .brand i{width:6px;height:22px;background:var(--amber);display:block}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:.02em;text-decoration:none;color:inherit}
+  .brand img{width:27px;height:27px;object-fit:contain;display:block;flex:none}
   .knav{display:flex;gap:6px;margin-left:auto}
   .knav a{font-size:12.5px;color:var(--muted);text-decoration:none;padding:6px 10px;border:1px solid transparent;border-radius:2px}
   .knav a:hover{color:var(--text);border-color:var(--line)}
@@ -54,9 +54,9 @@
 </head>
 <body>
 <header>
-  <div class="brand"><i></i>油见未来</div>
+  <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油">油见未来</a>
   <div style="font-size:13px;color:var(--muted)">石油知识库</div>
-  <nav class="knav"><a href="index.html">首页</a><a href="explore.html">探索</a><a href="ask.html">智能问答</a><a href="write.html">科普文案生成</a></nav>
+  <nav class="knav"><a href="index.html">首页</a><a href="ask.html">智能问答</a><a href="sandbox.html">沉浸式讲解</a><a href="write.html">科普文案</a></nav>
     <span class="back">当前位置：石油知识库（辅助入口）</span>
 </header>
 
