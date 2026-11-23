@@ -90,3 +90,14 @@ __stage.deviceState.snapshot()
 - 返回总览前，把需要保留的状态同步到 overview 表示（或让 overview 读取状态），不得让两个 Mesh 各存一份；
 - 同屏最多一个 `selected`；进入近景不改变 `batch.node`/task 进度，除非任务动作明确推进；
 - 阶段 06 的塔全剖、阶段 05 的分离器内部、阶段 04 的井筒内部，均必须提供“总览选设备→近景操作→返回总览”连续录屏。
+
+
+## Phase 04 近景表示
+
+- 新增 detail representations（同一 Store）：
+  - `underground_geology` → `underground_geology_detail`（层组代理锚点；层网格本身由关卡逐层 visible 控制，避免选中时把用户隐藏的层重新显示）
+  - `reservoir` → `underground_reservoir_detail`（储层透镜）
+  - `wellbore` → `underground_wellbore_detail`（套管/水泥/油管/射孔段）
+  - `wellhead` 既有对象 → 地下 Hero 的井口树 mesh，同为 `wellhead` detail
+- 近景对象通过 OBJ 名称映射到稳定 semanticName；状态仍由 `PETRO_DEVICE_STATE` 单一来源控制。
+- 退出地下关卡时 `stage.back()` 清 `levelId/interaction`，恢复总览环境组；不销毁 Hero 对象，重进时恢复层/剖切/压力初始态。

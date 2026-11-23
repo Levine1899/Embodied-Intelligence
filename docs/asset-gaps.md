@@ -1,4 +1,4 @@
-# Asset gaps · Phase 03
+# Asset gaps · 当前资产（Phase 04 已交付地下 Hero）
 
 日期：2026-11-22
 范围：当前 `web/assets/` 与阶段 03 程序化占位；不是最终资产验收。
@@ -7,11 +7,11 @@
 
 | 资产组 | 当前状态 | 阶段 03 可视证据 | 阶段责任 |
 |---|---|---|---|
-| 地下地质/储层/井筒/井口一体化 | **必须新建**；当前为地面开口 + 分层体块 + 基础井筒/井口 | `subsurface-1440.png` / `geology-close.png` | 阶段 04；当前视觉验收 `BLOCKED` |
+| 地下地质/储层/井筒/井口一体化 | **已新建**：Blender 4.5 `.blend` + OBJ/GLB + 语义节点 + 实际网页集成；断面纹理细节列 P1 | `phase-04/asset-*.png` / `phase04-01…09.png` | 阶段 04；最小 Hero 门禁通过，细节需精修 |
 | 三相分离器（含内部/剖切） | **需精修**；现有 OBJ 8,236 面，材质桶合并，无内部结构 | `gathering-1440.png` | 阶段 05；当前内部结构 `BLOCKED` |
 | 炼化装置/常减压塔（含全剖） | **需精修**；OBJ 54 个命名对象、半剖可用，全剖差异弱 | `refining-1440.png` | 阶段 06；当前全剖 `BLOCKED` |
 | 抽油机 | **可直接复用（中景）**；无 `.blend`/UV | `oilfield-1440.png` | 阶段 04 精修可选 |
-| 井口 | **需精修**；基础结构可辨 | `subsurface-1440.png` | 阶段 04 |
+| 井口 | **已纳入地下 Hero**：井口树/阀/出口/地面管线与同一 `wellhead` objectId；阶段 05 可精修阀门 | `phase-04/phase04-08-surface.png` | 阶段 04/05 |
 | 固定顶/外浮顶罐 | **需精修**；浮盘在关卡程序化对象里 | `storage-1440.png` | 阶段 05 |
 | 加热炉 | **需精修**；中景结构简单 | `refining-1440.png` | 阶段 06 |
 | 城市产品 | **占位**；基础几何体/产品卡 | `city-1440.png` | 阶段 06/07 |
@@ -53,3 +53,20 @@
 - 阶段 03 只使用**明确标注的程序化占位/现有中低模**搭建世界骨架；不宣称通过 Hero Asset Gate。按 00_MASTER §5，三类 Hero 是阶段 04/05/06 的责任，不是阶段 03 的当前 P0；阶段 09 做全局来源/许可/网页证据验收。
 - 当前三类 Hero 的视觉验收均为 **BLOCKED**；阶段 03 可继续代码骨架，但不能以占位图作为核心视觉交付完成。
 - 三角面数不作为质量判断；必须结合轮廓、比例、部件结构、材质、语义节点、局部可读性和网页展示。
+
+
+## 5. Phase 04 交付状态（2026-11-23）
+
+| 项 | 状态 |
+|---|---|
+| 地下地质/储层/井筒 Hero | **交付**：`assets-source/blender/underground_hero.blend`、`web/assets/underground/underground.obj/.mtl/.glb`、`underground-asset-manifest.json` |
+| 语义节点 | `geo_overburden/geo_caprock/geo_reservoir_layer/geo_basement/reservoir_lens/well_casing/well_cement/well_tubing/well_perforation_*/wellhead_*/well_flowline` |
+| 材质/贴图 | 8 个纯材质，无第三方贴图；色彩空间/贴图问题不适用 |
+| 单位/轴/原点 | 米；Blender Z-up 导出 OBJ Y-up；井口/地表中心为局部 0,0,0 |
+| 来源/许可 | 项目内自产脚本生成，无第三方模型/贴图；对外再分发需权利人确认，见 manifest |
+| 检查视图 | `asset-front/side/45/wellbore-close/reservoir-cutaway/wellbore-structure.png` |
+| 网页证据 | 9 张 1440×900 截图 + 57.45s 实时录屏 + `phase04-verify.json` |
+| 结论 | **最小 Hero 门禁通过；视觉细节 P1**（纹理/断面/层内粒度） |
+| 未完成 | 专业地质纹理/UV、跨浏览器、FPS/内存长跑 → P1/阶段 09 |
+
+三相分离器（阶段 05）与塔（阶段 06）仍按原计划，不由本阶段提前验收。

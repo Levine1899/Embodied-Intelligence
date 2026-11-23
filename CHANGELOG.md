@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 阶段 04 — 2026-11-23 · 地下开采（Hero 最小门禁通过）
+
+- 新增地下 Hero：Blender 4.5 源文件 `.blend`、运行 OBJ/MTL、GLB 备份、6 张资产检查视图、对象/语义/尺寸/锚点/材质清单与许可说明。
+- 新增 4 层波浪地层、储层透镜、井筒套管/水泥环/油管/射孔、井口树/地面管线；网页端由 ObjLite 实时加载，绑定 `underground_geology/reservoir/wellbore/wellhead`。
+- 重写 `web/levels/l1.js`：地层逐层显隐/剖切、储层图例/孔隙放大、井筒整体/射孔井段、沿井筒上行、地面集输端点、压力差示意与暂停/重置；保留 `adjust_pressure`。
+- 新增长逻辑 ID 3 个（`underground_geology`/`reservoir`/`wellbore`），`wellhead` 复用；总览与近景同 Store，退出恢复环境组/总览。
+- 文档：`underground-experience.md`、交互矩阵、资产门禁、场景/状态/actionId 补充；阶段 03 用户签收记录为 ACCEPTED。
+- 证据：9 张 1440×900 截图、50.8s 实时录屏、`phase04-verify.json`、五关/深链/章节/塔页/fallback 回归。
+- 结论：**阶段 04 技术范围 PASS（最小 Hero 门禁）；视觉细节/纹理列 P1；用户签收待定。** 未执行阶段 05。
+
+
 ## 阶段 03 — 2026-11-22 · 世界骨架（代码，未通过 Hero 视觉门禁）
 
 - 六区概念空间：真实地面开口 + 台地高差 + S 形对角管线，五 stage/深链保持；页面标注“产业链空间示意 / 非真实地理比例”。

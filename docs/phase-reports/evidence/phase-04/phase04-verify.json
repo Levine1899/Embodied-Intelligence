@@ -1,0 +1,618 @@
+{
+  "date": "2026-11-23",
+  "page": "http://127.0.0.1:8796/sandbox.html?rev=phase04",
+  "viewport": "1440x900",
+  "entered": {
+    "ok": true,
+    "text": "再看一遍 →"
+  },
+  "initial": {
+    "level": true,
+    "assetLoaded": true,
+    "assetFailed": false,
+    "layers": [
+      "overburden",
+      "caprock",
+      "reservoir",
+      "basement"
+    ],
+    "parts": [
+      "casing",
+      "cement",
+      "tubing",
+      "perforation"
+    ],
+    "clipped": true,
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "drill",
+      "stage": 0,
+      "zoneId": "subsurface",
+      "levelId": "l1",
+      "selectedObjectId": null,
+      "object": null,
+      "deviceName": null,
+      "knowledgeIds": [
+        "kb_drill"
+      ],
+      "knowledge": "kb_drill",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": null,
+      "history": []
+    },
+    "errors": []
+  },
+  "chipOff": {
+    "pressed": "false",
+    "state": {
+      "overburden": true,
+      "caprock": false,
+      "reservoir": true,
+      "basement": true
+    }
+  },
+  "layerInfo": {
+    "selected": "overburden",
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "drill",
+      "stage": 0,
+      "zoneId": "subsurface",
+      "levelId": "l1",
+      "selectedObjectId": "underground_geology",
+      "object": "underground_geology",
+      "deviceName": null,
+      "knowledgeIds": [
+        "kb_drill"
+      ],
+      "knowledge": "kb_drill",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "inspect_layer",
+        "value": "overburden",
+        "unit": "教学图层",
+        "actionId": "inspect_layer",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "inspect_layer",
+          "value": "overburden",
+          "unit": "教学图层",
+          "actionId": "inspect_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        }
+      ]
+    },
+    "info": "上覆地层\n\n地表以下的沉积岩层，像盖子一样压在上方。这里只表达“层层叠置”的概念，厚度不是真实比例。\n\n选中语义：geo_overburden · 可继续逐层隐藏/显示。\n\n教学示意：不是真实油藏数据、真实地质比例或数值模拟。"
+  },
+  "reservoirInfo": {
+    "selected": "reservoir",
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "drill",
+      "stage": 0,
+      "zoneId": "subsurface",
+      "levelId": "l1",
+      "selectedObjectId": "reservoir",
+      "object": "reservoir",
+      "deviceName": null,
+      "knowledgeIds": [
+        "kb_drill"
+      ],
+      "knowledge": "kb_drill",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "inspect_reservoir",
+        "value": "reservoir",
+        "unit": "教学对象",
+        "actionId": "inspect_reservoir",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "inspect_layer",
+          "value": "overburden",
+          "unit": "教学图层",
+          "actionId": "inspect_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "inspect_reservoir",
+          "value": "reservoir",
+          "unit": "教学对象",
+          "actionId": "inspect_reservoir",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:24"
+        }
+      ]
+    },
+    "legend": "ug-legend on",
+    "info": "储层 · 孔隙与流体\n\n储层岩石有孔隙/裂缝，油、气、水赋存其中。颜色只是教学编码；孔隙大小和连通性会影响流动，但不等于真实产能。\n\n可点「孔隙放大（示意）」查看局部概念图；这不是实际岩心扫描。\n\n教学示意：不是真实油藏数据、真实地质比例或数值模拟。"
+  },
+  "poreInfo": {
+    "pore": true,
+    "selected": "reservoir",
+    "legend": "ug-legend on",
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "drill",
+      "stage": 0,
+      "zoneId": "subsurface",
+      "levelId": "l1",
+      "selectedObjectId": "reservoir",
+      "object": "reservoir",
+      "deviceName": null,
+      "knowledgeIds": [
+        "kb_drill"
+      ],
+      "knowledge": "kb_drill",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "inspect_pores",
+        "value": "reservoir",
+        "unit": "教学示意",
+        "actionId": "inspect_pores",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "inspect_layer",
+          "value": "overburden",
+          "unit": "教学图层",
+          "actionId": "inspect_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "inspect_reservoir",
+          "value": "reservoir",
+          "unit": "教学对象",
+          "actionId": "inspect_reservoir",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:24"
+        },
+        {
+          "action": "inspect_pores",
+          "value": "reservoir",
+          "unit": "教学示意",
+          "actionId": "inspect_pores",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:25"
+        }
+      ]
+    }
+  },
+  "wellboreInfo": {
+    "selected": "perforation",
+    "view": "wellbore-local",
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "drill",
+      "stage": 0,
+      "zoneId": "subsurface",
+      "levelId": "l1",
+      "selectedObjectId": "wellbore",
+      "object": "wellbore",
+      "deviceName": null,
+      "knowledgeIds": [
+        "kb_drill"
+      ],
+      "knowledge": "kb_drill",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "inspect_wellbore_part",
+        "value": "perforation",
+        "unit": "教学部件",
+        "actionId": "inspect_wellbore_part",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "inspect_layer",
+          "value": "overburden",
+          "unit": "教学图层",
+          "actionId": "inspect_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "inspect_reservoir",
+          "value": "reservoir",
+          "unit": "教学对象",
+          "actionId": "inspect_reservoir",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:24"
+        },
+        {
+          "action": "inspect_pores",
+          "value": "reservoir",
+          "unit": "教学示意",
+          "actionId": "inspect_pores",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:25"
+        },
+        {
+          "action": "inspect_wellbore_part",
+          "value": "perforation",
+          "unit": "教学部件",
+          "actionId": "inspect_wellbore_part",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:27"
+        }
+      ]
+    },
+    "info": "射孔段\n\n在目标储层段射开套管/水泥环，让储层流体进入井筒；这里只表达“打开通道”的概念。\n\n井筒对象 ID：wellbore · 井段：well_perforation\n\n教学示意：不是真实油藏数据、真实地质比例或数值模拟。"
+  },
+  "pressureInfo": {
+    "pressure": 75,
+    "note": "更多流体向井筒方向移动（教学示意）",
+    "history": 7
+  },
+  "surfaceInfo": {
+    "view": "surface",
+    "selected": "wellhead",
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "drill",
+      "stage": 0,
+      "zoneId": "oilfield",
+      "levelId": "l1",
+      "selectedObjectId": "wellhead",
+      "object": "wellhead",
+      "deviceName": "井口 / 采油树",
+      "knowledgeIds": [
+        "kb_formation",
+        "kb_drill"
+      ],
+      "knowledge": "kb_formation",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "inspect_wellhead",
+        "value": "wellhead",
+        "unit": "教学设备",
+        "actionId": "inspect_wellhead",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "inspect_layer",
+          "value": "overburden",
+          "unit": "教学图层",
+          "actionId": "inspect_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "inspect_reservoir",
+          "value": "reservoir",
+          "unit": "教学对象",
+          "actionId": "inspect_reservoir",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:24"
+        },
+        {
+          "action": "inspect_pores",
+          "value": "reservoir",
+          "unit": "教学示意",
+          "actionId": "inspect_pores",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:25"
+        },
+        {
+          "action": "inspect_wellbore_part",
+          "value": "perforation",
+          "unit": "教学部件",
+          "actionId": "inspect_wellbore_part",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:27"
+        },
+        {
+          "action": "adjust_pressure",
+          "value": 75,
+          "unit": "示意百分比",
+          "actionId": "adjust_pressure",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:28"
+        },
+        {
+          "action": "trace_up_wellbore",
+          "value": "wellhead",
+          "unit": "教学动作",
+          "actionId": "trace_up_wellbore",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:29"
+        },
+        {
+          "action": "inspect_wellhead",
+          "value": "wellhead",
+          "unit": "教学设备",
+          "actionId": "inspect_wellhead",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:30"
+        }
+      ]
+    },
+    "readout": "状态：地面井口 · 集输管线 · 压差 75%（示意）"
+  },
+  "exitInfo": {
+    "level": false,
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "drill",
+      "stage": 0,
+      "zoneId": "oilfield",
+      "levelId": null,
+      "selectedObjectId": null,
+      "object": null,
+      "deviceName": null,
+      "knowledgeIds": [
+        "kb_drill"
+      ],
+      "knowledge": "kb_drill",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": null,
+      "history": [
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "inspect_layer",
+          "value": "overburden",
+          "unit": "教学图层",
+          "actionId": "inspect_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:23"
+        },
+        {
+          "action": "inspect_reservoir",
+          "value": "reservoir",
+          "unit": "教学对象",
+          "actionId": "inspect_reservoir",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:24"
+        },
+        {
+          "action": "inspect_pores",
+          "value": "reservoir",
+          "unit": "教学示意",
+          "actionId": "inspect_pores",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:25"
+        },
+        {
+          "action": "inspect_wellbore_part",
+          "value": "perforation",
+          "unit": "教学部件",
+          "actionId": "inspect_wellbore_part",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:27"
+        },
+        {
+          "action": "adjust_pressure",
+          "value": 75,
+          "unit": "示意百分比",
+          "actionId": "adjust_pressure",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:28"
+        },
+        {
+          "action": "trace_up_wellbore",
+          "value": "wellhead",
+          "unit": "教学动作",
+          "actionId": "trace_up_wellbore",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:29"
+        },
+        {
+          "action": "inspect_wellhead",
+          "value": "wellhead",
+          "unit": "教学设备",
+          "actionId": "inspect_wellhead",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:13:30"
+        }
+      ]
+    },
+    "errors": []
+  },
+  "screenshots": [
+    "phase04-01-entry.png",
+    "phase04-02-strata-toggle.png",
+    "phase04-03-strata-info.png",
+    "phase04-04-reservoir.png",
+    "phase04-05-pore.png",
+    "phase04-06-wellbore.png",
+    "phase04-07-pressure.png",
+    "phase04-08-surface.png",
+    "phase04-09-back-overview.png"
+  ]
+}

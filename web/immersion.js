@@ -1334,6 +1334,9 @@
   }
   /* ---------- 设备级知识卡（点击三维设备时使用） ---------- */
   const DEVICE_INFO = {
+    underground_geology: { name: '地下地质剖面', stage: 0, ask: '地层和储层是什么关系？', text: '上覆地层、盖层、储层和基底是教学分层；真实油藏还要看构造、岩性和流体条件。' },
+    reservoir: { name: '储层', stage: 0, ask: '石油为什么会在岩石里？', text: '储层岩石有孔隙和裂缝，油、气、水赋存其中；孔隙大小和连通性影响流动，但不等于真实产能。' },
+    wellbore: { name: '井筒 / 套管', stage: 0, ask: '井筒和套管是做什么的？', text: '井筒连接储层与地面；套管加固井壁，水泥环封隔层位，射孔段让储层流体进入井筒。' },
     three_phase_separator: { name: '三相分离器', stage: 1, ask: '三相分离器怎么把油、气、水分开？', text: '按密度与相态把井口产出物分成气、油、水三路，再分别送去处理或储存。' },
     pumpjack: { name: '抽油机', stage: 0, ask: '抽油机是怎么把油从井里抽上来的？', text: '把地面动力转成上下往复运动，通过抽油杆带动井下泵，把油举升到地面。' },
     wellhead: { name: '井口采油树', stage: 0, ask: '采油树上的阀门是做什么的？', text: '井口阀组控制油流开关与压力，把地下产出的流体安全导入集输管线。' },
@@ -1910,6 +1913,11 @@
     },
     isLevel() { return !!activeScene; },
     setInteraction(action, value, unit) { setInteraction(action, value, unit); },
+    setContextObject(objectId, zoneId) {
+      const info = window.PETRO_REGISTRY ? window.PETRO_REGISTRY.getDevice(objectId) : null;
+      window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.select(objectId || null);
+      syncSceneContext(currentStage, objectId || null, null, zoneId || (info ? info.zoneId : null));
+    },
     showDevice(objectId) { const info = DEVICE_INFO[objectId]; if (info) selectStage(info.stage, true, objectId); },
     get scene() { return activeScene || scene; },
     get baseScene() { return scene; },

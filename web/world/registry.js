@@ -42,6 +42,27 @@
       capabilities: ['select', 'valve'], assetStatus: 'reuse', interaction: ['select', 'openValve']
     },
     {
+      objectId: 'underground_geology', displayName: '地下地质剖面', zoneId: 'subsurface', stageId: 'drill', stageIndex: 0,
+      knowledgeIds: ['kb_formation'], chapterId: 'drill', levelIndex: 0,
+      modelPath: 'assets/underground/underground.obj', modelNode: 'geo_overburden/geo_caprock/geo_reservoir_layer/geo_basement',
+      overviewRepresentation: null, detailRepresentation: 'underground_geology_detail', anchor: 'reservoir_anchor',
+      capabilities: ['select', 'structure', 'layers'], assetStatus: 'new', interaction: ['select', 'toggleLayer']
+    },
+    {
+      objectId: 'reservoir', displayName: '储层', zoneId: 'subsurface', stageId: 'drill', stageIndex: 0,
+      knowledgeIds: ['kb_formation', 'kb_drill'], chapterId: 'drill', levelIndex: 0,
+      modelPath: 'assets/underground/underground.obj', modelNode: 'reservoir_lens/geo_reservoir_layer',
+      overviewRepresentation: null, detailRepresentation: 'underground_reservoir_detail', anchor: 'reservoir_anchor',
+      capabilities: ['select', 'pores', 'fluids'], assetStatus: 'new', interaction: ['select', 'inspectPores']
+    },
+    {
+      objectId: 'wellbore', displayName: '井筒 / 套管', zoneId: 'subsurface', stageId: 'drill', stageIndex: 0,
+      knowledgeIds: ['kb_formation', 'kb_drill'], chapterId: 'drill', levelIndex: 0,
+      modelPath: 'assets/underground/underground.obj', modelNode: 'well_casing/well_cement/well_tubing/well_perforation_00',
+      overviewRepresentation: null, detailRepresentation: 'underground_wellbore_detail', anchor: 'wellbore_reservoir_anchor',
+      capabilities: ['select', 'structure', 'trace'], assetStatus: 'new', interaction: ['select', 'toggleCasing', 'traceUp']
+    },
+    {
       objectId: 'three_phase_separator', displayName: '三相分离器', zoneId: 'gathering', stageId: 'gather', stageIndex: 1,
       knowledgeIds: ['kb_gather'], chapterId: 'gather', levelIndex: 1,
       modelPath: 'assets/hero/separator/separator.obj', modelNode: 'separator',
