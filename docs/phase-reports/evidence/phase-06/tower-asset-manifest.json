@@ -1,0 +1,100 @@
+{
+  "assetId": "distillation_unit_hero",
+  "date": "2026-11-23",
+  "source": "project-generated Blender/OBJ unit; source blend imported from tower.obj for editing; generator tools/make_tower.py",
+  "license": "Project internal use; written permission required for external redistribution.",
+  "teachingNote": "Teaching model; tray count, side positions and dimensions are simplified; not an engineering design.",
+  "files": {
+    "blend": "assets-source\\blender\\tower_hero.blend",
+    "obj": "web\\assets\\tower\\tower.obj",
+    "mtl": "web\\assets\\tower\\tower.mtl",
+    "glb": "web\\assets\\tower\\tower.glb",
+    "meta": "web\\assets\\tower\\tower.meta.json"
+  },
+  "fileHashes": {
+    "blend": "ce79163bbc89c22dba016c339e8a2a7351bef9008e6bf2ab5f22373347bf095e",
+    "obj": "dcd41cccf9389dea8a08dd8052f54730e7252b7fdf6043fb7cfc1f2ec4ee93d6",
+    "mtl": "2c4909925bd5a78ba37e139d015ce0a30d86099fbe4ebd2a20ed09a8b75ffe2d",
+    "glb": "53dc633669eae4e59d7500fe0e2709a6845c929967df541bfd094bf1227a43dd",
+    "meta": "9366732f444e18c1368d6e29c9bf23d06da10472ee7c8fd83d79694ffd32950d"
+  },
+  "fileSizes": {
+    "blend": 1852949,
+    "obj": 1065642,
+    "mtl": 1501,
+    "glb": 1242776,
+    "meta": 1482
+  },
+  "objectIds": [
+    "atmospheric_tower",
+    "vacuum_tower",
+    "heater"
+  ],
+  "semanticNodes": [
+    "Tower_Atmospheric_Shell",
+    "Tower_Atmospheric_ShellHalf",
+    "Tower_Atmospheric_Dome",
+    "Tower_Atmospheric_DomeHalf",
+    "Tower_Vacuum_Shell",
+    "Tower_Vacuum_ShellHalf",
+    "Tower_Vacuum_Dome",
+    "Tower_Vacuum_DomeHalf",
+    "Trays_A",
+    "Trays_V",
+    "Pipe_Feed_Horizontal",
+    "Pipe_Feed_Riser",
+    "Pipe_Bottom_To_Vacuum",
+    "Pipe_Side_Naphtha",
+    "Pipe_Side_Kerosene",
+    "Pipe_Side_Diesel",
+    "Pipe_Side_GasOil",
+    "Box_Naphtha",
+    "Box_Kerosene",
+    "Box_Diesel",
+    "Box_GasOil"
+  ],
+  "anchors": {
+    "anchor_tower_overview": [
+      0.0,
+      14.0,
+      -0.0
+    ],
+    "anchor_tower_feed": [
+      -4.5,
+      13.0,
+      -0.0
+    ],
+    "anchor_tower_trays": [
+      0.0,
+      16.0,
+      -0.0
+    ],
+    "anchor_tower_vacuum": [
+      7.6,
+      9.0,
+      -0.0
+    ],
+    "anchor_tower_products": [
+      9.5,
+      17.0,
+      -0.0
+    ]
+  },
+  "hotspots": {
+    "hs_crude_feed": "Pipe_Feed_Horizontal",
+    "hs_heater": "Heater",
+    "hs_atm_tower": "Tower_Atmospheric_Shell",
+    "hs_vacuum": "Tower_Vacuum_Shell",
+    "hs_products": "Box_"
+  },
+  "cutaway": {
+    "external": "full shell/dome visible; trays hidden",
+    "half": "full shell/dome hidden; half shell/dome visible; trays visible",
+    "full": "half shell weakened; trays and teaching vapor/liquid visible"
+  },
+  "limitations": [
+    "No verified tray count/engineering pressure/temperature/throughput.",
+    "Source .blend is an editable import of the generated OBJ; generator is make_tower.py.",
+    "No third-party textures/fonts; external redistribution needs written permission."
+  ]
+}

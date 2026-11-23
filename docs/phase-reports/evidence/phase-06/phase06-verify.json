@@ -1,0 +1,464 @@
+{
+  "date": "2026-11-23",
+  "page": "http://127.0.0.1:8796/sandbox.html?rev=phase06v-1795405202879#stage=3",
+  "viewport": "1440x900",
+  "external": {
+    "loaded": true,
+    "level": 0,
+    "groups": {
+      "full": 4,
+      "half": 4,
+      "trays": 2
+    },
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "refine",
+      "stage": 3,
+      "zoneId": "refining",
+      "levelId": "l4",
+      "selectedObjectId": "atmospheric_tower",
+      "object": "atmospheric_tower",
+      "deviceName": "常压蒸馏塔",
+      "knowledgeIds": [
+        "kb_refine"
+      ],
+      "knowledge": "kb_refine",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": null,
+      "history": []
+    },
+    "state": {
+      "objectId": "atmospheric_tower",
+      "selection": "selected",
+      "structure": "external",
+      "animation": "idle",
+      "level": 0,
+      "visible": true,
+      "representations": [
+        "overview",
+        "detail"
+      ]
+    }
+  },
+  "half": {
+    "level": 1,
+    "groups": {
+      "full": 4,
+      "half": 4,
+      "trays": 2
+    },
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "refine",
+      "stage": 3,
+      "zoneId": "refining",
+      "levelId": "l4",
+      "selectedObjectId": "atmospheric_tower",
+      "object": "atmospheric_tower",
+      "deviceName": "常压蒸馏塔",
+      "knowledgeIds": [
+        "kb_refine"
+      ],
+      "knowledge": "kb_refine",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "inspect_tower_structure",
+        "value": "half",
+        "unit": "示意",
+        "actionId": "inspect_tower_structure",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "inspect_tower_structure",
+          "value": "half",
+          "unit": "示意",
+          "actionId": "inspect_tower_structure",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:08"
+        }
+      ]
+    },
+    "state": {
+      "objectId": "atmospheric_tower",
+      "selection": "selected",
+      "structure": "half",
+      "animation": "idle",
+      "level": 0,
+      "visible": true,
+      "representations": [
+        "overview",
+        "detail"
+      ]
+    }
+  },
+  "full": {
+    "level": 2,
+    "flow": true,
+    "paused": false,
+    "fraction": "diesel",
+    "note": "柴油馏分 → 加氢精制 / 调和（典型示意）馏分不是最终成品油；路线为典型示意，不代表唯一工艺。",
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "refine",
+      "stage": 3,
+      "zoneId": "refining",
+      "levelId": "l4",
+      "selectedObjectId": "atmospheric_tower",
+      "object": "atmospheric_tower",
+      "deviceName": "常压蒸馏塔",
+      "knowledgeIds": [
+        "kb_refine"
+      ],
+      "knowledge": "kb_refine",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "select_fraction",
+        "value": "diesel",
+        "unit": "示意",
+        "actionId": "select_fraction",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "inspect_tower_structure",
+          "value": "half",
+          "unit": "示意",
+          "actionId": "inspect_tower_structure",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:08"
+        },
+        {
+          "action": "inspect_tower_structure",
+          "value": "full",
+          "unit": "示意",
+          "actionId": "inspect_tower_structure",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "start_vapor_liquid",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "start_vapor_liquid",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "choose_feed_position",
+          "value": "常压塔中部",
+          "unit": "示意",
+          "actionId": "choose_feed_position",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "inspect_tower_trays",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "inspect_tower_trays",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "select_fraction",
+          "value": "topgas",
+          "unit": "示意",
+          "actionId": "select_fraction",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "select_fraction",
+          "value": "naphtha",
+          "unit": "示意",
+          "actionId": "select_fraction",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "select_fraction",
+          "value": "kerosene",
+          "unit": "示意",
+          "actionId": "select_fraction",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "select_fraction",
+          "value": "diesel",
+          "unit": "示意",
+          "actionId": "select_fraction",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "select_fraction",
+          "value": "residue",
+          "unit": "示意",
+          "actionId": "select_fraction",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "select_fraction",
+          "value": "diesel",
+          "unit": "示意",
+          "actionId": "select_fraction",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        }
+      ]
+    },
+    "state": {
+      "objectId": "atmospheric_tower",
+      "selection": "selected",
+      "structure": "full",
+      "animation": "running",
+      "level": 0,
+      "visible": true,
+      "representations": [
+        "overview",
+        "detail"
+      ]
+    }
+  },
+  "fractions": [
+    {
+      "key": "topgas",
+      "selected": "topgas",
+      "note": "塔顶油气 → 冷凝/气分（典型示意）馏分不是最终成品油；路线为典型示意，不代表唯一工艺。"
+    },
+    {
+      "key": "naphtha",
+      "selected": "naphtha",
+      "note": "石脑油馏分 → 重整 / 乙烯原料（典型示意）馏分不是最终成品油；路线为典型示意，不代表唯一工艺。"
+    },
+    {
+      "key": "kerosene",
+      "selected": "kerosene",
+      "note": "煤油馏分 → 航煤 / 精制（典型示意）馏分不是最终成品油；路线为典型示意，不代表唯一工艺。"
+    },
+    {
+      "key": "diesel",
+      "selected": "diesel",
+      "note": "柴油馏分 → 加氢精制 / 调和（典型示意）馏分不是最终成品油；路线为典型示意，不代表唯一工艺。"
+    },
+    {
+      "key": "residue",
+      "selected": "residue",
+      "note": "常压渣油 → 减压蒸馏 / 深加工（典型示意）馏分不是最终成品油；路线为典型示意，不代表唯一工艺。"
+    }
+  ],
+  "paused": {
+    "flow": true,
+    "paused": true,
+    "button": "继续汽液"
+  },
+  "replay": {
+    "flow": true,
+    "paused": false
+  },
+  "reset": {
+    "level": 0,
+    "flow": false,
+    "fraction": null,
+    "state": {
+      "objectId": "atmospheric_tower",
+      "selection": "selected",
+      "structure": "external",
+      "animation": "idle",
+      "level": 0,
+      "visible": true,
+      "representations": [
+        "overview",
+        "detail"
+      ]
+    }
+  },
+  "exit": {
+    "level": false,
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "refine",
+      "stage": 3,
+      "zoneId": "refining",
+      "levelId": null,
+      "selectedObjectId": null,
+      "object": null,
+      "deviceName": null,
+      "knowledgeIds": [
+        "kb_refine"
+      ],
+      "knowledge": "kb_refine",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": null,
+      "history": [
+        {
+          "action": "choose_feed_position",
+          "value": "常压塔中部",
+          "unit": "示意",
+          "actionId": "choose_feed_position",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "inspect_tower_trays",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "inspect_tower_trays",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "select_fraction",
+          "value": "topgas",
+          "unit": "示意",
+          "actionId": "select_fraction",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "select_fraction",
+          "value": "naphtha",
+          "unit": "示意",
+          "actionId": "select_fraction",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "select_fraction",
+          "value": "kerosene",
+          "unit": "示意",
+          "actionId": "select_fraction",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "select_fraction",
+          "value": "diesel",
+          "unit": "示意",
+          "actionId": "select_fraction",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "select_fraction",
+          "value": "residue",
+          "unit": "示意",
+          "actionId": "select_fraction",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "select_fraction",
+          "value": "diesel",
+          "unit": "示意",
+          "actionId": "select_fraction",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:09"
+        },
+        {
+          "action": "pause_vapor_liquid",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "pause_vapor_liquid",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:11"
+        },
+        {
+          "action": "replay_refining_flow",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "replay_refining_flow",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:11"
+        },
+        {
+          "action": "inspect_tower_structure",
+          "value": "external",
+          "unit": "示意",
+          "actionId": "inspect_tower_structure",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:11"
+        },
+        {
+          "action": "restore_refining_view",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "restore_refining_view",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:40:11"
+        }
+      ]
+    },
+    "errors": []
+  },
+  "screenshots": [
+    "phase06-01-refining-external.png",
+    "phase06-02-refining-half.png",
+    "phase06-03-refining-full.png",
+    "phase06-04-refining-restored.png",
+    "phase06-05-back-overview.png"
+  ]
+}

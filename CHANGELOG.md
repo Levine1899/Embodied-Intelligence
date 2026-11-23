@@ -1,3 +1,13 @@
+## 阶段 06 — 2026-11-23 · 炼化与常减压塔
+
+- `l4` 从简化程序化塔切换为 `tower.obj` 装置群：常压塔/减压塔/加热炉/冷凝器/泵组/管线/平台/产品箱，主 objectId `atmospheric_tower`，与 `vacuum_tower`/`heater` 共用注册表与 `PETRO_DEVICE_STATE`。
+- 实现外观/半剖/全剖：完整壳→半壳/塔板→弱化半壳/塔板/汽液/进料/侧线路径；加载完成后显式回外观。
+- 新增常压/减压两条教学进料路径、汽液接触启动/暂停/继续/重播、塔板结构、五个馏分路径、恢复外观与返回总览；HTML 按钮为可访问入口。
+- 新增 `docs/refining-experience.md`（设备群/三状态/5 个互动矩阵/科学边界）；更新 `scene-distillation-tower.md`。
+- 新增 `tower_hero.blend` 可编辑源、资产 manifest（哈希/语义/锚点/限制）；保留 `tower.html` 旧入口/fallback。
+- 证据：5 张 1440×900 截图、41.3s 连续录屏、`phase06-verify.json`；E2E l1–l5 与 navcheck exit 0。
+- 结论：**阶段 06 技术/交互范围建议 PASS；P1 资产/3D 热点精修，P2 性能/用户测试未执行；用户签收待定。**
+
 # CHANGELOG
 
 ## 阶段 05 — 2026-11-23 · 地面处理与储运

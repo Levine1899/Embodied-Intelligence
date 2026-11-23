@@ -93,23 +93,23 @@
     {
       objectId: 'atmospheric_tower', displayName: '常压蒸馏塔', zoneId: 'refining', stageId: 'refine', stageIndex: 3,
       knowledgeIds: ['kb_refine'], chapterId: 'refine', levelIndex: 3,
-      modelPath: 'assets/tower/tower.obj', modelNode: 'Atmospheric_Tower',
-      overviewRepresentation: 'atm_tower_overview', detailRepresentation: null, anchor: 'atm_tower',
-      capabilities: ['select', 'structure', 'animation'], assetStatus: 'refine', interaction: ['select', 'cut', 'run']
+      modelPath: 'assets/tower/tower.obj', modelNode: 'Tower_Atmospheric_Shell',
+      overviewRepresentation: 'atm_tower_overview', detailRepresentation: 'atmospheric_tower_detail', anchor: 'anchor_tower_overview',
+      capabilities: ['select', 'structure', 'animation', 'feed', 'fractions'], assetStatus: 'hero', interaction: ['select', 'cut', 'run', 'feed', 'selectFraction']
     },
     {
       objectId: 'vacuum_tower', displayName: '减压蒸馏塔', zoneId: 'refining', stageId: 'refine', stageIndex: 3,
       knowledgeIds: ['kb_refine'], chapterId: 'refine', levelIndex: 3,
-      modelPath: 'assets/tower/tower.obj', modelNode: 'Vacuum_Tower',
-      overviewRepresentation: 'vac_tower_overview', detailRepresentation: null, anchor: 'vac_tower',
-      capabilities: ['select', 'structure'], assetStatus: 'refine', interaction: ['select', 'cut']
+      modelPath: 'assets/tower/tower.obj', modelNode: 'Tower_Vacuum_Shell',
+      overviewRepresentation: 'vac_tower_overview', detailRepresentation: 'vacuum_tower_detail', anchor: 'anchor_tower_vacuum',
+      capabilities: ['select', 'structure'], assetStatus: 'hero', interaction: ['select', 'cut']
     },
     {
       objectId: 'heater', displayName: '加热炉', zoneId: 'refining', stageId: 'refine', stageIndex: 3,
       knowledgeIds: ['kb_refine'], chapterId: 'refine', levelIndex: 3,
-      modelPath: 'assets/hero/heater/heater.obj', modelNode: 'heater',
-      overviewRepresentation: 'heater_overview', detailRepresentation: null, anchor: 'heater',
-      capabilities: ['select', 'animation'], assetStatus: 'refine', interaction: ['select', 'run']
+      modelPath: 'assets/tower/tower.obj', modelNode: 'Heater',
+      overviewRepresentation: 'heater_overview', detailRepresentation: 'heater_detail', anchor: 'anchor_tower_heater',
+      capabilities: ['select', 'animation'], assetStatus: 'hero', interaction: ['select', 'run']
     },
     {
       objectId: 'fuel_dispenser', displayName: '加油机', zoneId: 'city', stageId: 'use', stageIndex: 4,
