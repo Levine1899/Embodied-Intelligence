@@ -32,7 +32,7 @@
     var d = ensure(id);
     if (!d || !object3d) return d;
     if (!d.representations[representation]) d.representations[representation] = [];
-    d.representations[representation].push(object3d);
+    if (d.representations[representation].indexOf(object3d) < 0) d.representations[representation].push(object3d);
     object3d.userData.logicalObjectId = id;
     object3d.userData.representation = representation;
     apply(d);
@@ -94,6 +94,7 @@
   }
 
   function reset() {
+    overviewVisible = true;
     Object.keys(devices).forEach(function (id) {
       devices[id].selection = 'default';
       devices[id].structure = 'external';
@@ -110,6 +111,8 @@
     cameraMode = mode;
     emit({ type: 'camera', mode: cameraMode });
   }
+
+  function getOverviewVisible() { return overviewVisible; }
 
   function setOverviewVisible(v) {
     overviewVisible = !!v;
@@ -135,6 +138,7 @@
     select: select,
     snapshot: snapshot,
     reset: reset,
+    get overviewVisible() { return getOverviewVisible(); },
     subscribe: subscribe,
     setCameraMode: setCameraMode,
     setOverviewVisible: setOverviewVisible,

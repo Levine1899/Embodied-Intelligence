@@ -35,7 +35,7 @@
 | 公共展项会话复位 | **通过（设计）** | `interaction-spec.md` §7.1–7.3 |
 | 总控文件可追溯 | **通过（落库版）** | `docs/agent-prompts/` + SHA-256 |
 | 3D 灰盒参考 | **通过（设计证据）** | 5 张 PNG + `blockout.html`，§4.1 |
-| 用户设计签收 | **未执行** | `experience-design-signoff.md` |
+| 用户设计签收 | **已执行 / ACCEPTED（整段签收；未逐项勾选）** | `experience-design-signoff.md`；用户原话「签收阶段02。」；Agent 技术建议仍为 REVISE，不改变用户 ACCEPTED |
 
 ## 3. 本轮审查问题对应修订（按正文证据）
 

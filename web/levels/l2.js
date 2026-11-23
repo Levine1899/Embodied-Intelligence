@@ -1,6 +1,6 @@
 /* 关卡 02｜地面处理 —— 同样长在 V2 的场景里
-   在「处理设施」节点旁边做三相分离器与三个罐，镜头从总览推过去。
-   点出口 → 点罐，送错变红退回；送对后开一条常流。 */
+   在「处理设施」节点旁边做三相分离器与三个出口去向，镜头从总览推过去。
+   点出口 → 点去向，送错变红退回；送对后开一条常流。 */
 (function () {
   const stage = window.__stage;
   if (!stage || !window.__lvlEntry) return;
@@ -115,11 +115,11 @@
       pickables.push(proxy);
     });
 
-    /* 三个罐 */
+    /* 三个出口去向（几何仍为示意占位，不表示气/水都进罐） */
     const TANKS = [
-      { key: 'gas', name: '气罐', x: 5.0, z: -3.4, mat: gasMat },
-      { key: 'oil', name: '油罐', x: 7.0, z: 0.4, mat: oilMat },
-      { key: 'water', name: '水罐', x: 5.4, z: 4.0, mat: waterMat }
+      { key: 'gas', name: '气回收/处理', x: 5.0, z: -3.4, mat: gasMat },
+      { key: 'oil', name: '油储罐', x: 7.0, z: 0.4, mat: oilMat },
+      { key: 'water', name: '采出水处理', x: 5.4, z: 4.0, mat: waterMat }
     ];
 
     TANKS.forEach(function (t) {
@@ -211,7 +211,7 @@
   ui.innerHTML = [
     '<div class="lvl__bar"><span class="lvl__step">02 / 05</span><b>地面处理 · 三相分离</b><span class="lvl__hint" id="l2-hint">镜头正在靠近分离器…</span></div>',
     '<div class="lvl__act" id="l2-act" hidden>',
-    '<p>井口出来的是<b>油、气、水混在一起</b>。先点一个出口，再点它该去的罐。</p>',
+    '<p>井口出来的是<b>油、气、水混在一起</b>。先点一个出口，再点它该去的去向。</p>',
     '<div class="lvl__out"><span id="l2-note">未选择出口</span></div>',
     '</div>',
     '<button type="button" class="lvl__back" id="l2-back">返回总览</button>'
@@ -236,7 +236,7 @@
       o.ring.material.emissiveIntensity = o.key === key ? 2.2 : 1.0;
     });
     const o = built.OUTLETS.find(x => x.key === key);
-    note.textContent = '已选「' + o.name + '」出口，现在点一个罐';
+    note.textContent = '已选「' + o.name + '」出口，现在点一个去向';
   }
 
   function assignTank(key) {
@@ -285,7 +285,7 @@
     hint.textContent = '已完成 · 三相分离';
     const log = (window.__leadai && window.__leadai.ledger) || [];
     log.push({ k: '看', t: '地面处理：三相分离器' });
-    log.push({ k: '动手', t: '把气、油、水分别送进对的罐' });
+    log.push({ k: '动手', t: '把气、油、水接到正确出口' });
     if (stage.setNodeDone) stage.setNodeDone(1, true);
     back.classList.add('pulse');
     back.textContent = '完成，返回总览 →';

@@ -79,7 +79,7 @@ endpoints[3]: gas_recovery_header, flare_stack, produced_water_treatment
 - 每个设备：`selection(default/hover/selected)`、`structure(external/half/full/transparent)`、`animation(idle/running/paused)`、`level`、`visible`；
 - `bind(objectId, 'overview'|'detail', object3d)` 绑定表示；状态只在本 store 改；
 - `select` 清旧设备、设新设备；`set` 广播；`snapshot/reset` 供调试/会话；
-- `enterDetail/exitDetail`（`__stage`）保存/恢复相机、stage、章节/任务面板、`__sceneContext` 与进入前选择；清空选择不重置设备结构/动画，演示“总览→近景→返回”连续关系；
+- `enterDetail/exitDetail`（`__stage`）保存/恢复相机、stage、章节/任务面板、`__sceneContext` 与进入前选择；进入时同步 `selectedObjectId/object/deviceName/zoneId`；清空选择不重置设备结构/动画，演示“总览→近景→返回”连续关系；
 - 当前只有 `overview` 表示；`detail` 待阶段 04–06 接入，阶段 03 不假装已有高细节模型。
 
 详见 `docs/device-state-contract.md`。

@@ -44,6 +44,8 @@ objectId (stable)
 4. 返回总览：恢复进入前的 stage、章节链接、任务面板、`__sceneContext`、镜头和**进入前的选择**；若进入前无选择则恢复为空；当前设备的结构/动画保留在同一 `objectId` 的 Store 中。
 5. 不支持的 `structure` 能力：按钮禁用/说明，不得用“按钮存在”冒充结构可用。
 6. 页面刷新：相机/结构/动画回默认，但 batch/task/exploration 按 `interaction-spec.md` 恢复；阶段 07 验证。
+7. `reset()` 是完整场景 reset：恢复 `overviewVisible=true` 并重新 apply；当前实现已验证（reset 后实际表示可见）。
+8. `__sceneContext` 以旧对象为基底增量更新；保留 `scene/stage/object/knowledge/mode` 别名，`stage` 保留索引语义（0–4）；`interaction` 保留旧 action/value/unit 并新增 actionId/result；`history` 跨 stage/zone/device 保留，最近 12 条。
 
 ## 3. 总览 ↔ 近景流程
 
@@ -65,6 +67,7 @@ __stage.deviceState.snapshot()
   5. `PETRO_DEVICE_STATE.select(objectId)`、`cameraMode='focus'`。
 - `exitDetail()`：恢复进入前 stage/章节/任务面板/`__sceneContext`/orbit；恢复进入前选择（无选择则空）；`cameraMode='free'`。清空选择不等于重置设备结构/动画。
 - 阶段 04–06 接入 `detailRepresentation` 后，进入/退出必须调用同一 `bind(id,'detail',root)` 和保留/恢复规则；不得在关卡脚本里另建 `detailState`。
+- `enterDetail` 必须同步 `__sceneContext.selectedObjectId/object/deviceName/zoneId`，不能只更新 Store；`focusZone` 必须把明确 zoneId 传入上下文，不能再用 stageIndex 唯一推导 subsurface/oilfield。
 - 用户输入接管：pointer drag/wheel 清相机过渡；近景仍可旋转/缩放。
 
 ## 4. 验收（阶段 03 当前）

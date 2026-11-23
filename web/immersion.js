@@ -12,7 +12,7 @@
   /* ---------- 右栏：和关卡对齐 ---------- */
   const LEVEL_BRIEF = [
     { goal: '油藏在孔隙里，怎么把它“挤”出来？', take: '油不在“油湖”里，它藏在岩石孔隙中，靠压力被顶出来。' },
-    { goal: '井口出来的混在一起的东西，怎么分开？', take: '油、气、水密度不同，三相分离器把它们送进各自的罐。' },
+    { goal: '井口出来的混在一起的东西，怎么分开？', take: '油、气、水会沿不同出口分流：油相进入储运环节，气相进入回收/处理系统（特定工况下可能进入火炬），采出水进入水处理系统。' },
     { goal: '同样装一罐油，哪种罐更能减少油气空间？', take: '外浮顶的浮盘贴着油面，油气空间更小；实际损耗仍受密封、附件与操作影响，不等于零损耗。' },
     { goal: '一塔原油，凭什么分出不同馏分？', take: '按沸程不同，在不同高度切出不同馏分；馏分还需后续加工/精制/调和，不等于成品油。' },
     { goal: '石油除了烧，还能变成什么？', take: '塑料、沥青、石蜡等可通过石油路线生产；部分产品也有天然气、煤基或生物基路线。' }
@@ -85,7 +85,7 @@
 
   const explanations = [
     [
-      '很多油藏中的油藏在岩石的孔隙和裂缝中。井筒把地面与储层连接起来，具体怎样采出还要看地下条件。',
+      '很多油藏中的石油赋存在岩石的孔隙和裂缝中。井筒把地面与储层连接起来，具体怎样采出还要看地下条件。',
       '地下开采先建立井筒通道，再根据储层和流体条件组织生产。这里用一口井说明从地下到地面的连接。',
       '井型、储层特征和采油方式需要分别理解。井筒提供通道，产出能力还取决于储层流体与相应开发条件。',
       '本环节呈现井筒与储层的连接关系。不同井况涉及不同完井及举升方案，进一步研读需结合具体储层、井况与工程资料。'
@@ -263,11 +263,11 @@
     el.textContent = "读本章知识 · 第 " + m.n + " 章 " + m.t + " →";
   }
 
-  function selectStage(index, focus, objectId, anchor) {
+  function selectStage(index, focus, objectId, anchor, zoneId) {
     currentStage = index;
     updateTask();
     syncChapterLink(index);
-    syncSceneContext(index, objectId || null, null);
+    syncSceneContext(index, objectId || null, null, zoneId || null);
     if (window.PETRO_DEVICE_STATE) window.PETRO_DEVICE_STATE.select(objectId || null);
     if (objectId) showDeviceCard(objectId, index, anchor); else hideDeviceCard();
     if (focus && modelGroups[index]) {
@@ -1404,7 +1404,7 @@
   });
   let deviceCardEl = null;
   let deviceAnchor = null;
-  const history = [];
+  let history = [];
   function showDeviceCard(objectId, index, anchor) {
     if (window.Ambient) window.Ambient.blip();
     const info = DEVICE_INFO[objectId];
@@ -1431,10 +1431,8 @@
     const close = document.getElementById('device-close');
     close.onclick = function () {
       deviceCardEl.hidden = true;
-      if (window.__sceneContext) {
-        window.__sceneContext.selectedObjectId = null;
-        document.dispatchEvent(new CustomEvent('scene-context', { detail: window.__sceneContext }));
-      }
+      window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.select(null);
+      syncSceneContext(currentStage, null, null, window.__sceneContext ? window.__sceneContext.zoneId : null);
     };
   }
   function hideDeviceCard() {
@@ -1446,30 +1444,57 @@
   const SCENE_ID = 'oil_industry_journey'; // stable legacy alias; registrySceneId is new
   const STAGE_IDS = ['drill', 'gather', 'store', 'refine', 'use'];
   let mode = 'free';
-  function syncSceneContext(index, objectId, action) {
+  function syncSceneContext(index, objectId, action, explicitZoneId) {
     var reg = window.PETRO_REGISTRY;
-    var zone = null;
-    if (reg && index != null) {
-      zone = reg.zones.filter(function (z) { return z.stageIndex === index; })[0] || null;
-      if (index === 0) zone = reg.getZone('oilfield');
-    }
+    var prev = window.__sceneContext || {};
     var device = reg && objectId ? reg.getDevice(objectId) : null;
-    var ctx = {
-      sceneId: SCENE_ID,
-      registrySceneId: reg ? reg.sceneId : null,
-      stageId: index == null ? 'overview' : STAGE_IDS[index],
-      zoneId: zone ? zone.zoneId : null,
-      levelId: null,
-      selectedObjectId: objectId || null,
-      deviceName: device ? device.displayName : null,
-      knowledgeIds: device ? device.knowledgeIds.slice() : (index == null ? [] : ['kb_' + STAGE_IDS[index]]),
-      experienceMode: mode,
-      interaction: action || null
-    };
+    var zone = null;
+    if (reg) {
+      if (explicitZoneId) zone = reg.getZone(explicitZoneId);
+      if (!zone && device && device.zoneId) zone = reg.getZone(device.zoneId);
+      if (!zone && index != null) {
+        zone = reg.zones.filter(function (z) { return z.stageIndex === index; })[0] || null;
+        /* 阶段 0 无显式 zone 时保留项目默认：油田生产区；地下必须显式传入。 */
+        if (index === 0) zone = reg.getZone('oilfield');
+      }
+    }
+    var stageId = index == null ? 'overview' : STAGE_IDS[index];
+    var knowledgeIds = device ? device.knowledgeIds.slice() : (index == null ? [] : ['kb_' + STAGE_IDS[index]]);
+    /* 旧字段只增不删：以旧 context 为基底，保留 history 与未知字段。 */
+    var ctx = Object.assign({}, prev);
+    ctx.sceneId = SCENE_ID;
+    ctx.scene = SCENE_ID;
+    ctx.registrySceneId = reg ? reg.sceneId : (prev.registrySceneId || null);
+    ctx.stageId = stageId;
+    ctx.stage = index == null ? null : index;
+    ctx.zoneId = zone ? zone.zoneId : null;
+    ctx.levelId = prev.levelId || null;
+    ctx.selectedObjectId = objectId || null;
+    ctx.object = objectId || null;
+    ctx.deviceName = device ? device.displayName : null;
+    ctx.knowledgeIds = knowledgeIds;
+    ctx.knowledge = knowledgeIds.length ? knowledgeIds[0] : null;
+    ctx.experienceMode = mode;
+    ctx.mode = mode;
+    if (action && typeof action === 'object') ctx.interaction = normalizeInteraction(action);
+    else if (ctx.interaction === undefined) ctx.interaction = null;
+    if (Array.isArray(prev.history) && prev.history.length) history = prev.history.slice(-12);
+    ctx.history = history.slice(-12);
     window.__sceneContext = ctx;
     document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
     var box = document.getElementById('leadai-ctx');
     if (box && index != null) box.textContent = '上下文 · ' + stageNames[index];
+  }
+
+  function normalizeInteraction(action) {
+    if (!action || typeof action !== 'object') return null;
+    return {
+      action: action.action || null,
+      value: action.value == null ? null : action.value,
+      unit: action.unit || '示意',
+      actionId: action.actionId || action.action || null,
+      result: Object.prototype.hasOwnProperty.call(action, 'result') ? action.result : null
+    };
   }
 
   function markLevel(index) {
@@ -1480,6 +1505,15 @@
     window.__sceneContext = ctx;
     document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
   }
+  function bindOverviewTree(objectId, root) {
+    if (!window.PETRO_DEVICE_STATE || !root || !objectId) return;
+    root.traverse(function (node) {
+      if (node.userData && node.userData.objectId === objectId) {
+        window.PETRO_DEVICE_STATE.bind(objectId, 'overview', node);
+      }
+    });
+  }
+
   function loadAnimatedPumpjack(container) {
     if (!window.ObjLite) return;
     window.ObjLite.load('assets/hero/pumpjack/pumpjack.obj', 'assets/hero/pumpjack/pumpjack.mtl').then(function (root) {
@@ -1523,6 +1557,7 @@
         });
       });
       container.add(g);
+      bindOverviewTree('pumpjack', g);
       pumpAnim = { beam: beamPivot, crank: crankPivot };
     }).catch(function () {});
   }
@@ -1605,6 +1640,7 @@
         });
       });
       container.add(hero);
+      bindOverviewTree(objectId, hero);
       container.userData.heroLoaded = true;
       container.userData.heroParseMs = hero.userData.parseMs;
     }).catch(function () {
@@ -1613,24 +1649,27 @@
   }
 
   function setInteraction(action, value, unit) {
-    const fallback = {
-      sceneId: SCENE_ID,
-      stageId: STAGE_IDS[currentStage],
-      levelId: null,
-      selectedObjectId: null,
-      knowledgeIds: ['kb_' + STAGE_IDS[currentStage]],
-      experienceMode: mode || 'task'
+    if (!window.__sceneContext) syncSceneContext(currentStage, null, null, null);
+    const ctx = window.__sceneContext;
+    if (Array.isArray(ctx.history)) history = ctx.history.slice(-12);
+    const record = {
+      action: action,
+      value: value,
+      unit: unit || '示意',
+      actionId: action,
+      result: null
     };
-    const ctx = window.__sceneContext || fallback;
-    ctx.interaction = { action: action, value: value, unit: unit || '示意' };
+    ctx.interaction = record;
     ctx.experienceMode = mode || ctx.experienceMode;
+    ctx.mode = ctx.experienceMode;
     history.push({
       action: action, value: value, unit: unit || '示意',
+      actionId: action, result: null,
       stageId: ctx.stageId, levelId: ctx.levelId || null,
       time: new Date().toTimeString().slice(0, 8)
     });
     if (history.length > 12) history.shift();
-    ctx.history = history.slice(-8);
+    ctx.history = history.slice(-12);
     window.__sceneContext = ctx;
     document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
   }
@@ -1908,7 +1947,7 @@
     focusZone(zoneId) {
       const z = window.PETRO_REGISTRY && window.PETRO_REGISTRY.getZone(zoneId);
       if (!z) return false;
-      selectStage(z.stageIndex, false);
+      selectStage(z.stageIndex, false, null, null, z.zoneId);
       const reg = window.PETRO_REGISTRY;
       const cam = reg && z.camera ? reg.cameras[z.camera] : null;
       if (cam && cam.position && cam.lookAt) {
@@ -1939,6 +1978,7 @@
       if (!target) return false;
       detailSavedContext = {
         stage: currentStage,
+        zoneId: window.__sceneContext ? window.__sceneContext.zoneId : null,
         selected: window.PETRO_DEVICE_STATE ? window.PETRO_DEVICE_STATE.selectedObjectId : null,
         orbit: Object.assign({}, orbit),
         sceneContext: window.__sceneContext ? JSON.parse(JSON.stringify(window.__sceneContext)) : null
@@ -1948,9 +1988,10 @@
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
       const radius = Math.max(6, Math.max(size.x, size.y, size.z) * 2.4);
-      selectStage(info.stageIndex, false);
+      selectStage(info.stageIndex, false, null, null, info.zoneId);
       moveCamera({ targetX: center.x, targetY: center.y, targetZ: center.z, radius: radius, elevation: 0.28, azimuth: 0.35 });
       window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.select(objectId);
+      syncSceneContext(info.stageIndex, objectId, null, info.zoneId);
       window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.setCameraMode('focus');
       return true;
     },
@@ -1960,7 +2001,7 @@
       detailSavedContext = null;
       detailObjectId = null;
       /* 先恢复 stage/章节/任务面板/上下文，再恢复原选择与相机；不清掉当前设备结构/运行状态。 */
-      selectStage(saved.stage, false, saved.selected || null);
+      selectStage(saved.stage, false, saved.selected || null, null, saved.zoneId || null);
       if (saved.selected) {
         window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.select(saved.selected);
       } else {

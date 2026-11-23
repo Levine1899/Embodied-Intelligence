@@ -10,6 +10,16 @@
 - 证据：1440/1920 全景、六区截图、`detail-continuity-1440.mp4`；均标注程序化占位，不是 Hero 验收。
 - **Hero Asset Gate 仍未通过（BLOCKED）**；阶段 03 不宣称视觉/PASS。产品版本仍 3.4.0。
 
+## 阶段 03 rev3 — 2026-11-23 · 上下文契约返修
+
+- `syncSceneContext` 增量更新旧 context：保留 `scene/stage/object/knowledge/mode` 别名、interaction 旧键 + `actionId/result`、history 跨场景（12 条）。
+- `focusZone` 显式传 zoneId；`subsurface` 与 `oilfield` 共用 drill 但上下文不再一律 oilfield。
+- `enterDetail` 进入后同步 `selectedObjectId/object/deviceName/zoneId`，Store 与 context 同源；返回恢复进入前选择/上下文。
+- 分离器完成文案改为油→储运、气→回收/处理（特定工况火炬）、水→水处理；同步导览/设备卡/关卡/章节/AI 检索。
+- `reset()` 恢复 `overviewVisible=true` 并 apply；异步 Hero 替换后重新绑定，13/13 设备有实际 overview 表示。
+- 修正阶段 02 交接任务行“用户设计签收”为已执行/ACCEPTED（整段签收，未逐项勾选）。
+- 新增 `context-contract.json`；五关/深链/章节/塔页/fallback 重新通过；Hero 仍归 04–06。
+
 ## 阶段 03 rev2 — 2026-11-22 · 审查返修
 
 - 修复设备状态 Store：bind 即时应用、切换重置旧设备 structure/animation、overview/detail 可见性分离、setOverviewVisible 全量重应用。

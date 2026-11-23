@@ -1,4 +1,4 @@
-# Phase 03 evidence（rev2）
+# Phase 03 evidence（rev3）
 
 浏览器：Chrome 157 headless；静态服务 `http://127.0.0.1:8796`；页面 `sandbox.html`。
 截图/录屏均为真实浏览器 CDP 产物，不是 Blender 静帧/设计稿。
@@ -15,7 +15,8 @@
 | `refining-1440.png` | 炼化区 | 塔器/加热炉/管廊 |
 | `city-1440.png` | 产品应用区 | 产品台/加油机 |
 | `detail-continuity-1440.mp4` | 连续录屏 | 总览→`enterDetail('atmospheric_tower')`→`setCut(true/false)`→`exitDetail()`；**相机级连续性**，不是高模 detail/正式 Hero 验收 |
-| `state-contract.json` | 状态契约断言 | bind 即时应用、select 重置旧设备、overview/detail 可见性、图层数量、detail 返回上下文/选择 |
+| `state-contract.json` | 状态契约断言 | bind 即时应用、select 重置旧设备、13/13 实际 overview 可见性、reset、图层数量、detail 返回上下文/选择 |
+| `context-contract.json` | 上下文契约断言 | focusZone subsurface/oilfield zoneId、三种 detail 的 object/zone/deviceName、旧别名、interaction/history 跨场景保留 |
 | `level-e2e.json` | 五关回归 | l1–l5 均进入、核心操作写入 interaction、退出后 levelId 清空 |
 | `fallback.json` | 2D fallback | 对运行中 canvas 派发 `webglcontextlost`，sandbox/tower 均出现 2D fallback 文案 |
 

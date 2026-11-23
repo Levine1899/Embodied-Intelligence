@@ -1,14 +1,18 @@
 {
-  "date": "2026-11-22",
+  "date": "2026-11-23",
   "browser": "Chrome 157 headless via CDP",
   "page": "http://127.0.0.1:8796/sandbox.html",
   "assertions": {
     "bindAppliesCurrentState": {"stateBeforeBind": {"structure": "half", "animation": "running"}, "detailVisibleAfterBind": true, "result": "passed"},
     "switchResetsOldDevice": {"oldStructure": "external", "oldAnimation": "idle", "newSelection": "selected", "result": "passed"},
     "overviewVisibility": {"overviewVisible": false, "detailVisible": true, "result": "passed"},
+    "actualOverviewHide": {"boundLogicalDevices": 13, "hiddenFailures": 0, "result": "passed"},
+    "resetRestoresOverview": {"overviewVisibleBefore": false, "overviewVisibleAfter": true, "result": "passed"},
     "layerCounts": {"environment": 4, "infrastructure": 10, "equipment": 5, "processLines": 1, "flowEffects": 4, "labels": 6, "result": "passed"},
     "detailContextRestore": {"stage": "store", "zone": "storage", "selectedBefore": "floating_roof_tank", "selectedAfter": "floating_roof_tank", "structureAfter": "full", "animationAfter": "paused", "chapterHref": "chapter.html?id=store", "result": "passed"},
-    "detailContextRestoreNoSelection": {"selectedAfter": null, "structureAfter": "full", "stage": "use", "zone": "city", "result": "passed"}
+    "detailContextRestoreNoSelection": {"selectedAfter": null, "structureAfter": "full", "stage": "use", "zone": "city", "result": "passed"},
+    "focusZone": {"subsurfaceZone": "subsurface", "oilfieldZone": "oilfield", "bothStage": "drill", "result": "passed"},
+    "detailContexts": {"three_phase_separator": {"zone": "gathering", "deviceName": "三相分离器"}, "floating_roof_tank": {"zone": "storage", "deviceName": "外浮顶储罐"}, "atmospheric_tower": {"zone": "refining", "deviceName": "常压蒸馏塔"}, "result": "passed"}
   },
-  "notes": "Mock Object3D used for bind/visibility isolation; actual pumpjack group used for overview visibility. Detail context test used actual page."
+  "notes": "Mock Object3D for bind/visibility; actual 13 logical groups/meshes checked; context tests used actual page; no FPS/memory test."
 }
