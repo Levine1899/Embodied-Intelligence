@@ -1,3 +1,14 @@
+## 阶段 08 — 2026-11-23 · AI 场景上下文与动作白名单
+
+- 新增 `web/scene-context.js`：单一短期场景上下文（scene/stage/level/object/knowledge/interaction/history/ledger），不写 localStorage、不跨会话。
+- 新增 `web/ai-actions.js`：AI 动作白名单、场景/关卡/对象/参数/revision 校验，失败不改场景；支持执行前切换场景的安全拒绝。
+- `web/ai.js` 接入 `SceneContext.buildForAI()`，AI 请求继续使用兼容字段 `question/ctx/tier/mode`，并保留 Dify 页面现状。
+- 新增“带入写作页”显式 handoff：只传当前设备、关卡和已核验事实，写作页预填 Dify 的 topic/facts；无 handoff 不继承。
+- 写作页无代理时显示可编辑“预置模板 · 未连接模型”，不冒充模型输出；浏览器 AI 无代理时保留本地知识回答。
+- `docs/API.md` 补充 Dify 问答/写作端点，并注明 `/api/ask`、`/api/gen` 兼容；新增 `docs/ai-scene-context.md`。
+- 阶段验证：29 项真实浏览器断言 0 失败；四张截图；Dify chat/write 与旧 ask/gen 生产 API 均 200。
+- 结论：**阶段 08 技术/交互建议 PASS；用户签收待完成**。继承的仓库密钥历史安全事项仍需处理。
+
 ## 阶段 07 — 2026-11-23 · 系统整合（导览/任务/音频/档案）
 
 - 新增 `web/journey.js`：10 站沉浸导览状态机，显式「开始/继续/暂停/退出」，用户拖动/滚轮立即暂停；真实驱动 l1 储层/井筒、l2 半剖/分离、l3 浮顶液位/泵送、l4 全剖/馏分、l5 产品选择。

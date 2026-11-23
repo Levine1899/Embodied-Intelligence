@@ -1,0 +1,128 @@
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const PORT = Number(process.env.CDP_PORT || 4344);
+const BASE = process.env.BASE_URL || 'http://127.0.0.1:8796';
+const OUT = path.resolve(__dirname, '..', 'docs', 'phase-reports', 'evidence', 'phase-08');
+const WAIT = ms => new Promise(r => setTimeout(r, ms));
+const results = [];
+function assert(name, ok, detail) {
+  results.push({ name, ok: !!ok, detail: detail === undefined ? null : detail });
+  if (!ok) console.error('FAIL', name, detail || '');
+  else console.log('PASS', name);
+}
+function getJson(url) {
+  return new Promise((resolve, reject) => http.get(url, r => { let d=''; r.on('data', c => d+=c); r.on('end', () => resolve(JSON.parse(d))); }).on('error', reject));
+}
+(async () => {
+  fs.mkdirSync(OUT, { recursive: true });
+  const list = await getJson(`http://127.0.0.1:${PORT}/json/list`);
+  const page = list.find(t => t.type === 'page' && /sandbox\.html|write\.html/.test(t.url)) || list.find(t => t.type === 'page');
+  if (!page) throw new Error('no page target');
+  const ws = new WebSocket(page.webSocketDebuggerUrl);
+  let id = 0; const pending = new Map();
+  ws.onmessage = ev => {
+    const m = JSON.parse(ev.data);
+    if (m.id && pending.has(m.id)) { const p = pending.get(m.id); pending.delete(m.id); m.error ? p.reject(new Error(JSON.stringify(m.error))) : p.resolve(m.result); }
+  };
+  const send = (method, params) => new Promise((resolve, reject) => { id += 1; pending.set(id, { resolve, reject }); ws.send(JSON.stringify({ id, method, params: params || {} })); });
+  await new Promise(resolve => { ws.onopen = resolve; });
+  await send('Page.enable'); await send('Runtime.enable');
+  await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
+  async function ev(expr) {
+    const r = await send('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true });
+    if (r.exceptionDetails) throw new Error(r.exceptionDetails.text + ' ' + ((r.exceptionDetails.exception && r.exceptionDetails.exception.description) || ''));
+    return r.result && r.result.value;
+  }
+  async function shot(name) {
+    const r = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+    fs.writeFileSync(path.join(OUT, name), Buffer.from(r.data, 'base64'));
+  }
+  async function nav(url) { send('Page.navigate', { url }).catch(function () {}); await WAIT(1800); }
+
+  await nav(`${BASE}/sandbox.html?rev=phase08-verify-${Date.now()}`);
+  await WAIT(1000);
+  const boot = await ev(`({scene:!!window.SceneContext,actions:!!window.AIActions,leadai:!!window.__leadai,ctx:window.SceneContext&&window.SceneContext.get(),errors:window.__auditErrors||[]})`);
+  assert('scene context loads', boot.scene);
+  assert('AI action whitelist loads', boot.actions);
+  assert('AI panel present', boot.leadai);
+  assert('context has sceneId', boot.ctx && boot.ctx.sceneId === 'oil_industry_journey', boot.ctx);
+  assert('no boot errors', (boot.errors || []).length === 0, boot.errors);
+
+  await ev(`window.__stage.selectStage(1,true);window.__stage.levelHook(1)();true`);
+  await WAIT(1200);
+  let c = await ev(`window.SceneContext.get()`);
+  assert('level entry sets l2', c.levelId === 'l2' && c.stageId === 'gather', c);
+  assert('level entry selects separator', c.selectedObjectId === 'three_phase_separator', c);
+  assert('knowledge ids from registry', Array.isArray(c.knowledgeIds) && c.knowledgeIds.indexOf('kb_gather') >= 0, c.knowledgeIds);
+  await shot('phase08-01-context-separator.png');
+
+  // AI context request: stub successful /api/ask and inspect the exact request.
+  await ev(`window.SceneContext.recordInteraction('inspect_separator_structure','half','示意','correct');window.__origFetch=window.fetch;window.fetch=function(url,opts){if(String(url).indexOf('/api/ask')>=0){window.__lastAsk=JSON.parse(opts.body);return Promise.resolve(new Response(JSON.stringify({text:'模型补充示例'}),{status:200,headers:{'Content-Type':'application/json'}}));}return window.__origFetch(url,opts);};true`);
+  await ev(`window.__leadai.ask('这个设备的维护周期是多久')`);
+  await WAIT(500);
+  const ask = await ev(`({payload:window.__lastAsk,log:document.querySelector('#leadai-log').innerText})`);
+  assert('AI request keeps question/ctx/tier/mode', ask.payload && ask.payload.question && Array.isArray(ask.payload.ctx) && ask.payload.tier && ask.payload.mode, ask.payload);
+  assert('AI context includes selected device', ask.payload && ask.payload.ctx.some(x => x.indexOf('三相分离器') >= 0), ask.payload && ask.payload.ctx);
+  assert('AI context includes recent interaction', ask.payload && ask.payload.ctx.some(x => x.indexOf('inspect_separator_structure') >= 0), ask.payload && ask.payload.ctx);
+  assert('AI context labels verified local facts', ask.payload && ask.payload.ctx.some(x => x.indexOf('已核验要点') >= 0), ask.payload && ask.payload.ctx);
+  await shot('phase08-02-ai-context.png');
+
+  // No-proxy fallback: local KB answers without /api/ask.
+  await ev(`window.fetch=function(url,opts){if(String(url).indexOf('/api/ask')>=0)return Promise.reject(new Error('offline'));return window.__origFetch(url,opts);};true`);
+  await ev(`window.__leadai.ask('为什么油藏在石头里')`);
+  await WAIT(350);
+  const fallback = await ev(`document.querySelector('#leadai-log').innerText`);
+  assert('no-proxy AI still answers local knowledge', /岩石孔隙|油藏/.test(fallback), fallback.slice(-240));
+  await shot('phase08-03-no-proxy-local.png');
+
+  // Action boundaries.
+  c = await ev(`window.SceneContext.get()`);
+  let legal = await ev(`window.AIActions.execute({actionId:'start_separation'},{expectedRevision:window.SceneContext.revision()})`);
+  assert('legal AI action accepted', legal && legal.ok === true, legal);
+  assert('legal action changed separation', !!(await ev(`window.__l2.running`)));
+  const missing = await ev(`(function(){var before=window.SceneContext.get();var r=window.AIActions.execute({actionId:'select_object',args:{objectId:'not_a_real_device'}},{expectedRevision:window.SceneContext.revision()});return {r:r,after:window.SceneContext.get(),same:before.revision===window.SceneContext.revision()}})()`);
+  assert('missing object rejected', missing.r && missing.r.ok === false && missing.r.reason === 'OBJECT_NOT_FOUND', missing.r);
+  assert('missing object keeps context', missing.same === true, missing);
+  const mismatch = await ev(`(function(){window.SceneContext.setLevel('l3');var before=window.SceneContext.get();var r=window.AIActions.execute({actionId:'start_separation'},{expectedRevision:window.SceneContext.revision()});return {r:r,after:window.SceneContext.get(),same:before.revision===window.SceneContext.revision()}})()`);
+  assert('scene mismatch rejected', mismatch.r && mismatch.r.ok === false && mismatch.r.reason === 'SCENE_MISMATCH', mismatch.r);
+  assert('scene mismatch keeps current level', mismatch.after.levelId === 'l3' && mismatch.same === true, mismatch.after);
+  const switched = await ev(`(function(){window.SceneContext.setLevel('l2');var rev=window.SceneContext.revision();var r=window.AIActions.execute({actionId:'select_object',args:{objectId:'three_phase_separator'}},{expectedRevision:rev,beforeApply:function(){window.SceneContext.setLevel('l3');}});return {r:r,after:window.SceneContext.get()}})()`);
+  assert('scene switch during action rejected', switched.r && switched.r.ok === false && switched.r.reason === 'SCENE_CHANGED_DURING_ACTION', switched.r);
+  assert('scene switch preserved user target', switched.after.levelId === 'l3' && switched.after.selectedObjectId === 'floating_roof_tank', switched.after);
+  const unknown = await ev(`window.AIActions.execute({actionId:'delete_everything'})`);
+  assert('unknown action rejected', unknown.ok === false && unknown.reason === 'NOT_ALLOWED', unknown);
+
+  // Exit clears old device selection.
+  await ev(`window.SceneContext.setLevel('l2');window.SceneContext.selectDevice('three_phase_separator');window.SceneContext.exitLevel();true`);
+  c = await ev(`window.SceneContext.get()`);
+  assert('exit clears level and selection', c.levelId === null && c.selectedObjectId === null, c);
+
+  // Writing handoff is explicit and carries verified facts.
+  await ev(`window.SceneContext.setLevel('l3');window.SceneContext.selectDevice('floating_roof_tank');window.SceneContext.recordInteraction('inspect_tank_structure','floating_roof_tank','示意','correct');window.SceneContext.handoff();true`);
+  await nav(`${BASE}/write.html?from=scene&rev=phase08-verify`);
+  await WAIT(700);
+  const write = await ev(`({topic:document.querySelector('#topic').value,facts:document.querySelector('#facts').value,banner:document.querySelector('#scene-handoff')&&document.querySelector('#scene-handoff').innerText,errors:window.__auditErrors||[]})`);
+  assert('writing handoff prefills device topic', /外浮顶储罐/.test(write.topic), write);
+  assert('writing handoff carries verified facts', /浮盘|油气空间/.test(write.facts), write.facts);
+  assert('writing handoff banner visible', /已带入当前场景/.test(write.banner || ''), write.banner);
+
+  // Direct write without explicit handoff must not inherit.
+  await nav(`${BASE}/write.html?rev=phase08-direct`);
+  await WAIT(600);
+  const direct = await ev(`({banner:!!document.querySelector('#scene-handoff'),topic:document.querySelector('#topic').value})`);
+  assert('direct writing does not inherit scene', direct.banner === false, direct);
+
+  // No-proxy write fallback is clearly labeled.
+  await ev(`window.fetch=function(){return Promise.reject(new Error('offline'));};document.querySelector('#topic').value='测试主题';document.querySelector('#facts').value='三相分离器按相态和密度差异分离，不是过滤。';document.querySelector('#go').click();true`);
+  await WAIT(1200);
+  const wf = await ev(`({out:document.querySelector('#out').innerText,meta:document.querySelector('#meta').innerText,note:document.querySelector('#revnote').innerText})`);
+  assert('no-proxy write shows editable template', /预置模板/.test(wf.out), wf.out.slice(0,200));
+  assert('no-proxy write does not claim model ran', /未连接模型/.test(wf.meta + wf.note), wf);
+
+  const summary = { generatedAt: new Date().toISOString(), passed: results.filter(r => r.ok).length, failed: results.filter(r => !r.ok).length, results };
+  fs.writeFileSync(path.join(OUT, 'phase08-verify.json'), JSON.stringify(summary, null, 2), 'utf8');
+  console.log(JSON.stringify({ passed: summary.passed, failed: summary.failed, out: OUT }));
+  ws.close();
+  if (summary.failed) process.exitCode = 1;
+})().catch(e => { console.error(e.stack || e); process.exitCode = 1; });

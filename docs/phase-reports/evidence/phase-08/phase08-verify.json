@@ -1,0 +1,711 @@
+{
+  "generatedAt": "2026-11-23T12:31:59.812Z",
+  "passed": 29,
+  "failed": 0,
+  "results": [
+    {
+      "name": "scene context loads",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "AI action whitelist loads",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "AI panel present",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "context has sceneId",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
+        "createdAt": "2026-11-23T12:31:35.877Z",
+        "updatedAt": "2026-11-23T12:31:35.877Z",
+        "revision": 1,
+        "stageId": "overview",
+        "stageIndex": null,
+        "levelId": null,
+        "zoneId": null,
+        "selectedObjectId": null,
+        "object": null,
+        "deviceName": null,
+        "knowledgeIds": [],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [],
+        "ledger": [],
+        "source": "init"
+      }
+    },
+    {
+      "name": "no boot errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "level entry sets l2",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
+        "createdAt": "2026-11-23T12:31:35.877Z",
+        "updatedAt": "2026-11-23T12:31:38.639Z",
+        "revision": 4,
+        "stageId": "gather",
+        "stageIndex": 1,
+        "levelId": "l2",
+        "zoneId": "gathering",
+        "selectedObjectId": "three_phase_separator",
+        "object": "three_phase_separator",
+        "deviceName": "三相分离器",
+        "knowledgeIds": [
+          "kb_gather"
+        ],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [],
+        "ledger": [],
+        "source": "immersion",
+        "scene": "oil_industry_journey",
+        "stage": 1,
+        "knowledge": "kb_gather",
+        "mode": "free"
+      }
+    },
+    {
+      "name": "level entry selects separator",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
+        "createdAt": "2026-11-23T12:31:35.877Z",
+        "updatedAt": "2026-11-23T12:31:38.639Z",
+        "revision": 4,
+        "stageId": "gather",
+        "stageIndex": 1,
+        "levelId": "l2",
+        "zoneId": "gathering",
+        "selectedObjectId": "three_phase_separator",
+        "object": "three_phase_separator",
+        "deviceName": "三相分离器",
+        "knowledgeIds": [
+          "kb_gather"
+        ],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [],
+        "ledger": [],
+        "source": "immersion",
+        "scene": "oil_industry_journey",
+        "stage": 1,
+        "knowledge": "kb_gather",
+        "mode": "free"
+      }
+    },
+    {
+      "name": "knowledge ids from registry",
+      "ok": true,
+      "detail": [
+        "kb_gather"
+      ]
+    },
+    {
+      "name": "AI request keeps question/ctx/tier/mode",
+      "ok": true,
+      "detail": {
+        "question": "这个设备的维护周期是多久",
+        "ctx": [
+          "场景：石油产业链数字沙盘",
+          "环节：地面处理",
+          "关卡：l2",
+          "当前设备：三相分离器（objectId=three_phase_separator）",
+          "区域：gathering",
+          "关联知识点：kb_gather（本地人工审核）",
+          "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
+          "刚才的操作：inspect_separator_structure=half（示意，结果：correct）",
+          "最近操作：inspect_separator_structure=half(correct)",
+          "体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+          "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
+        ],
+        "tier": "mid",
+        "mode": "open"
+      }
+    },
+    {
+      "name": "AI context includes selected device",
+      "ok": true,
+      "detail": [
+        "场景：石油产业链数字沙盘",
+        "环节：地面处理",
+        "关卡：l2",
+        "当前设备：三相分离器（objectId=three_phase_separator）",
+        "区域：gathering",
+        "关联知识点：kb_gather（本地人工审核）",
+        "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
+        "刚才的操作：inspect_separator_structure=half（示意，结果：correct）",
+        "最近操作：inspect_separator_structure=half(correct)",
+        "体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+        "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
+      ]
+    },
+    {
+      "name": "AI context includes recent interaction",
+      "ok": true,
+      "detail": [
+        "场景：石油产业链数字沙盘",
+        "环节：地面处理",
+        "关卡：l2",
+        "当前设备：三相分离器（objectId=three_phase_separator）",
+        "区域：gathering",
+        "关联知识点：kb_gather（本地人工审核）",
+        "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
+        "刚才的操作：inspect_separator_structure=half（示意，结果：correct）",
+        "最近操作：inspect_separator_structure=half(correct)",
+        "体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+        "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
+      ]
+    },
+    {
+      "name": "AI context labels verified local facts",
+      "ok": true,
+      "detail": [
+        "场景：石油产业链数字沙盘",
+        "环节：地面处理",
+        "关卡：l2",
+        "当前设备：三相分离器（objectId=three_phase_separator）",
+        "区域：gathering",
+        "关联知识点：kb_gather（本地人工审核）",
+        "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
+        "刚才的操作：inspect_separator_structure=half（示意，结果：correct）",
+        "最近操作：inspect_separator_structure=half(correct)",
+        "体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+        "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
+      ]
+    },
+    {
+      "name": "no-proxy AI still answers local knowledge",
+      "ok": true,
+      "detail": "星火这一层看到的东西，可以随时问我。库里有答案我直接给；库里没有、但属于石油这行的，我调模型组织一段，并标出来源属性。这个设备的维护周期是多久模型补充 · 未逐条核验 · 通俗版模型补充示例换个工程档重讲加入待审补库复制这段是模型按通用知识组织的：公司沿革、数字请以官方公开资料为准。为什么油藏在石头里库外 · 未采用模型这个我答不了。（offline）知识库里没有对应条目，这类问题也不适合让模型即兴发挥。要不要试试：石油为什么是黑的油气藏在哪儿"
+    },
+    {
+      "name": "legal AI action accepted",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "actionId": "start_separation",
+        "result": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "name": "legal action changed separation",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "missing object rejected",
+      "ok": true,
+      "detail": {
+        "ok": false,
+        "reason": "OBJECT_NOT_FOUND",
+        "message": "该对象在当前场景不存在"
+      }
+    },
+    {
+      "name": "missing object keeps context",
+      "ok": true,
+      "detail": {
+        "r": {
+          "ok": false,
+          "reason": "OBJECT_NOT_FOUND",
+          "message": "该对象在当前场景不存在"
+        },
+        "after": {
+          "version": 1,
+          "sceneId": "oil_industry_journey",
+          "registrySceneId": "petro-chain-v3",
+          "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
+          "createdAt": "2026-11-23T12:31:35.877Z",
+          "updatedAt": "2026-11-23T12:31:53.674Z",
+          "revision": 7,
+          "stageId": "gather",
+          "stageIndex": 1,
+          "levelId": "l2",
+          "zoneId": "gathering",
+          "selectedObjectId": "three_phase_separator",
+          "object": "three_phase_separator",
+          "deviceName": "三相分离器",
+          "knowledgeIds": [
+            "kb_gather"
+          ],
+          "experienceMode": "free",
+          "interaction": {
+            "action": "start_separation",
+            "actionId": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "at": "2026-11-23T12:31:53.674Z"
+          },
+          "history": [
+            {
+              "action": "inspect_separator_structure",
+              "actionId": "inspect_separator_structure",
+              "value": "half",
+              "unit": "示意",
+              "result": "correct",
+              "stageId": "gather",
+              "levelId": "l2",
+              "zoneId": "gathering",
+              "at": "2026-11-23T12:31:43.223Z"
+            },
+            {
+              "action": "inspect_separator_structure",
+              "actionId": "inspect_separator_structure",
+              "value": "half",
+              "unit": "示意",
+              "result": null,
+              "stageId": "gather",
+              "levelId": "l2",
+              "zoneId": "gathering",
+              "at": "2026-11-23T12:31:53.673Z"
+            },
+            {
+              "action": "start_separation",
+              "actionId": "start_separation",
+              "value": "started",
+              "unit": "示意",
+              "result": null,
+              "stageId": "gather",
+              "levelId": "l2",
+              "zoneId": "gathering",
+              "at": "2026-11-23T12:31:53.674Z"
+            }
+          ],
+          "ledger": [
+            {
+              "type": "操作",
+              "action": "inspect_separator_structure",
+              "value": "half",
+              "unit": "示意",
+              "result": "correct",
+              "stageId": "gather",
+              "levelId": "l2",
+              "objectId": "three_phase_separator",
+              "at": "2026-11-23T12:31:43.223Z"
+            },
+            {
+              "type": "操作",
+              "action": "inspect_separator_structure",
+              "value": "half",
+              "unit": "示意",
+              "result": null,
+              "stageId": "gather",
+              "levelId": "l2",
+              "objectId": "three_phase_separator",
+              "at": "2026-11-23T12:31:53.673Z"
+            },
+            {
+              "type": "操作",
+              "action": "start_separation",
+              "value": "started",
+              "unit": "示意",
+              "result": null,
+              "stageId": "gather",
+              "levelId": "l2",
+              "objectId": "three_phase_separator",
+              "at": "2026-11-23T12:31:53.674Z"
+            }
+          ],
+          "source": "interaction",
+          "scene": "oil_industry_journey",
+          "stage": 1,
+          "knowledge": "kb_gather",
+          "mode": "free"
+        },
+        "same": true
+      }
+    },
+    {
+      "name": "scene mismatch rejected",
+      "ok": true,
+      "detail": {
+        "ok": false,
+        "reason": "SCENE_MISMATCH",
+        "message": "该动作只能在三相分离关卡执行"
+      }
+    },
+    {
+      "name": "scene mismatch keeps current level",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
+        "createdAt": "2026-11-23T12:31:35.877Z",
+        "updatedAt": "2026-11-23T12:31:53.677Z",
+        "revision": 8,
+        "stageId": "store",
+        "stageIndex": 2,
+        "levelId": "l3",
+        "zoneId": "storage",
+        "selectedObjectId": "floating_roof_tank",
+        "object": "floating_roof_tank",
+        "deviceName": "外浮顶储罐",
+        "knowledgeIds": [
+          "kb_store"
+        ],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-23T12:31:43.223Z"
+          },
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-23T12:31:53.673Z"
+          },
+          {
+            "action": "start_separation",
+            "actionId": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-23T12:31:53.674Z"
+          }
+        ],
+        "ledger": [
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-23T12:31:43.223Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-23T12:31:53.673Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-23T12:31:53.674Z"
+          }
+        ],
+        "source": "level",
+        "scene": "oil_industry_journey",
+        "stage": 1,
+        "knowledge": "kb_gather",
+        "mode": "free"
+      }
+    },
+    {
+      "name": "scene switch during action rejected",
+      "ok": true,
+      "detail": {
+        "ok": false,
+        "reason": "SCENE_CHANGED_DURING_ACTION",
+        "message": "动作执行前场景已切换，未执行以避免状态不一致"
+      }
+    },
+    {
+      "name": "scene switch preserved user target",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
+        "createdAt": "2026-11-23T12:31:35.877Z",
+        "updatedAt": "2026-11-23T12:31:53.678Z",
+        "revision": 10,
+        "stageId": "store",
+        "stageIndex": 2,
+        "levelId": "l3",
+        "zoneId": "storage",
+        "selectedObjectId": "floating_roof_tank",
+        "object": "floating_roof_tank",
+        "deviceName": "外浮顶储罐",
+        "knowledgeIds": [
+          "kb_store"
+        ],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-23T12:31:43.223Z"
+          },
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-23T12:31:53.673Z"
+          },
+          {
+            "action": "start_separation",
+            "actionId": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-23T12:31:53.674Z"
+          }
+        ],
+        "ledger": [
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-23T12:31:43.223Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-23T12:31:53.673Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-23T12:31:53.674Z"
+          }
+        ],
+        "source": "level",
+        "scene": "oil_industry_journey",
+        "stage": 1,
+        "knowledge": "kb_gather",
+        "mode": "free"
+      }
+    },
+    {
+      "name": "unknown action rejected",
+      "ok": true,
+      "detail": {
+        "ok": false,
+        "reason": "NOT_ALLOWED",
+        "message": "该动作不在白名单内"
+      }
+    },
+    {
+      "name": "exit clears level and selection",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
+        "createdAt": "2026-11-23T12:31:35.877Z",
+        "updatedAt": "2026-11-23T12:31:53.679Z",
+        "revision": 13,
+        "stageId": "gather",
+        "stageIndex": 1,
+        "levelId": null,
+        "zoneId": "gathering",
+        "selectedObjectId": null,
+        "object": null,
+        "deviceName": null,
+        "knowledgeIds": [
+          "kb_gather"
+        ],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-23T12:31:43.223Z"
+          },
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-23T12:31:53.673Z"
+          },
+          {
+            "action": "start_separation",
+            "actionId": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-23T12:31:53.674Z"
+          }
+        ],
+        "ledger": [
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-23T12:31:43.223Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-23T12:31:53.673Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-23T12:31:53.674Z"
+          }
+        ],
+        "source": "exit-level",
+        "scene": "oil_industry_journey",
+        "stage": 1,
+        "knowledge": "kb_gather",
+        "mode": "free"
+      }
+    },
+    {
+      "name": "writing handoff prefills device topic",
+      "ok": true,
+      "detail": {
+        "topic": "外浮顶储罐：它在这一环节做什么",
+        "facts": "外浮顶罐的浮盘随液位升降，可减少油气空间。\n浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。",
+        "banner": "已带入当前场景：外浮顶储罐 · 仅用于本次写作；已核验要点 2 条。\n清除",
+        "errors": []
+      }
+    },
+    {
+      "name": "writing handoff carries verified facts",
+      "ok": true,
+      "detail": "外浮顶罐的浮盘随液位升降，可减少油气空间。\n浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。"
+    },
+    {
+      "name": "writing handoff banner visible",
+      "ok": true,
+      "detail": "已带入当前场景：外浮顶储罐 · 仅用于本次写作；已核验要点 2 条。\n清除"
+    },
+    {
+      "name": "direct writing does not inherit scene",
+      "ok": true,
+      "detail": {
+        "banner": false,
+        "topic": "原油怎样从地下走到加油站"
+      }
+    },
+    {
+      "name": "no-proxy write shows editable template",
+      "ok": true,
+      "detail": "【预置模板 · 未连接模型，不是模型生成】\n主题：测试主题\n\n可以这样写：先从一个具体问题切入，再解释这个环节的作用，最后说明它和日常生活的联系。\n\n可核验的事实底稿：\n· 三相分离器按相态和密度差异分离，不是过滤。\n\n请把以上材料改写成一篇科普推文；不要编造没有底稿支持的数字或工程参数。"
+    },
+    {
+      "name": "no-proxy write does not claim model ran",
+      "ok": true,
+      "detail": {
+        "out": "【预置模板 · 未连接模型，不是模型生成】\n主题：测试主题\n\n可以这样写：先从一个具体问题切入，再解释这个环节的作用，最后说明它和日常生活的联系。\n\n可核验的事实底稿：\n· 三相分离器按相态和密度差异分离，不是过滤。\n\n请把以上材料改写成一篇科普推文；不要编造没有底稿支持的数字或工程参数。",
+        "meta": "134 字 · 科普推文 · 预置模板 · 未连接模型",
+        "note": "模型服务未连接，已放入可编辑的预置模板，不是模型输出。"
+      }
+    }
+  ]
+}

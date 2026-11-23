@@ -149,12 +149,21 @@
     )).join('');
   }
 
+  function sceneLabel() {
+    if (window.SceneContext) {
+      const c = window.SceneContext.get();
+      if (c.selectedObjectId) return (c.deviceName || c.selectedObjectId);
+      return c.stageId && c.stageId !== 'overview' ? (c.stageId + ' · 未选设备') : '总览';
+    }
+    return stageName();
+  }
   function syncCtx() {
-    const n = stageName();
+    const n = sceneLabel();
     box.querySelector('#leadai-ctx').textContent = '上下文 · ' + n;
     renderExt();
   }
   syncCtx();
+  document.addEventListener('scene-context', () => setTimeout(syncCtx, 30));
   document.querySelectorAll('#stages [data-stage]').forEach(b => b.addEventListener('click', () => setTimeout(syncCtx, 60)));
   document.addEventListener('stage-level', () => setTimeout(syncCtx, 80));
 
@@ -213,34 +222,18 @@
   }
 
   async function openAnswer(q) {
+    const sc = window.SceneContext;
+    const lines = sc ? sc.buildForAI() : [stageName()];
+    if (window.AIActions) {
+      const allowed = window.AIActions.available().map(a => a.actionId).join('、');
+      if (allowed) lines.push('当前可用动作（只能建议，需用户点击确认）：' + allowed);
+    }
+    const payload = { question: q, ctx: lines, tier: tier, mode: 'open' };
+    window.__leadai.lastPayload = payload;
     const r = await fetch('/api/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        question: q,
-        ctx: (function () {
-          const sc = window.__sceneContext;
-          const lines = [stageName()];
-          if (sc) {
-            if (sc.stageId && sc.stageId !== 'overview') lines.push('产业链环节：' + sc.stageId);
-            if (sc.selectedObjectId) lines.push('当前设备：' + sc.selectedObjectId);
-            if (sc.knowledgeIds && sc.knowledgeIds.length) lines.push('关联知识点：' + sc.knowledgeIds.join('、'));
-            if (sc.interaction) {
-              lines.push('本轮操作：' + sc.interaction.action + '=' + sc.interaction.value + (sc.interaction.unit ? '（' + sc.interaction.unit + '）' : ''));
-            }
-            if (sc.experienceMode) lines.push('体验模式：' + sc.experienceMode);
-            if (sc.history && sc.history.length) {
-              const recent = sc.history.slice(-4).map(function (h) {
-                return h.action + '=' + h.value + (h.unit ? '（' + h.unit + '）' : '');
-              });
-              lines.push('最近操作：' + recent.join('；'));
-            }
-          }
-          return lines;
-        })(),
-        tier: tier,
-        mode: 'open'
-      })
+      body: JSON.stringify(payload)
     });
     const j = await r.json();
     if (!r.ok || !j.text) throw new Error(j.error || '没有拿到回答');
@@ -248,9 +241,11 @@
   }
 
   function modelCard(q, text) {
+    const action = window.AIActions ? window.AIActions.parse(text) : null;
+    const visible = action ? text.replace(/```(?:action|json)\s*[\s\S]*?```/i, '').trim() : text;
     const d = push(
       '<div class="who">模型补充 · 未逐条核验 · ' + TIER_NAME[tier] + '</div>' +
-      '<div class="lm-body">' + esc(text).replace(/\n+/g, '<br/>') + '</div>' +
+      '<div class="lm-body">' + esc(visible).replace(/\n+/g, '<br/>') + '</div>' +
       '<div class="lm-acts">' +
         '<button type="button" class="lm-act" data-a="tier">换个' + TIER_SHORT[nextTier()] + '档重讲</button>' +
         '<button type="button" class="lm-act" data-a="save">加入待审补库</button>' +
@@ -267,6 +262,30 @@
         }
       };
     });
+    if (action && window.AIActions) {
+      const row = document.createElement('div');
+      row.className = 'lm-acts';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'lm-act';
+      btn.textContent = '执行建议动作 · ' + (action.actionId || '');
+      const note = document.createElement('div');
+      note.className = 'lm-note';
+      const rev = window.SceneContext ? window.SceneContext.revision() : null;
+      btn.onclick = function () {
+        const result = window.AIActions.execute(action, { expectedRevision: rev, expectedSceneId: 'oil_industry_journey' });
+        if (result.ok) {
+          btn.disabled = true;
+          btn.textContent = '动作已执行';
+          note.textContent = '已按白名单执行；如场景已变化，请重新查看。';
+        } else {
+          note.textContent = '该场景动作当前不可用：' + (result.message || window.AIActions.reasonText(result.reason));
+        }
+      };
+      row.append(btn);
+      d.appendChild(row);
+      d.appendChild(note);
+    }
     log('模型答', q, text.slice(0, 40));
   }
 
@@ -406,6 +425,17 @@
   genBtn.innerHTML = '<b>生成本场材料</b><span>讲解词 / 推文 / 短视频脚本</span>';
   genBtn.onclick = () => { dlg.showModal(); runGen(); };
   if (src) sideBody.insertBefore(genBtn, src); else sideBody.appendChild(genBtn);
+
+  const writeBtn = document.createElement('button');
+  writeBtn.type = 'button';
+  writeBtn.className = 'genbtn genbtn--side';
+  writeBtn.innerHTML = '<b>带入写作页</b><span>带上当前设备与已核验要点</span>';
+  writeBtn.onclick = function () {
+    if (!window.SceneContext) return;
+    window.SceneContext.handoff();
+    window.location.href = 'write.html?from=scene';
+  };
+  sideBody.insertBefore(writeBtn, genBtn);
 
   dlg.querySelectorAll('#gen-genres [data-genre]').forEach(b => {
     b.onclick = () => {

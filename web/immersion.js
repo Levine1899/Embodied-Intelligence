@@ -1580,6 +1580,7 @@
     ctx.registrySceneId = reg ? reg.sceneId : (prev.registrySceneId || null);
     ctx.stageId = stageId;
     ctx.stage = index == null ? null : index;
+    ctx.stageIndex = index;
     ctx.zoneId = zone ? zone.zoneId : null;
     ctx.levelId = prev.levelId || null;
     ctx.selectedObjectId = objectId || null;
@@ -1593,8 +1594,11 @@
     else if (ctx.interaction === undefined) ctx.interaction = null;
     if (Array.isArray(prev.history) && prev.history.length) history = prev.history.slice(-12);
     ctx.history = history.slice(-12);
-    window.__sceneContext = ctx;
-    document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
+    if (window.SceneContext) window.SceneContext.update(ctx, 'immersion');
+    else {
+      window.__sceneContext = ctx;
+      document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
+    }
     var box = document.getElementById('leadai-ctx');
     if (box && index != null) box.textContent = '上下文 · ' + stageNames[index];
   }
@@ -1611,6 +1615,10 @@
   }
 
   function markLevel(index) {
+    if (window.SceneContext) {
+      window.SceneContext.setLevel('l' + (index + 1), { experienceMode: mode });
+      return;
+    }
     if (!window.__sceneContext) syncSceneContext(index, null, null);
     const ctx = window.__sceneContext;
     ctx.levelId = 'l' + (index + 1);
@@ -1762,6 +1770,10 @@
   }
 
   function setInteraction(action, value, unit, result) {
+    if (window.SceneContext) {
+      window.SceneContext.recordInteraction(action, value, unit, result);
+      return;
+    }
     if (!window.__sceneContext) syncSceneContext(currentStage, null, null, null);
     const ctx = window.__sceneContext;
     if (Array.isArray(ctx.history)) history = ctx.history.slice(-12);
@@ -2015,7 +2027,8 @@
     back() {
       activeScene = null; activeCamera = null;
       viewport.classList.remove('in-level');
-      if (window.__sceneContext) {
+      if (window.SceneContext) window.SceneContext.exitLevel();
+      else if (window.__sceneContext) {
         window.__sceneContext.levelId = null;
         window.__sceneContext.interaction = null;
         document.dispatchEvent(new CustomEvent('scene-context', { detail: window.__sceneContext }));
