@@ -10,6 +10,8 @@
 - 结束 Commit（真实 SHA）：`4f3cec1fee38791e894471c66123cf0ae20e0159`
 - 分支：`main`
 - 工作区 `git status --short`：提交后为空；本报告为后置文档提交
+- 线上页面：`http://120.26.198.46:8020/v22/`（根入口跳转 V22；备份 `index.html.bak-20261123-203707`）
+- 发布包：`dist/scienceagent-web-438e014.tgz`，SHA-256 `5d46799873ea21ea0515629b373077116b9187fc5e2e4a38e24975aa2dd7203f`
 - 线上 API：`http://120.26.198.46:8020/api/dify-chat`、`/api/dify-write`；兼容 `/api/ask`、`/api/gen`
 
 ## 1. 前置检查
@@ -56,6 +58,7 @@
 | `docs/API.md` 更新 | **通过** | 新增 Dify 两端点；兼容段保留 |
 | `docs/ai-scene-context.md` | **通过** | 上下文形状、ID 表、样例、白名单、失败码 |
 | 真实浏览器验证 | **通过** | `phase08-verify.cjs` 29/0 |
+| V22 线上静态检查 | **通过** | scene-context/ai-actions/AI 面板加载，无 boot error |
 | 截图证据 | **通过** | 4 张 1440×900（context/AI/no-proxy/write handoff） |
 
 ## 3. 修改文件
