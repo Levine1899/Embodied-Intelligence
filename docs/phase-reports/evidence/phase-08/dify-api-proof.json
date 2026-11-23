@@ -25,5 +25,12 @@
     "textLength": 477,
     "hasText": true,
     "fields": "ledger,genre,facts"
+  },
+  "difyWriteWithSceneRecord": {
+    "status": 200,
+    "textLength": 196,
+    "hasText": true,
+    "factFieldKeepsBoundary": true,
+    "verifiedAt": "2026-11-24T07:40:00+08:00"
   }
 }

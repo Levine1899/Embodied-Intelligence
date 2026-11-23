@@ -7,11 +7,11 @@
 - 状态建议：**REVISE（仅剩继承 P0-SEC-01；P1 已修复并复测 36/0；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`6047a59`（阶段 07 文档完成后的 main）
-- 结束 Commit（真实 SHA）：`4f3cec1fee38791e894471c66123cf0ae20e0159`
+- 结束 Commit（真实 SHA）：`9d435c7`（复审修复；本报告后置文档提交）
 - 分支：`main`
 - 工作区 `git status --short`：提交后为空；本报告为后置文档提交
-- 线上页面：`http://120.26.198.46:8020/v22/`（根入口跳转 V22；备份 `index.html.bak-20261123-203707`）
-- 发布包：`dist/scienceagent-web-438e014.tgz`，SHA-256 `5d46799873ea21ea0515629b373077116b9187fc5e2e4a38e24975aa2dd7203f`
+- 线上页面：`http://120.26.198.46:8020/v23/`（根入口跳转 V23；备份 `index.html.bak-20261124-074048`）
+- 发布包：`dist/scienceagent-web-9d435c7.tgz`，SHA-256 `edc6e4da7be6fe51557f0ae482a933afb2359e54270e8e937240e22286657c6e`
 - 线上 API：`http://120.26.198.46:8020/api/dify-chat`、`/api/dify-write`；兼容 `/api/ask`、`/api/gen`
 
 ## 1. 前置检查
@@ -57,8 +57,8 @@
 | API Key 不在前端 | **通过** | 前端无 key；只使用 `/api/*`；服务端 env |
 | `docs/API.md` 更新 | **通过** | 新增 Dify 两端点；兼容段保留 |
 | `docs/ai-scene-context.md` | **通过** | 上下文形状、ID 表、样例、白名单、失败码 |
-| 真实浏览器验证 | **通过** | `phase08-verify.cjs` 29/0 |
-| V22 线上静态检查 | **通过** | scene-context/ai-actions/AI 面板加载，无 boot error |
+| 真实浏览器验证 | **通过** | `phase08-verify.cjs` 36/0 |
+| V23 线上静态检查 | **通过** | scene-context/ai-actions/AI 面板/动作入口加载，无 boot error |
 | 截图证据 | **通过** | 4 张 1440×900（context/AI/no-proxy/write handoff） |
 
 ## 3. 修改文件
@@ -270,3 +270,13 @@ phase08-02b-action-suggestion.png
 ```
 
 **复审结论仍为 REVISE（仅 P0-SEC-01）；不得进入阶段 09。**
+
+
+## 14. 部署复测（2026-11-24）
+
+- V23：`http://120.26.198.46:8020/v23/`，根入口已跳转；备份 `index.html.bak-20261124-074048`。
+- 服务端 `/docker/kepu-proxy/proxy.mjs` 已更新并重启；`/api/ask action:true` 生产实测返回合法 `select_object` 动作块（`action-mode-proof.json`）。
+- V23 浏览器实测：设备卡“问 AI”打开侧栏，点击“建议下一步”收到模型动作建议并显示“执行建议动作 · select_object”。
+- Dify 写作生产实测：带场景记录边界的 `facts` 返回 200 与正文（`dify-api-proof.json` 的 `difyWriteWithSceneRecord`）。
+- `phase08-verify` 36/0；截图更新。
+- **仍未关闭：P0-SEC-01**（旧 Dify key 仍有效，需 Dify 控制台轮换/吊销并清理历史）；因此阶段 08 仍为 REVISE，用户签收待完成，不进入阶段 09。
