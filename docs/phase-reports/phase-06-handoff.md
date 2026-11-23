@@ -7,7 +7,7 @@
 - 状态建议：**PASS（技术/交互范围；P0-ASSET-01 已修复；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`34c7839abcfec13da75f55fe61d8a23b73a86c77`
-- 结束 Commit（真实 SHA）：`2c6f518e078e296487848f1aadc92acd3d33dcae`（阶段 06 内容提交；交接文档回填提交见后）
+- 结束 Commit（真实 SHA）：`c6b9baa6dc85f6656a14fe73cb918bf8582147b2`（阶段 06 返修内容提交）
 - 分支：`main`
 - 工作区 `git status --short`：提交后记录（目标为空）
 
@@ -106,7 +106,7 @@ node navcheck.cjs                           # #stage=0..4、章节、塔页 exit
 | 验证断言 | 通过 | `phase06-verify.json` |
 | 资产外观检查 | 参考（Blender 静帧） | `asset-overview.png`、`asset-cutaway.png` |
 | Hero 资产清单/哈希 | 通过 | `tower-asset-manifest.json`（151 Mesh / 14,328 verts / 27,054 tris） |
-| 阶段包 | 已生成 | `dist/phase-06-web.tgz`，10,294,852 B，SHA-256 `4969E522E117C717843B65B89D98CA19A810C9F963189A81942E48396B88E3F5` |
+| 阶段包 | 已生成 | `dist/phase-06-web.tgz`，10294852 B，SHA-256 `7F90C47BA05EA119E3348831384E3617E038CC531BC44E88108A7B36B5786523` |
 
 ## 6. P0 / P1 / P2
 
