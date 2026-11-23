@@ -1,6 +1,6 @@
 {
   "date": "2026-11-23",
-  "page": "http://127.0.0.1:8796/sandbox.html?rev=phase06v-1795405202879#stage=3",
+  "page": "http://127.0.0.1:8796/sandbox.html?rev=phase06v-1795406375193#stage=3",
   "viewport": "1440x900",
   "external": {
     "loaded": true,
@@ -8,7 +8,8 @@
     "groups": {
       "full": 4,
       "half": 4,
-      "trays": 2
+      "trays": 2,
+      "hotspots": 5
     },
     "ctx": {
       "sceneId": "oil_industry_journey",
@@ -43,13 +44,8 @@
       ]
     }
   },
-  "half": {
+  "trayFromExternal": {
     "level": 1,
-    "groups": {
-      "full": 4,
-      "half": 4,
-      "trays": 2
-    },
     "ctx": {
       "sceneId": "oil_industry_journey",
       "scene": "oil_industry_journey",
@@ -68,6 +64,227 @@
       "experienceMode": "free",
       "mode": "free",
       "interaction": {
+        "action": "inspect_tower_trays",
+        "value": "atmospheric_tower",
+        "unit": "示意",
+        "actionId": "inspect_tower_trays",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "inspect_tower_trays",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "inspect_tower_trays",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        }
+      ]
+    }
+  },
+  "replayFromExternal": {
+    "level": 1,
+    "flow": true,
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "refine",
+      "stage": 3,
+      "zoneId": "refining",
+      "levelId": "l4",
+      "selectedObjectId": "atmospheric_tower",
+      "object": "atmospheric_tower",
+      "deviceName": "常压蒸馏塔",
+      "knowledgeIds": [
+        "kb_refine"
+      ],
+      "knowledge": "kb_refine",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "replay_refining_flow",
+        "value": "atmospheric_tower",
+        "unit": "示意",
+        "actionId": "replay_refining_flow",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "inspect_tower_trays",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "inspect_tower_trays",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "inspect_tower_structure",
+          "value": "external",
+          "unit": "示意",
+          "actionId": "inspect_tower_structure",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "restore_refining_view",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "restore_refining_view",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "replay_refining_flow",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "replay_refining_flow",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        }
+      ]
+    }
+  },
+  "hotspot": {
+    "count": 5,
+    "point": {
+      "x": 760.9822703377137,
+      "y": 398.37902747282385
+    },
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "refine",
+      "stage": 3,
+      "zoneId": "refining",
+      "levelId": "l4",
+      "selectedObjectId": "vacuum_tower",
+      "object": "vacuum_tower",
+      "deviceName": "减压蒸馏塔",
+      "knowledgeIds": [
+        "kb_refine"
+      ],
+      "knowledge": "kb_refine",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "select_refining_hotspot",
+        "value": "vacuum",
+        "unit": "示意",
+        "actionId": "select_refining_hotspot",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "inspect_tower_trays",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "inspect_tower_trays",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "inspect_tower_structure",
+          "value": "external",
+          "unit": "示意",
+          "actionId": "inspect_tower_structure",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "restore_refining_view",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "restore_refining_view",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "replay_refining_flow",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "replay_refining_flow",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "inspect_tower_structure",
+          "value": "external",
+          "unit": "示意",
+          "actionId": "inspect_tower_structure",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "restore_refining_view",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "restore_refining_view",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "select_refining_hotspot",
+          "value": "vacuum",
+          "unit": "示意",
+          "actionId": "select_refining_hotspot",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        }
+      ]
+    }
+  },
+  "half": {
+    "level": 1,
+    "groups": {
+      "full": 4,
+      "half": 4,
+      "trays": 2,
+      "hotspots": 5
+    },
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "refine",
+      "stage": 3,
+      "zoneId": "refining",
+      "levelId": "l4",
+      "selectedObjectId": "vacuum_tower",
+      "object": "vacuum_tower",
+      "deviceName": "减压蒸馏塔",
+      "knowledgeIds": [
+        "kb_refine"
+      ],
+      "knowledge": "kb_refine",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
         "action": "inspect_tower_structure",
         "value": "half",
         "unit": "示意",
@@ -76,6 +293,76 @@
       },
       "history": [
         {
+          "action": "inspect_tower_trays",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "inspect_tower_trays",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "inspect_tower_structure",
+          "value": "external",
+          "unit": "示意",
+          "actionId": "inspect_tower_structure",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "restore_refining_view",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "restore_refining_view",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "replay_refining_flow",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "replay_refining_flow",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "inspect_tower_structure",
+          "value": "external",
+          "unit": "示意",
+          "actionId": "inspect_tower_structure",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "restore_refining_view",
+          "value": "atmospheric_tower",
+          "unit": "示意",
+          "actionId": "restore_refining_view",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
+          "action": "select_refining_hotspot",
+          "value": "vacuum",
+          "unit": "示意",
+          "actionId": "select_refining_hotspot",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
           "action": "inspect_tower_structure",
           "value": "half",
           "unit": "示意",
@@ -83,13 +370,13 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:08"
+          "time": "11:59:40"
         }
       ]
     },
     "state": {
       "objectId": "atmospheric_tower",
-      "selection": "selected",
+      "selection": "default",
       "structure": "half",
       "animation": "idle",
       "level": 0,
@@ -132,6 +419,16 @@
       },
       "history": [
         {
+          "action": "select_refining_hotspot",
+          "value": "vacuum",
+          "unit": "示意",
+          "actionId": "select_refining_hotspot",
+          "result": null,
+          "stageId": "refine",
+          "levelId": "l4",
+          "time": "11:59:40"
+        },
+        {
           "action": "inspect_tower_structure",
           "value": "half",
           "unit": "示意",
@@ -139,7 +436,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:08"
+          "time": "11:59:40"
         },
         {
           "action": "inspect_tower_structure",
@@ -149,7 +446,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "start_vapor_liquid",
@@ -159,7 +456,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "choose_feed_position",
@@ -169,7 +466,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "inspect_tower_trays",
@@ -179,7 +476,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "select_fraction",
@@ -189,7 +486,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "select_fraction",
@@ -199,7 +496,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "select_fraction",
@@ -209,7 +506,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "select_fraction",
@@ -219,7 +516,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "select_fraction",
@@ -229,7 +526,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "select_fraction",
@@ -239,7 +536,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         }
       ]
     },
@@ -311,6 +608,7 @@
   },
   "exit": {
     "level": false,
+    "isolated": 0,
     "ctx": {
       "sceneId": "oil_industry_journey",
       "scene": "oil_industry_journey",
@@ -338,7 +636,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "inspect_tower_trays",
@@ -348,7 +646,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "select_fraction",
@@ -358,7 +656,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "select_fraction",
@@ -368,7 +666,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "select_fraction",
@@ -378,7 +676,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "select_fraction",
@@ -388,7 +686,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "select_fraction",
@@ -398,7 +696,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "select_fraction",
@@ -408,7 +706,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:09"
+          "time": "11:59:41"
         },
         {
           "action": "pause_vapor_liquid",
@@ -418,7 +716,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:11"
+          "time": "11:59:42"
         },
         {
           "action": "replay_refining_flow",
@@ -428,7 +726,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:11"
+          "time": "11:59:43"
         },
         {
           "action": "inspect_tower_structure",
@@ -438,7 +736,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:11"
+          "time": "11:59:43"
         },
         {
           "action": "restore_refining_view",
@@ -448,10 +746,21 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:40:11"
+          "time": "11:59:43"
         }
       ]
     },
+    "errors": []
+  },
+  "reentry": {
+    "level": true,
+    "level4": 0,
+    "isolated": 1,
+    "errors": []
+  },
+  "exit2": {
+    "level": false,
+    "isolated": 0,
     "errors": []
   },
   "screenshots": [

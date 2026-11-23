@@ -1,7 +1,7 @@
 {
   "assetId": "distillation_unit_hero",
   "date": "2026-11-23",
-  "source": "project-generated Blender/OBJ unit; source blend imported from tower.obj for editing; generator tools/make_tower.py",
+  "source": "project-generated Blender scene; tools/make_tower.py now saves assets-source/blender/tower_hero.blend before OBJ/GLB export",
   "license": "Project internal use; written permission required for external redistribution.",
   "teachingNote": "Teaching model; tray count, side positions and dimensions are simplified; not an engineering design.",
   "files": {
@@ -9,22 +9,47 @@
     "obj": "web\\assets\\tower\\tower.obj",
     "mtl": "web\\assets\\tower\\tower.mtl",
     "glb": "web\\assets\\tower\\tower.glb",
-    "meta": "web\\assets\\tower\\tower.meta.json"
+    "meta": "web\\assets\\tower\\tower.meta.json",
+    "render_overview": "web\\assets\\tower\\render-overview.png",
+    "render_cutaway": "web\\assets\\tower\\render-cutaway.png"
   },
   "fileHashes": {
-    "blend": "ce79163bbc89c22dba016c339e8a2a7351bef9008e6bf2ab5f22373347bf095e",
-    "obj": "dcd41cccf9389dea8a08dd8052f54730e7252b7fdf6043fb7cfc1f2ec4ee93d6",
-    "mtl": "2c4909925bd5a78ba37e139d015ce0a30d86099fbe4ebd2a20ed09a8b75ffe2d",
-    "glb": "53dc633669eae4e59d7500fe0e2709a6845c929967df541bfd094bf1227a43dd",
-    "meta": "9366732f444e18c1368d6e29c9bf23d06da10472ee7c8fd83d79694ffd32950d"
+    "blend": "6e26f348ad5bc71a0edb5230d6ab823c9fe1504ed4d95b0718b65f450ef7e1b3",
+    "obj": "3432aefa1628b7ea09951cbad1c26a4f769fd3a586d1d67fe65ed770fe91efd1",
+    "mtl": "45c2313c1c14e6d3285f17ac1d5fc8f81f0b486c271b4cf819a984a3af3e15e5",
+    "glb": "5fd535fee7fd867fdf61b1962f347a9de6e40d18db1dbd0f2d2909466c57a36e",
+    "meta": "9366732f444e18c1368d6e29c9bf23d06da10472ee7c8fd83d79694ffd32950d",
+    "render_overview": "15cc049ddc885be26a695eeed32b07aec414e92eaff194af47372731b69f8543",
+    "render_cutaway": "d7ce7d1692097b094884a16431974524cb73400044793f82ac6f50cddd5e2b03"
   },
   "fileSizes": {
-    "blend": 1852949,
-    "obj": 1065642,
-    "mtl": 1501,
-    "glb": 1242776,
-    "meta": 1482
+    "blend": 2522243,
+    "obj": 1523070,
+    "mtl": 2062,
+    "glb": 1698136,
+    "meta": 1482,
+    "render_overview": 806039,
+    "render_cutaway": 837151
   },
+  "stats": {
+    "meshObjects": 151,
+    "vertices": 14328,
+    "faces": 10673,
+    "triangles": 27054
+  },
+  "equipment": [
+    "Tower_Atmospheric_Shell",
+    "Tower_Vacuum_Shell",
+    "Heater",
+    "Condenser",
+    "Exchanger_1..3",
+    "Pump_A_0..2",
+    "PumpSkid_Base",
+    "PipeRack_*",
+    "Platform_Grate_*",
+    "Ladder_Rung_*",
+    "Foundation_*"
+  ],
   "objectIds": [
     "atmospheric_tower",
     "vacuum_tower",
@@ -88,13 +113,13 @@
     "hs_products": "Box_"
   },
   "cutaway": {
-    "external": "full shell/dome visible; trays hidden",
+    "external": "full shell/dome visible; trays hidden; equipment group visible",
     "half": "full shell/dome hidden; half shell/dome visible; trays visible",
     "full": "half shell weakened; trays and teaching vapor/liquid visible"
   },
   "limitations": [
     "No verified tray count/engineering pressure/temperature/throughput.",
-    "Source .blend is an editable import of the generated OBJ; generator is make_tower.py.",
+    "Equipment is recognizable teaching geometry, not high-fidelity engineering detail.",
     "No third-party textures/fonts; external redistribution needs written permission."
   ]
 }

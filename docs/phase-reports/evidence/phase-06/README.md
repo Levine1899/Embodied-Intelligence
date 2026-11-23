@@ -18,7 +18,7 @@
 
 ## 录屏
 
-- `refining-continuity.mp4`：1440×900，41.3s，2,058,469 B。
+- `refining-continuity.mp4`：1440×900，57.15s，1,635,934 B。
 - 顺序：总览 → 进入 l4 → 外观 → 半剖 → 全剖 → 常压进料 → 汽液接触 → 塔板 → 塔顶/柴油馏分 → 暂停/重播 → 恢复外观 → 返回总览。
 
 ## 断言
@@ -34,7 +34,7 @@
 
 ## 资产
 
-- `tower-asset-manifest.json`：`.blend`、OBJ、MTL、GLB、meta 的 SHA-256/大小、objectId、语义节点、锚点、限制。
+- `tower-asset-manifest.json`：`.blend`、OBJ、MTL、GLB、meta、检查渲染的 SHA-256/大小、151 Mesh / 14,328 verts / 27,054 tris、objectId、语义节点、锚点、限制。
 - Hero `distillation_unit_hero`；可编辑源 `assets-source/blender/tower_hero.blend`。
 - 教学示意，不提供工程压力/温度/处理量/精确塔板数；对外再分发需权利人书面确认。
 
@@ -44,7 +44,7 @@
 - 工程级 CFD/流场/工艺仿真。
 
 
-## Review 结论（2026-11-23）
+## Review 返修结论（2026-11-23）
 
-- **P0-ASSET-01 未关闭**：`asset-overview.png` 仍是两根基础圆柱、一个方箱、少量细管的遗留 `tower.obj`；网页 `phase06-01` 没有可辨识的换热器组/泵组/管廊/平台，不能通过阶段 06 视觉资产门禁。
-- 交互正向路径（三状态、进料、汽液、五馏分、返回）有测试证据，但不能覆盖 P0 视觉门禁；本目录不构成 PASS 证据。
+- **P0-ASSET-01 已关闭（最低视觉门禁）**：`asset-overview.png` 和 `phase06-01` 现在可见换热器组、泵组、管廊、平台/梯子/基础；资产 151 Mesh / 27,054 tris。仍是教学示意，不是工程级高精度模型（P1）。
+- 交互正向路径、边界测试和 3D 热点均有证据；本目录可作为技术/交互 PASS 的证据，但不代表工程资产。

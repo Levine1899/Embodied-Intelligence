@@ -59,6 +59,13 @@ function getJson(url) {
   await shot('phase06-01-refining-external.png');
   const external = await evalPage(`({loaded:window.__l4.loaded,level:window.__l4.level,groups:window.__l4.groups,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),state:window.PETRO_DEVICE_STATE.get('atmospheric_tower')})`);
 
+  // P1 regression: empty external actions must become observable, not silent no-ops.
+  const trayFromExternal = await evalPage(`(function(){document.querySelector('#l4-tray').click();return {level:window.__l4.level,ctx:JSON.parse(JSON.stringify(window.__sceneContext))};})()`);
+  await evalPage(`document.querySelector('#l4-reset').click()`);
+  const replayFromExternal = await evalPage(`(function(){document.querySelector('#l4-replay').click();return {level:window.__l4.level,flow:window.__l4.flowOn,ctx:JSON.parse(JSON.stringify(window.__sceneContext))};})()`);
+  await evalPage(`document.querySelector('#l4-reset').click()`);
+  const hotspot = await evalPage(`(function(){var p=window.__l4.hotspotPoint('vacuum');var c=window.__stage.renderer.domElement;c.dispatchEvent(new MouseEvent('click',{clientX:p.x,clientY:p.y,bubbles:true}));return {count:window.__l4.groups.hotspots,point:p,ctx:JSON.parse(JSON.stringify(window.__sceneContext))};})()`);
+
   await evalPage(`document.querySelector('[data-level="1"]').click()`);
   await sleep(1100);
   await shot('phase06-02-refining-half.png');
@@ -82,14 +89,20 @@ function getJson(url) {
   await shot('phase06-04-refining-restored.png');
   const reset = await evalPage(`({level:window.__l4.level,flow:window.__l4.flowOn,fraction:window.__l4.selectedFraction,state:window.PETRO_DEVICE_STATE.get('atmospheric_tower')})`);
 
-  await evalPage(`window.__l4.exit()`);
+  await evalPage(`window.__l4.exit(); window.__l4.exit()`);
   await sleep(1900);
   await shot('phase06-05-back-overview.png');
-  const exit = await evalPage(`({level:window.__stage.isLevel(),ctx:JSON.parse(JSON.stringify(window.__sceneContext)),errors:(window.__auditErrors||[]).map(e=>e.message||String(e))})`);
+  const exit = await evalPage(`({level:window.__stage.isLevel(),isolated:window.__l4.isolated,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),errors:(window.__auditErrors||[]).map(e=>e.message||String(e))})`);
+  await evalPage(`window.__l4.enter()`);
+  await sleep(1100);
+  const reentry = await evalPage(`({level:window.__stage.isLevel(),level4:window.__l4.level,isolated:window.__l4.isolated,errors:(window.__auditErrors||[]).map(e=>e.message||String(e))})`);
+  await evalPage(`window.__l4.exit()`);
+  await sleep(1900);
+  const exit2 = await evalPage(`({level:window.__stage.isLevel(),isolated:window.__l4.isolated,errors:(window.__auditErrors||[]).map(e=>e.message||String(e))})`);
 
   const result = {
     date: '2026-11-23', page: URL, viewport: '1440x900',
-    external, half, full, fractions, paused, replay, reset, exit,
+    external, trayFromExternal, replayFromExternal, hotspot, half, full, fractions, paused, replay, reset, exit, reentry, exit2,
     screenshots: [
       'phase06-01-refining-external.png', 'phase06-02-refining-half.png',
       'phase06-03-refining-full.png', 'phase06-04-refining-restored.png',

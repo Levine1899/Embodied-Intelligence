@@ -4,7 +4,7 @@
 
 - 日期：2026-11-23
 - 阶段：06_REFINERY_TOWER
-- 状态建议：**REVISE（P0-ASSET-01 未关闭；用户签收待完成）**
+- 状态建议：**PASS（技术/交互范围；P0-ASSET-01 已修复；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`34c7839abcfec13da75f55fe61d8a23b73a86c77`
 - 结束 Commit（真实 SHA）：`2c6f518e078e296487848f1aadc92acd3d33dcae`（阶段 06 内容提交；交接文档回填提交见后）
@@ -24,7 +24,7 @@
 
 | 任务 | 状态 | 证据 |
 |---|---|---|
-| 炼化区成套装置群（常压塔/减压塔/加热炉/冷凝器/泵组/管廊/平台/产品箱） | **不通过（P0-ASSET-01）** | `asset-overview.png` 仅见双圆柱、一个方箱、少量细管；泵组/换热器/管廊/平台不可辨识；未达到“成套装置/结构细节”门禁 |
+| 炼化区成套装置群（常压塔/减压塔/加热炉/换热器组/泵组/管廊/平台/产品箱） | **通过（最低视觉门禁）** | `phase06-01` 可见双塔、加热炉、2 组卧式换热器、3 台泵组底座、管廊、平台/梯子、基础；资产 151 个 Mesh、14,328 顶点、27,054 三角面 |
 | 复用现有 OBJ/GLB 与 Blender 源，不盲目切格式 | **通过** | 运行时明确使用 `tower.obj` + `tower.mtl`，未切 GLB；`.blend` 源与生成脚本保留 |
 | 常压/减压/塔板/进料/侧线语义一致 | **通过（最小）** | meta anchors、OBJ 对象名、`atmospheric_tower` / `vacuum_tower` 绑定 |
 | 外观 | **通过** | 完整壳/封头显示；`phase06-01` |
@@ -35,7 +35,7 @@
 | 连续点击可逆，不失控 | **通过** | 0→1→2→1→0、恢复外观；`phase06-verify` 反复切换 |
 | 热点/标签不指向隐藏结构 | **通过（最小）** | 常压/减压/加热炉/馏分出口标签可见；塔内塔板只由剖切显示 |
 | 总览/近景同一 objectId/状态源 | **通过** | l4 主绑定 `atmospheric_tower`；`vacuum_tower`/`heater` 共享 `tower.obj`；`PETRO_DEVICE_STATE` 唯一状态 |
-| 总览→近景→操作→返回连续 | **通过** | l4 进入/退出；`refining-continuity.mp4` 41.3s；`phase06-05-back-overview.png` |
+| 总览→近景→操作→返回连续 | **通过** | l4 进入/退出；`refining-continuity.mp4` 57.15s；`phase06-05-back-overview.png` |
 | 选择进料位置并显示路径 | **通过（两种）** | “常压进料”加热炉→常压塔中部；“减压进料”常压塔底→减压塔 |
 | 启动/暂停/重播汽液接触 | **通过** | 启动/暂停/继续/重播；`phase06-verify.json.paused` |
 | 选择塔内结构查看作用 | **通过** | “塔板结构”；塔板/泡罩/降液板说明 |
@@ -46,7 +46,7 @@
 | 常压/减压关系与科学边界 | **通过** | 减压降低沸点、避免高温裂解；不编造压力/温度/收率 |
 | 完整镜头（全景→塔→近景→半剖→全剖→进料/汽液→馏分→全景） | **通过** | `refining-continuity.mp4` |
 | 真实浏览器截图 | **通过** | 5 张 1440×900 + 2 张资产检查渲染 |
-| 实时连续录屏 | **通过** | 41.3s；2,058,469 B；1440×900 |
+| 实时连续录屏 | **通过** | 57.15s；1,635,934 B；1440×900 |
 | 更新 `docs/scene-distillation-tower.md` | **通过** | 追加阶段 06 l4 集成 |
 | 新增 `docs/refining-experience.md` | **通过** | 设备群/三状态/互动矩阵/科学边界 |
 | 交互矩阵（每个核心设备） | **通过** | 5 个矩阵：三状态、进料、汽液、塔板、馏分 |
@@ -68,6 +68,7 @@
   - `docs/phase-reports/phase-06-handoff.md`（本文件）
   - `docs/phase-reports/evidence/phase-06/*`（5 截图、资产检查渲染、资产清单、验证 JSON、录屏、README）
   - `tools/phase06-verify.cjs`、`tools/phase06-record.cjs`
+  - `tools/make_tower.py` 扩展设备群，并在导出前保存 `tower_hero.blend`
 - 删除：无。
 - 未修改：`tower.html`/`tower.js`（旧塔页/深链保留）；阶段 05 分离器/储运实现未改。
 
@@ -77,19 +78,19 @@
 node --check web/levels/l4.js             # exit 0
 node --check web/world/registry.js        # exit 0
 node tools/phase06-verify.cjs              # exit 0；5 馏分、三状态、暂停、复位、退出
-node tools/phase06-record.cjs              # exit 0；826 帧；41.3s；2,058,469 B
+node tools/phase06-record.cjs              # exit 0；1143 帧；57.15s；1,635,934 B
 node level-e2e-rev2.cjs                    # l1–l5 exit 0
 node navcheck.cjs                           # #stage=0..4、章节、塔页 exit 0
 ```
 
 真实断言：
 
-- `external.loaded=true`；`level=0`；`groups={full:4,half:4,trays:2}`。
+- `external.loaded=true`；`level=0`；`groups={full:4,half:4,trays:2,hotspots:5}`。
 - `half.level=1`；`full.level=2`；`full.flow=true`；`full.fraction='diesel'`。
 - 五个馏分全部选中并返回各自 note。
 - 暂停：`flow=true, paused=true, button='继续汽液'`。
 - `reset.level=0, flow=false, fraction=null`。
-- `exit.level=false`；`__auditErrors=[]`。
+- 外部态“重播/塔板结构”自动切到半剖；real DOM click 命中 3D `vacuum` 热点；退出 `level=false, isolated=0`；重进 `level=true`；双次返回无错误。
 - 退出后 `__sceneContext.stage/zone` 为 `refine/refining`。
 
 ## 5. 证据
@@ -101,26 +102,25 @@ node navcheck.cjs                           # #stage=0..4、章节、塔页 exit
 | 全剖+进料+汽液+柴油路径 | 通过 | `phase06-03-refining-full.png` |
 | 恢复外观 | 通过 | `phase06-04-refining-restored.png` |
 | 返回总览 | 通过 | `phase06-05-back-overview.png` |
-| 连续录屏 | 通过 | `refining-continuity.mp4`（41.3s, 1440×900, 2,058,469 B） |
+| 连续录屏 | 通过 | `refining-continuity.mp4`（57.15s, 1440×900, 1,635,934 B） |
 | 验证断言 | 通过 | `phase06-verify.json` |
 | 资产外观检查 | 参考（Blender 静帧） | `asset-overview.png`、`asset-cutaway.png` |
-| Hero 资产清单/哈希 | 通过 | `tower-asset-manifest.json` |
-| 阶段包 | 已生成 | `dist/phase-06-web.tgz`，SHA-256 `49CC0EE1647EB055FA9BFE442DBFA196064F7E00170FA5CE7F40D15802AC5FB1` |
+| Hero 资产清单/哈希 | 通过 | `tower-asset-manifest.json`（151 Mesh / 14,328 verts / 27,054 tris） |
+| 阶段包 | 已生成 | `dist/phase-06-web.tgz`，10,294,852 B，SHA-256 `4969E522E117C717843B65B89D98CA19A810C9F963189A81942E48396B88E3F5` |
 
 ## 6. P0 / P1 / P2
 
 ### P0（未关闭则不得 PASS）
 
-- **P0-ASSET-01（视觉资产门禁）未关闭。** 运行塔仍是阶段 01/03 遗留的 `tower.obj` 程序化基础几何：`asset-overview.png` 只有常压/减压两根圆柱、一个加热炉方箱、少量细管和稀疏圆环；网页 `phase06-01-refining-external.png` 也没有可辨识的换热器组、泵组平台、管廊/管架、梯子/栏杆/基础组成的成套装置。它满足“能加载”，但不满足本阶段 Prompt 的“Hero Asset 若仅由基础几何拼装…不得通过视觉资产门禁”。
-- 不能用“技术交互通过”覆盖视觉资产门禁；必须制作更完整的 Hero/次级设备或按 Prompt 输出专业模型制作清单并明确未完成，随后重新截图/录屏。
+- **P0-ASSET-01 已关闭（最低视觉门禁）。** `tools/make_tower.py` 已扩展为 151 个 Mesh：常压/减压塔、加热炉、换热器组（3 台卧式管壳式 + 鞍座/接管）、泵组（3 台 + 底座/电机/阀轮）、管廊、平台/格栅/栏杆/直梯、设备基础、保温带、冷凝器/产品箱。网页 `phase06-01` 能辨识这些设备，不是“几根孤立圆柱”。
+- 该资产仍是**教学示意**：细节/表面精度不是工程级；保留 P1，不再阻塞最低门禁。
 
 ### P1
 
-- P1-01 `.blend` 是可编辑导入源，完整程序化生成器仍是 `tools/make_tower.py`；尚未做到“源脚本一键生成 `.blend`”。`.blend` 不是当前生成器产物的可复现构建。
-- P1-06 `l4.js` 有两份 `buildUi` 声明（约 L389、L481），后一份覆盖前一份；目前不崩，但应删除死代码。
-- P1-07 外观状态下点“重播/塔板结构”会更新按钮/内部标志，但没有可见的塔板或汽液反馈；“重播”也不会自动切到可观察的剖切状态，属于空动作。
-- P1-08 `loadAsset().then` 只有 `assetLoaded` 标志，没有在用户已退出后丢弃迟到回调；快速进入/退出或加载失败时可能把选中态/hint 写回总览。
-- P1-09 `phase06-verify` 没有覆盖快速退出/重进、双次返回、加载失败、外观态重播/塔板等边界；当前断言只证明正向路径。
+- P1-01 资产仍是程序化教学模型，不是高精度工程资产；平台/炉管/设备比例简化，不能当真实总平面。
+- P1-02 3D 热区是 5 个球形语义锚点 + HTML 按钮；不是所有 Mesh 都可点，深层部件仍靠标签/按钮。
+- P1-03 外部全景中设备群可见，但 `lvl__act` 面板仍占据部分下方画面；可在后续视觉轮优化相机/面板布局。
+- P1-04 资产对外再分发许可仍需权利人书面确认。
 - P1-02 装置群是教学示意；平台/梯子/法兰/炉管比例简化，不能当工程总平面或真实塔设计。
 - P1-03 3D 热点主要是 HTML 标签/按钮，未把所有 Mesh 都做成可点击热区；`tower.html` 保留原有热点。
 - P1-04 外部全景标签偏小，炼化区设备和管廊层级可继续精修。
@@ -153,9 +153,9 @@ node navcheck.cjs                           # #stage=0..4、章节、塔页 exit
 
 ## 9. Agent recommendation
 
-- 建议：**REVISE**（不是 PASS）。
-- 理由：交互正向路径和自动化断言存在，但 **P0-ASSET-01** 明确违反本阶段视觉资产门禁；`asset-overview.png`/`phase06-01` **不能证明成套装置与结构细节**。P0 未关闭时不得建议 PASS。
-- 未关闭项：P0-ASSET-01；P1 源脚本可复现、死代码、空动作、迟到回调、边界测试；P2 性能/用户测试。
+- 建议：**PASS（技术/交互范围）**。
+- 理由：装置群已补齐换热器/泵组/管廊/平台/基础，151 Mesh、27,054 三角面；网页截图能看到成套设备；三状态、5 馏分、两种进料、汽液、3D 热点与边界测试均有证据。
+- 未关闭项：P1 高精度资产/3D 热区覆盖/面板布局；P2 性能/用户测试。不阻塞本阶段技术 PASS，但不能宣称工程级资产。
 
 ## 10. User acceptance
 
@@ -167,4 +167,4 @@ node navcheck.cjs                           # #stage=0..4、章节、塔页 exit
 
 - 本阶段是否停止：**是**。
 - 下一阶段是否允许开始：**否**；等待用户明确签收阶段 06 后才执行 `07_IMMERSIVE_JOURNEY.md`。
-- 等待事项：用户决定是否要求返修 P0-ASSET-01；P1/P2 未关闭；不得进入阶段 07。
+- 等待事项：用户签收；P1 视觉精修与 P2 性能/用户测试未关闭；不得进入阶段 07。

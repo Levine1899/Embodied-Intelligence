@@ -9,12 +9,17 @@
 
   let G = null, camera = null, baseScene = null, anchor = null;
   let unit = null, assetLoaded = false;
-  const fullMeshes = [], halfMeshes = [], trayMeshes = [], internals = [];
+  const fullMeshes = [], halfMeshes = [], trayMeshes = [], insulationMeshes = [], internals = [];
   const flows = [];
   const fractionGroups = {};
   let feedGroup = null, feedGroups = {}, trayGroup = null, flowGroup = null;
   let level = 0, flowOn = false, flowPaused = false, selectedFraction = null;
   let running = false, lastT = performance.now();
+  let enterTimer = null, exitTimer = null;
+  const hiddenWorld = [];
+  let hotspotGroup = null;
+  const hotspotMeshes = [];
+  let selectedHotspot = null;
 
   const SCALE = 0.46;
   const FRACTIONS = [
@@ -49,6 +54,19 @@
     };
   }
 
+  function isolateWorld() {
+    if (!baseScene || hiddenWorld.length) return;
+    baseScene.children.forEach(function (child) {
+      if (child === G || child.isLight || child.isCamera) return;
+      if (child.visible) { hiddenWorld.push(child); child.visible = false; }
+    });
+  }
+
+  function restoreWorld() {
+    hiddenWorld.forEach(function (child) { child.visible = true; });
+    hiddenWorld.length = 0;
+  }
+
   function build() {
     baseScene = stage.baseScene;
     const nodes = stage.nodes || [];
@@ -68,6 +86,7 @@
     buildUi();
     loadAsset();
     buildTowerLabels();
+    buildHotspots();
     buildInternals();
     buildPaths();
     buildTrayHighlight();
@@ -77,7 +96,7 @@
 
   function loadAsset() {
     if (!window.ObjLite) { hint.textContent = '装置模型加载器不可用'; return; }
-    window.ObjLite.load('assets/tower/tower.obj?v=06', 'assets/tower/tower.mtl?v=06').then(function (root) {
+    window.ObjLite.load('assets/tower/tower.obj?v=07', 'assets/tower/tower.mtl?v=07').then(function (root) {
       unit = root;
       unit.scale.setScalar(SCALE);
       unit.position.set(0, 0, 0);
@@ -95,12 +114,16 @@
         } else if (/^Trays_/.test(n)) {
           trayMeshes.push(o);
           o.visible = false;
+        } else if (/^Insulation_Band/.test(n)) {
+          insulationMeshes.push(o);
         }
-        if (/^Heater|^Pipe_Feed|^Pipe_Bottom|^Pipe_Side|^Pipe_Top|^Box_|^Pump_|^Railing_|^Ladder|^Skirt|^Manway_|^Nozzle_|^Flange_/.test(n)) {
+        if (/^Heater|^Pipe_Feed|^Pipe_Bottom|^Pipe_Side|^Pipe_Top|^Box_|^Pump_|^Railing_|^Ladder|^Skirt|^Manway_|^Nozzle_|^Flange_|^Exchanger_|^PumpSkid_|^PipeRack_|^Platform_|^Foundation_|^Stair_/.test(n)) {
           o.userData.towerPart = true;
         }
       });
       assetLoaded = true;
+      if (!window.__l4active) { unit.visible = false; return; }
+      unit.visible = true;
       setLevel(0, false);
       if (stage.deviceState) {
         stage.deviceState.bind('atmospheric_tower', 'detail', unit);
@@ -111,7 +134,7 @@
       syncUi();
       hint.textContent = '常减压装置 · 常压塔 / 减压塔 / 加热炉';
     }).catch(function () {
-      hint.textContent = '装置模型加载失败；可用 tower.html 的 2D 剖面 fallback';
+      if (window.__l4active) hint.textContent = '装置模型加载失败；可用 tower.html 的 2D 剖面 fallback';
     });
   }
 
@@ -120,7 +143,10 @@
       ['常压塔', [0, 13.2, 0], '#c9d6dc'],
       ['减压塔', [3.5, 8.0, 0], '#8fb6ad'],
       ['加热炉', [-3.2, 4.4, 0], '#d8a24a'],
-      ['馏分出口', [4.5, 8.8, 0], '#d8c9a0']
+      ['馏分出口', [4.5, 8.8, 0], '#d8c9a0'],
+      ['换热器组', [-5.8, 2.6, 0], '#9fb7c0'],
+      ['泵组', [1.95, 1.1, 2.9], '#d8a24a'],
+      ['管廊', [6.4, 3.2, 4.3], '#8fb6ad']
     ];
     defs.forEach(function (d) {
       const l = window.__lvlLabel(d[0], d[2]);
@@ -128,6 +154,78 @@
       l.scale.setScalar(0.72);
       G.add(l);
     });
+  }
+
+
+  const HOTSPOTS = [
+    { id: 'atm', objectId: 'atmospheric_tower', label: '常压塔', pos: [0, 8.4, 0], color: 0xc9d6dc, text: '常压塔按沸点范围分馏；切到半剖/全剖看塔板。' },
+    { id: 'vacuum', objectId: 'vacuum_tower', label: '减压塔', pos: [3.5, 6.2, 0], color: 0x8fb6ad, text: '减压塔降低压力，让重油在较低温度继续分离，避免高温裂解。' },
+    { id: 'heater', objectId: 'heater', label: '加热炉', pos: [-3.3, 4.2, 0], color: 0xd8a24a, text: '加热炉把原油加热到进塔条件；这里只做流程定位，不提供炉温/热负荷。' },
+    { id: 'feed', objectId: 'atmospheric_tower', label: '进料口', pos: [-2.0, 5.8, 0], color: 0xe0b35c, text: '常压进料进塔中部；也可切换减压进料，观察常压塔底→减压塔。' },
+    { id: 'products', objectId: 'atmospheric_tower', label: '馏分出口', pos: [4.25, 8.7, 0], color: 0x9fd3c6, text: '从塔顶到塔底依次是油气、石脑油、煤油、柴油、常压渣油；它们是馏分，不是成品油。' }
+  ];
+  const hotspotItems = [];
+
+  function buildHotspots() {
+    hotspotGroup = new THREE.Group();
+    G.add(hotspotGroup);
+    HOTSPOTS.forEach(function (h) {
+      const mat = new THREE.MeshBasicMaterial({ color: h.color, transparent: true, opacity: 0.88, depthWrite: false });
+      const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.115, 10, 8), mat);
+      mesh.position.set(h.pos[0], h.pos[1], h.pos[2]);
+      mesh.userData.hotspot = h.id;
+      mesh.userData.baseColor = h.color;
+      hotspotGroup.add(mesh);
+      hotspotMeshes.push(mesh);
+      hotspotItems.push({ def: h, mesh: mesh });
+    });
+    stage.viewport.addEventListener('click', onHotspotClick);
+  }
+
+  function syncHotspots() {
+    if (hotspotGroup) hotspotGroup.visible = !!window.__l4active;
+    hotspotMeshes.forEach(function (m) {
+      const on = m.userData.hotspot === selectedHotspot;
+      m.material.opacity = on ? 1 : 0.82;
+      m.scale.setScalar(on ? 1.55 : 1);
+    });
+  }
+
+  function selectHotspot(id) {
+    const item = hotspotItems.filter(function (x) { return x.def.id === id; })[0];
+    if (!item) return;
+    selectedHotspot = id;
+    const d = item.def;
+    if (stage.setContextObject) stage.setContextObject(d.objectId, 'refining');
+    if (stage.deviceState) stage.deviceState.select(d.objectId);
+    if (stage.setInteraction) stage.setInteraction('select_refining_hotspot', id, '示意');
+    hint.textContent = d.label + ' · 3D 语义热点';
+    note.innerHTML = '<b>' + d.label + '</b><br>' + d.text;
+    syncHotspots();
+  }
+
+  function hotspotPoint(id) {
+    const item = hotspotItems.filter(function (x) { return x.def.id === id; })[0];
+    if (!item || !camera) return null;
+    const p = new THREE.Vector3();
+    item.mesh.getWorldPosition(p);
+    p.project(camera);
+    const rect = stage.renderer.domElement.getBoundingClientRect();
+    return { x: rect.left + (p.x + 1) * 0.5 * rect.width, y: rect.top + (1 - p.y) * 0.5 * rect.height };
+  }
+
+  function onHotspotClick(e) {
+    if (!window.__l4active || !camera) return;
+    if (e.target !== stage.renderer.domElement) return;
+    const rect = stage.renderer.domElement.getBoundingClientRect();
+    const mouse = new THREE.Vector2(
+      ((e.clientX - rect.left) / rect.width) * 2 - 1,
+      -((e.clientY - rect.top) / rect.height) * 2 + 1
+    );
+    const ray = new THREE.Raycaster();
+    ray.setFromCamera(mouse, camera);
+    const hits = ray.intersectObjects(hotspotMeshes, false);
+    if (hits.length) selectHotspot(hits[0].object.userData.hotspot);
   }
 
   function buildInternals() {
@@ -252,6 +350,7 @@
       }
     });
     trayMeshes.forEach(function (o) { o.visible = level > 0; });
+    insulationMeshes.forEach(function (o) { o.visible = level === 0; });
     if (flowGroup) flowGroup.visible = flowOn && level > 0;
     if (trayGroup) trayGroup.visible = trayGroup.userData.on === true && level > 0;
     const names = ['外观', '半剖', '全剖'];
@@ -264,9 +363,9 @@
     }
     if (record !== false && stage.setInteraction) stage.setInteraction('inspect_tower_structure', level === 0 ? 'external' : (level === 1 ? 'half' : 'full'), '示意');
     if (camera) {
-      const target = new THREE.Vector3(anchor.x + 0.5, 5.0, anchor.z);
-      const dist = level === 0 ? 23 : 16;
-      fly(camera.position.clone(), target, new THREE.Vector3(anchor.x + dist * 0.45, 8.8, anchor.z + dist), target, 1000);
+      const target = new THREE.Vector3(anchor.x, level === 0 ? 4.0 : 5.2, anchor.z);
+      const dist = level === 0 ? 24 : 23;
+      fly(camera.position.clone(), target, new THREE.Vector3(anchor.x - (level === 0 ? 11.5 : 9.0), level === 0 ? 10.8 : 10.8, anchor.z + dist), target, 1000);
     }
   }
 
@@ -351,6 +450,7 @@
     });
     ui.querySelector('#l4-tray').addEventListener('click', function () {
       if (!trayGroup) return;
+      if (level === 0) setLevel(1, false);
       trayGroup.userData.on = !(trayGroup.userData.on === true);
       trayGroup.visible = trayGroup.userData.on && level > 0;
       if (stage.setInteraction) stage.setInteraction('inspect_tower_trays', 'atmospheric_tower', '示意');
@@ -359,7 +459,9 @@
     });
     ui.querySelector('#l4-replay').addEventListener('click', function () {
       internals.forEach(function (p) { p.position.y = p.userData.base; });
+      if (level === 0) setLevel(1, false);
       flowOn = true; flowPaused = false;
+      if (stage.deviceState) stage.deviceState.set('atmospheric_tower', { animation: 'running' }, 'level');
       if (flowGroup) flowGroup.visible = level > 0;
       selectedFraction = null;
       Object.keys(fractionGroups).forEach(function (k) { fractionGroups[k].group.visible = false; });
@@ -432,6 +534,8 @@
 
   function enter() {
     if (stage.isLevel()) return;
+    if (exitTimer) { clearTimeout(exitTimer); exitTimer = null; }
+    if (enterTimer) { clearTimeout(enterTimer); enterTimer = null; }
     if (!G) build();
     ensureCamera();
     const startPos = stage.camera.position.clone();
@@ -440,7 +544,10 @@
     camera.lookAt(startT);
     stage.use(baseScene, camera);
     if (stage.setOverviewVisible) stage.setOverviewVisible(false);
+    isolateWorld();
     window.__l4active = true;
+    if (unit) unit.visible = true;
+    if (hotspotGroup) hotspotGroup.visible = true;
     ui.classList.add('on');
     document.body.classList.add('in-level');
     if (stage.setContextObject) stage.setContextObject('atmospheric_tower', 'refining');
@@ -451,34 +558,42 @@
     if (!running) { running = true; loop(); }
     setLevel(0, false);
     fly(startPos, startT,
-      new THREE.Vector3(anchor.x + 12.0, 8.0, anchor.z + 16.0),
-      new THREE.Vector3(anchor.x + 0.8, 4.4, anchor.z), 1700);
-    setTimeout(function () {
+      new THREE.Vector3(anchor.x - 11.5, 10.8, anchor.z + 24.0),
+      new THREE.Vector3(anchor.x, 4.0, anchor.z), 1700);
+    enterTimer = setTimeout(function () {
+      enterTimer = null;
       if (!window.__l4active) return;
       ui.querySelector('#l4-act').hidden = false;
       hint.textContent = assetLoaded ? '装置群 · 选择剖切、进料或馏分' : '装置模型加载中…';
+      syncHotspots();
     }, 1500);
   }
 
   function exit() {
+    if (!window.__l4active) return;
     window.__l4active = false;
+    if (enterTimer) { clearTimeout(enterTimer); enterTimer = null; }
+    if (exitTimer) { clearTimeout(exitTimer); exitTimer = null; }
+    if (unit) unit.visible = false;
+    if (hotspotGroup) hotspotGroup.visible = false;
     ui.querySelector('#l4-act').hidden = true;
     ui.classList.remove('on');
     document.body.classList.remove('in-level');
     if (stage.setContextObject) stage.setContextObject(null, 'refining');
     if (stage.deviceState) stage.deviceState.select(null);
     fly(camera.position.clone(), new THREE.Vector3(anchor.x + 0.6, 5.0, anchor.z),
-      new THREE.Vector3(anchor.x, 11, anchor.z + 20), new THREE.Vector3(0, 1.2, 0), 1500);
-    setTimeout(function () {
+      new THREE.Vector3(anchor.x, 11, anchor.z + 24), new THREE.Vector3(0, 1.2, 0), 1500);
+    exitTimer = setTimeout(function () {
+      exitTimer = null;
       running = false;
       if (stage.setOverviewVisible) stage.setOverviewVisible(true);
+      restoreWorld();
       stage.back();
       const seg = document.querySelector('#stages [data-stage="3"]');
       if (seg) seg.classList.add('done-level');
     }, 1600);
   }
 
-  function buildUi() { buildUiOnce(); }
 
   window.__lvlEntry(3, '进入 04 炼化', enter);
   window.__l4 = {
@@ -486,6 +601,9 @@
     get level() { return level; }, get loaded() { return assetLoaded; },
     get flowOn() { return flowOn; }, get flowPaused() { return flowPaused; },
     get selectedFraction() { return selectedFraction; },
-    get groups() { return { full: fullMeshes.length, half: halfMeshes.length, trays: trayMeshes.length }; }
+    get groups() { return { full: fullMeshes.length, half: halfMeshes.length, trays: trayMeshes.length, hotspots: hotspotMeshes.length }; },
+    selectHotspot: selectHotspot,
+    hotspotPoint: hotspotPoint,
+    get isolated() { return hiddenWorld.length; }
   };
 })();
