@@ -21,6 +21,8 @@ async function loadKey(name = 'DEEPSEEK_API_KEY') {
 }
 const KEY = await loadKey();
 const DIFY_KEY = await loadKey('DIFY_API_KEY');
+const DIFY_WRITE_KEY = await loadKey('DIFY_WRITE_API_KEY');
+const DIFY_WRITE_URL = (await loadKey('DIFY_WRITE_API_URL') || 'http://121.196.165.49:8888/v1').replace(/\/$/, '');
 const DIFY_URL = (await loadKey('DIFY_API_URL') || 'http://121.196.165.49:8888/v1').replace(/\/$/, '');
 
 const SYS = `你是科普编辑。用户会给你一场参观/演示的过程记录，每条记录有类型（问 / 答 / 看 / 段）。
@@ -41,15 +43,23 @@ const SYS = `你是科普编辑。用户会给你一场参观/演示的过程记
 const TAIL = {
   copy: '9. 只输出正文，不要标题、不要小标题、不要 markdown。',
   post: '9. 第一行是标题，单独一行；其后是正文段落；不要小标题、不要 markdown、不要列表。',
+  event: '9. 输出活动策划方案，可按内容分段；未提供的时间、地点等信息不要编造。',
+  news: '9. 输出新闻稿，包含标题和正文；未提供的事件细节不要编造。',
+  poster: '9. 输出海报文案，包含简短标题和正文；未提供的活动信息不要编造。',
+  broadcast: '9. 只输出适合朗读的广播稿正文，不要 markdown。',
   script: '9. 只输出镜头行，一行一个镜头，每行四个字段用竖线隔开；不要段落、不要标题、不要编号、不要空行。'
 };
-const GENRE_NAME = { copy: '展馆讲解词', post: '科普推文', script: '短视频脚本' };
+const GENRE_NAME = { copy: '展品讲解词', post: '科普推文', event: '活动策划方案', news: '新闻稿', poster: '海报文案', broadcast: '广播稿', script: '短视频脚本' };
 const BAN = ['讲解员', '观众', '屏幕上', '激光笔', '灯光', '参观', '本场', '片子放完'];
 const hitBan = t => BAN.filter(w => t.includes(w));
 
 const GENRE = {
-  copy: '【体裁要求·最高优先级】写一篇展馆讲解词，600–800 字，口语、句子短、适合朗读；可以用展项名指路；结尾留一句给听众的提问。与下文"不要标题""不要小标题"的冲突处，以此条为准：仍然不要标题。',
+  copy: '【体裁要求·最高优先级】写一篇展品讲解词，600–800 字，口语、句子短、适合朗读；可以用展项名指路；结尾留一句给听众的提问。与下文"不要标题""不要小标题"的冲突处，以此条为准：仍然不要标题。',
   post: '【体裁要求·最高优先级】写一篇科普推文，260–360 字。第一行是标题（不加"标题："二字），空一行，然后：一个生活锚点 → 一段机制 → 一句落点。与下文"不要标题"冲突时，以此条为准：要标题。',
+  event: '【体裁要求·最高优先级】根据提供的素材写活动策划方案，清晰说明活动主题、目标和可行内容；缺少的时间、地点、人员等信息不要编造。允许使用小标题。',
+  news: '【体裁要求·最高优先级】根据提供的事实写新闻稿，包含标题和正文，表达客观准确；不编造事件、时间、地点或引语。',
+  poster: '【体裁要求·最高优先级】根据素材写简洁醒目的海报文案，包含标题和简短正文；不编造活动信息。',
+  broadcast: '【体裁要求·最高优先级】根据素材写广播稿，语言自然流畅，适合口头播读。',
   script: '【体裁要求·最高优先级】写一个短视频脚本，严格 8–10 行，每行必须含三个竖线（画面｜解说｜字幕｜秒数），一行一个镜头，不要写成段落。每行严格为"画面｜解说｜字幕｜秒数"，例如"井口特写｜这是套管，撑住井壁｜套管｜5s"。总时长 45–60 秒。竖线分隔不算 markdown，与下文"不要 markdown"冲突时以此条为准。'
 };
 const FACT_RULE = `
@@ -60,12 +70,25 @@ const FACT_RULE = `
 2. 底稿以外的科学细节一律不写，宁可少写；
 3. 底稿与记录冲突时，以底稿为准。`;
 
-async function callDeepSeek(ledger, genre, extra, facts) {
+const AUDIENCE = {
+  youth: '亲子与青少年：使用易懂的语言和贴近日常生活的解释，避免晦涩术语。',
+  public: '普通公众：使用清晰通俗的语言，必要时解释术语。',
+  enthusiast: '科技／石油爱好者：适当介绍科学原理和专业术语，并作必要解释。',
+  professional: '专业人士：使用准确的专业术语，表达严谨，适当增加技术深度。'
+};
+
+const WRITING_STYLE = {
+  rigorous: '严谨：措辞准确，逻辑清晰。',
+  lively: '活泼：语言生动、自然，适合目标群体。',
+  storytelling: '故事化：以连贯的叙述组织素材，不编造事实或场景。'
+};
+
+async function callDeepSeek(ledger, genre, extra, facts, audience, style) {
   const factBlock = (facts && facts.length)
     ? '\n\n【事实底稿】\n' + facts.map((f, i) => (i + 1) + '. ' + f).join('\n')
     : '';
   const messages = [
-    { role: 'system', content: SYS + '\n\n' + (GENRE[genre] || '') + '\n' + (TAIL[genre] || TAIL.copy) + (factBlock ? FACT_RULE : '') },
+    { role: 'system', content: SYS + '\n\n' + (GENRE[genre] || '') + '\n【目标用户群体】' + (AUDIENCE[audience] || AUDIENCE.public) + '\n【表达风格】' + (WRITING_STYLE[style] || WRITING_STYLE.rigorous) + '\n' + (TAIL[genre] || TAIL.copy) + (factBlock ? FACT_RULE : '') },
     { role: 'user', content: (GENRE_NAME[genre] ? '【本次要写的体裁】' + GENRE_NAME[genre] + '\n\n' : '') + JSON.stringify(ledger || [], null, 1) + factBlock }
   ];
   if (extra) messages.push(...extra);
@@ -171,7 +194,7 @@ async function callAsk(question, ctx, tier, mode) {
 const server = http.createServer(async (req, res) => {
   const url = req.url.split('?')[0];
 
-  if (url !== '/api/gen' && url !== '/api/ask' && url !== '/api/dify-chat') {
+  if (url !== '/api/gen' && url !== '/api/ask' && url !== '/api/dify-chat' && url !== '/api/dify-write') {
     res.writeHead(404, { 'Content-Type': 'application/json' });
     return res.end('{"error":"not found"}');
   }
@@ -179,7 +202,7 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(405, { 'Content-Type': 'application/json' });
     return res.end('{"error":"post only"}');
   }
-  if (url !== '/api/dify-chat' && !KEY) {
+  if (url !== '/api/dify-chat' && url !== '/api/dify-write' && !KEY) {
     res.writeHead(503, { 'Content-Type': 'application/json' });
     return res.end('{"error":"no key"}');
   }
@@ -194,6 +217,29 @@ const server = http.createServer(async (req, res) => {
 
   let payload = {};
   try { payload = JSON.parse(body || '{}'); } catch {}
+
+  if (url === '/api/dify-write') {
+    const respond = (status, data) => { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(data)); };
+    if (!DIFY_WRITE_KEY) return respond(503, { error: '尚未配置写作工作流 API Key，请检查 server/.env' });
+    const fields = ['topic', 'genre', 'facts', 'audience', 'style', 'draft', 'comment'];
+    if (fields.some(name => typeof payload[name] !== 'string') || !payload.genre || !payload.audience || !payload.style || (!payload.topic.trim() && !payload.facts.trim() && !payload.draft.trim())) {
+      return respond(400, { error: '写作参数不完整' });
+    }
+    try {
+      const upstream = await fetch(DIFY_WRITE_URL + '/workflows/run', {
+        method: 'POST', signal: AbortSignal.timeout(120000),
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + DIFY_WRITE_KEY },
+        body: JSON.stringify({ inputs: Object.fromEntries(fields.map(name => [name, payload[name]])), response_mode: 'blocking', user: 'scienceagent-write' })
+      });
+      const result = await upstream.json();
+      if (!upstream.ok || result.data?.status !== 'succeeded' || typeof result.data?.outputs?.text !== 'string' || !result.data.outputs.text.trim()) {
+        return respond(502, { error: '稿件生成失败，请检查 Dify 工作流配置后重试。' });
+      }
+      return respond(200, { text: result.data.outputs.text.trim() });
+    } catch {
+      return respond(502, { error: '无法连接 Dify 写作服务，请稍后重试。' });
+    }
+  }
 
   if (url === '/api/dify-chat') {
     if (!DIFY_KEY) {
@@ -241,13 +287,13 @@ const server = http.createServer(async (req, res) => {
     }
   }
   try {
-    let text = await callDeepSeek(payload.ledger, payload.genre, null, payload.facts);
+    let text = await callDeepSeek(payload.ledger, payload.genre, null, payload.facts, payload.audience, payload.style);
     const banned = hitBan(text);
     if (banned.length) {
       text = await callDeepSeek(payload.ledger, payload.genre, [
         { role: 'assistant', content: text },
         { role: 'user', content: '重写。刚才出现了' + banned.join('、') + '，违反第 8 条。读者不应知道有过一场参观。' }
-      ], payload.facts);
+      ], payload.facts, payload.audience, payload.style);
     }
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ text, ms: Date.now() - t0 }));
