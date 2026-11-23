@@ -323,6 +323,7 @@
     if ((lastLine.match(/\*\*/g) || []).length % 2) text += text.endsWith('*') && !text.endsWith('**') ? '*' : '**';
     else if (text.endsWith('*') && !text.endsWith('**')) text = text.slice(0, -1);
     content.innerHTML = DOMPurify.sanitize(marked.parse(text));
+    content.querySelectorAll('a[href]').forEach(link => { link.target = '_blank'; link.rel = 'noopener noreferrer'; });
   }
   function createUserMessage(question, prompt, turn) {
     const wrapper = node('div', 'user-message');
