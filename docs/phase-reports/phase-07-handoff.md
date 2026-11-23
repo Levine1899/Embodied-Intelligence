@@ -4,7 +4,7 @@
 
 - 日期：2026-11-23
 - 阶段：07_IMMERSIVE_JOURNEY
-- 状态建议：**PASS（复核修复后；技术/交互范围；用户签收待完成）**
+- 状态建议：**PASS（复核修复后；技术/交互范围；用户已签收（2026-11-23））**
 - 用户签收：**已签收（2026-11-23，用户原话“签收06、07”）**
 - 起始 Commit：`f059728236711e410927dffd84f9004bf7efad22`（阶段 06 后、阶段 07 开始前）
 - 结束 Commit（真实 SHA）：`6047a59`（当前 main；含 feature/261121-cuiyue-dev 的问答来源新标签修复）
@@ -22,7 +22,7 @@
 - 已读：`docs/phase-reports/phase-03-handoff.md`、`phase-04-handoff.md`、`phase-05-handoff.md`
 - 已读前置设计/交付物：`docs/experience-design.md`、`docs/interaction-spec.md`、`docs/device-state-contract.md`、`docs/scene-map.md`、`docs/camera-storyboard.md`、`docs/task-design.md`、`docs/refining-experience.md`、`docs/scene-distillation-tower.md`
 - 已读代码/资产：`web/immersion.js`、`web/world/registry.js`、`web/levels/entry.js`、`l1.js`–`l5.js`、`web/sandbox.html`、`web/assets/site/ambient.js`、阶段 04–06 证据索引
-- 阶段 03/04/05 用户签收：已有记录；阶段 06 原 handoff 的 `User acceptance` 仍为“待用户签收”，本阶段未改写该历史字段，也未代签。
+- 阶段 03/04/05 用户签收：已有记录；阶段 06 已于本轮按用户原话 `签收06、07` 补记签收，未改写技术结论。
 - 用户本轮明确声明：`阶段 03—06 已通过。` 作为阶段 07 放行依据（当前用户消息原文）。
 - 缺失项：没有独立的 `07_IMMERSIVE_JOURNEY.md` 文件；当前用户消息本身即本阶段 Prompt（与阶段 05/06 的处理一致）。没有前置交付文件缺失。
 - 是否因此阻塞：否。
@@ -156,7 +156,7 @@ node tools/phase07-record.cjs mission
 - **阶段 07 UI/技术无未关闭 P0。** 复核提出的 P0-R1/P0-R2 已修复，并由 `phase07-verify.cjs` 的 76 项断言覆盖：
   - **P0-R1 已修复**：M3 改为保存/判定当前液位；新增“75→0→泵不完成、再回 75 后完成”的负例；75/0 通过。
   - **P0-R2 已修复**：`resumeScene()` 恢复 l2 分离、l3 泵、l4 汽液；导览第 5/6/7 站暂停→继续断言全部通过；暂停时临时显示关卡操作面板，支持接管。
-- P0-GOV-01（阶段 06 用户签收字段仍写“待用户签收”）：用户本轮明确声明“阶段 03—06 已通过”，作为阶段 07 放行依据；未改写历史报告、未代签。阶段 07 自身的用户签收仍待完成。
+- P0-GOV-01：用户本轮明确 `签收06、07`；阶段 06/07 handoff 已记录签收，未改写技术结论。
 - 最短真实路径已在真实浏览器执行；任务不是选择题/积分/自动播放。
 
 ### P1
