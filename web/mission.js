@@ -241,6 +241,7 @@
     if (step) {
       ui.querySelector('#mission-goal').textContent = step.goal;
       ui.querySelector('#mission-clue').textContent = '线索：' + step.clue;
+      global.__narrationText = step.title + '。' + step.goal + '。线索：' + step.clue;
     }
     var fb = ui.querySelector('#mission-feedback');
     if (state.status === 'paused') {
@@ -302,7 +303,9 @@
     if (state.status !== 'active') state.status = 'active';
     var step = current();
     if (!step) return;
+    if (step.id === 'M5' && global.__l5) state.flags.pickedCount = (global.__l5.picked || []).length;
     busy = true;
+    if (global.Voice) global.Voice.stop();
     render();
     var st = currentState();
     st.visited = true;
@@ -361,11 +364,9 @@
       var solved = global.__l2 && global.__l2.solved;
       if (solved && solved.gas && solved.oil && solved.water && state.flags.started) completeStep();
     } else if (step.id === 'M3') {
-      if (action === 'change_liquid_level') {
-        state.flags.level = Math.max(state.flags.level || 0, Number(value) || 0);
-        if ((Number(value) || 0) < 70) state.flags.level = Math.max(state.flags.level || 0, Number(value) || 0);
-      }
+      if (action === 'change_liquid_level') state.flags.level = Number(value) || 0;
       if (action === 'start_pump') state.flags.pump = true;
+      /* 必须用“启动泵时的当前液位”，不能用历史最高液位。 */
       if ((state.flags.level || 0) >= 70 && state.flags.pump) completeStep();
     } else if (step.id === 'M4') {
       if (action === 'inspect_tower_structure' && value === 'full') state.flags.full = true;
@@ -374,12 +375,16 @@
     } else if (step.id === 'M5') {
       if (action === 'select_product') {
         var picked = (global.__l5 && global.__l5.picked) || [];
-        if (picked.length > 0) {
+        var before = Number(state.flags.pickedCount) || 0;
+        state.flags.pickedCount = picked.length;
+        /* 必须是新增选择，取消选中/无变化不能完成任务。 */
+        if (picked.length > before) {
           state.flags.product = value;
           state.flags.products = picked.length;
           completeStep();
         } else {
-          addError('至少保留一个选中的产品，再完成这一段。');
+          state.lastHint = 'M5 需要新增一个产品选择；取消选中不算完成任务。';
+          save();
         }
       }
     }

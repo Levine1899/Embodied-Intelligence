@@ -96,6 +96,7 @@
   /* ---------- 相机 ---------- */
   let flyHandle = null;
   function fly(from, fromT, to, toT, dur, done) {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { camera.position.copy(to); camera.lookAt(toT); if (typeof done === 'function') done(); return; }
     const t0 = performance.now();
     if (flyHandle) cancelAnimationFrame(flyHandle);
     const ease = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
@@ -256,5 +257,17 @@
 
   back.onclick = exit;
   window.__lvlEntry(4, '进入 05 产品去向', enter);
-  window.__l5 = { enter: enter, exit: exit, toggle: toggle, select: function (i) { if (!picked.has(i)) toggle(i); }, get picked() { return Array.from(picked); } };
+  window.__l5 = {
+    enter: enter,
+    exit: exit,
+    toggle: toggle,
+    select: function (i) { if (!picked.has(i)) toggle(i); },
+    get picked() { return Array.from(picked); },
+    screenPoint: function (i) {
+      var it = ITEMS[i]; if (!it || !camera || !stage || !stage.viewport) return null;
+      var v = new THREE.Vector3(); it.mesh.getWorldPosition(v); v.project(camera);
+      var r = stage.viewport.getBoundingClientRect();
+      return { x: r.left + (v.x * 0.5 + 0.5) * r.width, y: r.top + (-v.y * 0.5 + 0.5) * r.height, visible: v.z > -1 && v.z < 1 };
+    }
+  };
 })();

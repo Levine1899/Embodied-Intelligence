@@ -127,7 +127,7 @@
       objectIds: ['wellhead', 'pumpjack'],
       async enter() {
         await enterLevelAnd(0, function () {
-          if (global.__l1 && global.__l1.selectPart) global.__l1.selectPart('wellhead');
+          if (global.__l1 && global.__l1.selectWellhead) global.__l1.selectWellhead(); else if (global.__l1 && global.__l1.selectPart) global.__l1.selectPart('casing');
         });
       }
     },
@@ -260,6 +260,7 @@
     stepEl.textContent = String(tour.index + 1).padStart(2, '0') + ' / ' + String(TOUR_STEPS.length).padStart(2, '0');
     titleEl.textContent = s.title;
     textEl.textContent = s.narration;
+    global.__narrationText = s.title + '。' + s.narration;
     var extra = document.getElementById('tour-context');
     if (!extra) {
       extra = document.createElement('p');
@@ -305,6 +306,7 @@
     tour.busy = false;
     tour.ready = true;
     tour.playing = true;
+    document.body.classList.remove('journey-paused');
     paint();
   }
 
@@ -320,6 +322,7 @@
     tour.index = 0;
     tour.playing = true;
     document.body.classList.add('journey-tour');
+    document.body.classList.remove('journey-paused');
     if (stage() && stage().setMode) stage().setMode('tour');
     if (card) card.hidden = false;
     await showStep(0);
@@ -327,11 +330,12 @@
 
   async function stopTour(record) {
     if (!tour.active) return;
+    if (global.Voice) global.Voice.stop();
     tour.active = false;
     tour.playing = false;
     tour.token += 1;
     if (tour.status !== 'completed') tour.status = 'stopped';
-    document.body.classList.remove('journey-tour');
+    document.body.classList.remove('journey-tour', 'journey-paused');
     if (card) card.hidden = true;
     await leaveLevel();
     if (stage() && stage().setMode) stage().setMode('free');
@@ -341,6 +345,7 @@
   function pauseTour() {
     if (!tour.active || !tour.playing) return;
     tour.playing = false;
+    document.body.classList.add('journey-paused');
     pauseScene();
     paint();
   }
@@ -348,6 +353,8 @@
   function resumeTour() {
     if (!tour.active) return;
     tour.playing = true;
+    document.body.classList.remove('journey-paused');
+    resumeScene();
     if (global.Ambient && TOUR_STEPS[tour.index] && TOUR_STEPS[tour.index].stage != null) global.Ambient.setStage(TOUR_STEPS[tour.index].stage);
     paint();
   }
@@ -360,6 +367,21 @@
       if (c.levelId === 'l4') {
         var b = document.getElementById('l4-flow');
         if (b && b.getAttribute('aria-pressed') === 'true') b.click();
+      }
+    } catch (err) {}
+  }
+
+  function resumeScene() {
+    var c = ctx();
+    try {
+      if (c.levelId === 'l2' && global.__l2 && !global.__l2.running && global.__l2.startSeparation) global.__l2.startSeparation();
+      if (c.levelId === 'l3' && global.__l3 && !global.__l3.pumpRunning && global.__l3.startPump) global.__l3.startPump();
+      if (c.levelId === 'l4' && global.__l4) {
+        if (!global.__l4.flowOn && global.__l4.startFlow) global.__l4.startFlow();
+        else if (global.__l4.flowPaused) {
+          var b = document.getElementById('l4-flow');
+          if (b) b.click();
+        }
       }
     } catch (err) {}
   }

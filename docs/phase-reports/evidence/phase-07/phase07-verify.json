@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-11-23T10:44:00.765Z",
+  "generatedAt": "2026-11-23T11:31:08.419Z",
   "base": "http://127.0.0.1:8796",
-  "passed": 63,
+  "passed": 75,
   "failed": 0,
   "results": [
     {
@@ -113,6 +113,14 @@
       }
     },
     {
+      "name": "tour wellhead dynamic",
+      "ok": true,
+      "detail": {
+        "res": "wellhead",
+        "pressure": 0
+      }
+    },
+    {
       "name": "tour next to 3 clicked",
       "ok": true,
       "detail": null
@@ -173,6 +181,23 @@
       }
     },
     {
+      "name": "tour l2 pause stops separation and shows controls",
+      "ok": true,
+      "detail": {
+        "running": false,
+        "cls": true,
+        "act": "block"
+      }
+    },
+    {
+      "name": "tour l2 resume restarts separation",
+      "ok": true,
+      "detail": {
+        "running": true,
+        "playing": true
+      }
+    },
+    {
       "name": "tour next to 5 clicked",
       "ok": true,
       "detail": null
@@ -204,6 +229,22 @@
       "detail": {
         "level": 0.72,
         "pump": true
+      }
+    },
+    {
+      "name": "tour l3 pause stops pump",
+      "ok": true,
+      "detail": {
+        "running": false,
+        "cls": true
+      }
+    },
+    {
+      "name": "tour l3 resume restarts pump",
+      "ok": true,
+      "detail": {
+        "running": true,
+        "playing": true
       }
     },
     {
@@ -239,6 +280,24 @@
         "level": 2,
         "flow": true,
         "fraction": null
+      }
+    },
+    {
+      "name": "tour l4 pause stops flow",
+      "ok": true,
+      "detail": {
+        "flow": true,
+        "paused": true,
+        "cls": true
+      }
+    },
+    {
+      "name": "tour l4 resume restarts flow",
+      "ok": true,
+      "detail": {
+        "flow": true,
+        "paused": false,
+        "playing": true
       }
     },
     {
@@ -423,7 +482,7 @@
           "hintLevel": 0,
           "errors": [],
           "lastHint": "",
-          "startedAt": "2026-11-23T10:42:47.352Z",
+          "startedAt": "2026-11-23T11:29:50.970Z",
           "finishedAt": null
         },
         "level": "l1",
@@ -477,7 +536,7 @@
         "hintLevel": 0,
         "errors": [],
         "lastHint": "",
-        "startedAt": "2026-11-23T10:42:47.352Z",
+        "startedAt": "2026-11-23T11:29:50.970Z",
         "finishedAt": null
       }
     },
@@ -529,11 +588,16 @@
           "hintLevel": 0,
           "errors": [],
           "lastHint": "",
-          "startedAt": "2026-11-23T10:42:47.352Z",
+          "startedAt": "2026-11-23T11:29:50.970Z",
           "finishedAt": null
         },
         "level": "l2"
       }
+    },
+    {
+      "name": "mission M2 separation started",
+      "ok": true,
+      "detail": true
     },
     {
       "name": "mission records wrong destination error",
@@ -584,12 +648,12 @@
           "hintLevel": 1,
           "errors": [
             {
-              "at": "2026-11-23T10:43:03.515Z",
+              "at": "2026-11-23T11:30:07.349Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ],
           "lastHint": "",
-          "startedAt": "2026-11-23T10:42:47.352Z",
+          "startedAt": "2026-11-23T11:29:50.970Z",
           "finishedAt": null
         },
         "feedback": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。",
@@ -668,12 +732,16 @@
           "hintLevel": 0,
           "errors": [
             {
-              "at": "2026-11-23T10:43:03.515Z",
+              "at": "2026-11-23T11:30:07.349Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            },
+            {
+              "at": "2026-11-23T11:30:17.911Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ],
           "lastHint": "",
-          "startedAt": "2026-11-23T10:42:47.352Z",
+          "startedAt": "2026-11-23T11:29:50.970Z",
           "finishedAt": null
         },
         "solved": {
@@ -733,19 +801,90 @@
           "hintLevel": 0,
           "errors": [
             {
-              "at": "2026-11-23T10:43:03.515Z",
+              "at": "2026-11-23T11:30:07.349Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            },
+            {
+              "at": "2026-11-23T11:30:17.911Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ],
           "lastHint": "",
-          "startedAt": "2026-11-23T10:42:47.352Z",
+          "startedAt": "2026-11-23T11:29:50.970Z",
           "finishedAt": null
         },
         "level": "l3"
       }
     },
     {
-      "name": "mission M3 complete",
+      "name": "mission M3 does not complete after level drops",
+      "ok": true,
+      "detail": {
+        "state": {
+          "version": 1,
+          "id": "M-YJ-001",
+          "title": "追踪批次 YJ-001",
+          "status": "active",
+          "step": 2,
+          "steps": [
+            {
+              "id": "M1",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M2",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M3",
+              "done": false,
+              "visited": true
+            },
+            {
+              "id": "M4",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M5",
+              "done": false,
+              "visited": false
+            }
+          ],
+          "flags": {
+            "reservoir": true,
+            "up": true,
+            "started": true,
+            "level": 0,
+            "pump": true
+          },
+          "knowledge": [
+            "kb_formation",
+            "kb_gather"
+          ],
+          "hintsUsed": 1,
+          "hintLevel": 0,
+          "errors": [
+            {
+              "at": "2026-11-23T11:30:07.349Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            },
+            {
+              "at": "2026-11-23T11:30:17.911Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            }
+          ],
+          "lastHint": "",
+          "startedAt": "2026-11-23T11:29:50.970Z",
+          "finishedAt": null
+        },
+        "level": 0
+      }
+    },
+    {
+      "name": "mission M3 completes at current level >=70",
       "ok": true,
       "detail": {
         "version": 1,
@@ -796,12 +935,16 @@
         "hintLevel": 0,
         "errors": [
           {
-            "at": "2026-11-23T10:43:03.515Z",
+            "at": "2026-11-23T11:30:07.349Z",
+            "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+          },
+          {
+            "at": "2026-11-23T11:30:17.911Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           }
         ],
         "lastHint": "",
-        "startedAt": "2026-11-23T10:42:47.352Z",
+        "startedAt": "2026-11-23T11:29:50.970Z",
         "finishedAt": null
       }
     },
@@ -858,12 +1001,16 @@
           "hintLevel": 0,
           "errors": [
             {
-              "at": "2026-11-23T10:43:03.515Z",
+              "at": "2026-11-23T11:30:07.349Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            },
+            {
+              "at": "2026-11-23T11:30:17.911Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ],
           "lastHint": "",
-          "startedAt": "2026-11-23T10:42:47.352Z",
+          "startedAt": "2026-11-23T11:29:50.970Z",
           "finishedAt": null
         },
         "level": "l4"
@@ -924,12 +1071,16 @@
         "hintLevel": 0,
         "errors": [
           {
-            "at": "2026-11-23T10:43:03.515Z",
+            "at": "2026-11-23T11:30:07.349Z",
+            "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+          },
+          {
+            "at": "2026-11-23T11:30:17.911Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           }
         ],
         "lastHint": "",
-        "startedAt": "2026-11-23T10:42:47.352Z",
+        "startedAt": "2026-11-23T11:29:50.970Z",
         "finishedAt": null
       }
     },
@@ -977,7 +1128,8 @@
             "level": 75,
             "pump": true,
             "full": true,
-            "fraction": "diesel"
+            "fraction": "diesel",
+            "pickedCount": 1
           },
           "knowledge": [
             "kb_formation",
@@ -989,19 +1141,92 @@
           "hintLevel": 0,
           "errors": [
             {
-              "at": "2026-11-23T10:43:03.515Z",
+              "at": "2026-11-23T11:30:07.349Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            },
+            {
+              "at": "2026-11-23T11:30:17.911Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ],
           "lastHint": "",
-          "startedAt": "2026-11-23T10:42:47.352Z",
+          "startedAt": "2026-11-23T11:29:50.970Z",
           "finishedAt": null
         },
         "level": "l5"
       }
     },
     {
-      "name": "mission complete",
+      "name": "mission M5 deselect does not complete",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "id": "M-YJ-001",
+        "title": "追踪批次 YJ-001",
+        "status": "active",
+        "step": 4,
+        "steps": [
+          {
+            "id": "M1",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M2",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M3",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M4",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M5",
+            "done": false,
+            "visited": true
+          }
+        ],
+        "flags": {
+          "reservoir": true,
+          "up": true,
+          "started": true,
+          "level": 75,
+          "pump": true,
+          "full": true,
+          "fraction": "diesel",
+          "pickedCount": 0
+        },
+        "knowledge": [
+          "kb_formation",
+          "kb_gather",
+          "kb_store",
+          "kb_refine"
+        ],
+        "hintsUsed": 1,
+        "hintLevel": 0,
+        "errors": [
+          {
+            "at": "2026-11-23T11:30:07.349Z",
+            "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+          },
+          {
+            "at": "2026-11-23T11:30:17.911Z",
+            "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+          }
+        ],
+        "lastHint": "M5 需要新增一个产品选择；取消选中不算完成任务。",
+        "startedAt": "2026-11-23T11:29:50.970Z",
+        "finishedAt": null
+      }
+    },
+    {
+      "name": "mission complete by product selection",
       "ok": true,
       "detail": {
         "state": {
@@ -1045,8 +1270,9 @@
             "pump": true,
             "full": true,
             "fraction": "diesel",
-            "product": "柴油",
-            "products": 2
+            "pickedCount": 1,
+            "product": "汽油",
+            "products": 1
           },
           "knowledge": [
             "kb_formation",
@@ -1059,13 +1285,17 @@
           "hintLevel": 0,
           "errors": [
             {
-              "at": "2026-11-23T10:43:03.515Z",
+              "at": "2026-11-23T11:30:07.349Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            },
+            {
+              "at": "2026-11-23T11:30:17.911Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ],
           "lastHint": "",
-          "startedAt": "2026-11-23T10:42:47.352Z",
-          "finishedAt": "2026-11-23T10:43:37.579Z"
+          "startedAt": "2026-11-23T11:29:50.970Z",
+          "finishedAt": "2026-11-23T11:30:44.846Z"
         },
         "done": true
       }
@@ -1147,6 +1377,35 @@
         "stage": 0,
         "volume": 0.044800000000000006,
         "supported": true
+      }
+    },
+    {
+      "name": "optional narration controls present",
+      "ok": true,
+      "detail": {
+        "supported": true,
+        "api": true,
+        "play": true,
+        "stop": true,
+        "text": false
+      }
+    },
+    {
+      "name": "narration play/pause/stop API",
+      "ok": true,
+      "detail": {
+        "v1": {
+          "supported": true,
+          "playing": true,
+          "paused": false,
+          "text": "石油产业链数字沙盘，测试朗读。"
+        },
+        "v2": {
+          "supported": true,
+          "playing": false,
+          "paused": false,
+          "text": "石油产业链数字沙盘，测试朗读。"
+        }
       }
     },
     {

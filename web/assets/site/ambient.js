@@ -69,6 +69,22 @@
     param.linearRampToValueAtTime(value, now + (time || 0.6));
   }
 
+  function cue(kind) {
+    if (!on || !ctx || !master) return;
+    try {
+      var f = kind === 'pump' ? 90 : kind === 'tower' ? 260 : kind === 'separator' ? 170 : 140;
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.type = kind === 'tower' ? 'triangle' : 'sine';
+      o.frequency.setValueAtTime(f, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(Math.max(40, f * 0.55), ctx.currentTime + 0.16);
+      g.gain.setValueAtTime(0.0001, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.035, ctx.currentTime + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.2);
+      o.connect(g); g.connect(master); o.start(); o.stop(ctx.currentTime + 0.22);
+    } catch (e) {}
+  }
+
   function toggle() {
     if (!ctx) {
       if (!build()) return { supported: false, on: false };
@@ -117,6 +133,7 @@
 
   global.Ambient = {
     toggle: toggle,
+    cue: cue,
     setStage: setStage,
     setVolume: setVolume,
     getVolume: getVolume,

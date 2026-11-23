@@ -567,6 +567,7 @@
   }
 
   function flyTo(position, target, duration, done) {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { camera.position.copy(position); camera.lookAt(target); if (typeof done === 'function') done(); return; }
     if (!camera) return;
     if (flyHandle) cancelAnimationFrame(flyHandle);
     const from = camera.position.clone();
@@ -1065,6 +1066,7 @@
       get camera() { return camera; },
       selectLayer: selectLayer,
       selectReservoir: selectReservoir,
+      selectWellhead: selectWellhead,
       selectPart: selectPart,
       enterPore: enterPore,
       exitPore: exitPore,

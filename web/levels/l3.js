@@ -184,6 +184,7 @@
   /* ---------- 相机 ---------- */
   let flyHandle = null;
   function fly(from, fromT, to, toT, dur, done) {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { camera.position.copy(to); camera.lookAt(toT); if (typeof done === 'function') done(); return; }
     const t0 = performance.now();
     if (flyHandle) cancelAnimationFrame(flyHandle);
     const ease = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;

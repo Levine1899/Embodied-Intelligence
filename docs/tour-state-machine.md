@@ -31,7 +31,7 @@ tour = {
 - `busy=true` 时禁止再次推进；`token` 防止旧的异步转场覆盖新步骤。
 - 不使用固定定时器自动推进；每一步由用户点「开始 / 继续 / 结束导览」推进。
 - 转场由当前关卡的 `enter/exit`、`fly`、`setLevel`、`selectFraction` 等真实 API 驱动。
-- 用户拖动/滚轮/触摸会暂停；已经启动的关卡动画保留，不会被强行回放。
+- 用户拖动/滚轮/触摸会暂停；暂停时 `pauseScene()` 暂停 l2 分离、l3 泵、l4 汽液，继续时 `resumeScene()` 恢复；暂停期间关卡操作面板临时显示，允许接管。
 
 ## 2. 步骤字段
 
@@ -43,7 +43,7 @@ tour = {
 | `objectIds[]` | 该站涉及的设备集合 |
 | `sceneState` | 镜头到达后的场景状态 |
 | `animation` | 实际触发的设备/工艺动画 |
-| `narration` | 短讲解（文字；无语音资产不阻塞） |
+| `narration` | 短讲解（文字始终显示；可选浏览器语音朗读） |
 | `knowledge[]` | 本步知识点 ID |
 | `shotId` | 镜头脚本 ID |
 | `moveType` / `direction` | `dolly/crane/orbit/follow` + `in/out/up/down` |
@@ -73,7 +73,7 @@ tour = {
 |---|---|
 | 地下 | `__l1.selectReservoir()`，显示储层/油气水图例 |
 | 井筒 | `__l1.selectPart('casing')`、`__l1.traceUp()`，镜头随井筒上行 |
-| 井口 | `__l1.selectPart('wellhead')` |
+| 井口 | `__l1.selectWellhead()` |
 | 分离 | 进入 l2，`__l2.applyStructure(true,false)` + `__l2.startSeparation()` |
 | 储运 | 进入 l3，`selectTank('floating_roof_tank')` + `setLevel(72)` + `startPump()` |
 | 炼化 | 进入 l4，`setLevel(2,false)` + `startFlow()` |
@@ -94,10 +94,11 @@ tour = {
 ## 6. 声音
 
 - 默认静音；声音开关在场景工具条，音量 0–100。
+- 可选浏览器语音：`朗读 / 暂停 / 停止朗读`，使用 `speechSynthesis`，没有音频文件也能工作；不支持时按钮隐藏/不阻塞。
 - `assets/site/ambient.js` 现场合成低频环境音，明确为“氛围示意，非现场录音”，不模拟真实声级。
 - 无音频资产/无 WebAudio 时仅显示不可用，不阻塞导览。
-- 每站切换 `Ambient.setStage(stage)`，但只有用户开启声音后才可听。
-- 语音讲解未提供：文字讲解始终可见；不把“语音”标为已完成。
+- 每站切换 `Ambient.setStage(stage)` 并合成设备提示音，但只有用户开启声音后才可听。
+- 语音讲解为浏览器可选朗读，不保存录音；文字讲解始终可见。
 
 ## 7. 档案与记录
 

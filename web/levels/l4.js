@@ -529,6 +529,7 @@
   /* ---------- 相机 ---------- */
   let flyHandle = null;
   function fly(from, fromT, to, toT, dur) {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { camera.position.copy(to); camera.lookAt(toT); return; }
     if (!camera) return;
     const t0 = performance.now();
     if (flyHandle) cancelAnimationFrame(flyHandle);
