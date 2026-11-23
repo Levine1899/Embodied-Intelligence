@@ -108,7 +108,7 @@ node navcheck.cjs                           # #stage=0..4、章节、塔页 exit
 | 验证断言 | 通过 | `phase06-verify.json` |
 | 资产外观检查 | 参考（Blender 静帧） | `asset-overview.png`、`asset-cutaway.png` |
 | Hero 资产清单/哈希 | 通过 | `tower-asset-manifest.json`（151 Mesh / 14,328 verts / 27,054 tris） |
-| 阶段包 | 已生成 | `dist/phase-06-web.tgz`，10294852 B，SHA-256 `7F90C47BA05EA119E3348831384E3617E038CC531BC44E88108A7B36B5786523` |
+| 阶段包 | 已生成 | `dist/phase-06-web.tgz`，10,295,465 B，SHA-256 `D4C2F8C8513EBF92E50B00D918ED3DE514F740706F70D6D437ABA88C8B39F29E` |
 
 ## 6. P0 / P1 / P2
 
