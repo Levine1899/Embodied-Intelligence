@@ -1177,6 +1177,9 @@
             if (probe.userData && probe.userData.objectId) { objectId = probe.userData.objectId; break; }
             probe = probe.parent;
           }
+          // 只有命中真实设备/节点才切换环节。地面、厂房等背景网格没有 objectId，
+          // 旧逻辑会把“空地”当成炼化地坪（stage=3）直接进入炼化，必须忽略。
+          if (!objectId) return;
           while (object && object.userData.stage === undefined) object = object.parent;
           if (object) {
             const idx = object.userData.stage;
