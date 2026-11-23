@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 阶段 04 rev3 — 2026-11-23 · 交互一致性/导航语义返修
+
+- 增补 `updatePartChips()`，图层/部件在加载、reset、enter、exit-re-enter 后统一从实际 Mesh 反向同步按钮与 `aria-pressed`。
+- `traceUp()` 不再暗中修改压差值/动画状态；仅做镜头与结构导航；回调静默选中井口，保留 `trace_up_wellbore` 交互语义。
+- 修复 manifest 中 `wellhead_valve/outlet` 的 `objectId` 与 `assetId` 混用，部件级 `semanticId` 保留。
+- 更新地下体验验收表五关状态；关闭阶段 03 遗留的 Blender 导出待办（已由阶段 04 的 4.5.16 实际构建验证）。
+- 增补 reset/re-entry 控件一致性、traceUp 解耦的真实浏览器断言；用户签收仍待定，阶段 05 未启动。
+
+## 阶段 04 rev4 — 2026-11-23 · P1 控件同步/导航语义收口
+
+- 新增 `updatePartChips()`；加载、reset、enter、exit-re-enter 统一按实际 Mesh 同步按钮与 `aria-pressed`。
+- `traceUp()` 不再修改压差/暂停状态；镜头导航与 `adjust_pressure` 解耦，井口静默选中。
+- manifest 区分 `assetId/objectId/semanticId`；地下体验验收表引用实际五关证据。
+- 新增 `controlCheck`、`controlsBeforeExit`、`reentry`、`traceZero`、`trace75` 浏览器断言；重录 52.75s 录像。
+
 ## 阶段 04 — 2026-11-23 · 地下开采（Hero 最小门禁通过）
 
 - 新增地下 Hero：Blender 4.5 源文件 `.blend`、运行 OBJ/MTL、GLB 备份、6 张资产检查视图、对象/语义/尺寸/锚点/材质清单与许可说明。
@@ -7,7 +22,7 @@
 - 重写 `web/levels/l1.js`：地层逐层显隐/剖切、储层图例/孔隙放大、井筒整体/射孔井段、沿井筒上行、地面集输端点、压力差示意与暂停/重置；保留 `adjust_pressure`。
 - 新增长逻辑 ID 3 个（`underground_geology`/`reservoir`/`wellbore`），`wellhead` 复用；总览与近景同 Store，退出恢复环境组/总览。
 - 文档：`underground-experience.md`、交互矩阵、资产门禁、场景/状态/actionId 补充；阶段 03 用户签收记录为 ACCEPTED。
-- 证据：9 张 1440×900 截图、56.75s 实时录屏、`phase04-verify.json`、五关/深链/章节/塔页/fallback 回归。
+- 证据：9 张 1440×900 截图、52.75s 实时录屏、`phase04-verify.json`、五关/深链/章节/塔页/fallback 回归。
 - 结论：**阶段 04 技术范围 PASS（最小 Hero 门禁）；视觉细节/纹理列 P1；用户签收待定。** 未执行阶段 05。
 
 ## 阶段 04 rev2 — 2026-11-23 · review 返修
@@ -15,7 +30,7 @@
 - 注册表缓存版本 `v39`，交付页实际 16 个设备；新增 `wellbore` overview 表示。
 - 修复重进关卡压力/视角/完成态未复位；`resetView` 同步清 `__sceneContext`。
 - 修复清除高亮覆盖剖切自发光；压力面板移入左侧滚动栏，教学声明去重。
-- 重新生成 9 张 1440×900 截图和 56.75s 实时录屏；`phase04-verify` 增加 16 设备/overview/reset/reentry 断言。
+- 重新生成 9 张 1440×900 截图和 52.75s 实时录屏；`phase04-verify` 增加 16 设备/overview/reset/reentry 断言。
 - 地面场景增加地表平面/网格地平线；五关、深链、塔页、context-loss fallback 复跑通过。
 
 

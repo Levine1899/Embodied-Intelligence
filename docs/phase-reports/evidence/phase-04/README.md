@@ -22,7 +22,7 @@
 
 ## 实时录屏
 
-- `underground-continuity.mp4`：1440×900，56.75 s，CDP screencast 实时操作；包含入口 → 地层切换 → 储层（射线点选）→ 孔隙放大 → 剖面 → 压力差 → 沿井筒上行 → 地面。
+- `underground-continuity.mp4`：1440×900，52.75 s，CDP screencast 实时操作；包含入口 → 地层切换 → 储层（射线点选）→ 孔隙放大 → 剖面 → 压力差 → 沿井筒上行 → 地面。
 - 不是把静帧剪辑成视频；同一页面同一会话。
 
 ## Hero asset 检查视图

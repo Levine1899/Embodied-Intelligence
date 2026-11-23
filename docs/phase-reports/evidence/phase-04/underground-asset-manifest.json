@@ -361,6 +361,7 @@
     {
       "name": "wellhead_tree",
       "type": "MESH",
+      "assetId": "underground_hero",
       "objectId": "wellhead",
       "semanticId": "wellhead_tree",
       "layerIndex": null,
@@ -378,7 +379,8 @@
     {
       "name": "wellhead_valve",
       "type": "MESH",
-      "objectId": "underground_hero",
+      "assetId": "underground_hero",
+      "objectId": "wellhead",
       "semanticId": "wellhead_valve",
       "layerIndex": null,
       "dimensions": [
@@ -395,7 +397,8 @@
     {
       "name": "wellhead_outlet",
       "type": "MESH",
-      "objectId": "underground_hero",
+      "assetId": "underground_hero",
+      "objectId": "wellhead",
       "semanticId": "wellhead_outlet",
       "layerIndex": null,
       "dimensions": [

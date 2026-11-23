@@ -75,6 +75,16 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const resetCheck = await evalPage(`(function(){var p=document.querySelector('#l1-press');p.value=70;p.dispatchEvent(new Event('input',{bubbles:true}));window.__l1.selectReservoir();document.getElementById('l1-reset').click();return {pressure:window.__l1.pressure,selected:window.__l1.selected,ctx:window.__sceneContext.object,zone:window.__sceneContext.zoneId,slider:p.value}})()`);
   await wait(500);
+  const controlCheck = await evalPage(`(function(){
+    var cap=document.querySelector('#l1-layers [data-layer="caprock"]');
+    var tube=document.querySelector('#l1-parts [data-part="tubing"]');
+    cap.click(); tube.click();
+    var off={cap:window.__l1.layerVisible.caprock,capAria:cap.getAttribute('aria-pressed'),tube:window.__l1.partVisible.tubing,tubeAria:tube.getAttribute('aria-pressed')};
+    document.getElementById('l1-reset').click();
+    var reset={cap:window.__l1.layerVisible.caprock,capAria:cap.getAttribute('aria-pressed'),tube:window.__l1.partVisible.tubing,tubeAria:tube.getAttribute('aria-pressed')};
+    return {off:off,reset:reset};
+  })()`);
+  await wait(400);
   const initial = await evalPage(`({level:window.__stage.isLevel(),assetLoaded:window.__l1.assetLoaded,assetFailed:window.__l1.assetFailed,layers:window.__l1.layers,parts:window.__l1.parts,clipped:window.__l1.clipped,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),errors:(window.__auditErrors||[]).map(e=>e.message||String(e))})`);
 
   await evalPage(`(function(){var b=document.querySelector('#l1-layers [data-layer="caprock"]');b.click();return b.getAttribute('aria-pressed')})()`);
@@ -115,6 +125,13 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await shot('phase04-08-surface.png');
   const surfaceInfo = await evalPage(`({view:window.__l1.viewMode,selected:window.__l1.selected,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),readout:document.querySelector('#l1-readout').innerText})`);
 
+  const controlsBeforeExit = await evalPage(`(function(){
+    var cap=document.querySelector('#l1-layers [data-layer="caprock"]');
+    var tube=document.querySelector('#l1-parts [data-part="tubing"]');
+    if (window.__l1.layerVisible.caprock) cap.click();
+    if (window.__l1.partVisible.tubing) tube.click();
+    return {cap:window.__l1.layerVisible.caprock,capAria:cap.getAttribute('aria-pressed'),tube:window.__l1.partVisible.tubing,tubeAria:tube.getAttribute('aria-pressed')};
+  })()`);
   await evalPage(`window.__l1.exit()`);
   await wait(1200);
   await shot('phase04-09-back-overview.png');
@@ -123,7 +140,19 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await wait(900);
   await waitAsset();
   await wait(700);
-  const reentry = await evalPage(`({level:window.__stage.isLevel(),pressure:window.__l1.pressure,view:window.__l1.viewMode,slider:document.querySelector('#l1-press').value,done:document.querySelector('.lvl').classList.contains('done')})`);
+  const reentry = await evalPage(`(function(){var cap=document.querySelector('#l1-layers [data-layer="caprock"]');var tube=document.querySelector('#l1-parts [data-part="tubing"]');return {level:window.__stage.isLevel(),pressure:window.__l1.pressure,view:window.__l1.viewMode,slider:document.querySelector('#l1-press').value,done:document.querySelector('.lvl').classList.contains('done'),cap:window.__l1.layerVisible.caprock,capAria:cap.getAttribute('aria-pressed'),tube:window.__l1.partVisible.tubing,tubeAria:tube.getAttribute('aria-pressed')}})()`);
+  const traceBefore = await evalPage(`(function(){var p=document.querySelector('#l1-press');p.value=0;p.dispatchEvent(new Event('input',{bubbles:true}));if(!window.__l1.paused)document.querySelector('#l1-play').click();window.__l1.traceUp();return {pressure:window.__l1.pressure,paused:window.__l1.paused}})()`);
+  await wait(1900);
+  const traceZero = await evalPage(`({pressure:window.__l1.pressure,paused:window.__l1.paused,action:window.__sceneContext.interaction&&window.__sceneContext.interaction.action,actionId:window.__sceneContext.interaction&&window.__sceneContext.interaction.actionId})`);
+  await evalPage(`window.__l1.exit()`);
+  await wait(900);
+  await evalPage(`document.getElementById('enter-level').click()`);
+  await wait(900);
+  await waitAsset();
+  await wait(500);
+  const traceBefore75 = await evalPage(`(function(){var p=document.querySelector('#l1-press');p.value=75;p.dispatchEvent(new Event('input',{bubbles:true}));if(window.__l1.paused)document.querySelector('#l1-play').click();window.__l1.traceUp();return {pressure:window.__l1.pressure,paused:window.__l1.paused}})()`);
+  await wait(1900);
+  const trace75 = await evalPage(`({pressure:window.__l1.pressure,paused:window.__l1.paused,action:window.__sceneContext.interaction&&window.__sceneContext.interaction.action,actionId:window.__l1.lastInteraction&&window.__l1.lastInteraction.actionId})`);
   await evalPage(`window.__l1.exit()`);
   await wait(1000);
 
@@ -134,6 +163,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     overviewCheck,
     entered,
     resetCheck,
+    controlCheck,
     initial,
     chipOff,
     layerInfo,
@@ -143,7 +173,12 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     pressureInfo,
     surfaceInfo,
     exitInfo,
+    controlsBeforeExit,
     reentry,
+    traceBefore,
+    traceZero,
+    traceBefore75,
+    trace75,
     screenshots: [
       'phase04-01-entry.png', 'phase04-02-strata-toggle.png', 'phase04-03-strata-info.png',
       'phase04-04-reservoir.png', 'phase04-05-pore.png', 'phase04-06-wellbore.png',

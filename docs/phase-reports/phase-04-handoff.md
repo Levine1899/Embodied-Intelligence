@@ -40,7 +40,7 @@
 | 五关与其它区域未破坏 | **通过** | `phase04-regression.json` l1–l5 |
 | 深链/章节/塔页/fallback | **通过** | `#stage=0..4`、`chapter.html?id=store`、`tower.html`、context-loss |
 | 至少 6 张实际运行截图 | **通过** | 9 张 1440×900 |
-| 一段实时全流程录屏 | **通过** | `underground-continuity.mp4`，1440×900，56.75s |
+| 一段实时全流程录屏 | **通过** | `underground-continuity.mp4`，1440×900，52.75s |
 | 交互矩阵（≥3 核心） | **通过** | `docs/underground-experience.md` §4，5 个矩阵 |
 | Hero 的 `.blend`/语义/材质/尺度/许可/检查视图 | **通过（最小）** | manifest + README + 6 检查视图；授权记录为项目内自产 |
 | 阶段 03 签收记录 | **通过** | `phase-03-handoff.md` ACCEPTED + 原话 |
@@ -73,14 +73,14 @@ node --check web/immersion.js          # exit 0
 
 # 真实浏览器验证
 node tools/phase04-verify.cjs           # exit 0
-node tools/phase04-record.cjs           # exit 0; 1135 frames; 56.75s
+node tools/phase04-record.cjs           # exit 0; 1055 frames; 52.75s
 node C:\...\level-e2e-rev2.cjs          # l1–l5 全通过
 node C:\...\navcheck.cjs                # #stage=0..4/章节/塔页通过
 node C:\...\fallback-phase04.cjs        # context-loss fallback 通过
 ```
 
 - 浏览器：Chrome 157 headless CDP；页面 1440×900；本地 `http://127.0.0.1:8796`。
-- `phase04-verify.json`：`assetLoaded=true`、`assetFailed=false`、4 layers、4 parts、`zoneId=subsurface`、交互后 history 9 条、`__auditErrors=[]`；并含 `devices=16`、`overviewWellbore=true`、`resetCheck`、`reentry` 真断言。
+- `phase04-verify.json`：`assetLoaded=true`、`assetFailed=false`、4 layers、4 parts、`zoneId=subsurface`、交互后 history 9 条、`__auditErrors=[]`；并含 `devices=16`、`overviewWellbore=true`、`resetCheck`、`controlCheck`、`controlsBeforeExit`、`reentry`、`traceZero`、`trace75` 真断言。
 - 五关：l1 adjust_pressure、l2 choose_outlet、l3 change_liquid_level、l4 choose_fraction、l5 select_product；退出均 `levelId=null`。
 - fallback：context-loss 后 sandbox 显示恢复文案；塔页显示 2D 剖面。
 
@@ -97,7 +97,7 @@ node C:\...\fallback-phase04.cjs        # context-loss fallback 通过
 | 压力差 | 通过 | `phase04-07-pressure.png` |
 | 地面井口/管线 | 通过 | `phase04-08-surface.png` |
 | 返回总览 | 通过 | `phase04-09-back-overview.png` |
-| 实时录屏 | 通过 | `underground-continuity.mp4`（1440×900, 56.75s, 1,966,339 B） |
+| 实时录屏 | 通过 | `underground-continuity.mp4`（1440×900, 52.75s, 1,912,263 B） |
 | 断言 | 通过 | `phase04-verify.json` |
 | 回归 | 通过 | `phase04-regression.json` |
 | fallback | 通过（运行时） | `fallback.json` |
@@ -163,7 +163,7 @@ node C:\...\fallback-phase04.cjs        # context-loss fallback 通过
 ## 9. Agent recommendation
 
 - 建议：**PASS（阶段 04 技术范围，review 返修后）**
-- 理由：review 指出的注册表缓存/证据不一致、重进状态、reset 上下文、剖切高亮、总览井筒表示、面板遮挡、文案重复均已修复并有实际浏览器断言；P0 为空。
+- 理由：review 指出的注册表缓存/证据不一致、重进状态、reset 上下文、剖切高亮、总览井筒表示、控件同步、`traceUp` 与压差耦合、面板/文案/manifest/验收表均已修复并有实际浏览器断言；P0 为空。
 - 未关闭项：视觉细节 P1；真实用户测试/跨浏览器/性能/AI 属后续阶段；不阻塞本阶段 PASS。
 
 ## 10. User acceptance
@@ -177,3 +177,4 @@ node C:\...\fallback-phase04.cjs        # context-loss fallback 通过
 - 本阶段是否停止：**是**；交付后停止。
 - 下一阶段是否允许开始：**否**；等待用户明确签收阶段 04 后，才能执行 `05_PRODUCTION_STORAGE.md`。
 - 等待事项：用户签收；阶段 05 分离器内部/三相路径/HM-2；阶段 04 的 P1 视觉精修可在后续资产轮处理。
+- 阶段03 遗留 Blender/GLB 待办：已由阶段04 Blender 4.5.16 实际构建 .blend/OBJ/GLB 关闭；历史阶段03 报告不改写。

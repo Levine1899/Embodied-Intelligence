@@ -327,6 +327,7 @@
       applyClip();
       addSurfacePipe();
       updateLayerChips();
+      updatePartChips();
       if (ui) {
         hint.textContent = '地下剖面 · 点击岩层、储层或井筒';
         setInfo('地下剖面已加载', '四层岩性、储层透镜和井筒在同一空间里。点击剖面岩层或右侧按钮逐层查看。', '资产来源：项目自制 Blender 4.5 / OBJ；语义见资产清单。');
@@ -608,6 +609,8 @@
     LAYERS.forEach(function (l) { layerVisibility[l.key] = true; });
     applyLayerVisibility();
     applyPartVisibilityAll(true);
+    updateLayerChips();
+    updatePartChips();
     hideSurfaceScene();
     clipped = true;
     applyClip();
@@ -628,6 +631,18 @@
     ui.querySelectorAll('#l1-layers .ug-chip').forEach(function (b) {
       const key = b.dataset.layer;
       const on = key !== 'reservoir' ? layerVisibility[key] : (layerMeshes.reservoir && layerMeshes.reservoir.visible);
+      b.classList.toggle('on', on);
+      b.classList.toggle('off', !on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+
+  function updatePartChips() {
+    if (!ui) return;
+    ui.querySelectorAll('#l1-parts .ug-chip').forEach(function (b) {
+      const key = b.dataset.part;
+      const list = partMeshes[key] || [];
+      const on = list.length ? list.every(function (m) { return m.visible; }) : false;
       b.classList.toggle('on', on);
       b.classList.toggle('off', !on);
       b.setAttribute('aria-pressed', String(on));
@@ -660,6 +675,7 @@
       (partMeshes[p.key] || []).forEach(function (m) { m.visible = v; });
     });
     wellheadMeshes.forEach(function (m) { m.visible = v; });
+    updatePartChips();
   }
 
   function togglePart(key) {
@@ -667,12 +683,7 @@
     const list = partMeshes[key] || [];
     const currently = list.length ? list[0].visible : false;
     list.forEach(function (m) { m.visible = !currently; });
-    const chip = ui && ui.querySelector('#l1-parts [data-part="' + key + '"]');
-    if (chip) {
-      chip.classList.toggle('on', !currently);
-      chip.classList.toggle('off', currently);
-      chip.setAttribute('aria-pressed', String(!currently));
-    }
+    updatePartChips();
     lastInteraction = { actionId: 'toggle_wellbore_part', value: key, unit: '部件开关' };
     if (stage.setInteraction) stage.setInteraction('toggle_wellbore_part', key, '部件开关');
     const p = PARTS.filter(function (x) { return x.key === key; })[0];
@@ -768,7 +779,7 @@
     lastInteraction = { actionId: 'inspect_wellbore_part', value: key, unit: '教学部件' };
   }
 
-  function selectWellhead() {
+  function selectWellhead(silent) {
     selectedLayer = null;
     selectedPart = 'wellhead';
     clearLayerHighlight();
@@ -776,8 +787,10 @@
     setInfo('井口 / 采油树', '井口阀组控制流出与压力，把产出物导入集输管线。井口与地下井筒是同一口井的两个位置，不是两个设备。',
       '地面管线终点接到集输处理区；阀门操作在阶段 05 继续。');
     if (stage.setContextObject) stage.setContextObject('wellhead', 'oilfield');
-    if (stage.setInteraction) stage.setInteraction('inspect_wellhead', 'wellhead', '教学设备');
-    lastInteraction = { actionId: 'inspect_wellhead', value: 'wellhead', unit: '教学设备' };
+    if (!silent) {
+      if (stage.setInteraction) stage.setInteraction('inspect_wellhead', 'wellhead', '教学设备');
+      lastInteraction = { actionId: 'inspect_wellhead', value: 'wellhead', unit: '教学设备' };
+    }
   }
 
   function focusWellbore(mode) {
@@ -844,19 +857,14 @@
     if (poreMode) exitPore();
     viewMode = 'surface';
     clearLayerHighlight();
-    pressure = Math.max(pressure, 35);
-    const press = ui.querySelector('#l1-press');
-    if (press) { press.value = pressure; ui.querySelector('#l1-pct').textContent = pressure + '%'; }
     LAYERS.forEach(function (l) {
       if (layerMeshes[l.key] && (l.key === 'overburden' || l.key === 'caprock')) layerMeshes[l.key].visible = false;
     });
     if (reservoirLens) reservoirLens.visible = true;
-    const wellheadWorld = worldPoint(0, 1.55, 0);
-    updatePressureUI();
     flyTo(worldPoint(10.5, 6.2, 19), worldPoint(5.4, 0.7, -2.2), 1500, function () {
       hint.textContent = '地面井口 · 产出物进入集输管线';
       showSurfaceScene();
-      selectWellhead();
+      selectWellhead(true);
       if (!completed) {
         completed = true;
         ui.classList.add('done');
@@ -949,6 +957,9 @@
     baseScene.background = new THREE.Color(0x0d1518);
     layerVisibility = { overburden: true, caprock: true, reservoir: true, basement: true };
     applyLayerVisibility();
+    applyPartVisibilityAll(true);
+    updateLayerChips();
+    updatePartChips();
     pressure = 0;
     completed = false;
     paused = false;
@@ -1045,6 +1056,8 @@
       get clipped() { return clipped; },
       get viewMode() { return viewMode; },
       get layerState() { return Object.assign({}, layerVisibility); },
+      get layerVisible() { var out = {}; Object.keys(layerMeshes).forEach(function (k) { out[k] = !!(layerMeshes[k] && layerMeshes[k].visible); }); return out; },
+      get partVisible() { var out = {}; Object.keys(partMeshes).forEach(function (k) { var l = partMeshes[k] || []; out[k] = l.length ? l.every(function (m) { return m.visible; }) : null; }); return out; },
       get cameraPosition() { return camera ? camera.position.toArray() : null; },
       get camera() { return camera; },
       selectLayer: selectLayer,
