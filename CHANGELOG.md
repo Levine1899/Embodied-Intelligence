@@ -6,7 +6,7 @@
 - 扩展 `web/assets/site/ambient.js`：合成环境音开关/音量/静音；默认关闭，无资产不阻塞。
 - 新增 l1 `setPressure`、l3 `setLevel/startPump/pausePump`、l4 `selectFraction/startFlow`、l5 `select/picked` 供导览/任务稳定调用。
 - 新增 `docs/tour-state-machine.md`、`docs/mission-state-machine.md`；`tools/phase07-verify.cjs`（63 断言）与 `tools/phase07-record.cjs`；两段 1440×900 真实浏览器录屏。
-- 结论：**阶段 07 技术/交互范围建议 PASS；用户签收待完成**。P1：语音讲解未提供、设备音仅环境音、用户测试/移动端未执行。
+- 结论：**独立复核建议 REVISE，不能按 PASS 签收**。P0：M3 历史最高液位假成功；导览 l2/l3/l4 暂停后继续不恢复动画。P1：井口站无实际动态、M5 取消选中边界、验证/录屏偏 API、语音/设备音、reduced-motion、用户测试/移动端。
 
 ## 阶段 06 rev4 — 2026-11-23 · audit-2 定点返修
 
