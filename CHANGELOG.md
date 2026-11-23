@@ -1,3 +1,11 @@
+## 阶段 06 rev3 — 2026-11-23 · review 返修二
+
+- 修正常压渣油：移除中部 `GasOil` 错误侧线，改为塔底 `Pipe_Residue_Bottom` → `Box_Residue`；“常压瓦斯油”不再与常压渣油混称。
+- `tower.html` 的全剖进一步弱化半壳到 0.18、关闭 depthWrite，与半剖形成结构级差异；真实截图 `tower-full-cut.png`。
+- 明确 canonical 入口：sandbox l4 是主体验；overview 为 LOD；`tower.html` 是兼容/fallback 页，不冒充共享 Store。
+- 阶段 04/05 用户签收原话已记录；标准 handoff 与 refining-experience 文件在 `docs/phase-reports/` 与 `docs/` 可读。
+- 证据：新增常压渣油底部截图；重新验证、录屏、打包。
+
 ## 阶段 06 rev2 — 2026-11-23 · review 返修
 
 - 修复 P0-ASSET-01：`make_tower.py` 新增换热器组（3 台卧式管壳式）、泵组（3 台+电机/阀轮）、管廊、平台/格栅/栏杆/直梯、设备基础、保温带；网页可辨识为成套装置。资产 151 Mesh / 14,328 verts / 27,054 tris；生成器导出前保存 `tower_hero.blend`。

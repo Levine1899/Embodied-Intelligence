@@ -27,7 +27,7 @@
     { key: 'naphtha', name: '石脑油馏分', y: 9.66, color: 0x9fd3c6, route: '重整 / 乙烯原料（典型示意）' },
     { key: 'kerosene', name: '煤油馏分', y: 8.46, color: 0xd8c9a0, route: '航煤 / 精制（典型示意）' },
     { key: 'diesel', name: '柴油馏分', y: 7.27, color: 0xd8a24a, route: '加氢精制 / 调和（典型示意）' },
-    { key: 'residue', name: '常压渣油', y: 6.07, color: 0xb38a4a, route: '减压蒸馏 / 深加工（典型示意）' }
+    { key: 'residue', name: '常压渣油', y: 3.2, color: 0xb38a4a, route: '塔底 → 减压蒸馏 / 深加工（典型示意）' }
   ];
 
   function makeFlow(curve, color, count, speed, size, parent) {
@@ -96,7 +96,7 @@
 
   function loadAsset() {
     if (!window.ObjLite) { hint.textContent = '装置模型加载器不可用'; return; }
-    window.ObjLite.load('assets/tower/tower.obj?v=07', 'assets/tower/tower.mtl?v=07').then(function (root) {
+    window.ObjLite.load('assets/tower/tower.obj?v=08', 'assets/tower/tower.mtl?v=08').then(function (root) {
       unit = root;
       unit.scale.setScalar(SCALE);
       unit.position.set(0, 0, 0);
@@ -162,7 +162,7 @@
     { id: 'vacuum', objectId: 'vacuum_tower', label: '减压塔', pos: [3.5, 6.2, 0], color: 0x8fb6ad, text: '减压塔降低压力，让重油在较低温度继续分离，避免高温裂解。' },
     { id: 'heater', objectId: 'heater', label: '加热炉', pos: [-3.3, 4.2, 0], color: 0xd8a24a, text: '加热炉把原油加热到进塔条件；这里只做流程定位，不提供炉温/热负荷。' },
     { id: 'feed', objectId: 'atmospheric_tower', label: '进料口', pos: [-2.0, 5.8, 0], color: 0xe0b35c, text: '常压进料进塔中部；也可切换减压进料，观察常压塔底→减压塔。' },
-    { id: 'products', objectId: 'atmospheric_tower', label: '馏分出口', pos: [4.25, 8.7, 0], color: 0x9fd3c6, text: '从塔顶到塔底依次是油气、石脑油、煤油、柴油、常压渣油；它们是馏分，不是成品油。' }
+    { id: 'products', objectId: 'atmospheric_tower', label: '馏分出口', pos: [4.25, 8.7, 0], color: 0x9fd3c6, text: '从塔顶到塔底依次是油气、石脑油、煤油、柴油、常压渣油；常压渣油从塔底去减压塔，不是中部侧线。' }
   ];
   const hotspotItems = [];
 
@@ -607,3 +607,4 @@
     get isolated() { return hiddenWorld.length; }
   };
 })();
+

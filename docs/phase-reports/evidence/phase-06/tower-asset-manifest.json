@@ -1,9 +1,9 @@
 {
   "assetId": "distillation_unit_hero",
   "date": "2026-11-23",
-  "source": "project-generated Blender scene; tools/make_tower.py now saves assets-source/blender/tower_hero.blend before OBJ/GLB export",
+  "source": "project-generated Blender scene; tools/make_tower.py saves assets-source/blender/tower_hero.blend before OBJ/GLB export",
   "license": "Project internal use; written permission required for external redistribution.",
-  "teachingNote": "Teaching model; tray count, side positions and dimensions are simplified; not an engineering design.",
+  "teachingNote": "Teaching model; tray count, side positions and dimensions are simplified; Atmospheric residue is a bottom draw to vacuum distillation, not a mid-column gas-oil side stream.",
   "files": {
     "blend": "assets-source\\blender\\tower_hero.blend",
     "obj": "web\\assets\\tower\\tower.obj",
@@ -14,19 +14,19 @@
     "render_cutaway": "web\\assets\\tower\\render-cutaway.png"
   },
   "fileHashes": {
-    "blend": "6e26f348ad5bc71a0edb5230d6ab823c9fe1504ed4d95b0718b65f450ef7e1b3",
-    "obj": "3432aefa1628b7ea09951cbad1c26a4f769fd3a586d1d67fe65ed770fe91efd1",
+    "blend": "ce5dc16f0456dc81dfd999538a3fa97d55c354a01682e55210efcf088f545171",
+    "obj": "7aa2ea818a3cc80b5bc64153fc1a1c445e698976aa9a28511c2f458d8150eac6",
     "mtl": "45c2313c1c14e6d3285f17ac1d5fc8f81f0b486c271b4cf819a984a3af3e15e5",
-    "glb": "5fd535fee7fd867fdf61b1962f347a9de6e40d18db1dbd0f2d2909466c57a36e",
+    "glb": "01647132f79b1f2b8bb42ac19a65112fdf2ba8e2f131e4248f080b4d2983500f",
     "meta": "9366732f444e18c1368d6e29c9bf23d06da10472ee7c8fd83d79694ffd32950d",
     "render_overview": "15cc049ddc885be26a695eeed32b07aec414e92eaff194af47372731b69f8543",
     "render_cutaway": "d7ce7d1692097b094884a16431974524cb73400044793f82ac6f50cddd5e2b03"
   },
   "fileSizes": {
     "blend": 2522243,
-    "obj": 1523070,
+    "obj": 1523037,
     "mtl": 2062,
-    "glb": 1698136,
+    "glb": 1698140,
     "meta": 1482,
     "render_overview": 806039,
     "render_cutaway": 837151
@@ -48,7 +48,11 @@
     "PipeRack_*",
     "Platform_Grate_*",
     "Ladder_Rung_*",
-    "Foundation_*"
+    "Foundation_*",
+    "Pipe_Residue_Bottom",
+    "Box_Residue",
+    "Pipe_Residue_Bottom",
+    "Box_Residue"
   ],
   "objectIds": [
     "atmospheric_tower",
@@ -69,14 +73,14 @@
     "Pipe_Feed_Horizontal",
     "Pipe_Feed_Riser",
     "Pipe_Bottom_To_Vacuum",
+    "Pipe_Residue_Bottom",
+    "Box_Residue",
     "Pipe_Side_Naphtha",
     "Pipe_Side_Kerosene",
     "Pipe_Side_Diesel",
-    "Pipe_Side_GasOil",
     "Box_Naphtha",
     "Box_Kerosene",
-    "Box_Diesel",
-    "Box_GasOil"
+    "Box_Diesel"
   ],
   "anchors": {
     "anchor_tower_overview": [
@@ -113,13 +117,14 @@
     "hs_products": "Box_"
   },
   "cutaway": {
-    "external": "full shell/dome visible; trays hidden; equipment group visible",
+    "external": "full shell/dome; trays hidden; equipment group visible",
     "half": "full shell/dome hidden; half shell/dome visible; trays visible",
     "full": "half shell weakened; trays and teaching vapor/liquid visible"
   },
   "limitations": [
     "No verified tray count/engineering pressure/temperature/throughput.",
     "Equipment is recognizable teaching geometry, not high-fidelity engineering detail.",
+    "No GasOil/atmospheric-residue mid-column mislabel: residue is a bottom draw.",
     "No third-party textures/fonts; external redistribution needs written permission."
   ]
 }

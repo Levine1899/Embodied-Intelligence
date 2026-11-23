@@ -274,15 +274,19 @@ cyl("Pipe_Bottom_To_Vacuum", 0.34, 5.6, (ATM_R + (VAC_X - VAC_R - ATM_R) / 2, 0,
 
 
 # ---------------------------------------------------------------- 侧线 + 馏分去向
+# 常压塔三种侧线馏分 + 塔顶油气；常压渣油单独从塔底引出，不能画成中部侧线。
 SIDE = [
     ("Naphtha", 21.0, "石脑油"),
     ("Kerosene", 18.4, "煤油"),
     ("Diesel", 15.8, "柴油"),
-    ("GasOil", 13.2, "常压渣油"),
 ]
 for name, z, cn in SIDE:
     cyl(f"Pipe_Side_{name}", 0.22, 6.6, (ATM_R + 3.3, 0, z), rot=(0, 1.5708, 0), seg=14, material=PIPE_COOL)
     box(f"Box_{name}", (1.6, 1.6, 1.2), (ATM_R + 7.3, 0, z - 0.3), BOX)
+
+# 常压渣油：塔底 → 减压塔；底部产品箱只作为教学终点，不代表真实收率/储运设计。
+cyl("Pipe_Residue_Bottom", 0.26, 5.2, (ATM_R + 2.8, 0, 3.2), rot=(0, 1.5708, 0), seg=14, material=PIPE_HOT)
+box("Box_Residue", (1.7, 1.7, 1.2), (ATM_R + 7.3, 0, 2.9), BOX)
 
 # 塔顶 → 冷凝器
 cyl("Pipe_Top_Vapor", 0.4, 1.9, (ATM_R + 0.95, 0, 27.4), rot=(0, 1.5708, 0), seg=16, material=PIPE_COOL)

@@ -73,6 +73,9 @@ function getJson(url) {
 
   await evalPage(`document.querySelector('[data-level="2"]').click(); document.querySelector('#l4-flow').click(); document.querySelector('#l4-feed-atm').click(); document.querySelector('#l4-tray').click()`);
   const fractions = await evalPage(`(function(){var keys=['topgas','naphtha','kerosene','diesel','residue'];var out=[];keys.forEach(function(k){var b=document.querySelector('[data-fraction="'+k+'"]');if(b)b.click();out.push({key:k,selected:window.__l4.selectedFraction,note:document.querySelector('#l4-note').textContent});});return out;})()`);
+  await sleep(700);
+  await shot('phase06-06-residue-bottom.png');
+  const residue = await evalPage(`({selected:window.__l4.selectedFraction,note:document.querySelector('#l4-note').textContent,ctx:JSON.parse(JSON.stringify(window.__sceneContext))})`);
   await evalPage(`document.querySelector('[data-fraction="diesel"]').click()`);
   await sleep(1200);
   await shot('phase06-03-refining-full.png');
@@ -102,10 +105,10 @@ function getJson(url) {
 
   const result = {
     date: '2026-11-23', page: URL, viewport: '1440x900',
-    external, trayFromExternal, replayFromExternal, hotspot, half, full, fractions, paused, replay, reset, exit, reentry, exit2,
+    external, trayFromExternal, replayFromExternal, hotspot, half, full, fractions, residue, paused, replay, reset, exit, reentry, exit2,
     screenshots: [
       'phase06-01-refining-external.png', 'phase06-02-refining-half.png',
-      'phase06-03-refining-full.png', 'phase06-04-refining-restored.png',
+      'phase06-03-refining-full.png', 'phase06-06-residue-bottom.png', 'phase06-04-refining-restored.png',
       'phase06-05-back-overview.png'
     ]
   };

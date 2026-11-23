@@ -13,12 +13,14 @@
 | `phase06-03-refining-full.png` | 全剖 + 常压进料 + 汽液粒子 + 柴油馏分路径 |
 | `phase06-04-refining-restored.png` | 恢复外观、路径/馏分清空 |
 | `phase06-05-back-overview.png` | 返回炼化总览 |
+| `phase06-06-residue-bottom.png` | 常压渣油塔底路径 |
+| `tower-full-cut.png` | 独立 tower.html 全剖（半壳 0.18） |
 | `asset-overview.png` | Blender 资产检查渲染（非网页截图） |
 | `asset-cutaway.png` | Blender 资产半剖检查渲染（非网页截图） |
 
 ## 录屏
 
-- `refining-continuity.mp4`：1440×900，57.15s，1,635,934 B。
+- `refining-continuity.mp4`：1440×900，57.70s，1,675,828 B。
 - 顺序：总览 → 进入 l4 → 外观 → 半剖 → 全剖 → 常压进料 → 汽液接触 → 塔板 → 塔顶/柴油馏分 → 暂停/重播 → 恢复外观 → 返回总览。
 
 ## 断言

@@ -46,7 +46,7 @@
 | 常压/减压关系与科学边界 | **通过** | 减压降低沸点、避免高温裂解；不编造压力/温度/收率 |
 | 完整镜头（全景→塔→近景→半剖→全剖→进料/汽液→馏分→全景） | **通过** | `refining-continuity.mp4` |
 | 真实浏览器截图 | **通过** | 5 张 1440×900 + 2 张资产检查渲染 |
-| 实时连续录屏 | **通过** | 57.15s；1,635,934 B；1440×900 |
+| 实时连续录屏 | **通过** | 57.70s；1,675,828 B；1440×900 |
 | 更新 `docs/scene-distillation-tower.md` | **通过** | 追加阶段 06 l4 集成 |
 | 新增 `docs/refining-experience.md` | **通过** | 设备群/三状态/互动矩阵/科学边界 |
 | 交互矩阵（每个核心设备） | **通过** | 5 个矩阵：三状态、进料、汽液、塔板、馏分 |
@@ -78,7 +78,7 @@
 node --check web/levels/l4.js             # exit 0
 node --check web/world/registry.js        # exit 0
 node tools/phase06-verify.cjs              # exit 0；5 馏分、三状态、暂停、复位、退出
-node tools/phase06-record.cjs              # exit 0；1143 帧；57.15s；1,635,934 B
+node tools/phase06-record.cjs              # exit 0；1143 帧；57.70s；1,675,828 B
 node level-e2e-rev2.cjs                    # l1–l5 exit 0
 node navcheck.cjs                           # #stage=0..4、章节、塔页 exit 0
 ```
@@ -97,12 +97,14 @@ node navcheck.cjs                           # #stage=0..4、章节、塔页 exit
 
 | 证据 | 结果 | 路径 |
 |---|---|---|
+| 独立塔全剖 | 通过 | `tower-full-cut.png`（半壳 opacity 0.18） |
+| 常压渣油底部 | 通过 | `phase06-06-residue-bottom.png` |
 | 装置群外观 | 通过 | `docs/phase-reports/evidence/phase-06/phase06-01-refining-external.png` |
 | 半剖塔板 | 通过 | `phase06-02-refining-half.png` |
 | 全剖+进料+汽液+柴油路径 | 通过 | `phase06-03-refining-full.png` |
 | 恢复外观 | 通过 | `phase06-04-refining-restored.png` |
 | 返回总览 | 通过 | `phase06-05-back-overview.png` |
-| 连续录屏 | 通过 | `refining-continuity.mp4`（57.15s, 1440×900, 1,635,934 B） |
+| 连续录屏 | 通过 | `refining-continuity.mp4`（57.70s, 1440×900, 1,675,828 B） |
 | 验证断言 | 通过 | `phase06-verify.json` |
 | 资产外观检查 | 参考（Blender 静帧） | `asset-overview.png`、`asset-cutaway.png` |
 | Hero 资产清单/哈希 | 通过 | `tower-asset-manifest.json`（151 Mesh / 14,328 verts / 27,054 tris） |
@@ -118,6 +120,8 @@ node navcheck.cjs                           # #stage=0..4、章节、塔页 exit
 ### P1
 
 - P1-01 资产仍是程序化教学模型，不是高精度工程资产；平台/炉管/设备比例简化，不能当真实总平面。
+- P1-05 `tower.html` 是兼容/fallback 页，局部状态不与 l4 共享；canonical 详情仍是 sandbox l4。
+- P1-06 常压渣油已改塔底路径；中部只保留石脑油/煤油/柴油侧线。
 - P1-02 3D 热区是 5 个球形语义锚点 + HTML 按钮；不是所有 Mesh 都可点，深层部件仍靠标签/按钮。
 - P1-03 外部全景中设备群可见，但 `lvl__act` 面板仍占据部分下方画面；可在后续视觉轮优化相机/面板布局。
 - P1-04 资产对外再分发许可仍需权利人书面确认。

@@ -316,8 +316,15 @@
     scene.traverse(function (o) {
       if (!o.isMesh) return;
       var name = o.userData.groupName || '';
-      if (/ShellHalf$|DomeHalf$/.test(name)) o.visible = n > 0;         // 半剖壳/半穹顶：剖开时显示
-      else if (/^(Tower_Atmospheric_Shell|Tower_Vacuum_Shell|Tower_Atmospheric_Dome|Tower_Vacuum_Dome)$/.test(name)) {
+      if (/ShellHalf$|DomeHalf$/.test(name)) {
+        o.visible = n > 0;                                             // 半剖壳/半穹顶：剖开时显示
+        if (o.material) {
+          o.material.transparent = n === 2;
+          o.material.opacity = n === 2 ? 0.18 : 1;
+          o.material.depthWrite = n !== 2;
+          o.material.needsUpdate = true;
+        }
+      } else if (/^(Tower_Atmospheric_Shell|Tower_Vacuum_Shell|Tower_Atmospheric_Dome|Tower_Vacuum_Dome)$/.test(name)) {
         o.visible = n === 0;                                           // 整壳/整穹顶：外观时显示
       }
     });
@@ -327,6 +334,7 @@
     var note = document.getElementById('flow-note');
     if (note) note.hidden = n !== 2;
     if (internals) internals.visible = n === 2;
+    window.__towerLevel = n;
     flyTo({ target: new THREE.Vector3(0, 11.5, 0), az: 0.42, el: n > 0 ? 0.16 : 0.30, dist: n > 0 ? 23 : 33 });
   }
 

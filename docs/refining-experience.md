@@ -140,7 +140,13 @@
 - 本页不提供真实压力、温度、处理量、塔板效率或收率。
 - 塑料/合成纤维原料不必然来自石油；产品路线为典型示意。
 
-## 6. 已知限制
+## 6. 运行入口
+
+- **canonical detail**：`sandbox.html#stage=3` → `web/levels/l4.js`，加载 `tower.obj`，绑定 `atmospheric_tower` 与 `PETRO_DEVICE_STATE`。
+- **overview**：`immersion.js` 使用 `tower.obj` 的低细节/LOD 表示；为性能过滤部分辅助 Mesh，不代表详情页缺失。
+- **兼容页**：`tower.html` 保留旧入口、热点和 2D fallback；它维护自己的相机/剖切局部状态，不冒充与 l4 共享 Store。进入深链时它是兼容/回退页。
+
+## 7. 已知限制
 
 - `.blend` 是可编辑导入源；生成器仍是 `tools/make_tower.py`，不是完整参数化 `.blend` 历史。
 - 装置群资产是教学模型，不是工程总平面；管线/平台/设备比例简化。

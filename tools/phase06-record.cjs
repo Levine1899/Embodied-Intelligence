@@ -61,7 +61,9 @@ function getJson(url) {
     click('[data-fraction="topgas"]');
     await sleep(1100);
     click('[data-fraction="diesel"]');
-    await sleep(1400);
+    await sleep(900);
+    click('[data-fraction="residue"]');
+    await sleep(900);
     click('#l4-flow');
     await sleep(800);
     click('#l4-replay');
