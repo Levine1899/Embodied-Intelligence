@@ -46,7 +46,7 @@
 | 常压/减压关系与科学边界 | **通过** | 减压降低沸点、避免高温裂解；不编造压力/温度/收率 |
 | 完整镜头（全景→塔→近景→半剖→全剖→进料/汽液→馏分→全景） | **通过** | `refining-continuity.mp4` |
 | 真实浏览器截图 | **通过** | 5 张 1440×900 + 2 张资产检查渲染 |
-| 实时连续录屏 | **通过** | 55.90s；1,445,358 B；1440×900 |
+| 实时连续录屏 | **通过** | 55.15s；1,452,173 B；1440×900 |
 | 更新 `docs/scene-distillation-tower.md` | **通过** | 追加阶段 06 l4 集成 |
 | 新增 `docs/refining-experience.md` | **通过** | 设备群/三状态/互动矩阵/科学边界 |
 | 交互矩阵（每个核心设备） | **通过** | 5 个矩阵：三状态、进料、汽液、塔板、馏分 |
@@ -78,7 +78,7 @@
 node --check web/levels/l4.js             # exit 0
 node --check web/world/registry.js        # exit 0
 node tools/phase06-verify.cjs              # exit 0；5 馏分、三状态、暂停、复位、退出
-node tools/phase06-record.cjs              # exit 0；1143 帧；55.90s；1,445,358 B
+node tools/phase06-record.cjs              # exit 0；1143 帧；55.15s；1,452,173 B
 node level-e2e-rev2.cjs                    # l1–l5 exit 0
 node navcheck.cjs                           # #stage=0..4、章节、塔页 exit 0
 ```
@@ -104,7 +104,7 @@ node navcheck.cjs                           # #stage=0..4、章节、塔页 exit
 | 全剖+进料+汽液+柴油路径 | 通过 | `phase06-03-refining-full.png` |
 | 恢复外观 | 通过 | `phase06-04-refining-restored.png` |
 | 返回总览 | 通过 | `phase06-05-back-overview.png` |
-| 连续录屏 | 通过 | `refining-continuity.mp4`（55.90s, 1440×900, 1,445,358 B） |
+| 连续录屏 | 通过 | `refining-continuity.mp4`（55.15s, 1440×900, 1,452,173 B） |
 | 独立塔页状态/流程 | 通过 | `tower-state-flow.png`、`tower-state-flow.json` |
 | 验证断言 | 通过 | `phase06-verify.json` |
 | 资产外观检查 | 参考（Blender 静帧） | `asset-overview.png`、`asset-cutaway.png` |
