@@ -194,6 +194,7 @@
     canvas.addEventListener('pointermove', onPointerMove, true);
     canvas.addEventListener('pointerup', onPointerUp, true);
     canvas.addEventListener('pointercancel', onPointerUp, true);
+  canvas.addEventListener('contextmenu', function (e) { if (stage.isLevel()) e.preventDefault(); });
     canvas.addEventListener('wheel', onWheel, { passive: false, capture: true });
   }
 
@@ -896,7 +897,7 @@
   function onPointerDown(e) {
     if (!stage.isLevel() || !ui.classList.contains('on')) return;
     if (flyHandle) { cancelAnimationFrame(flyHandle); flyHandle = null; }
-    down = { x: e.clientX, y: e.clientY };
+    down = { x: e.clientX, y: e.clientY, button: e.button };
     dragged = false;
     e.stopPropagation();
   }
@@ -906,10 +907,12 @@
     const dy = e.clientY - down.y;
     if (Math.abs(dx) + Math.abs(dy) > 3) dragged = true;
     if (dragged) {
-      orbit.yaw -= dx * 0.006;
-      orbit.pitch = Math.max(-0.4, Math.min(0.85, orbit.pitch + dy * 0.005));
-      down = { x: e.clientX, y: e.clientY };
-      applyOrbit();
+      if (down.button === 2) {
+        orbit.yaw -= dx * 0.006;
+        orbit.pitch = Math.max(-0.4, Math.min(0.85, orbit.pitch + dy * 0.005));
+        applyOrbit();
+      }
+      down = { x: e.clientX, y: e.clientY, button: down.button };
       e.stopPropagation();
       e.preventDefault();
     }
@@ -917,9 +920,10 @@
   function onPointerUp(e) {
     if (!down || !stage.isLevel()) return;
     const wasDragged = dragged;
+    const button = down.button;
     down = null;
     e.stopPropagation();
-    if (!wasDragged) pick(e.clientX, e.clientY);
+    if (!wasDragged && button === 0) pick(e.clientX, e.clientY);
   }
   function onWheel(e) {
     if (!stage.isLevel()) return;
