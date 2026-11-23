@@ -1,6 +1,6 @@
 {
   "date": "2026-11-23",
-  "page": "http://127.0.0.1:8796/sandbox.html?rev=phase06v-1795406375193#stage=3",
+  "page": "http://127.0.0.1:8796/sandbox.html?rev=phase06v-1795406581857#stage=3",
   "viewport": "1440x900",
   "external": {
     "loaded": true,
@@ -79,7 +79,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         }
       ]
     }
@@ -120,7 +120,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "inspect_tower_structure",
@@ -130,7 +130,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "restore_refining_view",
@@ -140,7 +140,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "replay_refining_flow",
@@ -150,7 +150,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         }
       ]
     }
@@ -194,7 +194,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "inspect_tower_structure",
@@ -204,7 +204,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "restore_refining_view",
@@ -214,7 +214,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "replay_refining_flow",
@@ -224,7 +224,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "inspect_tower_structure",
@@ -234,7 +234,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "restore_refining_view",
@@ -244,7 +244,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "select_refining_hotspot",
@@ -254,7 +254,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         }
       ]
     }
@@ -300,7 +300,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "inspect_tower_structure",
@@ -310,7 +310,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "restore_refining_view",
@@ -320,7 +320,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "replay_refining_flow",
@@ -330,7 +330,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "inspect_tower_structure",
@@ -340,7 +340,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "restore_refining_view",
@@ -350,7 +350,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "select_refining_hotspot",
@@ -360,7 +360,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "inspect_tower_structure",
@@ -370,7 +370,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         }
       ]
     },
@@ -426,7 +426,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "inspect_tower_structure",
@@ -436,7 +436,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:40"
+          "time": "12:03:07"
         },
         {
           "action": "inspect_tower_structure",
@@ -446,7 +446,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "start_vapor_liquid",
@@ -456,7 +456,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "choose_feed_position",
@@ -466,7 +466,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "inspect_tower_trays",
@@ -476,7 +476,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "select_fraction",
@@ -486,7 +486,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "select_fraction",
@@ -496,7 +496,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "select_fraction",
@@ -506,7 +506,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "select_fraction",
@@ -516,7 +516,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "select_fraction",
@@ -526,7 +526,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "select_fraction",
@@ -536,7 +536,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         }
       ]
     },
@@ -636,7 +636,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "inspect_tower_trays",
@@ -646,7 +646,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "select_fraction",
@@ -656,7 +656,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "select_fraction",
@@ -666,7 +666,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "select_fraction",
@@ -676,7 +676,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "select_fraction",
@@ -686,7 +686,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "select_fraction",
@@ -696,7 +696,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "select_fraction",
@@ -706,7 +706,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:41"
+          "time": "12:03:08"
         },
         {
           "action": "pause_vapor_liquid",
@@ -716,7 +716,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:42"
+          "time": "12:03:09"
         },
         {
           "action": "replay_refining_flow",
@@ -726,7 +726,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:43"
+          "time": "12:03:10"
         },
         {
           "action": "inspect_tower_structure",
@@ -736,7 +736,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:43"
+          "time": "12:03:10"
         },
         {
           "action": "restore_refining_view",
@@ -746,7 +746,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "11:59:43"
+          "time": "12:03:10"
         }
       ]
     },
