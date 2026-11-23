@@ -223,6 +223,7 @@ function getJson(url) {
   }
   m = await ev(`({state:window.__mission.state,solved:window.__l2.solved})`);
   assert('mission M2 complete after three correct outlets', m.state.steps[1].done && m.state.step === 2, m);
+  assert('mission clears stale error after M2', (m.state.errors || []).length === 0 && (m.state.errorHistory || []).length >= 1, m.state);
   await click('#mission-enter');
   await WAIT(4800);
   m = await ev(`({state:window.__mission.state,level:window.__sceneContext.levelId})`);

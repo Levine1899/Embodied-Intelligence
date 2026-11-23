@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-11-23T11:31:08.419Z",
+  "generatedAt": "2026-11-23T11:40:34.072Z",
   "base": "http://127.0.0.1:8796",
-  "passed": 75,
+  "passed": 76,
   "failed": 0,
   "results": [
     {
@@ -482,7 +482,7 @@
           "hintLevel": 0,
           "errors": [],
           "lastHint": "",
-          "startedAt": "2026-11-23T11:29:50.970Z",
+          "startedAt": "2026-11-23T11:39:16.638Z",
           "finishedAt": null
         },
         "level": "l1",
@@ -536,7 +536,7 @@
         "hintLevel": 0,
         "errors": [],
         "lastHint": "",
-        "startedAt": "2026-11-23T11:29:50.970Z",
+        "startedAt": "2026-11-23T11:39:16.638Z",
         "finishedAt": null
       }
     },
@@ -588,7 +588,7 @@
           "hintLevel": 0,
           "errors": [],
           "lastHint": "",
-          "startedAt": "2026-11-23T11:29:50.970Z",
+          "startedAt": "2026-11-23T11:39:16.638Z",
           "finishedAt": null
         },
         "level": "l2"
@@ -648,12 +648,12 @@
           "hintLevel": 1,
           "errors": [
             {
-              "at": "2026-11-23T11:30:07.349Z",
+              "at": "2026-11-23T11:39:33.029Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ],
           "lastHint": "",
-          "startedAt": "2026-11-23T11:29:50.970Z",
+          "startedAt": "2026-11-23T11:39:16.638Z",
           "finishedAt": null
         },
         "feedback": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。",
@@ -730,25 +730,89 @@
           ],
           "hintsUsed": 1,
           "hintLevel": 0,
-          "errors": [
+          "errors": [],
+          "lastHint": "",
+          "startedAt": "2026-11-23T11:39:16.638Z",
+          "finishedAt": null,
+          "errorHistory": [
             {
-              "at": "2026-11-23T11:30:07.349Z",
+              "at": "2026-11-23T11:39:33.029Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             },
             {
-              "at": "2026-11-23T11:30:17.911Z",
+              "at": "2026-11-23T11:39:43.557Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
-          ],
-          "lastHint": "",
-          "startedAt": "2026-11-23T11:29:50.970Z",
-          "finishedAt": null
+          ]
         },
         "solved": {
           "gas": true,
           "oil": true,
           "water": true
         }
+      }
+    },
+    {
+      "name": "mission clears stale error after M2",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "id": "M-YJ-001",
+        "title": "追踪批次 YJ-001",
+        "status": "active",
+        "step": 2,
+        "steps": [
+          {
+            "id": "M1",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M2",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M3",
+            "done": false,
+            "visited": false
+          },
+          {
+            "id": "M4",
+            "done": false,
+            "visited": false
+          },
+          {
+            "id": "M5",
+            "done": false,
+            "visited": false
+          }
+        ],
+        "flags": {
+          "reservoir": true,
+          "up": true,
+          "started": true
+        },
+        "knowledge": [
+          "kb_formation",
+          "kb_gather"
+        ],
+        "hintsUsed": 1,
+        "hintLevel": 0,
+        "errors": [],
+        "lastHint": "",
+        "startedAt": "2026-11-23T11:39:16.638Z",
+        "finishedAt": null,
+        "errorHistory": [
+          {
+            "at": "2026-11-23T11:39:33.029Z",
+            "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+          },
+          {
+            "at": "2026-11-23T11:39:43.557Z",
+            "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+          }
+        ]
       }
     },
     {
@@ -799,19 +863,20 @@
           ],
           "hintsUsed": 1,
           "hintLevel": 0,
-          "errors": [
+          "errors": [],
+          "lastHint": "",
+          "startedAt": "2026-11-23T11:39:16.638Z",
+          "finishedAt": null,
+          "errorHistory": [
             {
-              "at": "2026-11-23T11:30:07.349Z",
+              "at": "2026-11-23T11:39:33.029Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             },
             {
-              "at": "2026-11-23T11:30:17.911Z",
+              "at": "2026-11-23T11:39:43.557Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
-          ],
-          "lastHint": "",
-          "startedAt": "2026-11-23T11:29:50.970Z",
-          "finishedAt": null
+          ]
         },
         "level": "l3"
       }
@@ -866,19 +931,20 @@
           ],
           "hintsUsed": 1,
           "hintLevel": 0,
-          "errors": [
+          "errors": [],
+          "lastHint": "",
+          "startedAt": "2026-11-23T11:39:16.638Z",
+          "finishedAt": null,
+          "errorHistory": [
             {
-              "at": "2026-11-23T11:30:07.349Z",
+              "at": "2026-11-23T11:39:33.029Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             },
             {
-              "at": "2026-11-23T11:30:17.911Z",
+              "at": "2026-11-23T11:39:43.557Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
-          ],
-          "lastHint": "",
-          "startedAt": "2026-11-23T11:29:50.970Z",
-          "finishedAt": null
+          ]
         },
         "level": 0
       }
@@ -933,19 +999,20 @@
         ],
         "hintsUsed": 1,
         "hintLevel": 0,
-        "errors": [
+        "errors": [],
+        "lastHint": "",
+        "startedAt": "2026-11-23T11:39:16.638Z",
+        "finishedAt": null,
+        "errorHistory": [
           {
-            "at": "2026-11-23T11:30:07.349Z",
+            "at": "2026-11-23T11:39:33.029Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           },
           {
-            "at": "2026-11-23T11:30:17.911Z",
+            "at": "2026-11-23T11:39:43.557Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           }
-        ],
-        "lastHint": "",
-        "startedAt": "2026-11-23T11:29:50.970Z",
-        "finishedAt": null
+        ]
       }
     },
     {
@@ -999,19 +1066,20 @@
           ],
           "hintsUsed": 1,
           "hintLevel": 0,
-          "errors": [
+          "errors": [],
+          "lastHint": "",
+          "startedAt": "2026-11-23T11:39:16.638Z",
+          "finishedAt": null,
+          "errorHistory": [
             {
-              "at": "2026-11-23T11:30:07.349Z",
+              "at": "2026-11-23T11:39:33.029Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             },
             {
-              "at": "2026-11-23T11:30:17.911Z",
+              "at": "2026-11-23T11:39:43.557Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
-          ],
-          "lastHint": "",
-          "startedAt": "2026-11-23T11:29:50.970Z",
-          "finishedAt": null
+          ]
         },
         "level": "l4"
       }
@@ -1069,19 +1137,20 @@
         ],
         "hintsUsed": 1,
         "hintLevel": 0,
-        "errors": [
+        "errors": [],
+        "lastHint": "",
+        "startedAt": "2026-11-23T11:39:16.638Z",
+        "finishedAt": null,
+        "errorHistory": [
           {
-            "at": "2026-11-23T11:30:07.349Z",
+            "at": "2026-11-23T11:39:33.029Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           },
           {
-            "at": "2026-11-23T11:30:17.911Z",
+            "at": "2026-11-23T11:39:43.557Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           }
-        ],
-        "lastHint": "",
-        "startedAt": "2026-11-23T11:29:50.970Z",
-        "finishedAt": null
+        ]
       }
     },
     {
@@ -1139,19 +1208,20 @@
           ],
           "hintsUsed": 1,
           "hintLevel": 0,
-          "errors": [
+          "errors": [],
+          "lastHint": "",
+          "startedAt": "2026-11-23T11:39:16.638Z",
+          "finishedAt": null,
+          "errorHistory": [
             {
-              "at": "2026-11-23T11:30:07.349Z",
+              "at": "2026-11-23T11:39:33.029Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             },
             {
-              "at": "2026-11-23T11:30:17.911Z",
+              "at": "2026-11-23T11:39:43.557Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
-          ],
-          "lastHint": "",
-          "startedAt": "2026-11-23T11:29:50.970Z",
-          "finishedAt": null
+          ]
         },
         "level": "l5"
       }
@@ -1210,19 +1280,20 @@
         ],
         "hintsUsed": 1,
         "hintLevel": 0,
-        "errors": [
+        "errors": [],
+        "lastHint": "M5 需要新增一个产品选择；取消选中不算完成任务。",
+        "startedAt": "2026-11-23T11:39:16.638Z",
+        "finishedAt": null,
+        "errorHistory": [
           {
-            "at": "2026-11-23T11:30:07.349Z",
+            "at": "2026-11-23T11:39:33.029Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           },
           {
-            "at": "2026-11-23T11:30:17.911Z",
+            "at": "2026-11-23T11:39:43.557Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           }
-        ],
-        "lastHint": "M5 需要新增一个产品选择；取消选中不算完成任务。",
-        "startedAt": "2026-11-23T11:29:50.970Z",
-        "finishedAt": null
+        ]
       }
     },
     {
@@ -1283,19 +1354,20 @@
           ],
           "hintsUsed": 1,
           "hintLevel": 0,
-          "errors": [
+          "errors": [],
+          "lastHint": "",
+          "startedAt": "2026-11-23T11:39:16.638Z",
+          "finishedAt": "2026-11-23T11:40:10.508Z",
+          "errorHistory": [
             {
-              "at": "2026-11-23T11:30:07.349Z",
+              "at": "2026-11-23T11:39:33.029Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             },
             {
-              "at": "2026-11-23T11:30:17.911Z",
+              "at": "2026-11-23T11:39:43.557Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
-          ],
-          "lastHint": "",
-          "startedAt": "2026-11-23T11:29:50.970Z",
-          "finishedAt": "2026-11-23T11:30:44.846Z"
+          ]
         },
         "done": true
       }

@@ -332,6 +332,11 @@
     if (!step || !st || st.done) return;
     st.done = true;
     state.lastHint = '';
+    /* 过渡后不把上一段的红色错误留在下一段；保留到 errorHistory 供复盘。 */
+    if (state.errors && state.errors.length) {
+      state.errorHistory = (state.errorHistory || []).concat(state.errors);
+      state.errors = [];
+    }
     addKnowledge(step.knowledge);
     if (global.JourneyStore) global.JourneyStore.recordMission(state);
     if (state.step < STEP_DEFS.length - 1) {

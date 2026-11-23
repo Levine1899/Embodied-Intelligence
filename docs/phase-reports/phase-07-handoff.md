@@ -109,13 +109,13 @@ node --check web/assets/site/ambient.js
 
 # 真实浏览器验证（Chrome 157 CDP，1440×900，本地 :8796）
 CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase07-verify.cjs
-# -> 75 passed / 0 failed
+# -> 76 passed / 0 failed
 
 # 真实浏览器录屏
 node tools/phase07-record.cjs tour
 # -> 1409 frames / 70.45s / 5,276,135 B
 node tools/phase07-record.cjs mission
-# -> 1519 frames / 75.95s / 5,776,825 B
+# -> 1496 frames / 74.80s / 5,742,155 B
 
 # HTTP 静态回归
 # index/ask/write/explore/sandbox/tower/kb + journey-store/mission/journey => 200
@@ -125,9 +125,9 @@ node tools/phase07-record.cjs mission
 
 | 证据 | 结果 | 路径/说明 |
 |---|---|---|
-| 75 项断言 | **通过** | `docs/phase-reports/evidence/phase-07/phase07-verify.json` |
+| 76 项断言 | **通过** | `docs/phase-reports/evidence/phase-07/phase07-verify.json` |
 | 导览完整录屏 | **通过** | `.../full-tour-continuity.mp4`（70.45s，1440×900） |
-| 自由探索+任务录屏 | **通过** | `.../free-plus-mission.mp4`（75.95s，1440×900） |
+| 自由探索+任务录屏 | **通过** | `.../free-plus-mission.mp4`（74.80s，1440×900） |
 | 导览全景 | 通过 | `phase07-02-tour-overview.png` |
 | 地下真实状态 | 通过 | `phase07-03-tour-underground.png` |
 | 三相分离半剖/运行 | 通过 | `phase07-04-tour-separator.png` |
@@ -153,7 +153,7 @@ node tools/phase07-record.cjs mission
 
 ### P0（未关闭则不得 PASS）
 
-- **无未关闭 P0。** 复核提出的 P0-R1/P0-R2 已修复，并由 `phase07-verify.cjs` 的 75 项断言覆盖：
+- **无未关闭 P0。** 复核提出的 P0-R1/P0-R2 已修复，并由 `phase07-verify.cjs` 的 76 项断言覆盖：
   - **P0-R1 已修复**：M3 改为保存/判定当前液位；新增“75→0→泵不完成、再回 75 后完成”的负例；75/0 通过。
   - **P0-R2 已修复**：`resumeScene()` 恢复 l2 分离、l3 泵、l4 汽液；导览第 5/6/7 站暂停→继续断言全部通过；暂停时临时显示关卡操作面板，支持接管。
 - P0-GOV-01（阶段 06 用户签收字段仍写“待用户签收”）：用户本轮明确声明“阶段 03—06 已通过”，作为阶段 07 放行依据；未改写历史报告、未代签。阶段 07 自身的用户签收仍待完成。
@@ -204,7 +204,7 @@ node tools/phase07-record.cjs mission
   - 10 站导览由显式继续推进，不是定时幻灯片；5 个章节有真实设备/工艺状态变化；
   - M-YJ-001 任务跨五关，M2 完成油/气/水三路去向，M3 当前液位判定，M4 全剖并选柴油，未用选择题替代；
   - 失败/提示/暂停/退出/重置/总结/档案分别实测；
-  - **75 项真实浏览器断言 0 失败**；两段真实浏览器录屏 1440×900；暂停/继续、M3 负例、M5 取消选中均有断言；
+  - **76 项真实浏览器断言 0 失败**；两段真实浏览器录屏 1440×900；暂停/继续、M3 负例、M5 取消选中均有断言；
   - 声音默认关闭，不阻塞；探索记录仅本机；语音为可选浏览器朗读。
 - 未关闭项：P1-R3/R5/R7/R8/R9（pointer 全量、reduced-motion 全遍历、N=5 用户测试、跨浏览器/移动端）；P2 性能/声效细化。
 - **本报告不能替代用户签收。**
@@ -232,5 +232,5 @@ node tools/phase07-record.cjs mission
 4. M5 以 `pickedCount` 增长判定新选择；取消选中不完成。
 5. 可选浏览器语音 `Voice` 朗读/暂停/停止通过；设备提示音为合成短音。
 6. 暂停时关卡操作面板可见；关卡 `fly` 尊重 reduced-motion。
-7. 最终：**75 passed / 0 failed**，15 张截图、两段录屏（70.45s / 75.95s）。
+7. 最终：**76 passed / 0 failed**，15 张截图、两段录屏（70.45s / 74.80s）。
 8. 复审结论：**PASS（技术/交互范围）**；P1 剩余项见 §6；用户签收仍未完成，未进入阶段 08。

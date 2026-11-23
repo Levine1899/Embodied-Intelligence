@@ -7,7 +7,7 @@
 
 ## 1. 验证结果
 
-`phase07-verify.json`：**75 passed / 0 failed**。
+`phase07-verify.json`：**76 passed / 0 failed**。
 
 覆盖：
 
@@ -50,7 +50,7 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase07-verify.cjs
 | 文件 | 时长 | 说明 |
 |---|---|---|
 | `full-tour-continuity.mp4` | 70.45s | 10 站完整导览：全景→地下→井筒→井口→分离→储运→炼化→馏分→产品→档案；含真实关卡切换/设备状态 |
-| `free-plus-mission.mp4` | 75.95s | 任务接单→地下→三相分离（含错误→提示→改对）→储运→炼化→产品→总结→自由探索拖拽 |
+| `free-plus-mission.mp4` | 74.80s | 任务接单→地下→三相分离（含错误→提示→改对）→储运→炼化→产品→总结→自由探索拖拽 |
 
 - 录屏由 CDP screencast 从真实浏览器捕获，没有后期剪辑/拼接；任务操作通过页面 DOM 与关卡 API 驱动，成功/失败由真实前端状态逻辑判定。
 - 录屏使用 `everyNthFrame=3` 以 20fps 编码；不是静止帧序列。
