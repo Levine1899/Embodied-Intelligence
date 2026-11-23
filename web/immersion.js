@@ -3,6 +3,7 @@
 
   const viewport = document.getElementById('viewport');
   let worldRoot = null;
+  let overviewWellbore = null;
   const stageButtons = Array.from(document.querySelectorAll('[data-stage]'));
   const depthSelect = document.getElementById('depth');
   const feedback = document.getElementById('feedback');
@@ -1074,6 +1075,16 @@
     scene.add(warm);
 
     buildModels();
+    const wbAnchor = (modelGroups[0] && modelGroups[0].position) ? modelGroups[0].position : new THREE.Vector3(-24, 0, 8);
+    overviewWellbore = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.18, 0.18, 7.2, 16),
+      new THREE.MeshStandardMaterial({ color: 0x59635e, roughness: 0.45, metalness: 0.7 })
+    );
+    overviewWellbore.name = 'wellbore_overview';
+    overviewWellbore.userData.objectId = 'wellbore';
+    overviewWellbore.position.set(wbAnchor.x, -3.4, wbAnchor.z);
+    scene.add(overviewWellbore);
+    if (window.PETRO_DEVICE_STATE) window.PETRO_DEVICE_STATE.bind('wellbore', 'overview', overviewWellbore);
     raycaster = new THREE.Raycaster();
     resize();
     new ResizeObserver(resize).observe(viewport);
@@ -1926,6 +1937,7 @@
       modelGroups.forEach(function (g) { g.visible = v; });
       pipes.forEach(function (p) { if (p.object) p.object.visible = v; });
       particles.forEach(function (p) { p.visible = v; });
+      if (overviewWellbore) overviewWellbore.visible = v;
     },
     setNodeDone(i, v) { if (v) doneSet.add(i); else doneSet.delete(i); saveDone(); applyBadge(i); syncStageTabs(); syncProgress(); syncTaskPanel(); maybeAllDone(); },
     resetProgress() {

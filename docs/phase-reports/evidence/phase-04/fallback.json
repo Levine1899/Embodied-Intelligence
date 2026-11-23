@@ -1,7 +1,15 @@
 {
-  "date":"2026-11-23",
-  "method":"真实页面加载后派发 webglcontextlost；不是设计稿",
-  "sandbox":{"text":"三维上下文丢失，正在尝试恢复；下方流程节点与讲解仍可使用。","hidden":false,"auditErrors":[]},
-  "tower":{"text":"三维场景不可用，已切换到 2D 剖面。","visible":true},
-  "note":"这是运行时 context-loss 回退；未宣称所有无 WebGL 冷启动/跨浏览器均通过。"
+  "date": "2026-11-23",
+  "method": "Runtime dispatch of webglcontextlost on actual sandbox canvas and tower canvas; CDP Chrome 157",
+  "sandbox": {
+    "text": "三维上下文丢失，正在尝试恢复；下方流程节点与讲解仍可使用。",
+    "hidden": false,
+    "canvas": true,
+    "audit": []
+  },
+  "tower": {
+    "text": "三维场景不可用，已切换到 2D 剖面。 （三维上下文已丢失，正在等待恢复…）\n塔顶气 → 冷凝器\n石脑油（上部侧线）\n煤油\n柴油\n常压渣油 → 减压塔\n原油进料（加热后）\n\n塔板数量与侧线位置为教学简化；真实装置以工艺资料为准。",
+    "visible": true
+  },
+  "limitations": ["只验证运行时 context-loss，不覆盖所有无 WebGL 冷启动/浏览器版本"]
 }

@@ -35,7 +35,7 @@
   };
 
   let G = null, baseScene = null, anchor = null, camera = null, worldGroup = null;
-  let surfaceApron = null, surfaceEndpoint = null, overviewWellbore = null;
+  let surfaceApron = null, surfaceEndpoint = null;
   let levelLights = [];
   let assetRoot = null, assetLoaded = false, assetFailed = false;
   let layerMeshes = {}, partMeshes = {}, reservoirLens = null, wellheadMeshes = [];
@@ -58,7 +58,7 @@
     const s = document.createElement('style');
     s.id = 'ug-style';
     s.textContent = `
-      .ug-left{position:absolute;left:14px;top:58px;width:286px;max-height:calc(100% - 156px);overflow:auto;pointer-events:auto;
+      .ug-left{position:absolute;left:14px;top:58px;width:286px;max-height:calc(100% - 100px);overflow:auto;pointer-events:auto;
         background:linear-gradient(180deg,rgba(8,17,24,.95),rgba(8,17,24,.86));border:1px solid #2a3d47;padding:12px 13px;z-index:3}
       .ug-kicker{font:600 10.5px/1.2 ui-monospace,Consolas,monospace;letter-spacing:.13em;color:#8da2ad;text-transform:uppercase;margin-bottom:8px}
       .ug-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 9px}
@@ -83,9 +83,9 @@
       .ug-scale{font:11px/1.5 ui-monospace,Consolas,monospace;color:#89a1ab;background:rgba(8,17,24,.8);padding:6px 8px;border-left:2px solid #e3ad58;max-width:150px}
       .ug-readout{font:11.5px/1.5 "Microsoft YaHei UI",sans-serif;color:#adc0c8;border-top:1px solid #263a44;margin-top:8px;padding-top:7px}
       .ug-tag{display:inline-block;border:1px solid #385561;color:#9fc0cc;border-radius:2px;padding:1px 5px;font-size:10.5px;margin-right:4px}
-      .lvl.on .lvl__act{left:322px;right:auto;max-width:390px}
-      @media(max-width:1200px){.lvl.on .lvl__act{left:276px;max-width:340px}}
-      @media(max-width:900px){.ug-left{width:238px}.ug-controls{top:auto;bottom:108px}.ug-btn{min-width:104px}.lvl.on .lvl__act{left:264px;max-width:310px}}
+      .lvl.on .lvl__act{position:static;left:auto;right:auto;bottom:auto;max-width:none;background:transparent;border:0;padding:10px 0 4px;margin-top:8px;border-top:1px solid #263a44}
+      .lvl.on .lvl__act p{font-size:12px;line-height:1.65}
+      @media(max-width:900px){.ug-left{width:238px}.ug-controls{top:auto;bottom:108px}.ug-btn{min-width:104px}.lvl.on .lvl__act{max-width:none}}
     `;
     document.head.appendChild(s);
   }
@@ -123,6 +123,9 @@
       '<button type="button" class="lvl__back" id="l1-back">返回总览</button>'
     ].join('');
     stage.viewport.appendChild(ui);
+    const actPanel = ui.querySelector('#l1-act');
+    const leftPanel = ui.querySelector('#l1-panel');
+    if (actPanel && leftPanel) leftPanel.appendChild(actPanel);
 
     hint = ui.querySelector('#l1-hint');
     info = ui.querySelector('#l1-info');
@@ -209,9 +212,11 @@
   }
 
   function setInfo(title, body, extra) {
+    const disclaimer = '教学示意：不是真实油藏数据、真实地质比例或数值模拟。';
+    const hasDisclaimer = (body + (extra || '')).indexOf('教学示意') >= 0 || (body + (extra || '')).indexOf('不是真实') >= 0;
     info.innerHTML = '<b>' + title + '</b><p>' + body + '</p>' +
       (extra ? '<p><small>' + extra + '</small></p>' : '') +
-      '<p><small>教学示意：不是真实油藏数据、真实地质比例或数值模拟。</small></p>';
+      (hasDisclaimer ? '' : '<p><small>' + disclaimer + '</small></p>');
     setReadout();
   }
 
@@ -514,14 +519,6 @@
     G.visible = false;
     baseScene.add(G);
     if (window.__lvlGroup) window.__lvlGroup(0, G);
-    overviewWellbore = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.22, 0.22, 7.2, 16),
-      new THREE.MeshStandardMaterial({ color: 0x59635e, roughness: 0.45, metalness: 0.7 })
-    );
-    overviewWellbore.name = 'overview_wellbore';
-    overviewWellbore.position.set(anchor.x, -3.4, anchor.z);
-    baseScene.add(overviewWellbore);
-    if (window.PETRO_DEVICE_STATE) window.PETRO_DEVICE_STATE.bind('wellbore', 'overview', overviewWellbore);
     layerVisibility = { overburden: true, caprock: true, reservoir: true, basement: true };
     buildPore();
     buildWellFlow();
@@ -593,6 +590,10 @@
     if (poreMode) exitPore();
     pressure = 0;
     completed = false;
+    paused = false;
+    const playBtn = ui && ui.querySelector('#l1-play');
+    if (playBtn) { playBtn.textContent = '暂停流动'; playBtn.setAttribute('aria-pressed', 'false'); }
+    ui && ui.classList.remove('done');
     const press = ui && ui.querySelector('#l1-press');
     if (press) press.value = 0;
     const pct = ui && ui.querySelector('#l1-pct');
@@ -609,6 +610,7 @@
     selectedPart = null;
     clearLayerHighlight();
     viewMode = 'block';
+    if (stage.setContextObject) stage.setContextObject(null, 'subsurface');
     setInfo('总览剖面', '点击剖面中的岩层、储层或井筒部件，查看它们的关系。可用按钮逐层显示/隐藏。');
     topView();
     updatePressureUI();
@@ -703,6 +705,7 @@
       reservoirLens.material.emissiveIntensity = 0;
     }
     highlightedLayer = null;
+    if (assetLoaded) applyClip();
   }
 
   function highlightLayer(key) {
@@ -937,6 +940,18 @@
     ensureCamera();
     layerVisibility = { overburden: true, caprock: true, reservoir: true, basement: true };
     applyLayerVisibility();
+    pressure = 0;
+    completed = false;
+    paused = false;
+    viewMode = 'block';
+    const press = ui.querySelector('#l1-press');
+    if (press) press.value = 0;
+    const pct = ui.querySelector('#l1-pct');
+    if (pct) pct.textContent = '0%';
+    const playBtn = ui.querySelector('#l1-play');
+    if (playBtn) { playBtn.textContent = '暂停流动'; playBtn.setAttribute('aria-pressed', 'false'); }
+    ui.classList.remove('done');
+    updatePressureUI();
     selectedLayer = null;
     selectedPart = null;
     clearLayerHighlight();
@@ -946,7 +961,6 @@
     if (cutBtn) cutBtn.textContent = '显示完整地层';
     hideSurfaceScene();
     G.visible = true;
-    if (overviewWellbore) overviewWellbore.visible = false;
     if (assetRoot) assetRoot.visible = true;
     const startPos = stage.camera.position.clone();
     const startTarget = new THREE.Vector3(anchor.x, 0, anchor.z);
@@ -989,7 +1003,6 @@
     ui.classList.remove('on', 'done');
     document.body.classList.remove('in-level');
     G.visible = false;
-    if (overviewWellbore) overviewWellbore.visible = true;
     hideSurfaceScene();
     if (worldGroup) worldGroup.visible = true;
     levelLights.forEach(function (o) { if (o.parent) o.parent.remove(o); });

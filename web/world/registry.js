@@ -59,7 +59,7 @@
       objectId: 'wellbore', displayName: '井筒 / 套管', zoneId: 'subsurface', stageId: 'drill', stageIndex: 0,
       knowledgeIds: ['kb_formation', 'kb_drill'], chapterId: 'drill', levelIndex: 0,
       modelPath: 'assets/underground/underground.obj', modelNode: 'well_casing/well_cement/well_tubing/well_perforation_00',
-      overviewRepresentation: null, detailRepresentation: 'underground_wellbore_detail', anchor: 'wellbore_reservoir_anchor',
+      overviewRepresentation: 'wellbore_overview', detailRepresentation: 'underground_wellbore_detail', anchor: 'wellbore_reservoir_anchor',
       capabilities: ['select', 'structure', 'trace'], assetStatus: 'new', interaction: ['select', 'toggleCasing', 'traceUp']
     },
     {

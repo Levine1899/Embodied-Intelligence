@@ -2,9 +2,34 @@
   "date": "2026-11-23",
   "page": "http://127.0.0.1:8796/sandbox.html?rev=phase04",
   "viewport": "1440x900",
+  "overviewCheck": {
+    "devices": 16,
+    "overviewWellbore": true,
+    "newIds": [
+      [
+        "underground_geology",
+        true
+      ],
+      [
+        "reservoir",
+        true
+      ],
+      [
+        "wellbore",
+        true
+      ]
+    ]
+  },
   "entered": {
     "ok": true,
     "text": "再看一遍 →"
+  },
+  "resetCheck": {
+    "pressure": 0,
+    "selected": null,
+    "ctx": null,
+    "zone": "subsurface",
+    "slider": "0"
   },
   "initial": {
     "level": true,
@@ -40,8 +65,35 @@
       "knowledge": "kb_drill",
       "experienceMode": "free",
       "mode": "free",
-      "interaction": null,
-      "history": []
+      "interaction": {
+        "action": "inspect_reservoir",
+        "value": "reservoir",
+        "unit": "教学对象",
+        "actionId": "inspect_reservoir",
+        "result": null
+      },
+      "history": [
+        {
+          "action": "adjust_pressure",
+          "value": 70,
+          "unit": "示意百分比",
+          "actionId": "adjust_pressure",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:55"
+        },
+        {
+          "action": "inspect_reservoir",
+          "value": "reservoir",
+          "unit": "教学对象",
+          "actionId": "inspect_reservoir",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:55"
+        }
+      ]
     },
     "errors": []
   },
@@ -66,11 +118,11 @@
       "levelId": "l1",
       "selectedObjectId": "underground_geology",
       "object": "underground_geology",
-      "deviceName": null,
+      "deviceName": "地下地质剖面",
       "knowledgeIds": [
-        "kb_drill"
+        "kb_formation"
       ],
-      "knowledge": "kb_drill",
+      "knowledge": "kb_formation",
       "experienceMode": "free",
       "mode": "free",
       "interaction": {
@@ -82,14 +134,24 @@
       },
       "history": [
         {
-          "action": "toggle_layer",
-          "value": "caprock",
-          "unit": "图层开关",
-          "actionId": "toggle_layer",
+          "action": "adjust_pressure",
+          "value": 70,
+          "unit": "示意百分比",
+          "actionId": "adjust_pressure",
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:23"
+          "time": "09:27:55"
+        },
+        {
+          "action": "inspect_reservoir",
+          "value": "reservoir",
+          "unit": "教学对象",
+          "actionId": "inspect_reservoir",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:55"
         },
         {
           "action": "toggle_layer",
@@ -99,7 +161,17 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:23"
+          "time": "09:27:55"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:56"
         },
         {
           "action": "inspect_layer",
@@ -109,11 +181,11 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:23"
+          "time": "09:27:56"
         }
       ]
     },
-    "info": "上覆地层\n\n地表以下的沉积岩层，像盖子一样压在上方。这里只表达“层层叠置”的概念，厚度不是真实比例。\n\n选中语义：geo_overburden · 可继续逐层隐藏/显示。\n\n教学示意：不是真实油藏数据、真实地质比例或数值模拟。"
+    "info": "上覆地层\n\n地表以下的沉积岩层，像盖子一样压在上方。这里只表达“层层叠置”的概念，厚度不是真实比例。\n\n选中语义：geo_overburden · 可继续逐层隐藏/显示。"
   },
   "reservoirInfo": {
     "selected": "reservoir",
@@ -127,11 +199,12 @@
       "levelId": "l1",
       "selectedObjectId": "reservoir",
       "object": "reservoir",
-      "deviceName": null,
+      "deviceName": "储层",
       "knowledgeIds": [
+        "kb_formation",
         "kb_drill"
       ],
-      "knowledge": "kb_drill",
+      "knowledge": "kb_formation",
       "experienceMode": "free",
       "mode": "free",
       "interaction": {
@@ -143,34 +216,14 @@
       },
       "history": [
         {
-          "action": "toggle_layer",
-          "value": "caprock",
-          "unit": "图层开关",
-          "actionId": "toggle_layer",
+          "action": "adjust_pressure",
+          "value": 70,
+          "unit": "示意百分比",
+          "actionId": "adjust_pressure",
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:23"
-        },
-        {
-          "action": "toggle_layer",
-          "value": "caprock",
-          "unit": "图层开关",
-          "actionId": "toggle_layer",
-          "result": null,
-          "stageId": "drill",
-          "levelId": "l1",
-          "time": "09:13:23"
-        },
-        {
-          "action": "inspect_layer",
-          "value": "overburden",
-          "unit": "教学图层",
-          "actionId": "inspect_layer",
-          "result": null,
-          "stageId": "drill",
-          "levelId": "l1",
-          "time": "09:13:23"
+          "time": "09:27:55"
         },
         {
           "action": "inspect_reservoir",
@@ -180,7 +233,47 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:24"
+          "time": "09:27:55"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:55"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:56"
+        },
+        {
+          "action": "inspect_layer",
+          "value": "overburden",
+          "unit": "教学图层",
+          "actionId": "inspect_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:56"
+        },
+        {
+          "action": "inspect_reservoir",
+          "value": "reservoir",
+          "unit": "教学对象",
+          "actionId": "inspect_reservoir",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:57"
         }
       ]
     },
@@ -201,11 +294,12 @@
       "levelId": "l1",
       "selectedObjectId": "reservoir",
       "object": "reservoir",
-      "deviceName": null,
+      "deviceName": "储层",
       "knowledgeIds": [
+        "kb_formation",
         "kb_drill"
       ],
-      "knowledge": "kb_drill",
+      "knowledge": "kb_formation",
       "experienceMode": "free",
       "mode": "free",
       "interaction": {
@@ -217,34 +311,14 @@
       },
       "history": [
         {
-          "action": "toggle_layer",
-          "value": "caprock",
-          "unit": "图层开关",
-          "actionId": "toggle_layer",
+          "action": "adjust_pressure",
+          "value": 70,
+          "unit": "示意百分比",
+          "actionId": "adjust_pressure",
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:23"
-        },
-        {
-          "action": "toggle_layer",
-          "value": "caprock",
-          "unit": "图层开关",
-          "actionId": "toggle_layer",
-          "result": null,
-          "stageId": "drill",
-          "levelId": "l1",
-          "time": "09:13:23"
-        },
-        {
-          "action": "inspect_layer",
-          "value": "overburden",
-          "unit": "教学图层",
-          "actionId": "inspect_layer",
-          "result": null,
-          "stageId": "drill",
-          "levelId": "l1",
-          "time": "09:13:23"
+          "time": "09:27:55"
         },
         {
           "action": "inspect_reservoir",
@@ -254,7 +328,47 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:24"
+          "time": "09:27:55"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:55"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:56"
+        },
+        {
+          "action": "inspect_layer",
+          "value": "overburden",
+          "unit": "教学图层",
+          "actionId": "inspect_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:56"
+        },
+        {
+          "action": "inspect_reservoir",
+          "value": "reservoir",
+          "unit": "教学对象",
+          "actionId": "inspect_reservoir",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:57"
         },
         {
           "action": "inspect_pores",
@@ -264,7 +378,7 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:25"
+          "time": "09:27:57"
         }
       ]
     }
@@ -282,11 +396,12 @@
       "levelId": "l1",
       "selectedObjectId": "wellbore",
       "object": "wellbore",
-      "deviceName": null,
+      "deviceName": "井筒 / 套管",
       "knowledgeIds": [
+        "kb_formation",
         "kb_drill"
       ],
-      "knowledge": "kb_drill",
+      "knowledge": "kb_formation",
       "experienceMode": "free",
       "mode": "free",
       "interaction": {
@@ -298,34 +413,14 @@
       },
       "history": [
         {
-          "action": "toggle_layer",
-          "value": "caprock",
-          "unit": "图层开关",
-          "actionId": "toggle_layer",
+          "action": "adjust_pressure",
+          "value": 70,
+          "unit": "示意百分比",
+          "actionId": "adjust_pressure",
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:23"
-        },
-        {
-          "action": "toggle_layer",
-          "value": "caprock",
-          "unit": "图层开关",
-          "actionId": "toggle_layer",
-          "result": null,
-          "stageId": "drill",
-          "levelId": "l1",
-          "time": "09:13:23"
-        },
-        {
-          "action": "inspect_layer",
-          "value": "overburden",
-          "unit": "教学图层",
-          "actionId": "inspect_layer",
-          "result": null,
-          "stageId": "drill",
-          "levelId": "l1",
-          "time": "09:13:23"
+          "time": "09:27:55"
         },
         {
           "action": "inspect_reservoir",
@@ -335,7 +430,47 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:24"
+          "time": "09:27:55"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:55"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:56"
+        },
+        {
+          "action": "inspect_layer",
+          "value": "overburden",
+          "unit": "教学图层",
+          "actionId": "inspect_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:56"
+        },
+        {
+          "action": "inspect_reservoir",
+          "value": "reservoir",
+          "unit": "教学对象",
+          "actionId": "inspect_reservoir",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:57"
         },
         {
           "action": "inspect_pores",
@@ -345,7 +480,7 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:25"
+          "time": "09:27:57"
         },
         {
           "action": "inspect_wellbore_part",
@@ -355,7 +490,7 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:27"
+          "time": "09:27:59"
         }
       ]
     },
@@ -364,7 +499,7 @@
   "pressureInfo": {
     "pressure": 75,
     "note": "更多流体向井筒方向移动（教学示意）",
-    "history": 7
+    "history": 9
   },
   "surfaceInfo": {
     "view": "surface",
@@ -396,34 +531,14 @@
       },
       "history": [
         {
-          "action": "toggle_layer",
-          "value": "caprock",
-          "unit": "图层开关",
-          "actionId": "toggle_layer",
+          "action": "adjust_pressure",
+          "value": 70,
+          "unit": "示意百分比",
+          "actionId": "adjust_pressure",
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:23"
-        },
-        {
-          "action": "toggle_layer",
-          "value": "caprock",
-          "unit": "图层开关",
-          "actionId": "toggle_layer",
-          "result": null,
-          "stageId": "drill",
-          "levelId": "l1",
-          "time": "09:13:23"
-        },
-        {
-          "action": "inspect_layer",
-          "value": "overburden",
-          "unit": "教学图层",
-          "actionId": "inspect_layer",
-          "result": null,
-          "stageId": "drill",
-          "levelId": "l1",
-          "time": "09:13:23"
+          "time": "09:27:55"
         },
         {
           "action": "inspect_reservoir",
@@ -433,7 +548,47 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:24"
+          "time": "09:27:55"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:55"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:56"
+        },
+        {
+          "action": "inspect_layer",
+          "value": "overburden",
+          "unit": "教学图层",
+          "actionId": "inspect_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:56"
+        },
+        {
+          "action": "inspect_reservoir",
+          "value": "reservoir",
+          "unit": "教学对象",
+          "actionId": "inspect_reservoir",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:57"
         },
         {
           "action": "inspect_pores",
@@ -443,7 +598,7 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:25"
+          "time": "09:27:57"
         },
         {
           "action": "inspect_wellbore_part",
@@ -453,7 +608,7 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:27"
+          "time": "09:27:59"
         },
         {
           "action": "adjust_pressure",
@@ -463,7 +618,7 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:28"
+          "time": "09:28:00"
         },
         {
           "action": "trace_up_wellbore",
@@ -473,7 +628,7 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:29"
+          "time": "09:28:01"
         },
         {
           "action": "inspect_wellhead",
@@ -483,7 +638,7 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:30"
+          "time": "09:28:03"
         }
       ]
     },
@@ -511,34 +666,14 @@
       "interaction": null,
       "history": [
         {
-          "action": "toggle_layer",
-          "value": "caprock",
-          "unit": "图层开关",
-          "actionId": "toggle_layer",
+          "action": "adjust_pressure",
+          "value": 70,
+          "unit": "示意百分比",
+          "actionId": "adjust_pressure",
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:23"
-        },
-        {
-          "action": "toggle_layer",
-          "value": "caprock",
-          "unit": "图层开关",
-          "actionId": "toggle_layer",
-          "result": null,
-          "stageId": "drill",
-          "levelId": "l1",
-          "time": "09:13:23"
-        },
-        {
-          "action": "inspect_layer",
-          "value": "overburden",
-          "unit": "教学图层",
-          "actionId": "inspect_layer",
-          "result": null,
-          "stageId": "drill",
-          "levelId": "l1",
-          "time": "09:13:23"
+          "time": "09:27:55"
         },
         {
           "action": "inspect_reservoir",
@@ -548,7 +683,47 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:24"
+          "time": "09:27:55"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:55"
+        },
+        {
+          "action": "toggle_layer",
+          "value": "caprock",
+          "unit": "图层开关",
+          "actionId": "toggle_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:56"
+        },
+        {
+          "action": "inspect_layer",
+          "value": "overburden",
+          "unit": "教学图层",
+          "actionId": "inspect_layer",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:56"
+        },
+        {
+          "action": "inspect_reservoir",
+          "value": "reservoir",
+          "unit": "教学对象",
+          "actionId": "inspect_reservoir",
+          "result": null,
+          "stageId": "drill",
+          "levelId": "l1",
+          "time": "09:27:57"
         },
         {
           "action": "inspect_pores",
@@ -558,7 +733,7 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:25"
+          "time": "09:27:57"
         },
         {
           "action": "inspect_wellbore_part",
@@ -568,7 +743,7 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:27"
+          "time": "09:27:59"
         },
         {
           "action": "adjust_pressure",
@@ -578,7 +753,7 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:28"
+          "time": "09:28:00"
         },
         {
           "action": "trace_up_wellbore",
@@ -588,7 +763,7 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:29"
+          "time": "09:28:01"
         },
         {
           "action": "inspect_wellhead",
@@ -598,11 +773,18 @@
           "result": null,
           "stageId": "drill",
           "levelId": "l1",
-          "time": "09:13:30"
+          "time": "09:28:03"
         }
       ]
     },
     "errors": []
+  },
+  "reentry": {
+    "level": true,
+    "pressure": 0,
+    "view": "block",
+    "slider": "0",
+    "done": false
   },
   "screenshots": [
     "phase04-01-entry.png",

@@ -7,7 +7,7 @@
 - 状态建议：**PASS（阶段 04 技术范围；Hero 最小门禁通过）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`b97816471bb2256b5245dd65f7ba21f1c46e642a`（阶段 03 签收后的 rev3）
-- 结束 Commit（真实 SHA）：`ddb470a`
+- 结束 Commit（真实 SHA）：<PHASE04_SHA2>
 - 分支：`main`
 - 工作区 `git status --short`：见提交后记录（目标为空）
 
@@ -40,7 +40,7 @@
 | 五关与其它区域未破坏 | **通过** | `phase04-regression.json` l1–l5 |
 | 深链/章节/塔页/fallback | **通过** | `#stage=0..4`、`chapter.html?id=store`、`tower.html`、context-loss |
 | 至少 6 张实际运行截图 | **通过** | 9 张 1440×900 |
-| 一段实时全流程录屏 | **通过** | `underground-continuity.mp4`，1440×900，50.8s |
+| 一段实时全流程录屏 | **通过** | `underground-continuity.mp4`，1440×900，56.8s |
 | 交互矩阵（≥3 核心） | **通过** | `docs/underground-experience.md` §4，5 个矩阵 |
 | Hero 的 `.blend`/语义/材质/尺度/许可/检查视图 | **通过（最小）** | manifest + README + 6 检查视图；授权记录为项目内自产 |
 | 阶段 03 签收记录 | **通过** | `phase-03-handoff.md` ACCEPTED + 原话 |
@@ -73,14 +73,14 @@ node --check web/immersion.js          # exit 0
 
 # 真实浏览器验证
 node tools/phase04-verify.cjs           # exit 0
-node tools/phase04-record.cjs           # exit 0; 1016 frames; 50.8s
+node tools/phase04-record.cjs           # exit 0; 1136 frames; 56.8s
 node C:\...\level-e2e-rev2.cjs          # l1–l5 全通过
 node C:\...\navcheck.cjs                # #stage=0..4/章节/塔页通过
 node C:\...\fallback-phase04.cjs        # context-loss fallback 通过
 ```
 
 - 浏览器：Chrome 157 headless CDP；页面 1440×900；本地 `http://127.0.0.1:8796`。
-- `phase04-verify.json`：`assetLoaded=true`、`assetFailed=false`、4 layers、4 parts、`zoneId=subsurface`、交互后 history 9 条、`__auditErrors=[]`。
+- `phase04-verify.json`：`assetLoaded=true`、`assetFailed=false`、4 layers、4 parts、`zoneId=subsurface`、交互后 history 9 条、`__auditErrors=[]`；并含 `devices=16`、`overviewWellbore=true`、`resetCheck`、`reentry` 真断言。
 - 五关：l1 adjust_pressure、l2 choose_outlet、l3 change_liquid_level、l4 choose_fraction、l5 select_product；退出均 `levelId=null`。
 - fallback：context-loss 后 sandbox 显示恢复文案；塔页显示 2D 剖面。
 
@@ -97,7 +97,7 @@ node C:\...\fallback-phase04.cjs        # context-loss fallback 通过
 | 压力差 | 通过 | `phase04-07-pressure.png` |
 | 地面井口/管线 | 通过 | `phase04-08-surface.png` |
 | 返回总览 | 通过 | `phase04-09-back-overview.png` |
-| 实时录屏 | 通过 | `underground-continuity.mp4`（1440×900, 50.8s, 1,624,159 B） |
+| 实时录屏 | 通过 | `underground-continuity.mp4`（1440×900, 56.8s, 1,998,338 B） |
 | 断言 | 通过 | `phase04-verify.json` |
 | 回归 | 通过 | `phase04-regression.json` |
 | fallback | 通过（运行时） | `fallback.json` |
@@ -106,9 +106,22 @@ node C:\...\fallback-phase04.cjs        # context-loss fallback 通过
 
 ## 6. P0 / P1 / P2
 
+### Review 返修（2026-11-23）
+
+| 找出的问题 | 修复 | 实际断言 |
+|---|---|---|
+| 注册表仍 `?v=v38`，缓存页只有 13 个设备；回归 JSON 却写 16 | `registry.js?v=v39`；补 `wellbore` overview 表示 | `devices=16`，三个新 ID 均可查 |
+| 重进关卡仍保留 70% 压力/surface 视角 | `enterLevel` 重置 pressure/paused/completed/viewMode，更新 slider/按钮 | `reentry={pressure:0,view:'block',slider:'0',done:false}` |
+| `resetView()` 清画面但不清 `__sceneContext` | 重置时 `setContextObject(null,'subsurface')` | `resetCheck={ctx:null,zone:'subsurface'}` |
+| 清除高亮会把剖切面自发光清零 | `clearLayerHighlight` 后恢复 `applyClip()` 基准 | 代码审查 + 截图复验 |
+| 总览井筒只进关后创建，`overviewRepresentation=null` | `immersion.js` 世界构建时创建 `wellbore_overview` 并 bind；随 overview 显隐 | `overviewWellbore=true`，`representations=['overview']` |
+| 压力面板遮住剖面主体 | 压力面板移入左侧可滚动信息栏，不再绝对定位 | 1440×900 截图复验 |
+| 教学声明重复 | `setInfo` 去重，已有声明不再追加 | 信息栏单条声明 |
+
 ### P0（未关闭则不得 PASS）
 
-- **无阶段 04 技术 P0 剩余。** 地下 Hero 已具备可编辑 `.blend`、OBJ/MTL + GLB、语义对象、材质/尺度/原点、来源/许可记录、6 检查视图、实际网页截图/录屏；不是仅 Box/Cylinder 且无源文件的占位。
+- **无阶段 04 技术 P0 剩余。** 上述 review P0 已关闭：交付页实际 `devices=16`，不再是“证据写 16、页面只有 13”。
+- 地下 Hero 已具备可编辑 `.blend`、OBJ/MTL + GLB、语义对象、材质/尺度/原点、来源/许可记录、6 检查视图、实际网页截图/录屏；不是仅 Box/Cylinder 且无源文件的占位。
 
 ### P1
 
@@ -148,8 +161,8 @@ node C:\...\fallback-phase04.cjs        # context-loss fallback 通过
 
 ## 9. Agent recommendation
 
-- 建议：**PASS（阶段 04 技术范围）**
-- 理由：必需交互、同一世界/状态、Hero 源文件/语义/实际网页集成、截图/录屏、五关回归均已落实；P0 为空。
+- 建议：**PASS（阶段 04 技术范围，review 返修后）**
+- 理由：review 指出的注册表缓存/证据不一致、重进状态、reset 上下文、剖切高亮、总览井筒表示、面板遮挡、文案重复均已修复并有实际浏览器断言；P0 为空。
 - 未关闭项：视觉细节 P1；真实用户测试/跨浏览器/性能/AI 属后续阶段；不阻塞本阶段 PASS。
 
 ## 10. User acceptance

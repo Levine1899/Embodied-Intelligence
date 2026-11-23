@@ -66,12 +66,15 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   await send('Page.navigate', { url: URL });
   await wait(1800);
+  const overviewCheck = await evalPage(`({devices:window.PETRO_REGISTRY.devices.length,overviewWellbore:!!window.__stage.baseScene.getObjectByName('wellbore_overview'),newIds:['underground_geology','reservoir','wellbore'].map(function(id){return [id,!!window.PETRO_REGISTRY.getDevice(id)]})})`);
   const entered = await evalPage(`(function(){var b=document.getElementById('enter-level');if(!b)return {ok:false,reason:'no entry button'};b.click();return {ok:true,text:b.textContent}})()`);
   await wait(900);
   await waitAsset();
   await wait(1200);
   await shot('phase04-01-entry.png');
 
+  const resetCheck = await evalPage(`(function(){var p=document.querySelector('#l1-press');p.value=70;p.dispatchEvent(new Event('input',{bubbles:true}));window.__l1.selectReservoir();document.getElementById('l1-reset').click();return {pressure:window.__l1.pressure,selected:window.__l1.selected,ctx:window.__sceneContext.object,zone:window.__sceneContext.zoneId,slider:p.value}})()`);
+  await wait(500);
   const initial = await evalPage(`({level:window.__stage.isLevel(),assetLoaded:window.__l1.assetLoaded,assetFailed:window.__l1.assetFailed,layers:window.__l1.layers,parts:window.__l1.parts,clipped:window.__l1.clipped,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),errors:(window.__auditErrors||[]).map(e=>e.message||String(e))})`);
 
   await evalPage(`(function(){var b=document.querySelector('#l1-layers [data-layer="caprock"]');b.click();return b.getAttribute('aria-pressed')})()`);
@@ -116,12 +119,21 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await wait(1200);
   await shot('phase04-09-back-overview.png');
   const exitInfo = await evalPage(`({level:window.__stage.isLevel(),ctx:JSON.parse(JSON.stringify(window.__sceneContext)),errors:(window.__auditErrors||[]).map(e=>e.message||String(e))})`);
+  await evalPage(`document.getElementById('enter-level').click()`);
+  await wait(900);
+  await waitAsset();
+  await wait(700);
+  const reentry = await evalPage(`({level:window.__stage.isLevel(),pressure:window.__l1.pressure,view:window.__l1.viewMode,slider:document.querySelector('#l1-press').value,done:document.querySelector('.lvl').classList.contains('done')})`);
+  await evalPage(`window.__l1.exit()`);
+  await wait(1000);
 
   const result = {
     date: '2026-11-23',
     page: URL,
     viewport: '1440x900',
+    overviewCheck,
     entered,
+    resetCheck,
     initial,
     chipOff,
     layerInfo,
@@ -131,6 +143,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     pressureInfo,
     surfaceInfo,
     exitInfo,
+    reentry,
     screenshots: [
       'phase04-01-entry.png', 'phase04-02-strata-toggle.png', 'phase04-03-strata-info.png',
       'phase04-04-reservoir.png', 'phase04-05-pore.png', 'phase04-06-wellbore.png',
