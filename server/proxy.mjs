@@ -112,14 +112,27 @@ const ASK_SYS = `你是石油科普讲解员，回答对象是普通公众，可
 5. 结尾不要喊口号。
 6. 如果问题与石油无关，直接说"这个问题超出了本展项的范围"，并用一句话给出本展项能回答的相关方向。`;
 
-function askMessages(question, ctx, tier, mode) {
+const ACTION_SYS = `
+
+【动作建议模式·最高优先级】
+本次用户要求“下一步操作建议”。先给一句简短说明，然后在正文末尾另起一行输出且只输出一个动作块：
+\`\`\`action
+{"actionId":"白名单动作ID","args":{...}}
+\`\`\`
+要求：
+1. actionId 只能使用用户资料里列出的“当前可用动作”；不得发明动作、对象、关卡。
+2. args 只能使用资料里明确存在的 objectId、关卡对应的参数；没有合适动作就不输出动作块，只说明“当前没有可执行建议”。
+3. 绝不自动执行；动作由用户在前端点击确认。
+4. 动作块必须是合法 JSON；不要在动作块外复述整段 JSON。`;
+
+function askMessages(question, ctx, tier, mode, actionMode) {
   const block = (ctx || []).length
     ? '\n\n【可引用的资料】\n' + ctx.map((c, i) => (i + 1) + '. ' + c).join('\n')
     : '';
   const t = (mode !== 'open' && TIER_SYS[tier]) ? '\n\n' + TIER_SYS[tier] : '';
   const sys = mode === 'open' ? ASK_OPEN_SYS : ASK_SYS;
   return [
-    { role: 'system', content: sys + t },
+    { role: 'system', content: sys + t + (actionMode ? ACTION_SYS : '') },
     { role: 'user', content: '问题：' + String(question || '').slice(0, 300) + block }
   ];
 }
@@ -174,8 +187,8 @@ async function askOnce(messages) {
   return j?.choices?.[0]?.message?.content?.trim() || '';
 }
 
-async function callAsk(question, ctx, tier, mode) {
-  const messages = askMessages(question, ctx, tier, mode);
+async function callAsk(question, ctx, tier, mode, actionMode) {
+  const messages = askMessages(question, ctx, tier, mode, actionMode);
   let text = await askOnce(messages);
   // 童话档硬约束：模型经常写飞，超长或带术语就只重写一次
   if (tier === 'kid' && text) {
@@ -278,7 +291,7 @@ const server = http.createServer(async (req, res) => {
     try {
       const tier = ['kid', 'mid', 'pro'].includes(payload.tier) ? payload.tier : 'mid';
       const mode = payload.mode === 'open' ? 'open' : 'rag';
-      const text = await callAsk(payload.question, payload.ctx, tier, mode);
+      const text = await callAsk(payload.question, payload.ctx, tier, mode, payload.action === true);
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       return res.end(JSON.stringify({ text, ms: Date.now() - t0, tier, mode }));
     } catch (e) {

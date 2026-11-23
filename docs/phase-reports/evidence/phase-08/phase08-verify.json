@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-23T12:31:59.812Z",
-  "passed": 29,
+  "generatedAt": "2026-11-23T23:38:28.794Z",
+  "passed": 36,
   "failed": 0,
   "results": [
     {
@@ -25,9 +25,9 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
-        "createdAt": "2026-11-23T12:31:35.877Z",
-        "updatedAt": "2026-11-23T12:31:35.877Z",
+        "sessionId": "ad9d3d2c-48bd-4725-9e7a-84d2b92fcc58",
+        "createdAt": "2026-11-23T23:37:56.155Z",
+        "updatedAt": "2026-11-23T23:37:56.155Z",
         "revision": 1,
         "stageId": "overview",
         "stageIndex": null,
@@ -56,9 +56,9 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
-        "createdAt": "2026-11-23T12:31:35.877Z",
-        "updatedAt": "2026-11-23T12:31:38.639Z",
+        "sessionId": "ad9d3d2c-48bd-4725-9e7a-84d2b92fcc58",
+        "createdAt": "2026-11-23T23:37:56.155Z",
+        "updatedAt": "2026-11-23T23:37:58.887Z",
         "revision": 4,
         "stageId": "gather",
         "stageIndex": 1,
@@ -88,9 +88,9 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
-        "createdAt": "2026-11-23T12:31:35.877Z",
-        "updatedAt": "2026-11-23T12:31:38.639Z",
+        "sessionId": "ad9d3d2c-48bd-4725-9e7a-84d2b92fcc58",
+        "createdAt": "2026-11-23T23:37:56.155Z",
+        "updatedAt": "2026-11-23T23:37:58.887Z",
         "revision": 4,
         "stageId": "gather",
         "stageIndex": 1,
@@ -121,6 +121,32 @@
       ]
     },
     {
+      "name": "device ask opens AI rail",
+      "ok": true,
+      "detail": {
+        "rail": true,
+        "display": "block",
+        "rect": {
+          "w": 264,
+          "h": 34
+        },
+        "value": "三相分离器怎么把油、气、水分开？"
+      }
+    },
+    {
+      "name": "device ask focuses visible input",
+      "ok": true,
+      "detail": {
+        "rail": true,
+        "display": "block",
+        "rect": {
+          "w": 264,
+          "h": 34
+        },
+        "value": "三相分离器怎么把油、气、水分开？"
+      }
+    },
+    {
       "name": "AI request keeps question/ctx/tier/mode",
       "ok": true,
       "detail": {
@@ -139,7 +165,8 @@
           "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
         ],
         "tier": "mid",
-        "mode": "open"
+        "mode": "open",
+        "action": false
       }
     },
     {
@@ -196,7 +223,7 @@
     {
       "name": "no-proxy AI still answers local knowledge",
       "ok": true,
-      "detail": "星火这一层看到的东西，可以随时问我。库里有答案我直接给；库里没有、但属于石油这行的，我调模型组织一段，并标出来源属性。这个设备的维护周期是多久模型补充 · 未逐条核验 · 通俗版模型补充示例换个工程档重讲加入待审补库复制这段是模型按通用知识组织的：公司沿革、数字请以官方公开资料为准。为什么油藏在石头里库外 · 未采用模型这个我答不了。（offline）知识库里没有对应条目，这类问题也不适合让模型即兴发挥。要不要试试：石油为什么是黑的油气藏在哪儿"
+      "detail": "星火这一层看到的东西，可以随时问我。库里有答案我直接给；库里没有、但属于石油这行的，我调模型组织一段，并标出来源属性。\n这个设备的维护周期是多久\n模型补充 · 未逐条核验 · 通俗版\n模型补充示例\n换个工程档重讲\n加入待审补库\n复制\n这段是模型按通用知识组织的：公司沿革、数字请以官方公开资料为准。\n为什么油藏在石头里\n库外 · 未采用模型\n这个我答不了。（offline）\n知识库里没有对应条目，这类问题也不适合让模型即兴发挥。\n要不要试试：石油为什么是黑的油气藏在哪儿"
     },
     {
       "name": "legal AI action accepted",
@@ -236,10 +263,10 @@
           "version": 1,
           "sceneId": "oil_industry_journey",
           "registrySceneId": "petro-chain-v3",
-          "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
-          "createdAt": "2026-11-23T12:31:35.877Z",
-          "updatedAt": "2026-11-23T12:31:53.674Z",
-          "revision": 7,
+          "sessionId": "ad9d3d2c-48bd-4725-9e7a-84d2b92fcc58",
+          "createdAt": "2026-11-23T23:37:56.155Z",
+          "updatedAt": "2026-11-23T23:38:16.284Z",
+          "revision": 8,
           "stageId": "gather",
           "stageIndex": 1,
           "levelId": "l2",
@@ -257,7 +284,7 @@
             "value": "started",
             "unit": "示意",
             "result": null,
-            "at": "2026-11-23T12:31:53.674Z"
+            "at": "2026-11-23T23:38:16.284Z"
           },
           "history": [
             {
@@ -269,7 +296,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "zoneId": "gathering",
-              "at": "2026-11-23T12:31:43.223Z"
+              "at": "2026-11-23T23:38:04.347Z"
             },
             {
               "action": "inspect_separator_structure",
@@ -280,7 +307,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "zoneId": "gathering",
-              "at": "2026-11-23T12:31:53.673Z"
+              "at": "2026-11-23T23:38:16.284Z"
             },
             {
               "action": "start_separation",
@@ -291,7 +318,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "zoneId": "gathering",
-              "at": "2026-11-23T12:31:53.674Z"
+              "at": "2026-11-23T23:38:16.284Z"
             }
           ],
           "ledger": [
@@ -304,7 +331,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "objectId": "three_phase_separator",
-              "at": "2026-11-23T12:31:43.223Z"
+              "at": "2026-11-23T23:38:04.347Z"
             },
             {
               "type": "操作",
@@ -315,7 +342,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "objectId": "three_phase_separator",
-              "at": "2026-11-23T12:31:53.673Z"
+              "at": "2026-11-23T23:38:16.284Z"
             },
             {
               "type": "操作",
@@ -326,7 +353,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "objectId": "three_phase_separator",
-              "at": "2026-11-23T12:31:53.674Z"
+              "at": "2026-11-23T23:38:16.284Z"
             }
           ],
           "source": "interaction",
@@ -354,10 +381,10 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
-        "createdAt": "2026-11-23T12:31:35.877Z",
-        "updatedAt": "2026-11-23T12:31:53.677Z",
-        "revision": 8,
+        "sessionId": "ad9d3d2c-48bd-4725-9e7a-84d2b92fcc58",
+        "createdAt": "2026-11-23T23:37:56.155Z",
+        "updatedAt": "2026-11-23T23:38:16.286Z",
+        "revision": 9,
         "stageId": "store",
         "stageIndex": 2,
         "levelId": "l3",
@@ -380,7 +407,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-23T12:31:43.223Z"
+            "at": "2026-11-23T23:38:04.347Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -391,7 +418,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-23T12:31:53.673Z"
+            "at": "2026-11-23T23:38:16.284Z"
           },
           {
             "action": "start_separation",
@@ -402,7 +429,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-23T12:31:53.674Z"
+            "at": "2026-11-23T23:38:16.284Z"
           }
         ],
         "ledger": [
@@ -415,7 +442,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-23T12:31:43.223Z"
+            "at": "2026-11-23T23:38:04.347Z"
           },
           {
             "type": "操作",
@@ -426,7 +453,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-23T12:31:53.673Z"
+            "at": "2026-11-23T23:38:16.284Z"
           },
           {
             "type": "操作",
@@ -437,7 +464,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-23T12:31:53.674Z"
+            "at": "2026-11-23T23:38:16.284Z"
           }
         ],
         "source": "level",
@@ -463,10 +490,10 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
-        "createdAt": "2026-11-23T12:31:35.877Z",
-        "updatedAt": "2026-11-23T12:31:53.678Z",
-        "revision": 10,
+        "sessionId": "ad9d3d2c-48bd-4725-9e7a-84d2b92fcc58",
+        "createdAt": "2026-11-23T23:37:56.155Z",
+        "updatedAt": "2026-11-23T23:38:16.287Z",
+        "revision": 11,
         "stageId": "store",
         "stageIndex": 2,
         "levelId": "l3",
@@ -489,7 +516,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-23T12:31:43.223Z"
+            "at": "2026-11-23T23:38:04.347Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -500,7 +527,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-23T12:31:53.673Z"
+            "at": "2026-11-23T23:38:16.284Z"
           },
           {
             "action": "start_separation",
@@ -511,7 +538,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-23T12:31:53.674Z"
+            "at": "2026-11-23T23:38:16.284Z"
           }
         ],
         "ledger": [
@@ -524,7 +551,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-23T12:31:43.223Z"
+            "at": "2026-11-23T23:38:04.347Z"
           },
           {
             "type": "操作",
@@ -535,7 +562,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-23T12:31:53.673Z"
+            "at": "2026-11-23T23:38:16.284Z"
           },
           {
             "type": "操作",
@@ -546,7 +573,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-23T12:31:53.674Z"
+            "at": "2026-11-23T23:38:16.284Z"
           }
         ],
         "source": "level",
@@ -566,16 +593,172 @@
       }
     },
     {
+      "name": "action mode sends action flag",
+      "ok": true,
+      "detail": {
+        "question": "请给下一步操作建议",
+        "ctx": [
+          "场景：石油产业链数字沙盘",
+          "环节：地面处理",
+          "关卡：l2",
+          "当前设备：三相分离器（objectId=three_phase_separator）",
+          "区域：gathering",
+          "关联知识点：kb_gather（本地人工审核）",
+          "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
+          "最近操作：inspect_separator_structure=half(correct)；inspect_separator_structure=half；start_separation=started",
+          "体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+          "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
+        ],
+        "tier": "mid",
+        "mode": "open",
+        "action": true
+      }
+    },
+    {
+      "name": "model action block renders execute button",
+      "ok": true,
+      "detail": {
+        "payload": {
+          "question": "请给下一步操作建议",
+          "ctx": [
+            "场景：石油产业链数字沙盘",
+            "环节：地面处理",
+            "关卡：l2",
+            "当前设备：三相分离器（objectId=three_phase_separator）",
+            "区域：gathering",
+            "关联知识点：kb_gather（本地人工审核）",
+            "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
+            "最近操作：inspect_separator_structure=half(correct)；inspect_separator_structure=half；start_separation=started",
+            "体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+            "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
+          ],
+          "tier": "mid",
+          "mode": "open",
+          "action": true
+        },
+        "buttons": [
+          "换个工程档重讲",
+          "加入待审补库",
+          "复制",
+          "换个工程档重讲",
+          "加入待审补库",
+          "复制",
+          "执行建议动作 · clear_selection"
+        ],
+        "hasAction": true
+      }
+    },
+    {
+      "name": "model action executes only after click",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "ad9d3d2c-48bd-4725-9e7a-84d2b92fcc58",
+        "createdAt": "2026-11-23T23:37:56.155Z",
+        "updatedAt": "2026-11-23T23:38:17.096Z",
+        "revision": 14,
+        "stageId": "gather",
+        "stageIndex": 1,
+        "levelId": "l2",
+        "zoneId": "gathering",
+        "selectedObjectId": null,
+        "object": null,
+        "deviceName": null,
+        "knowledgeIds": [
+          "kb_gather"
+        ],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-23T23:38:04.347Z"
+          },
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-23T23:38:16.284Z"
+          },
+          {
+            "action": "start_separation",
+            "actionId": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-23T23:38:16.284Z"
+          }
+        ],
+        "ledger": [
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-23T23:38:04.347Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-23T23:38:16.284Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-23T23:38:16.284Z"
+          }
+        ],
+        "source": "clear-selection",
+        "scene": "oil_industry_journey",
+        "stage": 1,
+        "knowledge": "kb_gather",
+        "mode": "free"
+      }
+    },
+    {
       "name": "exit clears level and selection",
       "ok": true,
       "detail": {
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "7d91d965-bf92-403b-8055-a54a0d9ba02f",
-        "createdAt": "2026-11-23T12:31:35.877Z",
-        "updatedAt": "2026-11-23T12:31:53.679Z",
-        "revision": 13,
+        "sessionId": "ad9d3d2c-48bd-4725-9e7a-84d2b92fcc58",
+        "createdAt": "2026-11-23T23:37:56.155Z",
+        "updatedAt": "2026-11-23T23:38:22.084Z",
+        "revision": 17,
         "stageId": "gather",
         "stageIndex": 1,
         "levelId": null,
@@ -598,7 +781,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-23T12:31:43.223Z"
+            "at": "2026-11-23T23:38:04.347Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -609,7 +792,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-23T12:31:53.673Z"
+            "at": "2026-11-23T23:38:16.284Z"
           },
           {
             "action": "start_separation",
@@ -620,7 +803,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-23T12:31:53.674Z"
+            "at": "2026-11-23T23:38:16.284Z"
           }
         ],
         "ledger": [
@@ -633,7 +816,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-23T12:31:43.223Z"
+            "at": "2026-11-23T23:38:04.347Z"
           },
           {
             "type": "操作",
@@ -644,7 +827,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-23T12:31:53.673Z"
+            "at": "2026-11-23T23:38:16.284Z"
           },
           {
             "type": "操作",
@@ -655,7 +838,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-23T12:31:53.674Z"
+            "at": "2026-11-23T23:38:16.284Z"
           }
         ],
         "source": "exit-level",
@@ -684,6 +867,24 @@
       "name": "writing handoff banner visible",
       "ok": true,
       "detail": "已带入当前场景：外浮顶储罐 · 仅用于本次写作；已核验要点 2 条。\n清除"
+    },
+    {
+      "name": "writing Dify request includes scene record",
+      "ok": true,
+      "detail": {
+        "topic": "外浮顶储罐：它在这一环节做什么",
+        "genre": "科普推文",
+        "facts": "外浮顶罐的浮盘随液位升降，可减少油气空间。\n浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。\n\n【场景记录 · 教学操作，不是已核验事实，不得当作事实】\n场景：石油产业链数字沙盘\n环节：储运\n关卡：l3\n当前设备：外浮顶储罐（objectId=floating_roof_tank）\n区域：storage\n关联知识点：kb_store（本地人工审核）\n刚才的操作：inspect_tank_structure=floating_roof_tank（示意，结果：correct）\n最近操作：inspect_tank_structure=floating_roof_tank(correct)\n体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+        "audience": "普通公众",
+        "style": "严谨",
+        "draft": "",
+        "comment": ""
+      }
+    },
+    {
+      "name": "writing Dify request keeps facts separate",
+      "ok": true,
+      "detail": "外浮顶罐的浮盘随液位升降，可减少油气空间。\n浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。\n\n【场景记录 · 教学操作，不是已核验事实，不得当作事实】\n场景：石油产业链数字沙盘\n环节：储运\n关卡：l3\n当前设备：外浮顶储罐（objectId=floating_roof_tank）\n区域：storage\n关联知识点：kb_store（本地人工审核）\n刚才的操作：inspect_tank_structure=floating_roof_tank（示意，结果：correct）\n最近操作：inspect_tank_structure=floating_roof_tank(correct)\n体验模式：free；设备数值均为教学示意，不是真实生产数据。"
     },
     {
       "name": "direct writing does not inherit scene",

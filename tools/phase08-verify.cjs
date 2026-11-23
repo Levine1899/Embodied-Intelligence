@@ -57,6 +57,13 @@ function getJson(url) {
   assert('knowledge ids from registry', Array.isArray(c.knowledgeIds) && c.knowledgeIds.indexOf('kb_gather') >= 0, c.knowledgeIds);
   await shot('phase08-01-context-separator.png');
 
+  // The device card entry must open the rail; otherwise #leadai-q is 0x0.
+  await ev(`window.__stage.showDevice('three_phase_separator');document.querySelector('#device-ask').click();true`);
+  await WAIT(450);
+  const entry = await ev(`({rail:document.querySelector('.layout').classList.contains('rail-open'),display:getComputedStyle(document.querySelector('.side__body')).display,rect:(function(){var e=document.querySelector('#leadai-q');if(!e)return null;var b=e.getBoundingClientRect();return {w:b.width,h:b.height};})(),value:document.querySelector('#leadai-q')&&document.querySelector('#leadai-q').value})`);
+  assert('device ask opens AI rail', entry.rail === true && entry.display === 'block', entry);
+  assert('device ask focuses visible input', entry.rect && entry.rect.w > 0 && entry.rect.h > 0 && !!entry.value, entry);
+
   // AI context request: stub successful /api/ask and inspect the exact request.
   await ev(`window.SceneContext.recordInteraction('inspect_separator_structure','half','示意','correct');window.__origFetch=window.fetch;window.fetch=function(url,opts){if(String(url).indexOf('/api/ask')>=0){window.__lastAsk=JSON.parse(opts.body);return Promise.resolve(new Response(JSON.stringify({text:'模型补充示例'}),{status:200,headers:{'Content-Type':'application/json'}}));}return window.__origFetch(url,opts);};true`);
   await ev(`window.__leadai.ask('这个设备的维护周期是多久')`);
@@ -93,6 +100,18 @@ function getJson(url) {
   const unknown = await ev(`window.AIActions.execute({actionId:'delete_everything'})`);
   assert('unknown action rejected', unknown.ok === false && unknown.reason === 'NOT_ALLOWED', unknown);
 
+  // Model -> action block -> user click, using a stubbed /api/ask response.
+  await ev(`window.SceneContext.setLevel('l2');window.SceneContext.selectDevice('three_phase_separator');window.__origFetch=window.fetch;window.fetch=function(url,opts){if(String(url).indexOf('/api/ask')>=0){window.__lastAsk=JSON.parse(opts.body);return Promise.resolve(new Response(JSON.stringify({text:'建议清空当前选择'+String.fromCharCode(10,96,96,96)+'action'+String.fromCharCode(10)+'{"actionId":"clear_selection"}'+String.fromCharCode(10,96,96,96)}),{status:200,headers:{'Content-Type':'application/json'}}));}return window.__origFetch(url,opts);};window.__leadai.ask('请给下一步操作建议',{actionMode:true});true`);
+  await WAIT(650);
+  const actionUi = await ev(`({payload:window.__lastAsk,buttons:Array.from(document.querySelectorAll('.lm-act')).map(function(b){return b.textContent}),hasAction:!!Array.from(document.querySelectorAll('.lm-act')).find(function(b){return b.textContent.indexOf('执行建议动作')>=0;})})`);
+  assert('action mode sends action flag', actionUi.payload && actionUi.payload.action === true, actionUi.payload);
+  assert('model action block renders execute button', actionUi.hasAction === true, actionUi);
+  await ev(`Array.from(document.querySelectorAll('.lm-act')).find(function(b){return b.textContent.indexOf('执行建议动作')>=0;}).click();true`);
+  await WAIT(250);
+  const afterAction = await ev(`window.SceneContext.get()`);
+  assert('model action executes only after click', afterAction.selectedObjectId === null, afterAction);
+  await shot('phase08-02b-action-suggestion.png');
+
   // Exit clears old device selection.
   await ev(`window.SceneContext.setLevel('l2');window.SceneContext.selectDevice('three_phase_separator');window.SceneContext.exitLevel();true`);
   c = await ev(`window.SceneContext.get()`);
@@ -106,6 +125,13 @@ function getJson(url) {
   assert('writing handoff prefills device topic', /外浮顶储罐/.test(write.topic), write);
   assert('writing handoff carries verified facts', /浮盘|油气空间/.test(write.facts), write.facts);
   assert('writing handoff banner visible', /已带入当前场景/.test(write.banner || ''), write.banner);
+
+  // The scene record must reach the Dify request, clearly separated from verified facts.
+  await ev(`window.fetch=function(url,opts){if(String(url).indexOf('/api/dify-write')>=0){window.__lastWriteBody=JSON.parse(opts.body);return Promise.resolve(new Response(JSON.stringify({text:'模型稿（测试）'}),{status:200,headers:{'Content-Type':'application/json'}}));}throw new Error('offline');};document.querySelector('#go').click();true`);
+  await WAIT(500);
+  const writeBody = await ev(`window.__lastWriteBody`);
+  assert('writing Dify request includes scene record', !!writeBody && /场景记录/.test(writeBody.facts || '') && /inspect_tank_structure/.test(writeBody.facts || ''), writeBody);
+  assert('writing Dify request keeps facts separate', !!writeBody && /不是已核验事实/.test(writeBody.facts || ''), writeBody && writeBody.facts);
 
   // Direct write without explicit handoff must not inherit.
   await nav(`${BASE}/write.html?rev=phase08-direct`);

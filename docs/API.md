@@ -121,11 +121,11 @@
 
 - 字段均为字符串；`topic`、`facts`、`draft` 至少一个非空。
 - 响应：`{ "text": "……" }`。
-- 场景 handoff 通过预填 `topic` / `facts` 进入 Dify，不改变 Dify 请求字段。
+- 场景 handoff 通过预填 `topic` / `facts` 进入 Dify，不改变 Dify 请求字段；场景记录以“不是已核验事实”边界追加在 `facts` 末尾。
 
 ## 场景上下文兼容
 
-- `/api/ask` 继续接收 `question`、`ctx`（string[]）、`tier`、`mode`；阶段 08 把设备、关卡、已核验要点和最近操作放进 `ctx`，不新增必填字段。
+- `/api/ask` 继续接收 `question`、`ctx`（string[]）、`tier`、`mode`；阶段 08 把设备、关卡、已核验要点和最近操作放进 `ctx`，不新增必填字段；可选 `action:true` 只启用动作建议模式。
 - `/api/gen` 继续接收 `ledger`、`genre`、`facts`；阶段 08 将场景记录放入 `ledger`、已核验知识放入 `facts`。
 - Dify 两个端点字段保持现状；`Ask`/`Write` 页面不直接接触 API Key。
 - 无代理时前端降级，不伪造模型输出。

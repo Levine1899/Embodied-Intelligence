@@ -99,7 +99,7 @@
     '<div class="lm sys"><b>星火</b>这一层看到的东西，可以随时问我。库里有答案我直接给；库里没有、但属于石油这行的，我调模型组织一段，并标出来源属性。</div>',
     '</div>',
     '<form class="leadai__ask" id="leadai-form"><input id="leadai-q" placeholder="就这一层问一句…" aria-label="提问"><button type="submit" aria-label="发送">↑</button></form>',
-    '<div class="leadai__foot"><span id="leadai-pending">待审补库 0 条</span><span class="leadai__tiers" id="leadai-tiers">档位：<button type="button" data-tier="kid">童话</button><button type="button" data-tier="mid" aria-pressed="true" class="on">通俗</button><button type="button" data-tier="pro">工程</button></span></div>'
+    '<div class="leadai__foot"><span id="leadai-pending">待审补库 0 条</span><span class="leadai__tiers" id="leadai-tiers">档位：<button type="button" data-tier="kid">童话</button><button type="button" data-tier="mid" aria-pressed="true" class="on">通俗</button><button type="button" data-tier="pro">工程</button></span></div><button type="button" id="leadai-suggest" class="leadai__suggest">建议下一步（白名单动作）</button>'
   ].join('');
   const src = side.querySelector('.source');
   if (src && src.parentNode) src.parentNode.insertBefore(box, src); else sideBody.appendChild(box);
@@ -221,14 +221,14 @@
     log('拒答', q, why || '库外');
   }
 
-  async function openAnswer(q) {
+  async function openAnswer(q, actionMode) {
     const sc = window.SceneContext;
     const lines = sc ? sc.buildForAI() : [stageName()];
     if (window.AIActions) {
       const allowed = window.AIActions.available().map(a => a.actionId).join('、');
       if (allowed) lines.push('当前可用动作（只能建议，需用户点击确认）：' + allowed);
     }
-    const payload = { question: q, ctx: lines, tier: tier, mode: 'open' };
+    const payload = { question: q, ctx: lines, tier: tier, mode: 'open', action: actionMode === true };
     window.__leadai.lastPayload = payload;
     const r = await fetch('/api/ask', {
       method: 'POST',
@@ -289,7 +289,8 @@
     log('模型答', q, text.slice(0, 40));
   }
 
-  async function ask(q) {
+  async function ask(q, opts) {
+    opts = opts || {};
     q = (q || '').trim();
     if (!q) return;
     push(esc(q), 'me');
@@ -312,7 +313,7 @@
     const wait = push('<div class="who">库外</div>知识库里没有直接对应的条目，我组织一个回答，并标明来源属性…', 'wait');
     let text = '';
     try {
-      text = await openAnswer(q);
+      text = await openAnswer(q, opts.actionMode === true);
     } catch (e) {
       wait.remove();
       refuseCard(q, ranked, e.message);
@@ -332,11 +333,16 @@
     ask(inp.value);
     inp.value = '';
   });
+  const suggestBtn = box.querySelector('#leadai-suggest');
+  if (suggestBtn) suggestBtn.addEventListener('click', function () {
+    ask('请根据当前场景给出一个下一步操作建议', { actionMode: true });
+  });
 
   /* 新增元素的样式（只加这一次，不动 index.html） */
   const style = document.createElement('style');
   style.textContent = [
     '.leadai__foot{display:flex;justify-content:space-between;gap:8px;margin-top:6px;font-size:11.5px;color:#7d93a2}',
+    '.leadai__suggest{margin-top:7px;background:transparent;border:1px solid #355864;color:#cfe3ea;border-radius:4px;padding:5px 9px;font-size:11.5px;cursor:pointer}',
     '.lm.model{border-left:2px solid #48d7f0;background:rgba(72,215,240,.06)}',
     '.lm.model .who{color:#48d7f0}',
     '.lm.wait{opacity:.75}',

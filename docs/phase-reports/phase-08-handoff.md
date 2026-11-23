@@ -4,7 +4,7 @@
 
 - 日期：2026-11-23
 - 阶段：08_AI_CONTEXT
-- 状态建议：**REVISE（复审发现 1 个继承 P0 + 3 个功能/证据 P1；用户签收待完成）**
+- 状态建议：**REVISE（仅剩继承 P0-SEC-01；P1 已修复并复测 36/0；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`6047a59`（阶段 07 文档完成后的 main）
 - 结束 Commit（真实 SHA）：`4f3cec1fee38791e894471c66123cf0ae20e0159`
@@ -160,7 +160,7 @@ POST /api/gen        -> 200, textLength 477
 
 ## 9. Agent recommendation
 
-- **建议：REVISE（复审后；阶段 08 技术实现可复现，但 P0 security 与 P1 入口/上下文链路未闭合）**
+- **建议：REVISE（P1 修复后；仅 P0-SEC-01 未关闭，需轮换旧 key/处理历史后才能 PASS）**
 - 理由（原技术实现）：
   - 场景上下文现在是单一 store，选中/关卡/交互/退出均有真实状态变化与断言；
   - AI 请求包含当前设备、知识点、已核验要点和最近操作；写作 handoff 带入事实并在无 handoff 时不继承；
@@ -194,32 +194,79 @@ POST /api/gen        -> 200, textLength 477
 - 这是仓库/部署安全 P0，不是 stage 08 UI P0；按 MASTER “任一 P0 未关闭不得建议 PASS”，本轮建议 REVISE。
 - 需要：确认旧 key 已轮换/吊销；清理远端历史（或至少记录风险接受人）。
 
-### P1-08-07（AI 入口在自由模式不可直接使用）
+### P1-08-07（已修复 2026-11-24：AI 入口在自由模式不可直接使用）
 
 - 设备卡的 `#device-ask` 只执行 `input.focus()` / `scrollIntoView`；自由模式下 `.layout` 没有 `rail-open`，`.side__body` 仍是 `display:none`，输入框 rect 为 0×0。
 - 实测：点击 `#device-ask` 后 `rail=false`、`sideDisplay=none`、`inputRect=0x0`；用户看不到 AI 面板，也没有低干扰的“已在等问题”提示。
 - 只有先点右栏“任务/资料”展开侧栏，才能使用 AI。入口体验不满足“设备选中时提供问问 AI”的可达性要求。
 - 建议：设备卡按钮同时调用 `setRail(true,'task')` 并聚焦/滚动到输入框；或提供独立可见的 AI 入口。
 
-### P1-08-08（写作 handoff 丢失场景记录）
+### P1-08-08（已修复 2026-11-24：写作 handoff 丢失场景记录）
 
 - `SceneContext.handoff()` / `buildForWriting()` 确实包含 `interaction`、`ledger`、`contextLines`；但 `write.html` 的 Dify 请求只发送 `topic/genre/facts/audience/style/draft/comment`，**interaction/ledger 没有进入请求**。
 - 因此“生成文案能继承已核验知识和场景记录”只验证了设备名与 facts；最近操作/操作记录没有进入 Dify，平台侧无法利用。
 - 建议：明确将 `scene` 作为独立字段送到写作代理/Dify 输入（标注“教学记录，不是已核验事实”），或在写入前把场景记录转成可见的“场景记录”段落；不得把它混入事实底稿冒充事实。
 
-### P1-08-09（AI 动作未做真实模型端到端）
+### P1-08-09（已修复 2026-11-24：AI 动作未做真实模型端到端）
 
 - 白名单、`parse()` 与 `AIActions.execute()` 已存在；但当前 `/api/ask` 提示词没有要求模型输出 fenced action block，Dify 页面也没有动作协议。
 - 本轮 3 个边界测试通过的是 `beforeApply`/直接调用 `AIActions` 的代码级注入，不是模型实际返回动作后的 UI 点击路径。
 - 建议：在受控提示词中加入动作块格式，或明确把动作建议降级为“仅本地白名单按钮”，并补一次真实模型 -> 解析 -> 用户点击的测试。
 
-### P1-08-10（证据与测试覆盖不足）
+### P1-08-10（部分修复 2026-11-24：证据与测试覆盖不足）
 
 - 测试使用 `__stage.selectStage` + `__stage.levelHook`、`SceneContext.handoff` 等 API，未覆盖真实 pointer 点击设备卡/入口。
-- `phase08-02-ai-context.png` 没有显示 AI 面板；现有截图不能作为“AI 入口可见”的证据。
+- 已补 `phase08-02-ai-context.png`（入口打开）、`phase08-02b-action-suggestion.png`（动作块）；仍有跨浏览器缺口。
 - 仅 1440×900 Chrome；无跨浏览器/移动端/长会话；无用户测试。
 
 ### 复审建议
 
 - 先修 P1-08-07（入口可达）与 P1-08-08（场景记录进入写作），补真实 pointer 与真实模型动作证据；P0-SEC-01 由用户确认密钥/历史处置。
 - 在以上完成前，阶段 08 保持 **REVISE**；不得进入阶段 09。
+
+
+## 13. 修复复测（2026-11-24）
+
+用户要求“修复”后，针对 §12 的 P1 做了以下修复；P0-SEC-01 仍需用户/管理员处置。
+
+### P1-08-07：已修复
+
+- `web/immersion.js` 的设备卡“问 AI”现在先调用 `setRail(true,'task')`，再聚焦/滚动输入框；不再对隐藏元素聚焦。
+- 复测：点击 `#device-ask` 后 `rail-open=true`、`.side__body display=block`、输入框 264×34；截图 `phase08-02-ai-context.png` 已显示 AI 面板。
+- 新增断言：`device ask opens AI rail`、`device ask focuses visible input`。
+
+### P1-08-08：已修复
+
+- `write.html` 保存显式 handoff 到 `window.__sceneHandoffData`；`requestDraft()` 将 `contextLines` 作为独立“场景记录”段追加到 Dify 的 `facts`，并标注“教学操作，不是已核验事实，不得当作事实”。
+- 已核验 facts 仍在前面；`facts` 字段名不变，Dify 工作流无需改字段。
+- 复测：请求体 facts 同时含 `场景记录`、`inspect_tank_structure` 与“不是已核验事实”边界；断言通过。
+
+### P1-08-09：已修复（真实模型 action mode）
+
+- `/api/ask` 新增可选 `action:true`；仅该模式服务端要求模型返回 fenced action block，普通问答不受影响。
+- AI 侧栏新增“建议下一步（白名单动作）”；返回动作块后仍由用户点击“执行建议动作”。
+- 生产实测：`POST /api/ask` `action:true` 返回 200，含合法 `select_object` 动作块（`action-mode-proof.json`）；本地 UI 用 stub 完成“响应 → 解析 → 按钮出现 → 点击执行”断言。
+- 新增断言 3 条，总计 **36/0**。
+
+### P1-08-10：部分修复
+
+- 已加入真实 pointer/入口断言、动作 UI 断言、写作请求体断言；截图更新。
+- 仍仅 1440×900 Chrome；跨浏览器/移动端/长会话/用户测试未执行。
+
+### P0-SEC-01：未关闭，不能 PASS
+
+- 2026-11-24 复测：历史 `.env` 的旧 Dify key 对 `/v1/info` 仍返回 200（未输任何 key 值）；旧 key 仍有效。
+- 需要用户在 Dify 控制台重新生成/吊销旧 key，并清理远端历史；仅改当前 `.env` 不足以关闭该 P0。
+- 本轮没有代替用户执行第三方吊销。
+
+### 复测结果
+
+```text
+36 passed / 0 failed
+phase08-verify.json
+action-mode-proof.json
+phase08-02-ai-context.png
+phase08-02b-action-suggestion.png
+```
+
+**复审结论仍为 REVISE（仅 P0-SEC-01）；不得进入阶段 09。**

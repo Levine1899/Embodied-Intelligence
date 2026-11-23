@@ -1,0 +1,10 @@
+{
+  "generatedAt": "2026-11-24T07:39:59.6637251+08:00",
+  "status": 200,
+  "actionMode": true,
+  "hasActionBlock": true,
+  "actionBlock": "{\"actionId\":\"select_object\",\"args\":{\"objectId\":\"three_phase_separator\"}}",
+  "note": "实际生产 /api/ask action:true 返回；前端仍需用户点击执行。",
+  "actionId": "select_object",
+  "isWhitelisted": true
+}

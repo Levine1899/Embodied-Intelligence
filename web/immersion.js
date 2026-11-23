@@ -1537,9 +1537,14 @@
     askBtn.onclick = function () {
       const input = document.getElementById('leadai-q');
       if (!input) return;
+      /* 自由模式下右栏是折叠的；先展开任务侧栏，否则输入框 rect 为 0×0。 */
+      if (typeof setRail === 'function') setRail(true, 'task');
+      else if (layoutEl) layoutEl.classList.add('rail-open');
       input.value = info.ask;
-      input.focus();
-      input.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      setTimeout(function () {
+        input.focus();
+        input.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }, 60);
     };
     const close = document.getElementById('device-close');
     close.onclick = function () {

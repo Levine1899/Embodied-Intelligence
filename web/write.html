@@ -757,6 +757,7 @@
   if (params.get('from') !== 'scene') return;
   var data = SceneContext.readHandoff({ consume: true });
   if (!data) return;
+  window.__sceneHandoffData = data;
   function byId(id) { return document.getElementById(id); }
   function addBanner() {
     var main = document.querySelector('main');
@@ -771,7 +772,7 @@
     clear.type = 'button';
     clear.textContent = '清除';
     clear.style.cssText = 'background:transparent;border:1px solid #355864;color:#cfe3ea;border-radius:4px;padding:3px 8px;cursor:pointer;flex:none';
-    clear.onclick = function () { box.remove(); };
+    clear.onclick = function () { box.remove(); window.__sceneHandoffData = null; };
     box.append(text, clear);
     main.insertBefore(box, main.firstChild);
   }
@@ -872,9 +873,23 @@
   async function requestDraft(draft, comment) {
     const audience = { youth: '亲子与青少年', public: '普通公众', enthusiast: '科技／石油爱好者', professional: '专业人士' };
     const style = { rigorous: '严谨', lively: '活泼', storytelling: '故事化' };
+    const scene = window.__sceneHandoffData;
+    let factText = factsArr().join('\n');
+    if (scene) {
+      const record = ['【场景记录 · 教学操作，不是已核验事实，不得当作事实】'];
+      const lines = (scene.contextLines || []).slice();
+      if (!lines.length) {
+        if (scene.objectName) lines.push('当前设备：' + scene.objectName + '（' + (scene.levelId || '') + '）');
+        if (scene.interaction) lines.push('刚才操作：' + scene.interaction.action + '=' + (scene.interaction.value == null ? '' : scene.interaction.value) + '（' + (scene.interaction.unit || '示意') + '）');
+      }
+      lines.forEach(function (line) { if (record.indexOf(line) < 0) record.push(line); });
+      factText += '\n\n' + record.join('\n');
+    }
+    const body = { topic: $('#topic').value.trim(), genre: GENRE_NAME[genre], facts: factText, audience: audience[$('#audience').value], style: style[$('#style').value], draft, comment };
+    window.__lastWriteBody = body;
     const response = await fetch('/api/dify-write', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topic: $('#topic').value.trim(), genre: GENRE_NAME[genre], facts: factsArr().join('\n'), audience: audience[$('#audience').value], style: style[$('#style').value], draft, comment })
+      body: JSON.stringify(body)
     });
     const result = await response.json();
     if (!response.ok || !result.text) throw new Error(result.error || '生成失败，请稍后重试。');
