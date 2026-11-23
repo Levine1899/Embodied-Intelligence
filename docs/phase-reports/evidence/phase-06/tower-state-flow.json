@@ -1,0 +1,67 @@
+{
+  "before": {
+    "tower": {
+      "level": 0,
+      "paused": true,
+      "selected": null
+    },
+    "store": {
+      "objectId": "atmospheric_tower",
+      "selection": "default",
+      "structure": "external",
+      "animation": "idle",
+      "level": 0,
+      "visible": true,
+      "representations": []
+    },
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "stageId": "refine",
+      "zoneId": "refining",
+      "levelId": "tower",
+      "selectedObjectId": null,
+      "object": null,
+      "knowledgeIds": [
+        "kb_refine"
+      ],
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": null,
+      "history": []
+    }
+  },
+  "after": {
+    "tower": {
+      "level": 2,
+      "paused": false,
+      "selected": null
+    },
+    "store": {
+      "objectId": "atmospheric_tower",
+      "selection": "default",
+      "structure": "full",
+      "animation": "idle",
+      "level": 0,
+      "visible": true,
+      "representations": []
+    },
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "stageId": "refine",
+      "zoneId": "refining",
+      "levelId": "tower",
+      "selectedObjectId": null,
+      "object": null,
+      "knowledgeIds": [
+        "kb_refine"
+      ],
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": null,
+      "history": []
+    },
+    "flow": "暂停汽液",
+    "full": "true"
+  },
+  "screenshot": "tower-state-flow.png"
+}

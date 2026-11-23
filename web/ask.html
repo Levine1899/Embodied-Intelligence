@@ -11,7 +11,7 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 "PingFang SC","Microsoft YaHei",system-ui,sans-serif}
   header{border-bottom:1px solid var(--line);padding:16px 40px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;text-decoration:none;color:inherit}
   .brand img{width:26px;height:26px;object-fit:contain;display:block;flex:none}
   nav{display:flex;gap:6px;margin-left:8px}
   nav a{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 12px;border:1px solid transparent;border-radius:2px}
@@ -213,12 +213,12 @@
 </head>
 <body class="is-empty">
 <header>
-  <div class="brand"><img src="assets/science-logo.png" alt="">油见未来</div>
+  <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油">油见未来</a>
   <nav>
 <a href="index.html">首页</a>
-<a href="explore.html">探索</a>
 <a href="ask.html" aria-current="page">智能问答</a>
-<a href="write.html">科普文案生成</a>
+<a href="sandbox.html">沉浸式讲解</a>
+<a href="write.html">科普文案</a>
 </nav>
 </header>
 

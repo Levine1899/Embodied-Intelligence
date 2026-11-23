@@ -36,7 +36,8 @@ img{display:block;max-width:100%}
 .cover::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(6,10,12,.7) 0%,rgba(6,10,12,.04) 28%,rgba(6,10,12,.06) 62%,rgba(6,10,12,.9) 100%)}
 .cover .top{position:relative;z-index:2;border-bottom:1px solid rgba(232,225,212,.14)}
 .cover .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--s-5);height:66px}
-.brand{display:flex;align-items:baseline;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.brand img{width:30px;height:30px;object-fit:contain;display:block;flex:none}
 .brand b{font-family:var(--font-display);font-size:20px;letter-spacing:.1em}
 .brand span{font-size:var(--fs-12);letter-spacing:.2em;color:rgba(232,225,212,.58)}
 .issue{font-size:var(--fs-12);letter-spacing:.16em;color:rgba(232,225,212,.55);white-space:nowrap}
@@ -96,7 +97,7 @@ footer a:hover{color:var(--accent)}
   </div>
   <div class="top">
     <div class="wrap">
-      <a class="brand" href="index.html"><b>油见未来</b><span>石油 · 科学 · 阅读</span></a>
+      <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><b>油见未来</b><span>石油 · 科学 · 阅读</span></a>
       <span class="issue">演示版 · 2026.11</span>
     </div>
   </div>

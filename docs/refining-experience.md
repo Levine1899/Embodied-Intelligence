@@ -144,7 +144,7 @@
 
 - **canonical detail**：`sandbox.html#stage=3` → `web/levels/l4.js`，加载 `tower.obj`，绑定 `atmospheric_tower` 与 `PETRO_DEVICE_STATE`。
 - **overview**：`immersion.js` 使用 `tower.obj` 的低细节/LOD 表示；为性能过滤部分辅助 Mesh，不代表详情页缺失。
-- **兼容页**：`tower.html` 保留旧入口、热点和 2D fallback；它维护自己的相机/剖切局部状态，不冒充与 l4 共享 Store。进入深链时它是兼容/回退页。
+- **兼容页**：`tower.html` 保留旧入口、热点和 2D fallback；加载 `world/state.js` 后在页面内读写 `PETRO_DEVICE_STATE`（atmospheric_tower/vacuum_tower 的 structure），并提供全剖、启动/暂停/重播汽液控制；页面间不做持久化，不冒充与 l4 共享相机状态。canonical 详情仍是 l4。
 
 ## 7. 已知限制
 

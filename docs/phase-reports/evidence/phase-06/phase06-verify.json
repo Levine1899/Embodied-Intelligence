@@ -1,6 +1,6 @@
 {
   "date": "2026-11-23",
-  "page": "http://127.0.0.1:8796/sandbox.html?rev=phase06v-1795410436102#stage=3",
+  "page": "http://127.0.0.1:8796/sandbox.html?rev=phase06v-1795416526802#stage=3",
   "viewport": "1440x900",
   "external": {
     "loaded": true,
@@ -44,6 +44,95 @@
       ]
     }
   },
+  "detailIsolation": {
+    "bindings": [
+      "atmospheric_tower",
+      "vacuum_tower",
+      "heater"
+    ],
+    "reps": {
+      "atm": [
+        "overview",
+        "detail"
+      ],
+      "vac": [
+        "overview",
+        "detail"
+      ],
+      "heater": [
+        "overview",
+        "detail"
+      ]
+    },
+    "before": {
+      "atmospheric_tower": {
+        "uuid": "cc271c17-cd9b-412d-982c-6314536cb718",
+        "children": 16,
+        "visible": true,
+        "name": "L4_Detail_atmospheric_tower"
+      },
+      "vacuum_tower": {
+        "uuid": "fb0882d8-91c7-4a34-bab4-fbdbf5616f6e",
+        "children": 10,
+        "visible": true,
+        "name": "L4_Detail_vacuum_tower"
+      },
+      "heater": {
+        "uuid": "4c3f2c78-9051-420e-8d7c-82fc8a7a7a35",
+        "children": 2,
+        "visible": true,
+        "name": "L4_Detail_heater"
+      }
+    },
+    "hidden": {
+      "atmospheric_tower": {
+        "uuid": "cc271c17-cd9b-412d-982c-6314536cb718",
+        "children": 16,
+        "visible": true,
+        "name": "L4_Detail_atmospheric_tower"
+      },
+      "vacuum_tower": {
+        "uuid": "fb0882d8-91c7-4a34-bab4-fbdbf5616f6e",
+        "children": 10,
+        "visible": false,
+        "name": "L4_Detail_vacuum_tower"
+      },
+      "heater": {
+        "uuid": "4c3f2c78-9051-420e-8d7c-82fc8a7a7a35",
+        "children": 2,
+        "visible": true,
+        "name": "L4_Detail_heater"
+      }
+    },
+    "restored": {
+      "atmospheric_tower": {
+        "uuid": "cc271c17-cd9b-412d-982c-6314536cb718",
+        "children": 16,
+        "visible": true,
+        "name": "L4_Detail_atmospheric_tower"
+      },
+      "vacuum_tower": {
+        "uuid": "fb0882d8-91c7-4a34-bab4-fbdbf5616f6e",
+        "children": 10,
+        "visible": true,
+        "name": "L4_Detail_vacuum_tower"
+      },
+      "heater": {
+        "uuid": "4c3f2c78-9051-420e-8d7c-82fc8a7a7a35",
+        "children": 2,
+        "visible": true,
+        "name": "L4_Detail_heater"
+      }
+    },
+    "isolated": true,
+    "vacuumHiddenWorks": true,
+    "restoredOk": true
+  },
+  "guide": {
+    "demo": false,
+    "levelId": "l4",
+    "title": "炼化 · 常减压"
+  },
   "trayFromExternal": {
     "level": 1,
     "ctx": {
@@ -79,7 +168,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         }
       ]
     }
@@ -120,7 +209,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "inspect_tower_structure",
@@ -130,7 +219,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "restore_refining_view",
@@ -140,7 +229,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "replay_refining_flow",
@@ -150,7 +239,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         }
       ]
     }
@@ -158,8 +247,8 @@
   "hotspot": {
     "count": 5,
     "point": {
-      "x": 760.9822703377137,
-      "y": 398.37902747282385
+      "x": 761.4350680638546,
+      "y": 370.56816374245705
     },
     "ctx": {
       "sceneId": "oil_industry_journey",
@@ -194,7 +283,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "inspect_tower_structure",
@@ -204,7 +293,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "restore_refining_view",
@@ -214,7 +303,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "replay_refining_flow",
@@ -224,7 +313,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "inspect_tower_structure",
@@ -234,7 +323,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "restore_refining_view",
@@ -244,7 +333,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "select_refining_hotspot",
@@ -254,7 +343,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         }
       ]
     }
@@ -300,7 +389,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "inspect_tower_structure",
@@ -310,7 +399,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "restore_refining_view",
@@ -320,7 +409,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "replay_refining_flow",
@@ -330,7 +419,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "inspect_tower_structure",
@@ -340,7 +429,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "restore_refining_view",
@@ -350,7 +439,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "select_refining_hotspot",
@@ -360,7 +449,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "inspect_tower_structure",
@@ -370,7 +459,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         }
       ]
     },
@@ -426,7 +515,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "inspect_tower_structure",
@@ -436,7 +525,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "inspect_tower_structure",
@@ -446,7 +535,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "start_vapor_liquid",
@@ -456,7 +545,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "choose_feed_position",
@@ -466,7 +555,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "inspect_tower_trays",
@@ -476,7 +565,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -486,7 +575,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -496,7 +585,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -506,7 +595,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -516,7 +605,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -526,7 +615,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -536,15 +625,15 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:23"
+          "time": "14:48:54"
         }
       ]
     },
     "state": {
       "objectId": "atmospheric_tower",
       "selection": "selected",
-      "structure": "full",
-      "animation": "running",
+      "structure": "external",
+      "animation": "idle",
       "level": 0,
       "visible": true,
       "representations": [
@@ -577,12 +666,21 @@
     {
       "key": "residue",
       "selected": "residue",
-      "note": "常压渣油 → 塔底 → 减压蒸馏 / 深加工（典型示意）馏分不是最终成品油；路线为典型示意，不代表唯一工艺。"
+      "note": "常压渣油 → 塔底 → 减压蒸馏 / 深加工（典型示意）塔底渣油去向，不是中部侧线；馏分不是最终成品油；路线为典型示意，不代表唯一工艺。"
     }
   ],
   "residue": {
     "selected": "residue",
-    "note": "常压渣油 → 塔底 → 减压蒸馏 / 深加工（典型示意）馏分不是最终成品油；路线为典型示意，不代表唯一工艺。",
+    "target": "vacuum_tower",
+    "info": {
+      "key": "residue",
+      "name": "常压渣油",
+      "target": "vacuum_tower",
+      "y": 3.2,
+      "kind": "bottom"
+    },
+    "note": "常压渣油 → 塔底 → 减压蒸馏 / 深加工（典型示意）塔底渣油去向，不是中部侧线；馏分不是最终成品油；路线为典型示意，不代表唯一工艺。",
+    "hint": "常压渣油 · 塔底至减压塔路径（教学示意）",
     "ctx": {
       "sceneId": "oil_industry_journey",
       "scene": "oil_industry_journey",
@@ -591,9 +689,9 @@
       "stage": 3,
       "zoneId": "refining",
       "levelId": "l4",
-      "selectedObjectId": "atmospheric_tower",
-      "object": "atmospheric_tower",
-      "deviceName": "常压蒸馏塔",
+      "selectedObjectId": "vacuum_tower",
+      "object": "vacuum_tower",
+      "deviceName": "减压蒸馏塔",
       "knowledgeIds": [
         "kb_refine"
       ],
@@ -616,7 +714,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "select_refining_hotspot",
@@ -626,7 +724,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "inspect_tower_structure",
@@ -636,7 +734,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:21"
+          "time": "14:48:52"
         },
         {
           "action": "inspect_tower_structure",
@@ -646,7 +744,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "start_vapor_liquid",
@@ -656,7 +754,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "choose_feed_position",
@@ -666,7 +764,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "inspect_tower_trays",
@@ -676,7 +774,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -686,7 +784,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -696,7 +794,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -706,7 +804,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -716,7 +814,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -726,7 +824,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         }
       ]
     }
@@ -760,6 +858,7 @@
   "exit": {
     "level": false,
     "isolated": 0,
+    "groupVisible": false,
     "ctx": {
       "sceneId": "oil_industry_journey",
       "scene": "oil_industry_journey",
@@ -787,7 +886,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "inspect_tower_trays",
@@ -797,7 +896,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -807,7 +906,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -817,7 +916,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -827,7 +926,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -837,7 +936,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -847,7 +946,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:22"
+          "time": "14:48:53"
         },
         {
           "action": "select_fraction",
@@ -857,7 +956,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:23"
+          "time": "14:48:54"
         },
         {
           "action": "pause_vapor_liquid",
@@ -867,7 +966,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:24"
+          "time": "14:48:55"
         },
         {
           "action": "replay_refining_flow",
@@ -877,7 +976,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:25"
+          "time": "14:48:56"
         },
         {
           "action": "inspect_tower_structure",
@@ -887,7 +986,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:25"
+          "time": "14:48:56"
         },
         {
           "action": "restore_refining_view",
@@ -897,7 +996,7 @@
           "result": null,
           "stageId": "refine",
           "levelId": "l4",
-          "time": "13:07:25"
+          "time": "14:48:56"
         }
       ]
     },
@@ -907,12 +1006,47 @@
     "level": true,
     "level4": 0,
     "isolated": 1,
+    "groupVisible": true,
+    "bindings": [
+      "atmospheric_tower",
+      "vacuum_tower",
+      "heater"
+    ],
     "errors": []
   },
   "exit2": {
     "level": false,
     "isolated": 0,
     "errors": []
+  },
+  "race": {
+    "loaded": true,
+    "bindings": [
+      "atmospheric_tower",
+      "vacuum_tower",
+      "heater"
+    ],
+    "groups": {
+      "atmospheric_tower": {
+        "uuid": "9da4a308-f3e1-4b58-b2e1-39635029420c",
+        "children": 16,
+        "visible": true,
+        "name": "L4_Detail_atmospheric_tower"
+      },
+      "vacuum_tower": {
+        "uuid": "932ae686-6878-4023-8375-04a3020c08b3",
+        "children": 10,
+        "visible": true,
+        "name": "L4_Detail_vacuum_tower"
+      },
+      "heater": {
+        "uuid": "bacae0d1-d78c-4601-b030-160fc59325e0",
+        "children": 2,
+        "visible": true,
+        "name": "L4_Detail_heater"
+      }
+    },
+    "level": true
   },
   "screenshots": [
     "phase06-01-refining-external.png",

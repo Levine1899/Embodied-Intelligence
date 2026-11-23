@@ -9,6 +9,9 @@
 
   let G = null, camera = null, baseScene = null, anchor = null;
   let unit = null, assetLoaded = false;
+  const detailGroups = {};
+  let detailBindings = [];
+  let residueTarget = 'vacuum_tower';
   const fullMeshes = [], halfMeshes = [], trayMeshes = [], insulationMeshes = [], internals = [];
   const flows = [];
   const fractionGroups = {};
@@ -23,11 +26,11 @@
 
   const SCALE = 0.46;
   const FRACTIONS = [
-    { key: 'topgas', name: '塔顶油气', y: 12.4, color: 0xbfd8cf, route: '冷凝/气分（典型示意）' },
-    { key: 'naphtha', name: '石脑油馏分', y: 9.66, color: 0x9fd3c6, route: '重整 / 乙烯原料（典型示意）' },
-    { key: 'kerosene', name: '煤油馏分', y: 8.46, color: 0xd8c9a0, route: '航煤 / 精制（典型示意）' },
-    { key: 'diesel', name: '柴油馏分', y: 7.27, color: 0xd8a24a, route: '加氢精制 / 调和（典型示意）' },
-    { key: 'residue', name: '常压渣油', y: 3.2, color: 0xb38a4a, route: '塔底 → 减压蒸馏 / 深加工（典型示意）' }
+    { key: 'topgas', name: '塔顶油气', y: 12.4, color: 0xbfd8cf, route: '冷凝/气分（典型示意）', target: 'atmospheric_tower' },
+    { key: 'naphtha', name: '石脑油馏分', y: 9.66, color: 0x9fd3c6, route: '重整 / 乙烯原料（典型示意）', target: 'atmospheric_tower' },
+    { key: 'kerosene', name: '煤油馏分', y: 8.46, color: 0xd8c9a0, route: '航煤 / 精制（典型示意）', target: 'atmospheric_tower' },
+    { key: 'diesel', name: '柴油馏分', y: 7.27, color: 0xd8a24a, route: '加氢精制 / 调和（典型示意）', target: 'atmospheric_tower' },
+    { key: 'residue', name: '常压渣油', y: 3.2, color: 0xb38a4a, route: '塔底 → 减压蒸馏 / 深加工（典型示意）', target: 'vacuum_tower' }
   ];
 
   function makeFlow(curve, color, count, speed, size, parent) {
@@ -94,6 +97,35 @@
     return G;
   }
 
+  function splitAndBindDetails() {
+    if (!unit || detailGroups.atmospheric_tower) { bindDetails(); return; }
+    const meshes = [];
+    unit.traverse(function (o) { if (o.isMesh) meshes.push(o); });
+    ['atmospheric_tower', 'vacuum_tower', 'heater'].forEach(function (id) {
+      const g = new THREE.Group();
+      g.name = 'L4_Detail_' + id;
+      unit.add(g);
+      detailGroups[id] = g;
+    });
+    meshes.forEach(function (o) {
+      const n = o.name || '';
+      let id = null;
+      if (/^Tower_Atmospheric|^Trays_A|^Pipe_Side_(Naphtha|Kerosene|Diesel)|^Box_(Naphtha|Kerosene|Diesel)|^Pipe_Top|^Pipe_Feed/.test(n)) id = 'atmospheric_tower';
+      else if (/^Tower_Vacuum|^Trays_V|^Condenser|^Pipe_Bottom_To_Vacuum|^Pipe_Residue_Bottom|^Box_Residue/.test(n)) id = 'vacuum_tower';
+      else if (/^Heater/.test(n)) id = 'heater';
+      if (id) detailGroups[id].attach(o);
+    });
+    bindDetails();
+  }
+
+  function bindDetails() {
+    if (!stage.deviceState || !detailGroups.atmospheric_tower) return;
+    ['atmospheric_tower', 'vacuum_tower', 'heater'].forEach(function (id) {
+      stage.deviceState.bind(id, 'detail', detailGroups[id]);
+    });
+    detailBindings = ['atmospheric_tower', 'vacuum_tower', 'heater'];
+  }
+
   function loadAsset() {
     if (!window.ObjLite) { hint.textContent = '装置模型加载器不可用'; return; }
     window.ObjLite.load('assets/tower/tower.obj?v=08', 'assets/tower/tower.mtl?v=08').then(function (root) {
@@ -122,15 +154,11 @@
         }
       });
       assetLoaded = true;
+      splitAndBindDetails();
       if (!window.__l4active) { unit.visible = false; return; }
       unit.visible = true;
       setLevel(0, false);
-      if (stage.deviceState) {
-        stage.deviceState.bind('atmospheric_tower', 'detail', unit);
-        stage.deviceState.bind('vacuum_tower', 'detail', unit);
-        stage.deviceState.bind('heater', 'detail', unit);
-        stage.deviceState.select('atmospheric_tower');
-      }
+      if (stage.deviceState) stage.deviceState.select('atmospheric_tower');
       syncUi();
       hint.textContent = '常减压装置 · 常压塔 / 减压塔 / 加热炉';
     }).catch(function () {
@@ -215,6 +243,7 @@
   }
 
   function onHotspotClick(e) {
+    if (performance.now() - (window.__stageDragAt || 0) < 300) return;
     if (!window.__l4active || !camera) return;
     if (e.target !== stage.renderer.domElement) return;
     const rect = stage.renderer.domElement.getBoundingClientRect();
@@ -282,9 +311,15 @@
     feedGroup = null;
 
     FRACTIONS.forEach(function (f) {
-      const from = new THREE.Vector3(1.2, f.y, 0);
-      const to = new THREE.Vector3(4.35, f.y, 0);
-      const curve = new THREE.CatmullRomCurve3([
+      const isResidue = f.key === 'residue';
+      const from = isResidue ? new THREE.Vector3(0.55, 2.25, 0) : new THREE.Vector3(1.2, f.y, 0);
+      const to = isResidue ? new THREE.Vector3(3.05, 3.45, 0) : new THREE.Vector3(4.35, f.y, 0);
+      const curve = new THREE.CatmullRomCurve3(isResidue ? [
+        from,
+        new THREE.Vector3(1.1, 2.25, 0),
+        new THREE.Vector3(2.2, 3.0, 0),
+        to
+      ] : [
         from,
         new THREE.Vector3(2.4, f.y + 0.12, 0),
         new THREE.Vector3(3.4, f.y, 0),
@@ -298,7 +333,7 @@
       G.add(group);
       const flow = makeFlow(curve, f.color, 7, 0.35, 0.06, group);
       flow.group.visible = true;
-      fractionGroups[f.key] = { group: group, flow: flow };
+      fractionGroups[f.key] = { group: group, flow: flow, target: f.target, isResidue: isResidue };
     });
   }
 
@@ -376,9 +411,9 @@
     if (!f) return;
     fractionGroups[key].group.visible = true;
     if (stage.setInteraction) stage.setInteraction('select_fraction', key, '示意');
-    if (stage.setContextObject) stage.setContextObject('atmospheric_tower', 'refining');
-    note.innerHTML = '<b>' + f.name + '</b> → ' + f.route + '<br><span style="color:#9a948a">馏分不是最终成品油；路线为典型示意，不代表唯一工艺。</span>';
-    hint.textContent = f.name + ' · 侧线馏分路径（教学示意）';
+    if (stage.setContextObject) stage.setContextObject(f.target, 'refining');
+    note.innerHTML = '<b>' + f.name + '</b> → ' + f.route + '<br><span style="color:#9a948a">' + (key === 'residue' ? '塔底渣油去向，不是中部侧线；' : '') + '馏分不是最终成品油；路线为典型示意，不代表唯一工艺。</span>';
+    hint.textContent = f.name + (key === 'residue' ? ' · 塔底至减压塔路径（教学示意）' : ' · 侧线馏分路径（教学示意）');
     syncUi();
   }
 
@@ -389,6 +424,7 @@
     if (ui) return;
     ui = document.createElement('div');
     ui.className = 'lvl';
+    ui.dataset.levelId = 'l4';
     ui.innerHTML = [
       '<div class="lvl__bar"><span class="lvl__step">04 / 05</span><b>炼化 · 常减压</b><span class="lvl__hint" id="l4-hint">装置群正在加载…</span></div>',
       '<div class="lvl__act" id="l4-act" hidden>',
@@ -546,6 +582,7 @@
     if (stage.setOverviewVisible) stage.setOverviewVisible(false);
     isolateWorld();
     window.__l4active = true;
+    if (G) G.visible = true;
     if (unit) unit.visible = true;
     if (hotspotGroup) hotspotGroup.visible = true;
     ui.classList.add('on');
@@ -553,7 +590,7 @@
     if (stage.setContextObject) stage.setContextObject('atmospheric_tower', 'refining');
     if (stage.deviceState) {
       stage.deviceState.select('atmospheric_tower');
-      if (assetLoaded) stage.deviceState.bind('atmospheric_tower', 'detail', unit);
+      if (assetLoaded) bindDetails();
     }
     if (!running) { running = true; loop(); }
     setLevel(0, false);
@@ -576,6 +613,7 @@
     if (exitTimer) { clearTimeout(exitTimer); exitTimer = null; }
     if (unit) unit.visible = false;
     if (hotspotGroup) hotspotGroup.visible = false;
+    if (G) G.visible = false;
     ui.querySelector('#l4-act').hidden = true;
     ui.classList.remove('on');
     document.body.classList.remove('in-level');
@@ -603,7 +641,27 @@
     get selectedFraction() { return selectedFraction; },
     get groups() { return { full: fullMeshes.length, half: halfMeshes.length, trays: trayMeshes.length, hotspots: hotspotMeshes.length }; },
     selectHotspot: selectHotspot,
+    selectFraction: selectFraction,
+    startFlow: function () {
+      var b = ui && ui.querySelector('#l4-flow');
+      if (!b) return;
+      if (!flowOn) b.click();
+    },
     hotspotPoint: hotspotPoint,
+    get detailBindings() { return detailBindings.slice(); },
+    get detailGroups() {
+      const out = {};
+      Object.keys(detailGroups).forEach(function (k) {
+        out[k] = { uuid: detailGroups[k].uuid, children: detailGroups[k].children.length, visible: detailGroups[k].visible, name: detailGroups[k].name };
+      });
+      return out;
+    },
+    fractionTarget: function (key) { return key === 'residue' ? residueTarget : 'atmospheric_tower'; },
+    fractionInfo: function (key) {
+      const f = FRACTIONS.filter(function (x) { return x.key === key; })[0];
+      return f ? { key: f.key, name: f.name, target: f.target, y: f.y, kind: f.key === 'residue' ? 'bottom' : 'side' } : null;
+    },
+    get residueTarget() { return residueTarget; },
     get isolated() { return hiddenWorld.length; }
   };
 })();

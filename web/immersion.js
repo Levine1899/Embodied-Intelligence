@@ -278,6 +278,29 @@
     }
   }
 
+  let leavingLevel = false;
+  let pendingStage = null;
+
+  function goStage(index, focus) {
+    const run = function () { selectStage(index, focus); };
+    if (!activeScene) { run(); return; }
+    if (leavingLevel) { pendingStage = run; return; }
+    leavingLevel = true;
+    const levelId = window.__sceneContext && window.__sceneContext.levelId;
+    const m = levelId && /^l(\d)$/.exec(levelId);
+    const api = m ? window['__l' + m[1]] : null;
+    try {
+      if (api && typeof api.exit === 'function') api.exit();
+      else { activeScene = null; activeCamera = null; }
+    } catch (err) { /* switch must not be blocked by a level */ }
+    setTimeout(function () {
+      leavingLevel = false;
+      const next = pendingStage || run;
+      pendingStage = null;
+      next();
+    }, 1900);
+  }
+
   function moveCamera(values) {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) {
@@ -823,7 +846,7 @@
       button.textContent = REGIONS[index].name;
       button.setAttribute('aria-label', '查看' + stageNames[index]);
       button.addEventListener('pointerdown', function (event) { event.stopPropagation(); });
-      button.addEventListener('click', function () { selectStage(index, true); });
+      button.addEventListener('click', function () { goStage(index, true); });
       viewport.appendChild(button);
       labels.push({
         element: button,
@@ -1103,12 +1126,16 @@
         c0.getWorldDirection(d0);
         levelPivot = c0.position.clone().add(d0.multiplyScalar(levelPivotDist));
       }
-      dragging = { x: event.clientX, y: event.clientY, lastX: event.clientX, lastY: event.clientY, moved: false };
+      dragging = { x: event.clientX, y: event.clientY, lastX: event.clientX, lastY: event.clientY, moved: false, button: event.button };
       viewport.setPointerCapture(event.pointerId);
     });
     viewport.addEventListener('pointermove', function (event) {
       if (!dragging) return;
-      if (Math.abs(event.clientX - dragging.x) + Math.abs(event.clientY - dragging.y) > 5) dragging.moved = true;
+      if (!event.buttons) { dragging = null; return; }
+      if (Math.abs(event.clientX - dragging.x) + Math.abs(event.clientY - dragging.y) > 5) {
+        if (!dragging.moved) window.__stageDragAt = performance.now();
+        dragging.moved = true;
+      }
     if (activeScene && dragging) {
       if (!dragging.moved) return;
       const cam = activeCamera || camera;
@@ -1134,41 +1161,120 @@
       dragging.lastX = event.clientX;
       dragging.lastY = event.clientY;
     });
+    function nearestDeviceStageAt(clientX, clientY) {
+      if (!modelGroups || !modelGroups.length) return null;
+      const rect = viewport.getBoundingClientRect();
+      const box = new THREE.Box3();
+      const point = new THREE.Vector3();
+      const seen = {};
+      let best = null;
+      let bestDist = 120;
+      camera.updateMatrixWorld();
+      modelGroups.forEach(function (group) {
+        group.traverse(function (obj) {
+          if (!obj.userData || !obj.userData.objectId) return;
+          const id = obj.userData.objectId;
+          if (seen[id]) return;
+          seen[id] = true;
+          let stage = null;
+          let p = obj;
+          while (p) {
+            if (p.userData && p.userData.stage !== undefined) { stage = p.userData.stage; break; }
+            p = p.parent;
+          }
+          if (stage === null) return;
+          box.setFromObject(obj);
+          if (box.isEmpty()) return;
+          let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+          for (let i = 0; i < 8; i++) {
+            point.set(
+              i & 1 ? box.max.x : box.min.x,
+              i & 2 ? box.max.y : box.min.y,
+              i & 4 ? box.max.z : box.min.z
+            ).project(camera);
+            if (point.z < -1 || point.z > 1) continue;
+            const sx = rect.left + (point.x + 1) / 2 * rect.width;
+            const sy = rect.top + (1 - point.y) / 2 * rect.height;
+            if (sx < minX) minX = sx;
+            if (sx > maxX) maxX = sx;
+            if (sy < minY) minY = sy;
+            if (sy > maxY) maxY = sy;
+          }
+          if (minX === Infinity) return;
+          const dx = clientX < minX ? minX - clientX : clientX > maxX ? clientX - maxX : 0;
+          const dy = clientY < minY ? minY - clientY : clientY > maxY ? clientY - maxY : 0;
+          const dist = Math.hypot(dx, dy);
+          if (dist < bestDist) { bestDist = dist; best = stage; }
+        });
+      });
+      return best;
+    }
+
+    function enterStageFromBackground(clientX, clientY) {
+      let idx = nearestDeviceStageAt(clientX, clientY);
+      // 导览会自动改变 currentStage；此时不能用“当前环节”猜用户点的设备。
+      if (idx === null && mode !== 'tour') idx = currentStage;
+      if (idx === null) return;
+      selectStage(idx, true);
+      window.__stageDragAt = performance.now();
+      const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
+      if (hook) { markLevel(idx); hook(); }
+    }
+
     viewport.addEventListener('pointerup', function (event) {
       levelPivot = null;
-      if (activeScene) { dragging = null; return; }
-      if (dragging && !dragging.moved) {
-        const bounds = viewport.getBoundingClientRect();
-        raycaster.setFromCamera(new THREE.Vector2(
-          (event.clientX - bounds.left) / bounds.width * 2 - 1,
-          1 - (event.clientY - bounds.top) / bounds.height * 2
-        ), camera);
-        const hits = raycaster.intersectObjects(modelGroups, true);
-        if (hits.length) {
-          const hitPoint = hits[0].point.clone();
-          let object = hits[0].object;
-          let objectId = null;
-          let probe = object;
-          while (probe) {
-            if (probe.userData && probe.userData.objectId) { objectId = probe.userData.objectId; break; }
-            probe = probe.parent;
-          }
-          while (object && object.userData.stage === undefined) object = object.parent;
-          if (object) {
-            const idx = object.userData.stage;
-            if (objectId) {
-              selectStage(idx, true, objectId, hitPoint);
-              return;
-            }
+      const drag = dragging;
+      dragging = null;
+      if (activeScene) return;
+      if (!drag || drag.moved) return;
+      window.__stageDragAt = 0;
+      const bounds = viewport.getBoundingClientRect();
+      raycaster.setFromCamera(new THREE.Vector2(
+        (event.clientX - bounds.left) / bounds.width * 2 - 1,
+        1 - (event.clientY - bounds.top) / bounds.height * 2
+      ), camera);
+      const hits = raycaster.intersectObjects(modelGroups, true);
+      if (!hits.length) {
+        // 设备周围的地坪/厂房不一定在 modelGroups 里；补一次全场景射线。
+        const bgHits = raycaster.intersectObjects(scene.children, true);
+        if (!bgHits.length) return;
+        enterStageFromBackground(event.clientX, event.clientY);
+        return;
+      }
+      if (hits.length) {
+        const hitPoint = hits[0].point.clone();
+        let object = hits[0].object;
+        let objectId = null;
+        let probe = object;
+        while (probe) {
+          if (probe.userData && probe.userData.objectId) { objectId = probe.userData.objectId; break; }
+          probe = probe.parent;
+        }
+        // 设备本体没有精确点中时，用地坪附近最近的设备来判断环节；
+        // 导览模式下绝不用自动变化的 currentStage 猜，避免点地面处理却进地下开采。
+        if (!objectId) {
+          enterStageFromBackground(event.clientX, event.clientY);
+          return;
+        }
+        while (object && object.userData.stage === undefined) object = object.parent;
+        if (object) {
+          const idx = object.userData.stage;
+          if (objectId) {
+            selectStage(idx, true, objectId, hitPoint);
+            window.__stageDragAt = performance.now();
+            // 点击设备本体 = 直接进入该环节的任务操作，不再要求先开任务面板。
             const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
-            if (hook) { markLevel(idx); hook(); return; }
-            selectStage(idx, true, null, hitPoint);
+            if (hook) { markLevel(idx); hook(); }
+            return;
           }
+          const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
+          if (hook) { markLevel(idx); hook(); return; }
+          selectStage(idx, true, null, hitPoint);
         }
       }
-      dragging = null;
     });
     viewport.addEventListener('pointercancel', function () { dragging = null; });
+    viewport.addEventListener('contextmenu', function (event) { if (activeScene) event.preventDefault(); });
     viewport.addEventListener('wheel', function (event) {
       event.preventDefault();
       cameraTransition = null;
@@ -1178,23 +1284,17 @@
 
 
   stageButtons.forEach(function (button, index) {
-    button.addEventListener('click', function () { selectStage(index, true); });
+    button.addEventListener('click', function () { goStage(index, true); });
   });
   depthSelect.addEventListener('change', updateTask);
-  document.getElementById('overview').addEventListener('click', function () {
-    moveCamera({ targetX: 2, targetY: 2.0, targetZ: -1, radius: 58, azimuth: 0.52, elevation: 0.40 });
-  });
-  document.getElementById('focus').addEventListener('click', function () { selectStage(currentStage, true); });
   document.getElementById('next').addEventListener('click', function () {
-    selectStage((currentStage + 1) % stageNames.length, true);
+    goStage((currentStage + 1) % stageNames.length, true);
   });
   const playBtn = document.getElementById('play');
   if (playBtn) {
     playBtn.setAttribute('aria-pressed', String(playing));
     playBtn.textContent = playing ? '暂停流向' : '播放流向';
   }
-  const spinDefault = document.getElementById('spin');
-  if (spinDefault) spinDefault.setAttribute('aria-pressed', String(autoOrbit));
 
   const layoutEl = document.querySelector('.layout');
   function applyModeLayout(modeName) {
@@ -1258,10 +1358,6 @@
     soundBtn.setAttribute('aria-pressed', String(result.on));
     soundBtn.textContent = result.on ? '声音开' : '声音';
   });
-  const cutBtn = document.getElementById('cut');
-  if (cutBtn) cutBtn.addEventListener('click', function () { applyUnitCut(!unitState.cut); });
-  const spinBtn = document.getElementById('spin');
-  if (spinBtn) spinBtn.addEventListener('click', function () { setAutoOrbit(!autoOrbit); });
   document.getElementById('play').addEventListener('click', function () {
     playing = !playing;
     this.setAttribute('aria-pressed', String(playing));
@@ -1968,6 +2064,12 @@
     },
     isNodeDone(i) { return doneSet.has(i); },
     levelHook(i) { const h = (window.__levelHooks && window.__levelHooks[i]) || null; if (h) markLevel(i); return h; },
+    setMode(next) {
+      mode = next;
+      paintModes();
+      if (typeof applyModeLayout === 'function') applyModeLayout(next);
+    },
+    getMode() { return mode; },
     refreshTaskPanel() { syncTaskPanel(); },
     get camera() { return activeCamera || camera; },
     setCut(on) { applyUnitCut(on); },

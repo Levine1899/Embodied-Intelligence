@@ -45,7 +45,12 @@
         const host = panel.querySelector('.lvl__act');
         if (!host || host.hidden) return;
         if (host.querySelector('.lvl__demo')) return;
-        const idx = Array.prototype.indexOf.call(document.querySelectorAll('.lvl'), panel);
+        const actId = host.id || '';
+        let levelId = panel.dataset.levelId || '';
+        if (!levelId && /^l\d-act$/.test(actId)) levelId = actId.slice(0, 2);
+        if (levelId === 'l4' || levelId === 'l2') return; // l4 有自己的结构/进料/馏分说明；l2 有分步面板，避免通用引导条遮挡设备
+        const ids = ['l1', 'l2', 'l3', 'l4', 'l5'];
+        const idx = levelId ? ids.indexOf(levelId) : Array.prototype.indexOf.call(document.querySelectorAll('.lvl'), panel);
         if (idx < 0) return;
         const kind = KIND[idx] || 'tap';
         const wrap = document.createElement('div');

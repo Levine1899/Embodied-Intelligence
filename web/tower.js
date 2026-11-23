@@ -42,6 +42,9 @@
   if (!window.THREE || !webglOK()) { showFallback('WebGL 不可用'); return; }
 
   var state = { level: 0, selected: null, loaded: false, frames: 0, cutEnabled: false };
+  var deviceState = window.PETRO_DEVICE_STATE;
+  var flowPaused = true;
+  var OBJECT_OF_HOTSPOT = { hs_atm_tower: 'atmospheric_tower', hs_vacuum: 'vacuum_tower', hs_heater: 'heater', hs_crude_feed: 'atmospheric_tower', hs_products: 'atmospheric_tower' };
   var META = null;
   window.__tower = state;
 
@@ -305,8 +308,26 @@
       });
     });
     var sel = HOTSPOTS.filter(function (h) { return h.id === state.selected; })[0];
+    if (deviceState) {
+      var oid = state.selected ? OBJECT_OF_HOTSPOT[state.selected] : null;
+      if (oid) deviceState.select(oid);
+      else if (deviceState.selectedObjectId) deviceState.select(null);
+    }
+    syncContext();
     renderDetail(sel || null);
     if (fly && sel) flyTo({ target: sel.pos.clone(), az: 0.95, el: 0.24, dist: 30 });
+  }
+
+  function syncContext() {
+    var oid = state.selected ? OBJECT_OF_HOTSPOT[state.selected] : (deviceState && deviceState.selectedObjectId) || null;
+    window.__sceneContext = {
+      sceneId: 'oil_industry_journey', stageId: 'refine', zoneId: 'refining', levelId: 'tower',
+      selectedObjectId: oid, object: oid, knowledgeIds: ['kb_refine'],
+      experienceMode: 'free', mode: 'free',
+      interaction: window.__sceneContext && window.__sceneContext.interaction || null,
+      history: window.__sceneContext && window.__sceneContext.history || []
+    };
+    window.__towerState = { level: state.level, paused: flowPaused, selected: oid };
   }
 
   // ---------------------------------------------------------------- 剖切
@@ -328,13 +349,19 @@
         o.visible = n === 0;                                           // 整壳/整穹顶：外观时显示
       }
     });
-    document.querySelectorAll('#levels button').forEach(function (b) {
+    document.querySelectorAll('#levels button[data-level]').forEach(function (b) {
       b.setAttribute('aria-pressed', String(Number(b.dataset.level) === n));
     });
     var note = document.getElementById('flow-note');
     if (note) note.hidden = n !== 2;
     if (internals) internals.visible = n === 2;
     window.__towerLevel = n;
+    if (deviceState) {
+      var structure = n === 0 ? 'external' : (n === 1 ? 'half' : 'full');
+      deviceState.set('atmospheric_tower', { structure: structure }, 'tower-page');
+      deviceState.set('vacuum_tower', { structure: structure }, 'tower-page');
+    }
+    syncContext();
     flyTo({ target: new THREE.Vector3(0, 11.5, 0), az: 0.42, el: n > 0 ? 0.16 : 0.30, dist: n > 0 ? 23 : 33 });
   }
 
@@ -433,6 +460,7 @@
     return pts[pts.length - 1].clone();
   }
   function stepFlows(dt) {
+    if (flowPaused) return;
     flows.forEach(function (s) {
       var f = s.userData.flow;
       f.t = (f.t + dt * f.speed) % 1;
@@ -489,11 +517,30 @@
     cam.dist = 80; cam.el = 0.42;
     flyTo({ target: new THREE.Vector3(0.5, 9.6, 0), az: 0.72, el: 0.26, dist: 33 }, 1400);
 
-    document.querySelectorAll('#levels button').forEach(function (b) {
+    document.querySelectorAll('#levels button[data-level]').forEach(function (b) {
       b.addEventListener('click', function () { setLevel(Number(b.dataset.level)); });
     });
     var reset = document.getElementById('reset');
     if (reset) reset.addEventListener('click', function () { flyTo({ target: new THREE.Vector3(0.5, 9.6, 0), az: 0.72, el: 0.26, dist: 33 }); });
+    var flowToggle = document.getElementById('flow-toggle');
+    var flowReplay = document.getElementById('flow-replay');
+    function syncFlowUi() {
+      if (!flowToggle) return;
+      flowToggle.textContent = flowPaused ? '启动汽液' : '暂停汽液';
+      flowToggle.setAttribute('aria-pressed', String(!flowPaused));
+    }
+    if (flowToggle) flowToggle.addEventListener('click', function () {
+      if (flowPaused) { flowPaused = false; if (state.level === 0) setLevel(2); }
+      else flowPaused = true;
+      syncFlowUi(); syncContext();
+    });
+    if (flowReplay) flowReplay.addEventListener('click', function () {
+      flows.forEach(function (s) { s.userData.flow.t = 0; s.position.copy(s.userData.flow.pts[0]); });
+      if (internals) internals.children.forEach(function (m) { m.position.y = m.userData.dir > 0 ? 4.6 : 24.6; });
+      flowPaused = false; if (state.level === 0) setLevel(2);
+      syncFlowUi(); syncContext();
+    });
+    syncFlowUi();
 
     buildLabels(); buildList(); renderDetail(null);
   }).catch(function (err) {
@@ -534,7 +581,7 @@
     if (state.loaded) {
       stepFlows(dt);
       stepLabels();
-      if (internals && internals.visible) {
+      if (internals && internals.visible && !flowPaused) {
         internals.children.forEach(function (m) {
           m.position.y += m.userData.dir * dt * (m.userData.dir > 0 ? 2.4 : 1.6);
           if (m.userData.dir > 0 && m.position.y > 24.6) m.position.y = 4.6;

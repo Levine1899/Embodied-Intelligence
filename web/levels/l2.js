@@ -464,12 +464,22 @@
   ui.className = 'lvl';
   ui.innerHTML = [
     '<div class="lvl__bar"><span class="lvl__step">02 / 05</span><b>地面处理 · 三相分离</b><span class="lvl__hint" id="l2-hint">镜头正在靠近分离器…</span></div>',
-    '<div class="lvl__act" id="l2-act" hidden>',
-    '<p>井口出来的是<b>油、气、水混在一起</b>。先点一个出口，再点它该去的去向。</p>',
-    '<div class="lvl__out"><span id="l2-note">未选择出口</span></div>',
-    '<div class="lvl__btns" role="group" aria-label="选择出口"><button type="button" class="lvl__btn" data-outlet="gas" aria-pressed="false">气出口</button><button type="button" class="lvl__btn" data-outlet="oil" aria-pressed="false">油出口</button><button type="button" class="lvl__btn" data-outlet="water" aria-pressed="false">水出口</button></div>',
-    '<div class="lvl__btns" role="group" aria-label="选择去向"><button type="button" class="lvl__btn" data-target="gas" aria-pressed="false">气回收/处理</button><button type="button" class="lvl__btn" data-target="oil" aria-pressed="false">油储罐</button><button type="button" class="lvl__btn" data-target="water" aria-pressed="false">采出水处理</button></div>',
-    '<div class="lvl__btns"><button type="button" class="lvl__btn" id="l2-structure" aria-pressed="false" disabled>打开内部结构</button><button type="button" class="lvl__btn" id="l2-play">启动分离</button><button type="button" class="lvl__btn" id="l2-step">单步</button><button type="button" class="lvl__btn" id="l2-replay">重播</button></div>',
+    '<div class="lvl__act lvl2" id="l2-act" hidden>',
+    '<div class="lvl2__head"><div><span class="lvl2__eyebrow">三相分离操作</span><b>先选出口，再选去向</b></div><span class="lvl2__state" id="l2-note">未选择出口</span></div>',
+    '<p class="lvl2__lede">井口出来的是<b>油、气、水混在一起</b>。按 1 → 2 两步完成。</p>',
+    '<div class="lvl2__step">',
+    '<div class="lvl2__stephead"><span class="lvl2__num">1</span><b>选择出口</b><span class="lvl2__stepnote">点按钮，或点场景标签</span></div>',
+    '<div class="lvl__btns lvl2__choices" role="group" aria-label="选择出口"><button type="button" class="lvl__btn" data-outlet="gas" aria-pressed="false">气出口</button><button type="button" class="lvl__btn" data-outlet="oil" aria-pressed="false">油出口</button><button type="button" class="lvl__btn" data-outlet="water" aria-pressed="false">水出口</button></div>',
+    '</div>',
+    '<div class="lvl2__step">',
+    '<div class="lvl2__stephead"><span class="lvl2__num">2</span><b>选择去向</b><span class="lvl2__stepnote">与出口匹配</span></div>',
+    '<div class="lvl__btns lvl2__choices" role="group" aria-label="选择去向"><button type="button" class="lvl__btn" data-target="gas" aria-pressed="false" disabled>气回收/处理</button><button type="button" class="lvl__btn" data-target="oil" aria-pressed="false" disabled>油储罐</button><button type="button" class="lvl__btn" data-target="water" aria-pressed="false" disabled>采出水处理</button></div>',
+    '</div>',
+    '<details class="lvl2__more"><summary>演示与结构</summary><div class="lvl2__tools">',
+    '<div class="lvl2__toolrow"><span class="lvl2__tool-label">结构</span><button type="button" class="lvl__btn" id="l2-structure" aria-pressed="false" disabled>打开内部结构</button></div>',
+    '<div class="lvl2__toolrow"><span class="lvl2__tool-label">演示</span><button type="button" class="lvl__btn" id="l2-play">启动分离</button><button type="button" class="lvl__btn" id="l2-step">单步</button><button type="button" class="lvl__btn" id="l2-replay">重播</button></div>',
+    '</div></details>',
+    '<p class="lvl__dragtip">拖动画面空白处可旋转视角</p>',
     '</div>',
     '<button type="button" class="lvl__back" id="l2-back">返回总览</button>'
   ].join('');
@@ -506,13 +516,15 @@
       o.ring.material.emissiveIntensity = o.key === key ? 2.2 : 1.0;
     });
     outletBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-outlet') === key)); });
-    targetBtns.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+    targetBtns.forEach(function (b) { b.disabled = false; b.setAttribute('aria-pressed', 'false'); });
     const o = built.OUTLETS.find(x => x.key === key);
-    note.textContent = '已选「' + o.name + '」出口，现在点一个去向';
+    note.classList.remove('is-on', 'is-ok', 'is-error');
+    note.classList.add('is-on');
+    note.textContent = '已选 ' + o.name + ' 出口';
   }
 
   function assignTank(key) {
-    if (!picked) { note.textContent = '先点一个出口'; return; }
+    if (!picked) { note.classList.remove('is-on', 'is-ok', 'is-error'); note.textContent = '先选择出口'; return; }
     const o = built.OUTLETS.find(x => x.key === picked);
     const t = built.TANKS.find(x => x.key === key);
     const ok = picked === key;
@@ -543,12 +555,17 @@
           t.fill.scale.y = 0.95;
           t.fill.material.emissiveIntensity = 1.3;
           addStream(picked);
-          note.textContent = o.name + '已进' + t.name;
+          note.classList.remove('is-on', 'is-ok', 'is-error');
+          note.classList.add('is-ok');
+          note.textContent = o.name + ' → ' + t.name;
           if (solved.gas && solved.oil && solved.water) complete();
         } else {
-          note.textContent = '错误去向已拦截，未实际送达，请重新选择';
+          note.classList.remove('is-on', 'is-ok', 'is-error');
+          note.classList.add('is-error');
+          note.textContent = '去向不匹配，已拦截';
         }
-        targetBtns.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+        outletBtns.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+        targetBtns.forEach(function (b) { b.disabled = true; b.setAttribute('aria-pressed', 'false'); });
         picked = null;
         built.OUTLETS.forEach(function (x) { x.ring.scale.setScalar(1); x.ring.material.emissiveIntensity = 1.0; });
       }
@@ -575,6 +592,7 @@
 
   stage.viewport.addEventListener('pointerup', function (e) {
     if (!stage.isLevel() || window.__l2active !== true) return;
+    if (performance.now() - (window.__stageDragAt || 0) < 300) return;
     if (e.target.closest('.lvl')) return;
     const rect = stage.viewport.getBoundingClientRect();
     ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
