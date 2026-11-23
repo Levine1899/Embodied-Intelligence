@@ -1161,6 +1161,66 @@
       dragging.lastX = event.clientX;
       dragging.lastY = event.clientY;
     });
+    function nearestDeviceStageAt(clientX, clientY) {
+      if (!modelGroups || !modelGroups.length) return null;
+      const rect = viewport.getBoundingClientRect();
+      const box = new THREE.Box3();
+      const point = new THREE.Vector3();
+      const seen = {};
+      let best = null;
+      let bestDist = 120;
+      camera.updateMatrixWorld();
+      modelGroups.forEach(function (group) {
+        group.traverse(function (obj) {
+          if (!obj.userData || !obj.userData.objectId) return;
+          const id = obj.userData.objectId;
+          if (seen[id]) return;
+          seen[id] = true;
+          let stage = null;
+          let p = obj;
+          while (p) {
+            if (p.userData && p.userData.stage !== undefined) { stage = p.userData.stage; break; }
+            p = p.parent;
+          }
+          if (stage === null) return;
+          box.setFromObject(obj);
+          if (box.isEmpty()) return;
+          let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+          for (let i = 0; i < 8; i++) {
+            point.set(
+              i & 1 ? box.max.x : box.min.x,
+              i & 2 ? box.max.y : box.min.y,
+              i & 4 ? box.max.z : box.min.z
+            ).project(camera);
+            if (point.z < -1 || point.z > 1) continue;
+            const sx = rect.left + (point.x + 1) / 2 * rect.width;
+            const sy = rect.top + (1 - point.y) / 2 * rect.height;
+            if (sx < minX) minX = sx;
+            if (sx > maxX) maxX = sx;
+            if (sy < minY) minY = sy;
+            if (sy > maxY) maxY = sy;
+          }
+          if (minX === Infinity) return;
+          const dx = clientX < minX ? minX - clientX : clientX > maxX ? clientX - maxX : 0;
+          const dy = clientY < minY ? minY - clientY : clientY > maxY ? clientY - maxY : 0;
+          const dist = Math.hypot(dx, dy);
+          if (dist < bestDist) { bestDist = dist; best = stage; }
+        });
+      });
+      return best;
+    }
+
+    function enterStageFromBackground(clientX, clientY) {
+      let idx = nearestDeviceStageAt(clientX, clientY);
+      // 导览会自动改变 currentStage；此时不能用“当前环节”猜用户点的设备。
+      if (idx === null && mode !== 'tour') idx = currentStage;
+      if (idx === null) return;
+      selectStage(idx, true);
+      window.__stageDragAt = performance.now();
+      const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
+      if (hook) { markLevel(idx); hook(); }
+    }
+
     viewport.addEventListener('pointerup', function (event) {
       levelPivot = null;
       const drag = dragging;
@@ -1176,11 +1236,9 @@
       const hits = raycaster.intersectObjects(modelGroups, true);
       if (!hits.length) {
         // 设备周围的地坪/厂房不一定在 modelGroups 里；补一次全场景射线。
-        // 只要点到当前环节场景里的实体，就进入当前环节，不按背景网格的 stage 走。
         const bgHits = raycaster.intersectObjects(scene.children, true);
         if (!bgHits.length) return;
-        const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(currentStage);
-        if (hook) { window.__stageDragAt = performance.now(); markLevel(currentStage); hook(); }
+        enterStageFromBackground(event.clientX, event.clientY);
         return;
       }
       if (hits.length) {
@@ -1192,12 +1250,10 @@
           if (probe.userData && probe.userData.objectId) { objectId = probe.userData.objectId; break; }
           probe = probe.parent;
         }
-        // 设备本体没有精确点中时，允许把设备周围的地坪/厂房当作同一环节的点击区。
-        // 关键：进入的是“当前选中的环节”，绝不使用背景网格自己的 stage（地面曾被错误地继承成炼化 stage=3）。
+        // 设备本体没有精确点中时，用地坪附近最近的设备来判断环节；
+        // 导览模式下绝不用自动变化的 currentStage 猜，避免点地面处理却进地下开采。
         if (!objectId) {
-          const idx = currentStage;
-          const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
-          if (hook) { window.__stageDragAt = performance.now(); markLevel(idx); hook(); }
+          enterStageFromBackground(event.clientX, event.clientY);
           return;
         }
         while (object && object.userData.stage === undefined) object = object.parent;
