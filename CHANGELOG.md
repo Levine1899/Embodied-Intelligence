@@ -1,4 +1,5 @@
 ## 阶段 06 rev3 — 2026-11-23 · review 返修二
+- `tower.html` 接入 `world/state.js`，剖切写 `PETRO_DEVICE_STATE`；新增启动/暂停/重播汽液按钮和 `tower-state-flow` 证据。
 
 - 修正常压渣油：移除中部 `GasOil` 错误侧线，改为塔底 `Pipe_Residue_Bottom` → `Box_Residue`；“常压瓦斯油”不再与常压渣油混称。
 - `tower.html` 的全剖进一步弱化半壳到 0.18、关闭 depthWrite，与半剖形成结构级差异；真实截图 `tower-full-cut.png`。

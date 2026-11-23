@@ -105,10 +105,11 @@ node navcheck.cjs                           # #stage=0..4、章节、塔页 exit
 | 恢复外观 | 通过 | `phase06-04-refining-restored.png` |
 | 返回总览 | 通过 | `phase06-05-back-overview.png` |
 | 连续录屏 | 通过 | `refining-continuity.mp4`（57.70s, 1440×900, 1,675,828 B） |
+| 独立塔页状态/流程 | 通过 | `tower-state-flow.png`、`tower-state-flow.json` |
 | 验证断言 | 通过 | `phase06-verify.json` |
 | 资产外观检查 | 参考（Blender 静帧） | `asset-overview.png`、`asset-cutaway.png` |
 | Hero 资产清单/哈希 | 通过 | `tower-asset-manifest.json`（151 Mesh / 14,328 verts / 27,054 tris） |
-| 阶段包 | 已生成 | `dist/phase-06-web.tgz`，10,295,465 B，SHA-256 `D4C2F8C8513EBF92E50B00D918ED3DE514F740706F70D6D437ABA88C8B39F29E` |
+| 阶段包 | 已生成 | `dist/phase-06-web.tgz`，10,297,154 B，SHA-256 `89FAE9B66F1D7EABCC7315FB403BD92E3BAA87711E9DF48960B9BF1170CF5BC0` |
 
 ## 6. P0 / P1 / P2
 
@@ -120,7 +121,7 @@ node navcheck.cjs                           # #stage=0..4、章节、塔页 exit
 ### P1
 
 - P1-01 资产仍是程序化教学模型，不是高精度工程资产；平台/炉管/设备比例简化，不能当真实总平面。
-- P1-05 `tower.html` 是兼容/fallback 页，局部状态不与 l4 共享；canonical 详情仍是 sandbox l4。
+- P1-05 `tower.html` 是兼容/fallback 页；已接入 `PETRO_DEVICE_STATE`（页面内）和汽液启动/暂停/重播控制，但不做跨页持久化，canonical 详情仍是 sandbox l4。
 - P1-06 常压渣油已改塔底路径；中部只保留石脑油/煤油/柴油侧线。
 - P1-02 3D 热区是 5 个球形语义锚点 + HTML 按钮；不是所有 Mesh 都可点，深层部件仍靠标签/按钮。
 - P1-03 外部全景中设备群可见，但 `lvl__act` 面板仍占据部分下方画面；可在后续视觉轮优化相机/面板布局。

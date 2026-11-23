@@ -15,6 +15,7 @@
 | `phase06-05-back-overview.png` | 返回炼化总览 |
 | `phase06-06-residue-bottom.png` | 常压渣油塔底路径 |
 | `tower-full-cut.png` | 独立 tower.html 全剖（半壳 0.18） |
+| `tower-state-flow.png` | tower.html 状态接入与汽液控制 |
 | `asset-overview.png` | Blender 资产检查渲染（非网页截图） |
 | `asset-cutaway.png` | Blender 资产半剖检查渲染（非网页截图） |
 

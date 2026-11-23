@@ -115,6 +115,8 @@
       <button type="button" data-level="0" aria-pressed="true">外观</button>
       <button type="button" data-level="1" aria-pressed="false">半剖</button>
       <button type="button" data-level="2" aria-pressed="false">全剖</button>
+      <button type="button" id="flow-toggle" aria-pressed="true">启动汽液</button>
+      <button type="button" id="flow-replay">重播汽液</button>
     </div>
     <button type="button" class="reset" id="reset">重置视角</button>
     <div class="labels" id="labels"></div>
@@ -134,7 +136,8 @@
 <footer>剖面与颜色均为教学示意，不代表真实装置比例、温度、压力或流量。模型由 Three.js 程序化生成，<b>非</b>外包精模 GLB。</footer>
 
 <script src="assets/three.browser.js"></script>
-<script src="tower.js?v=cut2"></script>
+<script src="world/state.js"></script>
+<script src="tower.js?v=state1"></script>
 </body>
 </html>
 

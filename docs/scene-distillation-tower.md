@@ -60,5 +60,5 @@
 - l4 提供外观/半剖/全剖、常压/减压进料、汽液接触暂停/重播、塔板结构、五馏分路径和恢复外观；按钮与 `PETRO_DEVICE_STATE` 同步。
 - 三状态由 `tower.obj` 的 `Tower_*_Shell/Dome` 与 `*ShellHalf/*DomeHalf`、`Trays_A/V` 实现；全剖把半壳 opacities 弱化到 0.18；`tower.html` 也执行同样的半壳弱化/`depthWrite=false`，不是只叠加粒子。
 - 阶段 06 返修把装置群扩到 151 个 Mesh：3 台卧式换热器、3 台泵组、管廊、平台/梯子/基础、保温带；`tools/make_tower.py` 导出前保存 `.blend`。
-- 独立 `tower.html` 仍保留原有 OBJ 加载、三档剖切、热点和 2D fallback，作为深链/兼容/回退入口；其剖切状态是页面局部状态，canonical 详情状态在 sandbox l4。
+- 独立 `tower.html` 仍保留原有 OBJ 加载、三档剖切、热点和 2D fallback，作为深链/兼容/回退入口；其剖切状态通过 `world/state.js` 写入 `PETRO_DEVICE_STATE`，并新增启动/暂停/重播汽液按钮；页面间不做持久化，canonical 详情与录制证据仍以 sandbox l4 为准。
 - 关键限制：`.blend` 是可编辑导入源，完整生成器仍是 `tools/make_tower.py`；塔板数/侧线位置为教学简化；不提供工程参数。
