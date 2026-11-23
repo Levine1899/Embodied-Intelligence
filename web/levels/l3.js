@@ -8,6 +8,7 @@
 
   let G = null, camera = null, baseScene = null, anchor = null;
   let pumpFlow = null, pumpRunning = false, pumpPaused = false, cutMode = false, pumpMesh = null, selectedTankId = 'fixed_roof_tank';
+  let routeInfo = null;
   const flows = [];
   const built = {};
 
@@ -58,7 +59,7 @@
     function tank(x, z, floating) {
       const g = new THREE.Group();
       g.position.set(x, 0, z);
-      const bodyMat = new THREE.MeshStandardMaterial({ color: 0x33434e, roughness: 0.45, metalness: 0.7, transparent: true, opacity: 0.82, side: THREE.DoubleSide });
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0x33434e, roughness: 0.45, metalness: 0.7, transparent: true, opacity: 0.94, side: THREE.DoubleSide });
       const body = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.55, 3.6, 26, 1, true), bodyMat);
       body.position.y = 1.8;
       g.add(body);
@@ -148,16 +149,29 @@
     wheel.rotation.x = Math.PI / 2; wheel.position.set(-0.55, 1.18, 0); pumpMesh.add(wheel);
     const pumpLabel = window.__lvlLabel('转输泵组', '#d8a24a'); pumpLabel.position.set(3.9, 2.7, 1.8); pumpLabel.scale.setScalar(0.78); G.add(pumpLabel);
 
-    /* 泵送路径：罐区 → 炼化入口方向（教学示意） */
+    /* 泵送路径：终点接到全局 path_store_refine 的 storage 出口。 */
+    const globalRoute = stage.getRoute ? stage.getRoute('path_store_refine') : null;
+    if (globalRoute) {
+      const localStart = globalRoute.start.clone().sub(G.position);
+      routeInfo = {
+        pathId: 'path_store_refine',
+        storageOutlet: globalRoute.start.toArray(),
+        refineryFeed: globalRoute.end.toArray(),
+        localEnd: localStart.toArray()
+      };
+    }
+    const routeEnd = routeInfo
+      ? new THREE.Vector3(routeInfo.localEnd[0], routeInfo.localEnd[1], routeInfo.localEnd[2])
+      : new THREE.Vector3(9.2, 1.2, 3.4);
     const pumpCurve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(3.7, 1.15, 1.4),
       new THREE.Vector3(5.3, 1.0, 2.0),
-      new THREE.Vector3(7.2, 1.1, 3.2),
-      new THREE.Vector3(9.2, 1.2, 3.4)
+      new THREE.Vector3((5.3 + routeEnd.x) / 2, Math.max(1.0, routeEnd.y), (2.0 + routeEnd.z) / 2),
+      routeEnd
     ]);
     const pipe = new THREE.Mesh(new THREE.TubeGeometry(pumpCurve, 40, 0.07, 8, false),
       new THREE.MeshStandardMaterial({ color: 0x8b6b3f, roughness: 0.5, metalness: 0.4 }));
-    pipe.name = 'store_transfer_pipe'; G.add(pipe);
+    pipe.name = 'store_transfer_pipe'; pipe.userData.pathId = 'path_store_refine'; G.add(pipe);
     const valve = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.035, 8, 18), new THREE.MeshStandardMaterial({ color: 0xd8a24a, roughness: 0.45 }));
     valve.rotation.x = Math.PI / 2; valve.position.set(5.2, 1.4, 1.9); G.add(valve);
     const valveLabel = window.__lvlLabel('出口阀', '#d8a24a'); valveLabel.position.set(5.2, 2.0, 1.9); valveLabel.scale.setScalar(0.72); G.add(valveLabel);
@@ -281,7 +295,7 @@
     cutBtn.textContent = cutMode ? '恢复罐壁' : '罐体剖面';
     [built.fixed, built.float].forEach(function (t) {
       if (!t || !t.bodyMat) return;
-      t.bodyMat.transparent = true; t.bodyMat.opacity = cutMode ? 0.28 : 0.82; t.bodyMat.depthWrite = !cutMode; t.bodyMat.needsUpdate = true;
+      t.bodyMat.transparent = true; t.bodyMat.opacity = cutMode ? 0.28 : 0.94; t.bodyMat.depthWrite = !cutMode; t.bodyMat.needsUpdate = true;
     });
     if (stage.deviceState) {
       stage.deviceState.set('fixed_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
@@ -375,5 +389,6 @@
 
   back.onclick = exit;
   window.__lvlEntry(2, '进入 03 储运', enter);
-  window.__l3 = { enter: enter, exit: exit, selectTank: selectTank, get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; }, get cutMode() { return cutMode; }, get pumpRunning() { return pumpRunning; }, get pumpPaused() { return pumpPaused; }, get level() { return level; } };
+  window.__l3 = { enter: enter, exit: exit, selectTank: selectTank, get routeInfo() { return routeInfo; }, get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; }, get cutMode() { return cutMode; }, get pumpRunning() { return pumpRunning; }, get pumpPaused() { return pumpPaused; }, get level() { return level; } };
 })();
+

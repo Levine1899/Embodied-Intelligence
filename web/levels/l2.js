@@ -8,6 +8,7 @@
 
   let G = null, camera = null, baseScene = null, anchor = null;
   let overviewSeparator = [];
+  let sepTimers = [];
   let assetRoot = null, assetLoaded = false, assetFailed = false;
   let procShell = null, structMode = false, runningSep = false, pausedSep = false;
   let shellMats = [], externalShell = [], cutShell = [], internalMeshes = [], internalLabels = [], cutRim = null, phaseT = 0;
@@ -213,7 +214,7 @@
     internalMeshes.forEach(function (m) { m.visible = structMode; });
     internalLabels.forEach(function (l) { l.visible = structMode; });
     if (cutRim) cutRim.visible = structMode;
-    phaseFlows.forEach(function (f) { f.tube.visible = structMode; f.group.visible = structMode && runningSep; });
+    phaseFlows.forEach(function (f) { f.tube.visible = structMode; f.group.visible = structMode && (runningSep || pausedSep); });
     var b = ui && ui.querySelector('#l2-structure');
     if (b) {
       b.textContent = structMode ? '恢复外壳' : '打开内部结构';
@@ -369,8 +370,7 @@
     if (phaseT >= 1) phaseT = 0;
     syncSeparatorState();
     if (stage.setInteraction) stage.setInteraction('start_separation', 'started', '示意');
-    var b = ui && ui.querySelector('#l2-play');
-    if (b) { b.textContent = '暂停分离'; b.setAttribute('aria-pressed', 'true'); }
+    syncUi();
     hint.textContent = '分离演示 · 气上浮 / 油水按密度分层';
   }
 
@@ -379,18 +379,19 @@
     pausedSep = true;
     syncSeparatorState();
     if (stage.setInteraction) stage.setInteraction('pause_separation', 'paused', '示意');
-    var b = ui && ui.querySelector('#l2-play');
-    if (b) { b.textContent = '继续分离'; b.setAttribute('aria-pressed', 'false'); }
+    syncUi();
     hint.textContent = '已暂停 · 可单步或重播';
   }
 
   function stepSeparation() {
     if (!assetLoaded) return;
+    if (!structMode) applyStructure(true, false);
     runningSep = false;
     pausedSep = true;
     phaseT = Math.min(1, phaseT + 0.12);
     syncSeparatorState();
     if (stage.setInteraction) stage.setInteraction('step_separation', 'step', '示意');
+    syncUi();
     hint.textContent = '单步 · 观察相态在出口附近的去向';
   }
 
@@ -401,8 +402,7 @@
     pausedSep = false;
     syncSeparatorState();
     if (stage.setInteraction) stage.setInteraction('replay_separation', 'replay', '示意');
-    var b = ui && ui.querySelector('#l2-play');
-    if (b) { b.textContent = '暂停分离'; b.setAttribute('aria-pressed', 'true'); }
+    syncUi();
     hint.textContent = '重播 · 气、油、水从同一进料分流';
   }
 
@@ -452,10 +452,10 @@
       f.items.forEach(function (dot) {
         var t = (phaseT + dot.userData.base) % 1;
         dot.position.copy(f.curve.getPoint(t));
-        dot.visible = structMode && runningSep;
+        dot.visible = structMode && (runningSep || pausedSep);
       });
       f.tube.visible = structMode;
-      f.group.visible = structMode && runningSep;
+      f.group.visible = structMode && (runningSep || pausedSep);
     });
   }
 
@@ -467,6 +467,8 @@
     '<div class="lvl__act" id="l2-act" hidden>',
     '<p>井口出来的是<b>油、气、水混在一起</b>。先点一个出口，再点它该去的去向。</p>',
     '<div class="lvl__out"><span id="l2-note">未选择出口</span></div>',
+    '<div class="lvl__btns" role="group" aria-label="选择出口"><button type="button" class="lvl__btn" data-outlet="gas" aria-pressed="false">气出口</button><button type="button" class="lvl__btn" data-outlet="oil" aria-pressed="false">油出口</button><button type="button" class="lvl__btn" data-outlet="water" aria-pressed="false">水出口</button></div>',
+    '<div class="lvl__btns" role="group" aria-label="选择去向"><button type="button" class="lvl__btn" data-target="gas" aria-pressed="false">气回收/处理</button><button type="button" class="lvl__btn" data-target="oil" aria-pressed="false">油储罐</button><button type="button" class="lvl__btn" data-target="water" aria-pressed="false">采出水处理</button></div>',
     '<div class="lvl__btns"><button type="button" class="lvl__btn" id="l2-structure" aria-pressed="false" disabled>打开内部结构</button><button type="button" class="lvl__btn" id="l2-play">启动分离</button><button type="button" class="lvl__btn" id="l2-step">单步</button><button type="button" class="lvl__btn" id="l2-replay">重播</button></div>',
     '</div>',
     '<button type="button" class="lvl__back" id="l2-back">返回总览</button>'
@@ -481,6 +483,10 @@
   const playBtn = ui.querySelector('#l2-play');
   const stepBtn = ui.querySelector('#l2-step');
   const replayBtn = ui.querySelector('#l2-replay');
+  const outletBtns = Array.prototype.slice.call(ui.querySelectorAll('[data-outlet]'));
+  const targetBtns = Array.prototype.slice.call(ui.querySelectorAll('[data-target]'));
+  outletBtns.forEach(function (b) { b.addEventListener('click', function () { pickOutlet(b.getAttribute('data-outlet')); }); });
+  targetBtns.forEach(function (b) { b.addEventListener('click', function () { assignTank(b.getAttribute('data-target')); }); });
   structureBtn.addEventListener('click', function () { applyStructure(!structMode); });
   playBtn.addEventListener('click', function () { if (runningSep) pauseSeparation(); else startSeparation(); });
   stepBtn.addEventListener('click', stepSeparation);
@@ -499,6 +505,8 @@
       o.ring.scale.setScalar(o.key === key ? 1.5 : 1);
       o.ring.material.emissiveIntensity = o.key === key ? 2.2 : 1.0;
     });
+    outletBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-outlet') === key)); });
+    targetBtns.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
     const o = built.OUTLETS.find(x => x.key === key);
     note.textContent = '已选「' + o.name + '」出口，现在点一个去向';
   }
@@ -509,7 +517,7 @@
     const t = built.TANKS.find(x => x.key === key);
     const ok = picked === key;
     hint.textContent = ok ? '对了 · ' + o.name + ' → ' + t.name : '再看一眼：' + o.name + ' 不该进 ' + t.name;
-    if (stage.setInteraction) stage.setInteraction('assign_outlet_target', picked + '>' + key, ok ? '正确去向' : '错误去向');
+    if (stage.setInteraction) stage.setInteraction('assign_outlet_target', picked + '>' + key, '示意', ok ? 'success' : 'error');
 
     /* 一次性输送的粒子，走完落位 */
     const from = new THREE.Vector3(o.pos[0], o.pos[1] + (o.dir === 'up' ? 0.7 : o.dir === 'down' ? -0.7 : 0), o.pos[2] + (o.dir === 'front' ? 0.75 : 0));
@@ -524,7 +532,9 @@
     const t0 = performance.now();
     (function step() {
       const k = Math.min(1, (performance.now() - t0) / 900);
-      dot.position.copy(curve.getPoint(k));
+      /* Wrong target goes to the target and returns: "拦截" is visible. */
+      const p = ok ? k : (k < 0.5 ? k * 2 : (1 - k) * 2);
+      dot.position.copy(curve.getPoint(p));
       if (k < 1) requestAnimationFrame(step);
       else {
         G.remove(dot);
@@ -536,8 +546,9 @@
           note.textContent = o.name + '已进' + t.name;
           if (solved.gas && solved.oil && solved.water) complete();
         } else {
-          note.textContent = '送错了：' + o.name + ' 回到了分离器';
+          note.textContent = '错误去向已拦截，未实际送达，请重新选择';
         }
+        targetBtns.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
         picked = null;
         built.OUTLETS.forEach(function (x) { x.ring.scale.setScalar(1); x.ring.material.emissiveIntensity = 1.0; });
       }
@@ -548,10 +559,11 @@
     completed = true;
     ui.classList.add('done');
     hint.textContent = '已完成 · 三相分离';
+    if (stage.setInteraction) stage.setInteraction('complete_separation', 'gas,oil,water', '完成', 'success');
+    if (stage.setNodeDone) stage.setNodeDone(1, true);
     const log = (window.__leadai && window.__leadai.ledger) || [];
     log.push({ k: '看', t: '地面处理：三相分离器' });
     log.push({ k: '动手', t: '把气、油、水接到正确出口' });
-    if (stage.setNodeDone) stage.setNodeDone(1, true);
     back.classList.add('pulse');
     back.textContent = '完成，返回总览 →';
     act.hidden = true;
@@ -610,9 +622,11 @@
     /* The overview hero is material-merged under separator__*; hide it so
        the detail Hero does not render a second shell in the same place. */
     overviewSeparator = [];
+    sepTimers.forEach(clearTimeout);
+    sepTimers = [];
     hideOverviewSeparator();
-    setTimeout(hideOverviewSeparator, 500);
-    setTimeout(hideOverviewSeparator, 1400);
+    sepTimers.push(setTimeout(function () { if (window.__l2active) hideOverviewSeparator(); }, 500));
+    sepTimers.push(setTimeout(function () { if (window.__l2active) hideOverviewSeparator(); }, 1400));
     G.visible = true;
     if (stage.setContextObject) stage.setContextObject('three_phase_separator', 'gathering');
     if (stage.deviceState) stage.deviceState.select('three_phase_separator');
@@ -646,6 +660,8 @@
     ui.classList.remove('on', 'done');
     document.body.classList.remove('in-level');
     window.__l2active = false;
+    sepTimers.forEach(clearTimeout);
+    sepTimers = [];
     G.visible = false;
     overviewSeparator.forEach(function (rec) { rec.parent.add(rec.object); rec.object.visible = true; });
     overviewSeparator = [];
@@ -663,7 +679,7 @@
 
   back.onclick = exit;
   window.__lvlEntry(1, '进入 02 地面处理', enter);
-  window.__l2 = { enter: enter, exit: exit, pickOutlet: pickOutlet, assignTank: assignTank, screenPoint: screenPoint, get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; }, applyStructure: applyStructure, startSeparation: startSeparation, pauseSeparation: pauseSeparation, stepSeparation: stepSeparation, replaySeparation: replaySeparation, get assetLoaded() { return assetLoaded; }, get assetFailed() { return assetFailed; }, get structMode() { return structMode; }, get running() { return runningSep; }, get paused() { return pausedSep; }, get phaseT() { return phaseT; } };
+  window.__l2 = { enter: enter, exit: exit, pickOutlet: pickOutlet, assignTank: assignTank, screenPoint: screenPoint, get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; }, applyStructure: applyStructure, startSeparation: startSeparation, pauseSeparation: pauseSeparation, stepSeparation: stepSeparation, replaySeparation: replaySeparation, get assetLoaded() { return assetLoaded; }, get assetFailed() { return assetFailed; }, get structMode() { return structMode; }, get running() { return runningSep; }, get paused() { return pausedSep; }, get phaseT() { return phaseT; }, get completed() { return completed; }, get solved() { return Object.assign({}, solved); }, get phaseDots() { return phaseFlows.reduce(function (n, f) { return n + f.items.filter(function (d) { return d.visible; }).length; }, 0); } };
 })();
 
 

@@ -74,28 +74,51 @@ function getJson(url) {
   await evalPage(`document.querySelector('#l2-structure').click()`);
   await wait(900);
   await evalPage(`document.querySelector('#l2-play').click()`);
-  await wait(2400);
+  await wait(1400);
   await shot('phase05-02-separator-internal.png');
   const internal = await evalPage(`({struct:window.__l2.structMode,running:window.__l2.running,phaseT:window.__l2.phaseT,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),state:window.PETRO_DEVICE_STATE.get('three_phase_separator')})`);
 
+  /* P1-01: paused/step particles must remain visible and freeze. */
+  await evalPage(`document.querySelector('#l2-play').click()`);
+  await wait(500);
+  const paused = await evalPage(`({running:window.__l2.running,paused:window.__l2.paused,phaseT:window.__l2.phaseT,dots:window.__l2.phaseDots,play:document.querySelector('#l2-play').textContent})`);
+  await evalPage(`document.querySelector('#l2-step').click()`);
+  await wait(350);
+  const stepped = await evalPage(`({running:window.__l2.running,paused:window.__l2.paused,phaseT:window.__l2.phaseT,dots:window.__l2.phaseDots,play:document.querySelector('#l2-play').textContent,aria:document.querySelector('#l2-play').getAttribute('aria-pressed')})`);
+  await evalPage(`document.querySelector('#l2-play').click()`);
+  await wait(500);
+
   const click3d = async (kind, key) => evalPage(`(function(){var p=window.__l2.screenPoint('${kind}','${key}'); if(!p)return null; var el=document.getElementById('viewport'); el.dispatchEvent(new PointerEvent('pointerdown',{clientX:p.x,clientY:p.y,bubbles:true})); el.dispatchEvent(new PointerEvent('pointerup',{clientX:p.x,clientY:p.y,bubbles:true})); return p;})()`);
+  const domPair = async (outletKey, targetKey) => evalPage(`(function(){var o=document.querySelector('[data-outlet="${outletKey}"]');var t=document.querySelector('[data-target="${targetKey}"]');if(!o||!t)return {ok:false};o.click();t.click();return {ok:true,outlet:o.getAttribute('aria-label')||o.textContent,target:t.textContent};})()`);
   await click3d('outlet', 'oil');
   await wait(600);
   await click3d('tank', 'gas');
   await wait(1100);
   await shot('phase05-03a-wrong-target.png');
   const wrong = await evalPage(`({ctx:JSON.parse(JSON.stringify(window.__sceneContext)),note:document.querySelector('#l2-note').textContent})`);
-  await click3d('outlet', 'oil');
-  await wait(500);
-  await click3d('tank', 'oil');
-  await wait(1400);
+  /* P1-04: all three correct paths via real HTML target buttons. */
+  await domPair('gas', 'gas');
+  await wait(1100);
+  await domPair('oil', 'oil');
+  await wait(1100);
   await shot('phase05-03-outlet-choice.png');
+  await domPair('water', 'water');
+  await wait(1200);
+  await shot('phase05-03b-complete.png');
   const outlet = await evalPage(`({last:window.__l2.lastInteraction,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),note:document.querySelector('#l2-note').textContent})`);
+  const completed = await evalPage(`({completed:window.__l2.completed,solved:window.__l2.solved,actHidden:document.querySelector('#l2-act').hidden,nodeDone:document.querySelectorAll('#stages [data-stage="1"].done-level').length})`);
 
   await evalPage(`window.__l2.exit()`);
   await wait(1800);
   await shot('phase05-04-back-overview.png');
   const back = await evalPage(`({level:window.__stage.isLevel(),ctx:JSON.parse(JSON.stringify(window.__sceneContext))})`);
+
+  /* P1-02: quick enter/exit must not let delayed overview hides remove it again. */
+  await evalPage(`window.__stage.selectStage(1,true); window.__stage.levelHook(1)()`);
+  await wait(280);
+  await evalPage(`window.__l2.exit()`);
+  await wait(1800);
+  const quickExit = await evalPage(`(function(){var n=0,v=0;window.__stage.baseScene.traverse(function(o){if(o.isMesh&&/^separator__/.test(o.name||'')){n++;if(o.visible)v++;}});return {level:window.__stage.isLevel(),active:!!window.__l2active,separatorMeshes:n,visible:v};})()`);
 
   await evalPage(`window.__stage.selectStage(2,true); window.__stage.levelHook(2)()`);
   await wait(2200);
@@ -105,7 +128,7 @@ function getJson(url) {
   await wait(400);
   await wait(1300);
   await shot('phase05-06-storage-cut.png');
-  const storage = await evalPage(`({level:window.__stage.isLevel(),levelValue:window.__l3.level,cut:window.__l3.cutMode,pumpRunning:window.__l3.pumpRunning,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),state:window.PETRO_DEVICE_STATE.get('fixed_roof_tank')})`);
+  const storage = await evalPage(`({level:window.__stage.isLevel(),levelValue:window.__l3.level,cut:window.__l3.cutMode,pumpRunning:window.__l3.pumpRunning,routeInfo:window.__l3.routeInfo,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),state:window.PETRO_DEVICE_STATE.get('fixed_roof_tank')})`);
 
   await evalPage(`document.querySelector('#l3-float').click()`);
   await wait(900);
@@ -119,10 +142,10 @@ function getJson(url) {
 
   const result = {
     date: '2026-11-23', page: URL, viewport: '1440x900',
-    overview, external, internal, outlet, back, storage, floating, exit,
+    overview, external, internal, paused, stepped, wrong, outlet, completed, back, quickExit, storage, floating, exit,
     screenshots: [
       'phase05-01-separator-external.png', 'phase05-02-separator-internal.png',
-      'phase05-03-outlet-choice.png', 'phase05-04-back-overview.png',
+      'phase05-03a-wrong-target.png', 'phase05-03-outlet-choice.png', 'phase05-03b-complete.png', 'phase05-04-back-overview.png',
       'phase05-05-storage-external.png', 'phase05-06-storage-cut.png',
       'phase05-07-floating-tank.png', 'phase05-08-storage-overview.png'
     ]
@@ -131,3 +154,4 @@ function getJson(url) {
   console.log('RESULT', JSON.stringify(result, null, 2));
   ws.close();
 })().catch((e) => { console.error('FAIL', e); process.exit(1); });
+

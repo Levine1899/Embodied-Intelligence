@@ -4,7 +4,7 @@
 
 - 日期：2026-11-23
 - 阶段：05_PRODUCTION_STORAGE
-- 状态建议：**PASS（阶段 05 修复后技术/交互范围；视觉细节 P1）**
+- 状态建议：**REVISE（阶段 05 技术项已修复；阶段 06 仍被用户签收门禁阻塞）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`3890822b66041c4d4d0dca6ad9a976cd08d288f5`（阶段 04 rev4）
 - 结束 Commit：`b6d2f047e06204d525a0c4869e5574a20d195704`
@@ -24,7 +24,16 @@
 - 分离器：新增半壳 `separator_cut_shell`、上下切边、圆柱切片液层；`.blend/OBJ/GLB` 重导出；网页以半透明壳+内部切片+相层标签显示，避免矩形箱体。
 - l2：补齐 `inspect_separator_structure`、`start/pause/step/replay_separation`、`assign_outlet_target`；初始按钮改“启动分离”；修复壳/动画重进 UI 同步；出口/去向改用真实 pointer 事件测试。
 - l3：补齐 `inspect_tank_structure`、`start/pause/replay_pump`；添加选中环、液位/剖面/泵状态重进同步；修复 `lastInteraction`。
-- 证据：新增 `phase05-03a-wrong-target.png`；重录 66.15s 录屏；交接与 README 更新为 9 张截图。
+- 证据：新增 `phase05-03a-wrong-target.png`、`phase05-03b-complete.png`；重录 71.55s 录屏；交接与 README 更新为 10 张截图。
+
+## 2a. Review P1 修复验证
+
+- P1-01：暂停后 `phaseDots=21`，单步后仍为 21 且 `phaseT` 前进；播放按钮为“继续分离”并同步 `aria-pressed=false`。
+- P1-02：进入后 280ms 快速退出，`quickExit.active=false`、`separatorMeshes=5`、`visible=5`，暂存的 overview Mesh 全部恢复。
+- P1-03：气/油/水出口和三个去向都有真实 HTML 按钮；验证脚本通过 DOM 按钮完成三条正确路径。
+- P1-04：`solved={gas:true,oil:true,water:true}`、`completed=true`、`actHidden=true`、`nodeDone=1`，保留 `phase05-03b-complete.png`。
+- P1-05：`__l3.routeInfo.pathId='path_store_refine'`，本地泵送终点 localEnd 与全局 storageOutlet 使用同一坐标。
+- P1-06：Manifest 统计 7,364 tris / 43 meshObjects / 3,790 verts，附 4 个文件 SHA-256；交接日志同步。
 
 ## 2b. 任务逐项
 
@@ -40,10 +49,10 @@
 | 液位/气相空间 | **通过** | 0–100 滑块；`fixed_roof_tank.level=0.55`；页面显示油气空间 |
 | 泵送/暂停/重播/路径 | **通过** | 泵送粒子、方向、暂停/重播；`phase05-06` |
 | 外浮顶非零排放 | **通过** | 顶部提示“减少油气空间，不等于零排放”；文案不换算排放 |
-| 总览→近景→返回 | **通过** | 真实 CDP 指针点击出口/罐体；`phase05-03a`、`phase05-03`、`phase05-04`；context 保留 stage/zone |
+| 总览→近景→返回 | **通过** | 真实 CDP 指针+HTML 按钮；`phase05-03a`、`phase05-03`、`phase05-03b`、`phase05-04`；快速退出计时器测试通过 |
 | 交互矩阵 ≥3 | **通过** | `production-storage-experience.md` §3/§4，5 个矩阵 |
-| 真实截图 ≥6 | **通过** | 9 张 1440×900 |
-| 实时连续录屏 | **通过** | `production-storage-continuity.mp4`，1440×900，66.15s |
+| 真实截图 ≥6 | **通过** | 10 张 1440×900 |
+| 实时连续录屏 | **通过** | `production-storage-continuity.mp4`，1440×900，71.55s |
 | 五关回归 | **通过** | E2E l1–l5 通过；17 devices |
 | 深链/章节/塔页 | **通过** | navcheck 退出 0 |
 | 阶段 06 塔 | **不适用** | 未开始 |
@@ -65,13 +74,13 @@
 
 ```bash
 "D:\tools\blender\blender-4.5.16-windows-x64\blender.exe" -b -P tools/blender/build_separator_hero.py
-# -> @@SEPARATOR_ASSET_OK@@; 6,924 tris; 40 mesh; OBJ 474 KB; GLB 377 KB; .blend 1.07 MB
+# -> 7,364 tris; 43 meshObjects; 3,790 verts; OBJ 495,915 B; GLB 391,188 B; .blend 1,119,702 B
 
 node --check web/levels/l2.js        # exit 0
 node --check web/levels/l3.js        # exit 0
 node --check web/world/registry.js   # exit 0
-node tools/phase05-verify.cjs        # exit 0; 真实 pointer 点出口/罐体
-node tools/phase05-record.cjs        # exit 0; 66.15s; 3,985,070 B
+node tools/phase05-verify.cjs        # exit 0; 暂停/单步粒子、三相完整路径、DOM 按钮、真实 pointer
+node tools/phase05-record.cjs        # exit 0; 71.55s; 4,312,470 B
 node .../level-e2e-rev2.cjs          # l1–l5 exit 0
 node .../navcheck.cjs                # #stage=0..4/章节/塔页 exit 0
 ```
@@ -91,7 +100,7 @@ node .../navcheck.cjs                # #stage=0..4/章节/塔页 exit 0
 | 罐体剖面/泵送 | 通过 | `phase05-06-storage-cut.png` |
 | 外浮顶 | 通过 | `phase05-07-floating-tank.png` |
 | 返回储运总览 | 通过 | `phase05-08-storage-overview.png` |
-| 连续录屏 | 通过 | `production-storage-continuity.mp4`（66.15s, 1440×900） |
+| 连续录屏 | 通过 | `production-storage-continuity.mp4`（71.55s, 1440×900） |
 | 断言 | 通过 | `phase05-verify.json` |
 | Hero 检查视图 | 通过 | `asset-front/side/45/internal/internal-side.png` |
 | Hero 清单 | 通过 | `separator-asset-manifest.json` |
@@ -100,7 +109,8 @@ node .../navcheck.cjs                # #stage=0..4/章节/塔页 exit 0
 
 ### P0（未关闭则不得 PASS）
 
-- **无阶段 05 P0 剩余。** 分离器 Hero 有 `.blend`、OBJ/MTL、GLB、内部语义节点、网页加载与真实截图/录屏；储罐泵送有状态变化和路径。
+- **P0-GOV-01 未关闭（流程门禁）。** 阶段 04 handoff 仍为 `待用户签收`；阶段 05 仍为 `待用户签收`。Agent 不能代签，因此在用户本人明确签收前，阶段 06 必须 BLOCKED。
+- 分离器/储罐/泵送的实现 P0 已修复；资产和交互证据见下。
 
 ### P1
 
@@ -134,8 +144,8 @@ node .../navcheck.cjs                # #stage=0..4/章节/塔页 exit 0
 
 ## 9. Agent recommendation
 
-- 建议：**PASS（阶段 05 修复后技术/交互范围）**
-- 理由：同一 objectId/状态源、分离器内部/三相路径/出口、储罐液位/剖面、泵送路径/暂停重播、9 张真实截图和 66.15s 连续录屏、五关回归均有实际证据。
+- 建议：**技术项 PASS；阶段 06 BLOCKED（等待用户签收阶段 04/05）**
+- 理由：同一 objectId/状态源、分离器内部/三相路径/出口、储罐液位/剖面、泵送路径/暂停重播、10 张真实截图和 71.55s 连续录屏、五关回归均有实际证据。
 - 未关闭项：视觉细节、储罐独立 Hero、全球管线连接、性能/用户测试/跨浏览器属后续；不阻塞本阶段技术 PASS。
 
 ## 10. User acceptance

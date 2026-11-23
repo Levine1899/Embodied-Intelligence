@@ -48,7 +48,8 @@
   "stats": {
     "triangles": 7364,
     "vertices": 3790,
-    "meshObjects": 43
+    "meshObjects": 43,
+    "basis": "all Blender mesh objects in the final .blend after cutaway/liquid-slab build; includes hidden internal/cutaway pieces; OBJ/GLB are exports of the same scene"
   },
   "objects": [
     {
@@ -524,5 +525,17 @@
         2.08
       ]
     }
-  ]
+  ],
+  "fileHashes": {
+    "blend": "1f29a0776989b006f44413ca14d5fdbfa79bbf5287555db8aa9aefea578bfa79",
+    "obj": "02c49491b219033fc7939c3fc3a63cf817bed7dff472dabc32be09327a0c3145",
+    "mtl": "1a285ff8a66d55469fb100dd796c69996b2cc5e274b874eb0f94cc15c0c23990",
+    "glb": "741c0ee6a0ad9e630f264c66900d2c3d54ec055034addd0f44570301c595d18b"
+  },
+  "fileSizes": {
+    "blend": 1119702,
+    "obj": 495915,
+    "mtl": 1404,
+    "glb": 391188
+  }
 }

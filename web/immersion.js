@@ -1665,23 +1665,24 @@
     });
   }
 
-  function setInteraction(action, value, unit) {
+  function setInteraction(action, value, unit, result) {
     if (!window.__sceneContext) syncSceneContext(currentStage, null, null, null);
     const ctx = window.__sceneContext;
     if (Array.isArray(ctx.history)) history = ctx.history.slice(-12);
+    const outcome = result == null ? null : result;
     const record = {
       action: action,
       value: value,
       unit: unit || '示意',
       actionId: action,
-      result: null
+      result: outcome
     };
     ctx.interaction = record;
     ctx.experienceMode = mode || ctx.experienceMode;
     ctx.mode = ctx.experienceMode;
     history.push({
       action: action, value: value, unit: unit || '示意',
-      actionId: action, result: null,
+      actionId: action, result: outcome,
       stageId: ctx.stageId, levelId: ctx.levelId || null,
       time: new Date().toTimeString().slice(0, 8)
     });
@@ -1926,13 +1927,23 @@
       document.dispatchEvent(new CustomEvent('stage-level'));
     },
     isLevel() { return !!activeScene; },
-    setInteraction(action, value, unit) { setInteraction(action, value, unit); },
+    setInteraction(action, value, unit, result) { setInteraction(action, value, unit, result); },
     setContextObject(objectId, zoneId) {
       const info = window.PETRO_REGISTRY ? window.PETRO_REGISTRY.getDevice(objectId) : null;
       window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.select(objectId || null);
       syncSceneContext(currentStage, objectId || null, null, zoneId || (info ? info.zoneId : null));
     },
     showDevice(objectId) { const info = DEVICE_INFO[objectId]; if (info) selectStage(info.stage, true, objectId); },
+    getRoute(pathId) {
+      const hit = pipes.filter(function (p) { return p.pathId === pathId; })[0];
+      if (!hit) return null;
+      return {
+        pathId: pathId,
+        start: hit.curve.getPoint(0),
+        end: hit.curve.getPoint(1),
+        curve: hit.curve
+      };
+    },
     get scene() { return activeScene || scene; },
     get baseScene() { return scene; },
     get nodes() { return modelGroups.map(function (g) { return g.position.clone(); }); },

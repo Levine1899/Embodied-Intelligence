@@ -51,7 +51,7 @@
 | 知识解释 | 油水气按密度/相态分层；堰板控制液位 | 重力分离不是过滤；气相上浮 | 气→气回收/处理；油→油储罐；水→采出水处理 |
 | 错误/边界反馈 | 资源未加载时提示备用剖面，不冒充 Hero | 未加载不可启动 | 选错去向：红色粒子 + “不该进…”解释 |
 | 重置/恢复 | “恢复外壳”/重进保留 Store 结构 | “暂停/重播” | 退出再进保留已完成出口 |
-| 可访问替代 | `l2-structure` 键盘按钮；HTML 出口按钮不是唯一入口 | 播放/单步/重播按钮 | 出口标签 + 键盘按钮 |
+| 可访问替代 | `l2-structure` 按钮；**真实 HTML 气/油/水出口与三个去向按钮**，与 3D 共用同一 `pickOutlet/assignTank` | 播放/暂停/单步/重播按钮 | 出口/去向按钮 + `aria-pressed`；已验证按钮路径 |
 | AI 上下文 | stage=gather, objectId=three_phase_separator, knowledge=kb_gather | 同左 | interaction=choose_outlet |
 | 验收证据 | `phase05-02-separator-internal.png` | `phase05-02`；录屏 | `phase05-03-outlet-choice.png`；`phase05-verify.json` |
 
@@ -100,12 +100,12 @@
 | 无真实仿真数据伪造 | 通过 | 页面文案 + 无工程数值 |
 | 分离器 Hero `.blend`/运行格式/语义/许可 | 最小通过 | `separator_hero.blend`、OBJ/MTL/GLB、manifest、5 检查视图 |
 | 分离器/储罐各 2–3 个真实状态变化 | 通过 | 本文矩阵；截图/录屏 |
-| 连续录屏 | 通过 | `production-storage-continuity.mp4`，66.15s，1440×900 |
+| 连续录屏 | 通过 | `production-storage-continuity.mp4`，71.55s，1440×900 |
 
 ## 6. 未覆盖 / 已知限制
 
 - 储罐是程序化几何，不是独立 Hero `.blend`；罐体细节与浮顶结构仍属教学级。
-- 泵送路径是**本地区段示意**，没有把每米管线接入全球场景的真实管廊；世界级 `path_store_refine` 只提供方向。
+- 泵送局部曲线的终点已映射到全局 `path_store_refine` 的 storage 出口坐标；全局管廊仍由总览路径提供，未做工程级逐米管线。
 - 未执行 FPS/内存长跑、跨浏览器、移动端、真实用户测试；不得声称通过。
 - 未执行 AI `/api/ask` 闭环。
 - 外部再分发许可仍需权利人确认；见 manifest。

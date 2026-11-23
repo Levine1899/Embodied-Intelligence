@@ -1,6 +1,6 @@
 {
   "date": "2026-11-23",
-  "page": "http://127.0.0.1:8796/sandbox.html?rev=phase05v-1795402131199#stage=1",
+  "page": "http://127.0.0.1:8796/sandbox.html?rev=phase05v-1795404008439#stage=1",
   "viewport": "1440x900",
   "overview": {
     "devices": 17,
@@ -36,7 +36,7 @@
   "internal": {
     "struct": true,
     "running": true,
-    "phaseT": 0.571757999999672,
+    "phaseT": 0.35164799999967206,
     "ctx": {
       "sceneId": "oil_industry_journey",
       "scene": "oil_industry_journey",
@@ -70,7 +70,7 @@
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:48:57"
+          "time": "11:20:14"
         },
         {
           "action": "start_separation",
@@ -80,7 +80,7 @@
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:48:58"
+          "time": "11:20:15"
         }
       ]
     },
@@ -97,14 +97,22 @@
       ]
     }
   },
-  "outlet": {
-    "last": {
-      "action": "assign_outlet_target",
-      "value": "oil>oil",
-      "unit": "正确去向",
-      "actionId": "assign_outlet_target",
-      "result": null
-    },
+  "paused": {
+    "running": false,
+    "paused": true,
+    "phaseT": 0.3552120000003277,
+    "dots": 21,
+    "play": "继续分离"
+  },
+  "stepped": {
+    "running": false,
+    "paused": true,
+    "phaseT": 0.4752120000003277,
+    "dots": 21,
+    "play": "继续分离",
+    "aria": "false"
+  },
+  "wrong": {
     "ctx": {
       "sceneId": "oil_industry_journey",
       "scene": "oil_industry_journey",
@@ -124,10 +132,10 @@
       "mode": "free",
       "interaction": {
         "action": "assign_outlet_target",
-        "value": "oil>oil",
-        "unit": "正确去向",
+        "value": "oil>gas",
+        "unit": "示意",
         "actionId": "assign_outlet_target",
-        "result": null
+        "result": "error"
       },
       "history": [
         {
@@ -138,7 +146,7 @@
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:48:57"
+          "time": "11:20:14"
         },
         {
           "action": "start_separation",
@@ -148,7 +156,37 @@
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:48:58"
+          "time": "11:20:15"
+        },
+        {
+          "action": "pause_separation",
+          "value": "paused",
+          "unit": "示意",
+          "actionId": "pause_separation",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:16"
+        },
+        {
+          "action": "step_separation",
+          "value": "step",
+          "unit": "示意",
+          "actionId": "step_separation",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:17"
+        },
+        {
+          "action": "start_separation",
+          "value": "started",
+          "unit": "示意",
+          "actionId": "start_separation",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:17"
         },
         {
           "action": "choose_outlet",
@@ -158,17 +196,84 @@
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:00"
+          "time": "11:20:18"
         },
         {
           "action": "assign_outlet_target",
           "value": "oil>gas",
-          "unit": "错误去向",
+          "unit": "示意",
           "actionId": "assign_outlet_target",
+          "result": "error",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:18"
+        }
+      ]
+    },
+    "note": "错误去向已拦截，未实际送达，请重新选择"
+  },
+  "outlet": {
+    "last": {
+      "action": "complete_separation",
+      "value": "gas,oil,water",
+      "unit": "完成",
+      "actionId": "complete_separation",
+      "result": "success"
+    },
+    "ctx": {
+      "sceneId": "oil_industry_journey",
+      "scene": "oil_industry_journey",
+      "registrySceneId": "petro-chain-v3",
+      "stageId": "gather",
+      "stage": 1,
+      "zoneId": "gathering",
+      "levelId": "l2",
+      "selectedObjectId": "three_phase_separator",
+      "object": "three_phase_separator",
+      "deviceName": "三相分离器",
+      "knowledgeIds": [
+        "kb_gather"
+      ],
+      "knowledge": "kb_gather",
+      "experienceMode": "free",
+      "mode": "free",
+      "interaction": {
+        "action": "complete_separation",
+        "value": "gas,oil,water",
+        "unit": "完成",
+        "actionId": "complete_separation",
+        "result": "success"
+      },
+      "history": [
+        {
+          "action": "pause_separation",
+          "value": "paused",
+          "unit": "示意",
+          "actionId": "pause_separation",
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:01"
+          "time": "11:20:16"
+        },
+        {
+          "action": "step_separation",
+          "value": "step",
+          "unit": "示意",
+          "actionId": "step_separation",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:17"
+        },
+        {
+          "action": "start_separation",
+          "value": "started",
+          "unit": "示意",
+          "actionId": "start_separation",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:17"
         },
         {
           "action": "choose_outlet",
@@ -178,21 +283,101 @@
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:02"
+          "time": "11:20:18"
+        },
+        {
+          "action": "assign_outlet_target",
+          "value": "oil>gas",
+          "unit": "示意",
+          "actionId": "assign_outlet_target",
+          "result": "error",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:18"
+        },
+        {
+          "action": "choose_outlet",
+          "value": "gas",
+          "unit": "示意",
+          "actionId": "choose_outlet",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:20"
+        },
+        {
+          "action": "assign_outlet_target",
+          "value": "gas>gas",
+          "unit": "示意",
+          "actionId": "assign_outlet_target",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:20"
+        },
+        {
+          "action": "choose_outlet",
+          "value": "oil",
+          "unit": "示意",
+          "actionId": "choose_outlet",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:21"
         },
         {
           "action": "assign_outlet_target",
           "value": "oil>oil",
-          "unit": "正确去向",
+          "unit": "示意",
           "actionId": "assign_outlet_target",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:21"
+        },
+        {
+          "action": "choose_outlet",
+          "value": "water",
+          "unit": "示意",
+          "actionId": "choose_outlet",
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:03"
+          "time": "11:20:22"
+        },
+        {
+          "action": "assign_outlet_target",
+          "value": "water>water",
+          "unit": "示意",
+          "actionId": "assign_outlet_target",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:22"
+        },
+        {
+          "action": "complete_separation",
+          "value": "gas,oil,water",
+          "unit": "完成",
+          "actionId": "complete_separation",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:23"
         }
       ]
     },
-    "note": "油已进油储罐"
+    "note": "水已进采出水处理"
+  },
+  "completed": {
+    "completed": true,
+    "solved": {
+      "gas": true,
+      "oil": true,
+      "water": true
+    },
+    "actHidden": true,
+    "nodeDone": 1
   },
   "back": {
     "level": false,
@@ -216,14 +401,24 @@
       "interaction": null,
       "history": [
         {
-          "action": "inspect_separator_structure",
-          "value": "half",
+          "action": "pause_separation",
+          "value": "paused",
           "unit": "示意",
-          "actionId": "inspect_separator_structure",
+          "actionId": "pause_separation",
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:48:57"
+          "time": "11:20:16"
+        },
+        {
+          "action": "step_separation",
+          "value": "step",
+          "unit": "示意",
+          "actionId": "step_separation",
+          "result": null,
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:17"
         },
         {
           "action": "start_separation",
@@ -233,7 +428,7 @@
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:48:58"
+          "time": "11:20:17"
         },
         {
           "action": "choose_outlet",
@@ -243,17 +438,37 @@
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:00"
+          "time": "11:20:18"
         },
         {
           "action": "assign_outlet_target",
           "value": "oil>gas",
-          "unit": "错误去向",
+          "unit": "示意",
           "actionId": "assign_outlet_target",
+          "result": "error",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:18"
+        },
+        {
+          "action": "choose_outlet",
+          "value": "gas",
+          "unit": "示意",
+          "actionId": "choose_outlet",
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:01"
+          "time": "11:20:20"
+        },
+        {
+          "action": "assign_outlet_target",
+          "value": "gas>gas",
+          "unit": "示意",
+          "actionId": "assign_outlet_target",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:20"
         },
         {
           "action": "choose_outlet",
@@ -263,26 +478,80 @@
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:02"
+          "time": "11:20:21"
         },
         {
           "action": "assign_outlet_target",
           "value": "oil>oil",
-          "unit": "正确去向",
+          "unit": "示意",
           "actionId": "assign_outlet_target",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:21"
+        },
+        {
+          "action": "choose_outlet",
+          "value": "water",
+          "unit": "示意",
+          "actionId": "choose_outlet",
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:03"
+          "time": "11:20:22"
+        },
+        {
+          "action": "assign_outlet_target",
+          "value": "water>water",
+          "unit": "示意",
+          "actionId": "assign_outlet_target",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:22"
+        },
+        {
+          "action": "complete_separation",
+          "value": "gas,oil,water",
+          "unit": "完成",
+          "actionId": "complete_separation",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:23"
         }
       ]
     }
+  },
+  "quickExit": {
+    "level": false,
+    "active": false,
+    "separatorMeshes": 5,
+    "visible": 5
   },
   "storage": {
     "level": true,
     "levelValue": 0.55,
     "cut": true,
     "pumpRunning": true,
+    "routeInfo": {
+      "pathId": "path_store_refine",
+      "storageOutlet": [
+        14.301598740484511,
+        3.75,
+        -6.418109474885004
+      ],
+      "refineryFeed": [
+        18.705724627095993,
+        4.749999999999999,
+        -9.440079577626497
+      ],
+      "localEnd": [
+        4.301598740484511,
+        3.75,
+        -1.4181094748850036
+      ]
+    },
     "ctx": {
       "sceneId": "oil_industry_journey",
       "scene": "oil_industry_journey",
@@ -309,44 +578,34 @@
       },
       "history": [
         {
-          "action": "inspect_separator_structure",
-          "value": "half",
+          "action": "assign_outlet_target",
+          "value": "oil>gas",
           "unit": "示意",
-          "actionId": "inspect_separator_structure",
-          "result": null,
+          "actionId": "assign_outlet_target",
+          "result": "error",
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:48:57"
-        },
-        {
-          "action": "start_separation",
-          "value": "started",
-          "unit": "示意",
-          "actionId": "start_separation",
-          "result": null,
-          "stageId": "gather",
-          "levelId": "l2",
-          "time": "10:48:58"
+          "time": "11:20:18"
         },
         {
           "action": "choose_outlet",
-          "value": "oil",
+          "value": "gas",
           "unit": "示意",
           "actionId": "choose_outlet",
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:00"
+          "time": "11:20:20"
         },
         {
           "action": "assign_outlet_target",
-          "value": "oil>gas",
-          "unit": "错误去向",
+          "value": "gas>gas",
+          "unit": "示意",
           "actionId": "assign_outlet_target",
-          "result": null,
+          "result": "success",
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:01"
+          "time": "11:20:20"
         },
         {
           "action": "choose_outlet",
@@ -356,17 +615,47 @@
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:02"
+          "time": "11:20:21"
         },
         {
           "action": "assign_outlet_target",
           "value": "oil>oil",
-          "unit": "正确去向",
+          "unit": "示意",
           "actionId": "assign_outlet_target",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:21"
+        },
+        {
+          "action": "choose_outlet",
+          "value": "water",
+          "unit": "示意",
+          "actionId": "choose_outlet",
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:03"
+          "time": "11:20:22"
+        },
+        {
+          "action": "assign_outlet_target",
+          "value": "water>water",
+          "unit": "示意",
+          "actionId": "assign_outlet_target",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:22"
+        },
+        {
+          "action": "complete_separation",
+          "value": "gas,oil,water",
+          "unit": "完成",
+          "actionId": "complete_separation",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:23"
         },
         {
           "action": "inspect_tank_structure",
@@ -376,7 +665,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:06"
+          "time": "11:20:28"
         },
         {
           "action": "change_liquid_level",
@@ -386,7 +675,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:10"
+          "time": "11:20:31"
         },
         {
           "action": "inspect_tank_structure",
@@ -396,7 +685,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:10"
+          "time": "11:20:31"
         },
         {
           "action": "start_pump",
@@ -406,7 +695,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:10"
+          "time": "11:20:31"
         }
       ]
     },
@@ -457,44 +746,24 @@
       },
       "history": [
         {
-          "action": "inspect_separator_structure",
-          "value": "half",
-          "unit": "示意",
-          "actionId": "inspect_separator_structure",
-          "result": null,
-          "stageId": "gather",
-          "levelId": "l2",
-          "time": "10:48:57"
-        },
-        {
-          "action": "start_separation",
-          "value": "started",
-          "unit": "示意",
-          "actionId": "start_separation",
-          "result": null,
-          "stageId": "gather",
-          "levelId": "l2",
-          "time": "10:48:58"
-        },
-        {
           "action": "choose_outlet",
-          "value": "oil",
+          "value": "gas",
           "unit": "示意",
           "actionId": "choose_outlet",
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:00"
+          "time": "11:20:20"
         },
         {
           "action": "assign_outlet_target",
-          "value": "oil>gas",
-          "unit": "错误去向",
+          "value": "gas>gas",
+          "unit": "示意",
           "actionId": "assign_outlet_target",
-          "result": null,
+          "result": "success",
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:01"
+          "time": "11:20:20"
         },
         {
           "action": "choose_outlet",
@@ -504,17 +773,47 @@
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:02"
+          "time": "11:20:21"
         },
         {
           "action": "assign_outlet_target",
           "value": "oil>oil",
-          "unit": "正确去向",
+          "unit": "示意",
           "actionId": "assign_outlet_target",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:21"
+        },
+        {
+          "action": "choose_outlet",
+          "value": "water",
+          "unit": "示意",
+          "actionId": "choose_outlet",
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:03"
+          "time": "11:20:22"
+        },
+        {
+          "action": "assign_outlet_target",
+          "value": "water>water",
+          "unit": "示意",
+          "actionId": "assign_outlet_target",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:22"
+        },
+        {
+          "action": "complete_separation",
+          "value": "gas,oil,water",
+          "unit": "完成",
+          "actionId": "complete_separation",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:23"
         },
         {
           "action": "inspect_tank_structure",
@@ -524,7 +823,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:06"
+          "time": "11:20:28"
         },
         {
           "action": "change_liquid_level",
@@ -534,7 +833,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:10"
+          "time": "11:20:31"
         },
         {
           "action": "inspect_tank_structure",
@@ -544,7 +843,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:10"
+          "time": "11:20:31"
         },
         {
           "action": "start_pump",
@@ -554,7 +853,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:10"
+          "time": "11:20:31"
         },
         {
           "action": "inspect_tank_structure",
@@ -564,7 +863,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:12"
+          "time": "11:20:33"
         }
       ]
     },
@@ -603,44 +902,24 @@
       "interaction": null,
       "history": [
         {
-          "action": "inspect_separator_structure",
-          "value": "half",
-          "unit": "示意",
-          "actionId": "inspect_separator_structure",
-          "result": null,
-          "stageId": "gather",
-          "levelId": "l2",
-          "time": "10:48:57"
-        },
-        {
-          "action": "start_separation",
-          "value": "started",
-          "unit": "示意",
-          "actionId": "start_separation",
-          "result": null,
-          "stageId": "gather",
-          "levelId": "l2",
-          "time": "10:48:58"
-        },
-        {
           "action": "choose_outlet",
-          "value": "oil",
+          "value": "gas",
           "unit": "示意",
           "actionId": "choose_outlet",
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:00"
+          "time": "11:20:20"
         },
         {
           "action": "assign_outlet_target",
-          "value": "oil>gas",
-          "unit": "错误去向",
+          "value": "gas>gas",
+          "unit": "示意",
           "actionId": "assign_outlet_target",
-          "result": null,
+          "result": "success",
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:01"
+          "time": "11:20:20"
         },
         {
           "action": "choose_outlet",
@@ -650,17 +929,47 @@
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:02"
+          "time": "11:20:21"
         },
         {
           "action": "assign_outlet_target",
           "value": "oil>oil",
-          "unit": "正确去向",
+          "unit": "示意",
           "actionId": "assign_outlet_target",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:21"
+        },
+        {
+          "action": "choose_outlet",
+          "value": "water",
+          "unit": "示意",
+          "actionId": "choose_outlet",
           "result": null,
           "stageId": "gather",
           "levelId": "l2",
-          "time": "10:49:03"
+          "time": "11:20:22"
+        },
+        {
+          "action": "assign_outlet_target",
+          "value": "water>water",
+          "unit": "示意",
+          "actionId": "assign_outlet_target",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:22"
+        },
+        {
+          "action": "complete_separation",
+          "value": "gas,oil,water",
+          "unit": "完成",
+          "actionId": "complete_separation",
+          "result": "success",
+          "stageId": "gather",
+          "levelId": "l2",
+          "time": "11:20:23"
         },
         {
           "action": "inspect_tank_structure",
@@ -670,7 +979,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:06"
+          "time": "11:20:28"
         },
         {
           "action": "change_liquid_level",
@@ -680,7 +989,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:10"
+          "time": "11:20:31"
         },
         {
           "action": "inspect_tank_structure",
@@ -690,7 +999,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:10"
+          "time": "11:20:31"
         },
         {
           "action": "start_pump",
@@ -700,7 +1009,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:10"
+          "time": "11:20:31"
         },
         {
           "action": "inspect_tank_structure",
@@ -710,7 +1019,7 @@
           "result": null,
           "stageId": "store",
           "levelId": "l3",
-          "time": "10:49:12"
+          "time": "11:20:33"
         }
       ]
     },
@@ -719,7 +1028,9 @@
   "screenshots": [
     "phase05-01-separator-external.png",
     "phase05-02-separator-internal.png",
+    "phase05-03a-wrong-target.png",
     "phase05-03-outlet-choice.png",
+    "phase05-03b-complete.png",
     "phase05-04-back-overview.png",
     "phase05-05-storage-external.png",
     "phase05-06-storage-cut.png",
