@@ -7,7 +7,7 @@
 - 状态建议：**PASS（技术/交互范围；P0-ASSET-01 已修复；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`34c7839abcfec13da75f55fe61d8a23b73a86c77`
-- 结束 Commit（真实 SHA）：`e2580f7494bc0cec24194811ed76296318797f5b`（阶段 06 review 修复内容提交）
+- 结束 Commit（真实 SHA）：`__AUDIT2_SHA__`（阶段 06 audit-2 定点返修）
 - 分支：`main`
 - 工作区 `git status --short`：提交后记录（目标为空）
 
@@ -46,7 +46,7 @@
 | 常压/减压关系与科学边界 | **通过** | 减压降低沸点、避免高温裂解；不编造压力/温度/收率 |
 | 完整镜头（全景→塔→近景→半剖→全剖→进料/汽液→馏分→全景） | **通过** | `refining-continuity.mp4` |
 | 真实浏览器截图 | **通过** | 5 张 1440×900 + 2 张资产检查渲染 |
-| 实时连续录屏 | **通过** | 57.70s；1,675,828 B；1440×900 |
+| 实时连续录屏 | **通过** | 55.90s；1,445,358 B；1440×900 |
 | 更新 `docs/scene-distillation-tower.md` | **通过** | 追加阶段 06 l4 集成 |
 | 新增 `docs/refining-experience.md` | **通过** | 设备群/三状态/互动矩阵/科学边界 |
 | 交互矩阵（每个核心设备） | **通过** | 5 个矩阵：三状态、进料、汽液、塔板、馏分 |
@@ -78,7 +78,7 @@
 node --check web/levels/l4.js             # exit 0
 node --check web/world/registry.js        # exit 0
 node tools/phase06-verify.cjs              # exit 0；5 馏分、三状态、暂停、复位、退出
-node tools/phase06-record.cjs              # exit 0；1143 帧；57.70s；1,675,828 B
+node tools/phase06-record.cjs              # exit 0；1143 帧；55.90s；1,445,358 B
 node level-e2e-rev2.cjs                    # l1–l5 exit 0
 node navcheck.cjs                           # #stage=0..4、章节、塔页 exit 0
 ```
@@ -104,12 +104,12 @@ node navcheck.cjs                           # #stage=0..4、章节、塔页 exit
 | 全剖+进料+汽液+柴油路径 | 通过 | `phase06-03-refining-full.png` |
 | 恢复外观 | 通过 | `phase06-04-refining-restored.png` |
 | 返回总览 | 通过 | `phase06-05-back-overview.png` |
-| 连续录屏 | 通过 | `refining-continuity.mp4`（57.70s, 1440×900, 1,675,828 B） |
+| 连续录屏 | 通过 | `refining-continuity.mp4`（55.90s, 1440×900, 1,445,358 B） |
 | 独立塔页状态/流程 | 通过 | `tower-state-flow.png`、`tower-state-flow.json` |
 | 验证断言 | 通过 | `phase06-verify.json` |
 | 资产外观检查 | 参考（Blender 静帧） | `asset-overview.png`、`asset-cutaway.png` |
 | Hero 资产清单/哈希 | 通过 | `tower-asset-manifest.json`（151 Mesh / 14,328 verts / 27,054 tris） |
-| 阶段包 | 已生成 | `dist/phase-06-web.tgz`，10,297,154 B，SHA-256 `89FAE9B66F1D7EABCC7315FB403BD92E3BAA87711E9DF48960B9BF1170CF5BC0` |
+| 阶段包 | 已生成 | `dist/phase-06-web.tgz`，10,302,662 B，SHA-256 `A0AC80919A2CB90B6880B26E2C9D72E04330490E9F7AF143EF40222FF6579E53` |
 
 ## 6. P0 / P1 / P2
 
@@ -121,13 +121,21 @@ node navcheck.cjs                           # #stage=0..4、章节、塔页 exit
 ### P1
 
 - P1-01 资产仍是程序化教学模型，不是高精度工程资产；平台/炉管/设备比例简化，不能当真实总平面。
-- P1-05 `tower.html` 是兼容/fallback 页；已接入 `PETRO_DEVICE_STATE`（页面内）和汽液启动/暂停/重播控制，但不做跨页持久化，canonical 详情仍是 sandbox l4。
-- P1-06 常压渣油已改塔底路径；中部只保留石脑油/煤油/柴油侧线。
 - P1-02 3D 热区是 5 个球形语义锚点 + HTML 按钮；不是所有 Mesh 都可点，深层部件仍靠标签/按钮。
 - P1-03 外部全景中设备群可见，但 `lvl__act` 面板仍占据部分下方画面；可在后续视觉轮优化相机/面板布局。
 - P1-04 资产对外再分发许可仍需权利人书面确认。
+- P1-05 `tower.html` 是兼容/fallback 页；已接入 `PETRO_DEVICE_STATE`（页面内）和汽液启动/暂停/重播控制，但不做跨页持久化，canonical 详情仍是 sandbox l4。
+- P1-06 常压渣油已改塔底路径；中部只保留石脑油/煤油/柴油侧线。l4 的渣油 overlay 已改为塔底→减压塔，不再称“侧线馏分路径”。
 
-### P2
+### 2026-11-23 · audit-2 定点返修
+
+- 常压塔/减压塔/加热炉拆成独立 detail 子组分别 bind，不再把 `unit` 根对象绑定三次；增加隔离断言。
+- `exit()` 显式 `G.visible=false`，重进恢复；验证 `window.__levelGroups[3].visible`。
+- 模型加载完成后无条件拆分并 bind；`enter()` 再次幂等补绑，覆盖“进入即退出、加载后重进”。
+- 渣油 overlay 改为塔底→减压塔，提示改为“塔底至减压塔路径”。
+- l4 引导以 `data-level-id` 识别，禁用错配的 l5 演示条。
+
+## P2
 
 - 真实浏览器 FPS/内存长跑、跨浏览器、移动端、N=5 用户测试：**未执行**。
 - 真实工程参数/塔板效率/CFD：未执行，且不在科普范围。

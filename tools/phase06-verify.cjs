@@ -59,6 +59,25 @@ function getJson(url) {
   await shot('phase06-01-refining-external.png');
   const external = await evalPage(`({loaded:window.__l4.loaded,level:window.__l4.level,groups:window.__l4.groups,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),state:window.PETRO_DEVICE_STATE.get('atmospheric_tower')})`);
 
+  const detailIsolation = await evalPage(`(function(){
+    var st=window.PETRO_DEVICE_STATE;
+    var before=window.__l4.detailGroups;
+    st.set('vacuum_tower',{visible:false},'phase06-test');
+    var hidden=window.__l4.detailGroups;
+    st.set('vacuum_tower',{visible:true},'phase06-test');
+    var restored=window.__l4.detailGroups;
+    return {
+      bindings:window.__l4.detailBindings,
+      reps:{atm:st.get('atmospheric_tower').representations,vac:st.get('vacuum_tower').representations,heater:st.get('heater').representations},
+      before:before, hidden:hidden, restored:restored,
+      isolated:before.atmospheric_tower.uuid!==before.vacuum_tower.uuid && before.vacuum_tower.uuid!==before.heater.uuid,
+      vacuumHiddenWorks:hidden.vacuum_tower.visible===false && hidden.atmospheric_tower.visible===true && hidden.heater.visible===true,
+      restoredOk:restored.vacuum_tower.visible===true
+    };
+  })()`);
+
+  const guide = await evalPage(`({demo:!!document.querySelector('.lvl.on .lvl__demo'), levelId:document.querySelector('.lvl.on').dataset.levelId, title:document.querySelector('.lvl.on .lvl__bar b').textContent})`);
+
   // P1 regression: empty external actions must become observable, not silent no-ops.
   const trayFromExternal = await evalPage(`(function(){document.querySelector('#l4-tray').click();return {level:window.__l4.level,ctx:JSON.parse(JSON.stringify(window.__sceneContext))};})()`);
   await evalPage(`document.querySelector('#l4-reset').click()`);
@@ -75,7 +94,7 @@ function getJson(url) {
   const fractions = await evalPage(`(function(){var keys=['topgas','naphtha','kerosene','diesel','residue'];var out=[];keys.forEach(function(k){var b=document.querySelector('[data-fraction="'+k+'"]');if(b)b.click();out.push({key:k,selected:window.__l4.selectedFraction,note:document.querySelector('#l4-note').textContent});});return out;})()`);
   await sleep(700);
   await shot('phase06-06-residue-bottom.png');
-  const residue = await evalPage(`({selected:window.__l4.selectedFraction,note:document.querySelector('#l4-note').textContent,ctx:JSON.parse(JSON.stringify(window.__sceneContext))})`);
+  const residue = await evalPage(`({selected:window.__l4.selectedFraction,target:window.__l4.fractionTarget('residue'),info:window.__l4.fractionInfo('residue'),note:document.querySelector('#l4-note').textContent,hint:document.querySelector('#l4-hint').textContent,ctx:JSON.parse(JSON.stringify(window.__sceneContext))})`);
   await evalPage(`document.querySelector('[data-fraction="diesel"]').click()`);
   await sleep(1200);
   await shot('phase06-03-refining-full.png');
@@ -95,17 +114,32 @@ function getJson(url) {
   await evalPage(`window.__l4.exit(); window.__l4.exit()`);
   await sleep(1900);
   await shot('phase06-05-back-overview.png');
-  const exit = await evalPage(`({level:window.__stage.isLevel(),isolated:window.__l4.isolated,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),errors:(window.__auditErrors||[]).map(e=>e.message||String(e))})`);
+  const exit = await evalPage(`({level:window.__stage.isLevel(),isolated:window.__l4.isolated,groupVisible:window.__levelGroups&&window.__levelGroups[3]?window.__levelGroups[3].visible:null,ctx:JSON.parse(JSON.stringify(window.__sceneContext)),errors:(window.__auditErrors||[]).map(e=>e.message||String(e))})`);
   await evalPage(`window.__l4.enter()`);
   await sleep(1100);
-  const reentry = await evalPage(`({level:window.__stage.isLevel(),level4:window.__l4.level,isolated:window.__l4.isolated,errors:(window.__auditErrors||[]).map(e=>e.message||String(e))})`);
+  const reentry = await evalPage(`({level:window.__stage.isLevel(),level4:window.__l4.level,isolated:window.__l4.isolated,groupVisible:window.__levelGroups&&window.__levelGroups[3]?window.__levelGroups[3].visible:null,bindings:window.__l4.detailBindings,errors:(window.__auditErrors||[]).map(e=>e.message||String(e))})`);
   await evalPage(`window.__l4.exit()`);
   await sleep(1900);
   const exit2 = await evalPage(`({level:window.__stage.isLevel(),isolated:window.__l4.isolated,errors:(window.__auditErrors||[]).map(e=>e.message||String(e))})`);
 
+  // 异步加载竞态：进入后立刻退出，待加载完成，再进入时应补齐三个 detail 绑定。
+  const raceUrl = URL.split('#')[0] + '&race=' + Date.now() + '#stage=3';
+  await send('Page.navigate', { url: raceUrl });
+  await sleep(350);
+  const race = await evalPage(`(async()=>{
+    for(var i=0;i<30 && !window.__l4;i++) await new Promise(r=>setTimeout(r,100));
+    if(!window.__l4) return {error:'l4 not ready'};
+    window.__l4.enter(); window.__l4.exit();
+    for(var j=0;j<90 && !window.__l4.loaded;j++) await new Promise(r=>setTimeout(r,100));
+    await new Promise(r=>setTimeout(r,300));
+    window.__l4.enter();
+    await new Promise(r=>setTimeout(r,700));
+    return {loaded:window.__l4.loaded,bindings:window.__l4.detailBindings,groups:window.__l4.detailGroups,level:window.__stage.isLevel()};
+  })()`);
+
   const result = {
     date: '2026-11-23', page: URL, viewport: '1440x900',
-    external, trayFromExternal, replayFromExternal, hotspot, half, full, fractions, residue, paused, replay, reset, exit, reentry, exit2,
+    external, detailIsolation, guide, trayFromExternal, replayFromExternal, hotspot, half, full, fractions, residue, paused, replay, reset, exit, reentry, exit2, race,
     screenshots: [
       'phase06-01-refining-external.png', 'phase06-02-refining-half.png',
       'phase06-03-refining-full.png', 'phase06-06-residue-bottom.png', 'phase06-04-refining-restored.png',

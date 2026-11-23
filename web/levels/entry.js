@@ -45,7 +45,10 @@
         const host = panel.querySelector('.lvl__act');
         if (!host || host.hidden) return;
         if (host.querySelector('.lvl__demo')) return;
-        const idx = Array.prototype.indexOf.call(document.querySelectorAll('.lvl'), panel);
+        const levelId = panel.dataset.levelId || '';
+        if (levelId === 'l4') return; // l4 有自己的结构/进料/馏分说明，避免 l5 通用引导遮挡塔体
+        const ids = ['l1', 'l2', 'l3', 'l4', 'l5'];
+        const idx = levelId ? ids.indexOf(levelId) : Array.prototype.indexOf.call(document.querySelectorAll('.lvl'), panel);
         if (idx < 0) return;
         const kind = KIND[idx] || 'tap';
         const wrap = document.createElement('div');

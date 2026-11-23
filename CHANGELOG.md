@@ -1,3 +1,11 @@
+## 阶段 06 rev4 — 2026-11-23 · audit-2 定点返修
+
+- l4 拆分 atmospheric_tower / vacuum_tower / heater 的独立 detail Object3D 子组，修复同一 root 绑定三个 objectId。
+- l4 退出隐藏关卡 Group，重进恢复；异步加载后无条件幂等补绑三设备。
+- 渣油 overlay 改为塔底→减压塔，独立路径与提示，不再称侧线。
+- l4 引导以稳定 levelId 识别并禁用错配的 l5 演示条。
+- 新增隔离/Group/异步加载/渣油目标/引导断言；重跑 verify、E2E、tower-check、nav。
+
 ## 阶段 06 rev3 — 2026-11-23 · review 返修二
 - `tower.html` 接入 `world/state.js`，剖切写 `PETRO_DEVICE_STATE`；新增启动/暂停/重播汽液按钮和 `tower-state-flow` 证据。
 
