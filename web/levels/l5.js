@@ -198,6 +198,7 @@
 
   stage.viewport.addEventListener('pointerup', function (e) {
     if (!stage.isLevel() || window.__l5active !== true) return;
+    if (performance.now() - (window.__stageDragAt || 0) < 300) return;
     if (e.target.closest('.lvl')) return;
     const rect = stage.viewport.getBoundingClientRect();
     ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;

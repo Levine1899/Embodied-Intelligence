@@ -243,6 +243,7 @@
   }
 
   function onHotspotClick(e) {
+    if (performance.now() - (window.__stageDragAt || 0) < 300) return;
     if (!window.__l4active || !camera) return;
     if (e.target !== stage.renderer.domElement) return;
     const rect = stage.renderer.domElement.getBoundingClientRect();

@@ -1120,7 +1120,6 @@
     viewport.addEventListener('pointerdown', function (event) {
       if (event.target.closest('button')) return;
       if (event.target.closest('input,button,select,textarea,.lvl-entry,.lvl__chip')) return;
-      if (activeScene && event.button !== 2) return; // 关卡内左键留给操作；右键拖动才转视角
       if (activeScene) {
         const c0 = activeCamera || camera;
         const d0 = new THREE.Vector3();
@@ -1133,7 +1132,10 @@
     viewport.addEventListener('pointermove', function (event) {
       if (!dragging) return;
       if (!event.buttons) { dragging = null; return; }
-      if (Math.abs(event.clientX - dragging.x) + Math.abs(event.clientY - dragging.y) > 5) dragging.moved = true;
+      if (Math.abs(event.clientX - dragging.x) + Math.abs(event.clientY - dragging.y) > 5) {
+        if (!dragging.moved) window.__stageDragAt = performance.now();
+        dragging.moved = true;
+      }
     if (activeScene && dragging) {
       if (!dragging.moved) return;
       const cam = activeCamera || camera;
@@ -1165,6 +1167,7 @@
       dragging = null;
       if (activeScene) return;
       if (!drag || drag.moved) return;
+      window.__stageDragAt = 0;
       const bounds = viewport.getBoundingClientRect();
       raycaster.setFromCamera(new THREE.Vector2(
         (event.clientX - bounds.left) / bounds.width * 2 - 1,
@@ -1188,6 +1191,10 @@
           const idx = object.userData.stage;
           if (objectId) {
             selectStage(idx, true, objectId, hitPoint);
+            window.__stageDragAt = performance.now();
+            // 点击设备本体 = 直接进入该环节的任务操作，不再要求先开任务面板。
+            const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
+            if (hook) { markLevel(idx); hook(); }
             return;
           }
           const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
@@ -1210,10 +1217,6 @@
     button.addEventListener('click', function () { goStage(index, true); });
   });
   depthSelect.addEventListener('change', updateTask);
-  document.getElementById('overview').addEventListener('click', function () {
-    moveCamera({ targetX: 2, targetY: 2.0, targetZ: -1, radius: 58, azimuth: 0.52, elevation: 0.40 });
-  });
-  document.getElementById('focus').addEventListener('click', function () { goStage(currentStage, true); });
   document.getElementById('next').addEventListener('click', function () {
     goStage((currentStage + 1) % stageNames.length, true);
   });
@@ -1222,8 +1225,6 @@
     playBtn.setAttribute('aria-pressed', String(playing));
     playBtn.textContent = playing ? '暂停流向' : '播放流向';
   }
-  const spinDefault = document.getElementById('spin');
-  if (spinDefault) spinDefault.setAttribute('aria-pressed', String(autoOrbit));
 
   const layoutEl = document.querySelector('.layout');
   function applyModeLayout(modeName) {
@@ -1287,10 +1288,6 @@
     soundBtn.setAttribute('aria-pressed', String(result.on));
     soundBtn.textContent = result.on ? '声音开' : '声音';
   });
-  const cutBtn = document.getElementById('cut');
-  if (cutBtn) cutBtn.addEventListener('click', function () { applyUnitCut(!unitState.cut); });
-  const spinBtn = document.getElementById('spin');
-  if (spinBtn) spinBtn.addEventListener('click', function () { setAutoOrbit(!autoOrbit); });
   document.getElementById('play').addEventListener('click', function () {
     playing = !playing;
     this.setAttribute('aria-pressed', String(playing));

@@ -907,11 +907,10 @@
     const dy = e.clientY - down.y;
     if (Math.abs(dx) + Math.abs(dy) > 3) dragged = true;
     if (dragged) {
-      if (down.button === 2) {
-        orbit.yaw -= dx * 0.006;
-        orbit.pitch = Math.max(-0.4, Math.min(0.85, orbit.pitch + dy * 0.005));
-        applyOrbit();
-      }
+      window.__stageDragAt = performance.now();
+      orbit.yaw -= dx * 0.006;
+      orbit.pitch = Math.max(-0.4, Math.min(0.85, orbit.pitch + dy * 0.005));
+      applyOrbit();
       down = { x: e.clientX, y: e.clientY, button: down.button };
       e.stopPropagation();
       e.preventDefault();
