@@ -1,0 +1,469 @@
+{
+  "assetId": "underground_hero",
+  "generatedAt": "2026-11-23",
+  "source": "project-generated Blender 4.5.16 geometry",
+  "license": "Project internal asset; verify distribution rights before external reuse.",
+  "teachingNote": "Stylised teaching cutaway; four geological layers, lenticular reservoir, wellbore and wellhead. Not a real reservoir, not a real geological scale.",
+  "units": "metres; Blender Z-up; exported OBJ Y-up",
+  "scale": 1.0,
+  "origin": "wellhead/surface centre at local (0,0,0)",
+  "dimensions": {
+    "x": 18.0,
+    "depth": 12.0,
+    "vertical": 13.6
+  },
+  "files": {
+    "blend": "assets-source/blender/underground_hero.blend",
+    "obj": "web/assets/underground/underground.obj",
+    "mtl": "web/assets/underground/underground.mtl",
+    "glb": "web/assets/underground/underground.glb"
+  },
+  "sha256": {
+    "blend": "8df9d79e4804486fc25f7fdf255faf6a80737b66caf5f350a587f95ae4208474",
+    "obj": "ba7b37f8de1433e47f3384bd046b0c11503d1a6b5133efe55ccb2611cf169af7",
+    "mtl": "5da4c4194750642c6918d5aa9951176066fc3a5706d167aa047dc193c84833a4",
+    "glb": "5d5d7a7f34ad6ff15460369cb326e45e32208e0b9619521ead46934d9d89bc06"
+  },
+  "materials": [
+    "mat_geo_overburden",
+    "mat_geo_caprock",
+    "mat_geo_reservoir",
+    "mat_geo_basement",
+    "mat_well_steel",
+    "mat_well_cement",
+    "mat_well_amber",
+    "mat_surface_pad"
+  ],
+  "objects": [
+    {
+      "name": "geo_overburden",
+      "type": "MESH",
+      "objectId": "underground_hero",
+      "semanticId": "geo_overburden",
+      "layerIndex": 0,
+      "dimensions": [
+        18.0,
+        12.0,
+        3.029
+      ],
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "geo_caprock",
+      "type": "MESH",
+      "objectId": "underground_hero",
+      "semanticId": "geo_caprock",
+      "layerIndex": 1,
+      "dimensions": [
+        18.0,
+        12.0,
+        2.594
+      ],
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "geo_reservoir_layer",
+      "type": "MESH",
+      "objectId": "underground_hero",
+      "semanticId": "geo_reservoir_layer",
+      "layerIndex": 2,
+      "dimensions": [
+        18.0,
+        12.0,
+        3.964
+      ],
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "geo_basement",
+      "type": "MESH",
+      "objectId": "underground_hero",
+      "semanticId": "geo_basement",
+      "layerIndex": 3,
+      "dimensions": [
+        18.0,
+        12.0,
+        5.005
+      ],
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "reservoir_lens",
+      "type": "MESH",
+      "objectId": "reservoir",
+      "semanticId": "reservoir_lens",
+      "layerIndex": null,
+      "dimensions": [
+        11.2,
+        6.4,
+        2.3
+      ],
+      "location": [
+        0.0,
+        0.0,
+        -6.0
+      ]
+    },
+    {
+      "name": "well_casing",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_casing",
+      "layerIndex": null,
+      "dimensions": [
+        0.6,
+        0.6,
+        8.6
+      ],
+      "location": [
+        0.0,
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "name": "well_cement",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_cement",
+      "layerIndex": null,
+      "dimensions": [
+        1.04,
+        1.04,
+        8.6
+      ],
+      "location": [
+        0.0,
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "name": "well_tubing",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_tubing",
+      "layerIndex": null,
+      "dimensions": [
+        0.26,
+        0.26,
+        8.2
+      ],
+      "location": [
+        0.0,
+        0.0,
+        -2.8
+      ]
+    },
+    {
+      "name": "well_perforation_00",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_perforation",
+      "layerIndex": null,
+      "dimensions": [
+        0.09,
+        0.09,
+        0.16
+      ],
+      "location": [
+        0.48,
+        0.0,
+        -5.6
+      ]
+    },
+    {
+      "name": "well_perforation_01",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_perforation",
+      "layerIndex": null,
+      "dimensions": [
+        0.09,
+        0.09,
+        0.16
+      ],
+      "location": [
+        0.388,
+        0.282,
+        -5.6
+      ]
+    },
+    {
+      "name": "well_perforation_02",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_perforation",
+      "layerIndex": null,
+      "dimensions": [
+        0.09,
+        0.09,
+        0.16
+      ],
+      "location": [
+        0.148,
+        0.457,
+        -5.6
+      ]
+    },
+    {
+      "name": "well_perforation_03",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_perforation",
+      "layerIndex": null,
+      "dimensions": [
+        0.09,
+        0.09,
+        0.16
+      ],
+      "location": [
+        -0.148,
+        0.457,
+        -5.6
+      ]
+    },
+    {
+      "name": "well_perforation_04",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_perforation",
+      "layerIndex": null,
+      "dimensions": [
+        0.09,
+        0.09,
+        0.16
+      ],
+      "location": [
+        -0.388,
+        0.282,
+        -5.6
+      ]
+    },
+    {
+      "name": "well_perforation_05",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_perforation",
+      "layerIndex": null,
+      "dimensions": [
+        0.09,
+        0.09,
+        0.16
+      ],
+      "location": [
+        -0.48,
+        0.0,
+        -5.6
+      ]
+    },
+    {
+      "name": "well_perforation_06",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_perforation",
+      "layerIndex": null,
+      "dimensions": [
+        0.09,
+        0.09,
+        0.16
+      ],
+      "location": [
+        -0.388,
+        -0.282,
+        -5.6
+      ]
+    },
+    {
+      "name": "well_perforation_07",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_perforation",
+      "layerIndex": null,
+      "dimensions": [
+        0.09,
+        0.09,
+        0.16
+      ],
+      "location": [
+        -0.148,
+        -0.457,
+        -5.6
+      ]
+    },
+    {
+      "name": "well_perforation_08",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_perforation",
+      "layerIndex": null,
+      "dimensions": [
+        0.09,
+        0.09,
+        0.16
+      ],
+      "location": [
+        0.148,
+        -0.457,
+        -5.6
+      ]
+    },
+    {
+      "name": "well_perforation_09",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_perforation",
+      "layerIndex": null,
+      "dimensions": [
+        0.09,
+        0.09,
+        0.16
+      ],
+      "location": [
+        0.388,
+        -0.282,
+        -5.6
+      ]
+    },
+    {
+      "name": "surface_pad",
+      "type": "MESH",
+      "objectId": "underground_hero",
+      "semanticId": "surface_pad",
+      "layerIndex": null,
+      "dimensions": [
+        2.0,
+        2.0,
+        0.11
+      ],
+      "location": [
+        0.0,
+        0.0,
+        0.11
+      ]
+    },
+    {
+      "name": "wellhead_tree",
+      "type": "MESH",
+      "assetId": "underground_hero",
+      "objectId": "wellhead",
+      "semanticId": "wellhead_tree",
+      "layerIndex": null,
+      "dimensions": [
+        0.55,
+        0.55,
+        0.55
+      ],
+      "location": [
+        0.0,
+        0.0,
+        0.72
+      ]
+    },
+    {
+      "name": "wellhead_valve",
+      "type": "MESH",
+      "assetId": "underground_hero",
+      "objectId": "wellhead",
+      "semanticId": "wellhead_valve",
+      "layerIndex": null,
+      "dimensions": [
+        0.79,
+        0.79,
+        0.11
+      ],
+      "location": [
+        0.0,
+        0.0,
+        1.33
+      ]
+    },
+    {
+      "name": "wellhead_outlet",
+      "type": "MESH",
+      "assetId": "underground_hero",
+      "objectId": "wellhead",
+      "semanticId": "wellhead_outlet",
+      "layerIndex": null,
+      "dimensions": [
+        0.2,
+        0.2,
+        1.3
+      ],
+      "location": [
+        0.9,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "name": "well_flowline",
+      "type": "MESH",
+      "objectId": "wellbore",
+      "semanticId": "well_flowline",
+      "layerIndex": null,
+      "dimensions": [
+        0.18,
+        0.18,
+        7.2
+      ],
+      "location": [
+        4.2,
+        -1.5,
+        0.52
+      ]
+    }
+  ],
+  "inspectionViews": [
+    "asset-front.png",
+    "asset-side.png",
+    "asset-45.png",
+    "asset-wellbore-close.png",
+    "asset-reservoir-cutaway.png",
+    "asset-wellbore-structure.png"
+  ],
+  "anchors": {
+    "wellhead_anchor": [
+      0,
+      1.6,
+      0
+    ],
+    "wellbore_top_anchor": [
+      0,
+      0.9,
+      0
+    ],
+    "wellbore_reservoir_anchor": [
+      0,
+      -5.8,
+      0
+    ],
+    "reservoir_anchor": [
+      0,
+      -6.0,
+      0
+    ]
+  },
+  "limitations": [
+    "No real geological data or real reservoir scale.",
+    "Layer boundaries are stylised waves, not measured horizons.",
+    "Wellbore parts are simplified teaching geometry, not engineering casing design.",
+    "OBJ has no custom properties; Blender object names and this manifest carry semantic IDs."
+  ]
+}

@@ -1,0 +1,541 @@
+{
+  "assetId": "separator_three_phase",
+  "date": "2026-11-23",
+  "source": "project-generated Blender 4.5.16 geometry",
+  "license": "Project internal use; written permission required for external redistribution.",
+  "teachingNote": "Stylised three-phase gravity separator for teaching; not a real CFD or engineering design.",
+  "units": "metres; Blender Z-up; OBJ exported Y-up",
+  "dimensions_m": {
+    "length": 6.8,
+    "diameter": 2.0,
+    "height": 5.0
+  },
+  "origin": "separator centreline at local (0,0,0); vessel centre y=2.1",
+  "cutaway": "separator_cut_shell (back half) + separator_cut_edge_top/bottom; external shell hidden in structure mode",
+  "files": {
+    "blend": "assets-source/blender/separator_hero.blend",
+    "obj": "web/assets/separator/separator.obj",
+    "mtl": "web/assets/separator/separator.mtl",
+    "glb": "web/assets/separator/separator.glb"
+  },
+  "anchors": {
+    "separator_inlet": [
+      -3.35,
+      2.1,
+      0
+    ],
+    "separator_gas_outlet": [
+      0,
+      4.1,
+      0
+    ],
+    "separator_oil_outlet": [
+      3.35,
+      2.1,
+      0.2
+    ],
+    "separator_water_outlet": [
+      2.6,
+      1.9,
+      -0.9
+    ],
+    "separator_centre": [
+      0,
+      2.1,
+      0
+    ]
+  },
+  "stats": {
+    "triangles": 7364,
+    "vertices": 3790,
+    "meshObjects": 43,
+    "basis": "all Blender mesh objects in the final .blend after cutaway/liquid-slab build; includes hidden internal/cutaway pieces; OBJ/GLB are exports of the same scene"
+  },
+  "objects": [
+    {
+      "name": "separator_shell",
+      "semanticId": "separator_shell",
+      "objectId": "three_phase_separator",
+      "triangles": 188,
+      "dimensions": [
+        6.0,
+        2.0,
+        2.0
+      ]
+    },
+    {
+      "name": "separator_head_left",
+      "semanticId": "separator_head_left",
+      "objectId": "three_phase_separator",
+      "triangles": 960,
+      "dimensions": [
+        0.84,
+        2.0,
+        2.0
+      ]
+    },
+    {
+      "name": "separator_head_right",
+      "semanticId": "separator_head_right",
+      "objectId": "three_phase_separator",
+      "triangles": 960,
+      "dimensions": [
+        0.84,
+        2.0,
+        2.0
+      ]
+    },
+    {
+      "name": "separator_cut_shell",
+      "semanticId": "separator_cut_shell",
+      "objectId": "three_phase_separator",
+      "triangles": 56,
+      "dimensions": [
+        6.04,
+        1.006,
+        2.012
+      ]
+    },
+    {
+      "name": "separator_cut_edge_top",
+      "semanticId": "separator_cut_edge_top",
+      "objectId": "three_phase_separator",
+      "triangles": 36,
+      "dimensions": [
+        6.08,
+        0.05,
+        0.048
+      ]
+    },
+    {
+      "name": "separator_cut_edge_bottom",
+      "semanticId": "separator_cut_edge_bottom",
+      "objectId": "three_phase_separator",
+      "triangles": 36,
+      "dimensions": [
+        6.08,
+        0.05,
+        0.048
+      ]
+    },
+    {
+      "name": "separator_saddle_left",
+      "semanticId": "separator_saddle_left",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.45,
+        2.0,
+        0.65
+      ]
+    },
+    {
+      "name": "separator_base_left",
+      "semanticId": "separator_base_left",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.85,
+        2.5,
+        0.16
+      ]
+    },
+    {
+      "name": "separator_saddle_right",
+      "semanticId": "separator_saddle_right",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.45,
+        2.0,
+        0.65
+      ]
+    },
+    {
+      "name": "separator_base_right",
+      "semanticId": "separator_base_right",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.85,
+        2.5,
+        0.16
+      ]
+    },
+    {
+      "name": "separator_skid",
+      "semanticId": "separator_skid",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        6.8,
+        2.8,
+        0.18
+      ]
+    },
+    {
+      "name": "separator_inlet",
+      "semanticId": "separator_inlet",
+      "objectId": "three_phase_separator",
+      "triangles": 76,
+      "dimensions": [
+        0.9,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "separator_inlet_flange",
+      "semanticId": "separator_inlet_flange",
+      "objectId": "three_phase_separator",
+      "triangles": 76,
+      "dimensions": [
+        0.08,
+        0.775,
+        0.775
+      ]
+    },
+    {
+      "name": "separator_gas_outlet",
+      "semanticId": "separator_gas_outlet",
+      "objectId": "three_phase_separator",
+      "triangles": 76,
+      "dimensions": [
+        0.44,
+        0.44,
+        0.75
+      ]
+    },
+    {
+      "name": "separator_gas_outlet_flange",
+      "semanticId": "separator_gas_outlet_flange",
+      "objectId": "three_phase_separator",
+      "triangles": 76,
+      "dimensions": [
+        0.682,
+        0.682,
+        0.08
+      ]
+    },
+    {
+      "name": "separator_oil_outlet",
+      "semanticId": "separator_oil_outlet",
+      "objectId": "three_phase_separator",
+      "triangles": 76,
+      "dimensions": [
+        0.9,
+        0.44,
+        0.44
+      ]
+    },
+    {
+      "name": "separator_oil_outlet_flange",
+      "semanticId": "separator_oil_outlet_flange",
+      "objectId": "three_phase_separator",
+      "triangles": 76,
+      "dimensions": [
+        0.08,
+        0.682,
+        0.682
+      ]
+    },
+    {
+      "name": "separator_water_outlet",
+      "semanticId": "separator_water_outlet",
+      "objectId": "three_phase_separator",
+      "triangles": 76,
+      "dimensions": [
+        0.36,
+        0.36,
+        0.65
+      ]
+    },
+    {
+      "name": "separator_water_outlet_flange",
+      "semanticId": "separator_water_outlet_flange",
+      "objectId": "three_phase_separator",
+      "triangles": 76,
+      "dimensions": [
+        0.558,
+        0.558,
+        0.08
+      ]
+    },
+    {
+      "name": "separator_manway",
+      "semanticId": "separator_manway",
+      "objectId": "three_phase_separator",
+      "triangles": 108,
+      "dimensions": [
+        0.68,
+        0.68,
+        0.12
+      ]
+    },
+    {
+      "name": "separator_manway_ring",
+      "semanticId": "separator_manway_ring",
+      "objectId": "three_phase_separator",
+      "triangles": 1152,
+      "dimensions": [
+        0.75,
+        0.75,
+        0.07
+      ]
+    },
+    {
+      "name": "separator_gauge",
+      "semanticId": "separator_gauge",
+      "objectId": "three_phase_separator",
+      "triangles": 92,
+      "dimensions": [
+        0.26,
+        0.26,
+        0.06
+      ]
+    },
+    {
+      "name": "separator_valve_wheel",
+      "semanticId": "separator_valve_wheel",
+      "objectId": "three_phase_separator",
+      "triangles": 1152,
+      "dimensions": [
+        0.41,
+        0.41,
+        0.05
+      ]
+    },
+    {
+      "name": "separator_internal_water",
+      "semanticId": "separator_internal_water",
+      "objectId": "three_phase_separator",
+      "triangles": 116,
+      "dimensions": [
+        4.4,
+        1.723,
+        0.7
+      ]
+    },
+    {
+      "name": "separator_internal_oil",
+      "semanticId": "separator_internal_oil",
+      "objectId": "three_phase_separator",
+      "triangles": 116,
+      "dimensions": [
+        4.4,
+        1.74,
+        0.54
+      ]
+    },
+    {
+      "name": "separator_internal_gas",
+      "semanticId": "separator_internal_gas",
+      "objectId": "three_phase_separator",
+      "triangles": 116,
+      "dimensions": [
+        4.4,
+        1.524,
+        0.42
+      ]
+    },
+    {
+      "name": "separator_internal_weir",
+      "semanticId": "separator_internal_weir",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.08,
+        1.55,
+        0.9
+      ]
+    },
+    {
+      "name": "separator_internal_baffle",
+      "semanticId": "separator_internal_baffle",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.08,
+        1.55,
+        1.15
+      ]
+    },
+    {
+      "name": "separator_internal_inlet_distributor",
+      "semanticId": "separator_internal_inlet_distributor",
+      "objectId": "three_phase_separator",
+      "triangles": 76,
+      "dimensions": [
+        0.9,
+        0.32,
+        0.32
+      ]
+    },
+    {
+      "name": "separator_internal_inlet_port_00",
+      "semanticId": "separator_internal_inlet_port",
+      "objectId": "three_phase_separator",
+      "triangles": 36,
+      "dimensions": [
+        0.086,
+        0.09,
+        0.14
+      ]
+    },
+    {
+      "name": "separator_internal_inlet_port_01",
+      "semanticId": "separator_internal_inlet_port",
+      "objectId": "three_phase_separator",
+      "triangles": 36,
+      "dimensions": [
+        0.086,
+        0.09,
+        0.14
+      ]
+    },
+    {
+      "name": "separator_internal_inlet_port_02",
+      "semanticId": "separator_internal_inlet_port",
+      "objectId": "three_phase_separator",
+      "triangles": 36,
+      "dimensions": [
+        0.086,
+        0.09,
+        0.14
+      ]
+    },
+    {
+      "name": "separator_internal_inlet_port_03",
+      "semanticId": "separator_internal_inlet_port",
+      "objectId": "three_phase_separator",
+      "triangles": 36,
+      "dimensions": [
+        0.086,
+        0.09,
+        0.14
+      ]
+    },
+    {
+      "name": "separator_internal_inlet_port_04",
+      "semanticId": "separator_internal_inlet_port",
+      "objectId": "three_phase_separator",
+      "triangles": 36,
+      "dimensions": [
+        0.086,
+        0.09,
+        0.14
+      ]
+    },
+    {
+      "name": "separator_internal_mist_00",
+      "semanticId": "separator_internal_mist_extractor",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.06,
+        0.95,
+        0.35
+      ]
+    },
+    {
+      "name": "separator_internal_mist_01",
+      "semanticId": "separator_internal_mist_extractor",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.06,
+        0.95,
+        0.35
+      ]
+    },
+    {
+      "name": "separator_internal_mist_02",
+      "semanticId": "separator_internal_mist_extractor",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.06,
+        0.95,
+        0.35
+      ]
+    },
+    {
+      "name": "separator_internal_mist_03",
+      "semanticId": "separator_internal_mist_extractor",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.06,
+        0.95,
+        0.35
+      ]
+    },
+    {
+      "name": "separator_internal_mist_04",
+      "semanticId": "separator_internal_mist_extractor",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.06,
+        0.95,
+        0.35
+      ]
+    },
+    {
+      "name": "separator_internal_mist_05",
+      "semanticId": "separator_internal_mist_extractor",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.06,
+        0.95,
+        0.35
+      ]
+    },
+    {
+      "name": "separator_internal_mist_06",
+      "semanticId": "separator_internal_mist_extractor",
+      "objectId": "three_phase_separator",
+      "triangles": 12,
+      "dimensions": [
+        0.06,
+        0.95,
+        0.35
+      ]
+    },
+    {
+      "name": "separator_internal_vortex_breaker",
+      "semanticId": "separator_internal_vortex_breaker",
+      "objectId": "three_phase_separator",
+      "triangles": 92,
+      "dimensions": [
+        0.84,
+        0.84,
+        0.12
+      ]
+    },
+    {
+      "name": "separator_cutaway_rim",
+      "semanticId": "separator_cutaway_rim",
+      "objectId": "three_phase_separator",
+      "triangles": 1152,
+      "dimensions": [
+        0.05,
+        2.08,
+        2.08
+      ]
+    }
+  ],
+  "fileHashes": {
+    "blend": "1f29a0776989b006f44413ca14d5fdbfa79bbf5287555db8aa9aefea578bfa79",
+    "obj": "02c49491b219033fc7939c3fc3a63cf817bed7dff472dabc32be09327a0c3145",
+    "mtl": "1a285ff8a66d55469fb100dd796c69996b2cc5e274b874eb0f94cc15c0c23990",
+    "glb": "741c0ee6a0ad9e630f264c66900d2c3d54ec055034addd0f44570301c595d18b"
+  },
+  "fileSizes": {
+    "blend": 1119702,
+    "obj": 495915,
+    "mtl": 1404,
+    "glb": 391188
+  }
+}

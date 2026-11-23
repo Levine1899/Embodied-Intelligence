@@ -52,6 +52,9 @@ TRAY = mat("Tray", (0.66, 0.71, 0.74), 0.65, 0.4)
 BOX = mat("ProductBox", (0.27, 0.40, 0.46), 0.4, 0.55)
 PIPE_HOT = mat("PipeHot", (0.62, 0.42, 0.14), 0.5, 0.4, 1.2)
 PIPE_COOL = mat("PipeCool", (0.14, 0.45, 0.53), 0.5, 0.4, 1.0)
+CONCRETE = mat("Concrete", (0.34, 0.33, 0.30), 0.04, 0.95)
+INSULATION = mat("Insulation", (0.56, 0.53, 0.46), 0.18, 0.82)
+SAFETY = mat("SafetyYellow", (0.62, 0.48, 0.16), 0.25, 0.60)
 
 
 def assign(obj, material):
@@ -271,15 +274,19 @@ cyl("Pipe_Bottom_To_Vacuum", 0.34, 5.6, (ATM_R + (VAC_X - VAC_R - ATM_R) / 2, 0,
 
 
 # ---------------------------------------------------------------- 侧线 + 馏分去向
+# 常压塔三种侧线馏分 + 塔顶油气；常压渣油单独从塔底引出，不能画成中部侧线。
 SIDE = [
     ("Naphtha", 21.0, "石脑油"),
     ("Kerosene", 18.4, "煤油"),
     ("Diesel", 15.8, "柴油"),
-    ("GasOil", 13.2, "常压渣油"),
 ]
 for name, z, cn in SIDE:
     cyl(f"Pipe_Side_{name}", 0.22, 6.6, (ATM_R + 3.3, 0, z), rot=(0, 1.5708, 0), seg=14, material=PIPE_COOL)
     box(f"Box_{name}", (1.6, 1.6, 1.2), (ATM_R + 7.3, 0, z - 0.3), BOX)
+
+# 常压渣油：塔底 → 减压塔；底部产品箱只作为教学终点，不代表真实收率/储运设计。
+cyl("Pipe_Residue_Bottom", 0.26, 5.2, (ATM_R + 2.8, 0, 3.2), rot=(0, 1.5708, 0), seg=14, material=PIPE_HOT)
+box("Box_Residue", (1.7, 1.7, 1.2), (ATM_R + 7.3, 0, 2.9), BOX)
 
 # 塔顶 → 冷凝器
 cyl("Pipe_Top_Vapor", 0.4, 1.9, (ATM_R + 0.95, 0, 27.4), rot=(0, 1.5708, 0), seg=16, material=PIPE_COOL)
@@ -289,6 +296,75 @@ box("Condenser", (2.4, 3.0, 1.8), (VAC_X - 0.6, 0, 28.3), STEEL)
 # 泵
 cyl("Pump_1", 0.8, 1.6, (3.4, 2.6, 1.0), rot=(0.0, 0, 0), seg=20, material=STEEL_DARK)
 cyl("Pump_2", 0.8, 1.6, (5.2, 2.6, 1.0), seg=20, material=STEEL_DARK)
+
+# ---------------------------------------------------------------- 装置群：换热/泵组/管廊/平台/基础
+# 这些是视觉可辨识的成套设备，不改变塔体三状态的语义命名。
+
+# 设备基础
+box("Foundation_Atm", (6.2, 6.2, 0.35), (ATM_X, ATM_Y, 0.18), CONCRETE)
+box("Foundation_Vac", (6.4, 6.0, 0.35), (VAC_X, 0, 0.18), CONCRETE)
+box("Foundation_Heater", (5.4, 5.4, 0.30), (HEAT_X, HEAT_Y, 0.15), CONCRETE)
+
+# 换热器组：三台卧式管壳式换热器 + 鞍座/接管/封头
+def exchanger(name, x, y, z, length=5.0, radius=0.82):
+    cyl(name + "_Shell", radius, length, (x, y, z), rot=(0, math.pi / 2, 0), seg=24, material=STEEL)
+    for dx in (-length * 0.30, length * 0.30):
+        box(name + "_Saddle", (0.55, 1.5, 1.05), (x + dx, y, z - 0.95), STEEL_DARK)
+    cyl(name + "_Head_A", radius * 1.02, 0.16, (x - length / 2, y, z), rot=(0, math.pi / 2, 0), seg=24, material=STEEL_DARK)
+    cyl(name + "_Head_B", radius * 1.02, 0.16, (x + length / 2, y, z), rot=(0, math.pi / 2, 0), seg=24, material=STEEL_DARK)
+    cyl(name + "_Nozzle", 0.18, 0.90, (x, y, z + 0.82), seg=12, material=PIPE_COOL)
+    cyl(name + "_Nozzle_Out", 0.18, 0.90, (x, y, z - 0.82), seg=12, material=PIPE_COOL)
+
+exchanger("Exchanger_1", -12.5, -3.0, 4.4, 5.2, 0.82)
+exchanger("Exchanger_2", -12.5, 3.0, 4.4, 5.2, 0.82)
+exchanger("Exchanger_3", -8.5, -3.0, 4.4, 4.2, 0.70)
+for i, ex in enumerate(("Exchanger_1", "Exchanger_2", "Exchanger_3")):
+    box(ex + "_Base", (5.8 if i < 2 else 4.8, 2.3, 0.28), (-12.5 if i < 2 else -8.5, -3.0 if i != 1 else 3.0, 0.14), CONCRETE)
+
+# 泵组：底座、三台泵、电机、出口管、阀门手轮
+box("PumpSkid_Base", (6.4, 3.8, 0.28), (4.2, -6.2, 0.14), CONCRETE)
+for i in range(3):
+    px = 2.2 + i * 1.8
+    cyl("Pump_A_%d_Body" % i, 0.46, 1.35, (px, -6.2, 0.95), rot=(0, math.pi / 2, 0), seg=18, material=STEEL)
+    box("Pump_A_%d_Motor" % i, (1.0, 0.75, 0.75), (px + 1.0, -6.2, 0.85), STEEL_DARK)
+    cyl("Pump_A_%d_Suction" % i, 0.16, 1.2, (px - 1.05, -6.2, 1.25), rot=(0, math.pi / 2, 0), seg=12, material=PIPE_HOT)
+    cyl("Pump_A_%d_Discharge" % i, 0.13, 1.8, (px, -6.2, 2.0), seg=12, material=PIPE_COOL)
+    # 阀门手轮：细圆环 + 辐条，远看是手轮而不是圆点
+    bpy.ops.mesh.primitive_torus_add(major_radius=0.30, minor_radius=0.035, location=(px, -6.2, 2.75))
+    wheel = bpy.context.object
+    wheel.name = "Pump_A_%d_ValveWheel" % i
+    wheel.rotation_euler[0] = math.pi / 2
+    assign(wheel, SAFETY)
+
+# 管廊/管架：三跨立柱 + 两层横梁 + 工艺管线
+for i in range(4):
+    box("PipeRack_Column_%d" % i, (0.24, 0.24, 6.5), (10.5 + i * 2.2, -9.4, 3.25), STEEL_DARK)
+for z in (3.1, 5.6):
+    box("PipeRack_Beam_%d" % int(z * 10), (7.2, 0.18, 0.18), (13.8, -9.4, z), STEEL_DARK)
+for j, (yy, zz, col) in enumerate((( -9.75, 3.75, PIPE_COOL), (-9.5, 5.0, PIPE_HOT), (-9.2, 5.9, PIPE_COOL))):
+    cyl("PipeRack_Pipe_%d" % j, 0.12, 7.0, (13.8, yy, zz), rot=(0, math.pi / 2, 0), seg=12, material=col)
+
+# 常压塔操作平台/格栅/栏杆/直梯；不藏进完整壳体内部
+for z in (10.0, 18.0):
+    box("Platform_Grate_%d" % int(z), (5.3, 1.55, 0.10), (ATM_X, -3.25, z), STEEL_DARK)
+    for sx in (-2.45, 2.45):
+        box("Platform_Post_%d_%d" % (int(z), int(sx * 10)), (0.08, 0.08, 1.1), (ATM_X + sx, -3.95, z + 0.55), STEEL_DARK)
+    box("Platform_Rail_%d" % int(z), (5.3, 0.07, 0.07), (ATM_X, -3.95, z + 1.05), SAFETY)
+
+# 直梯：真实横档，替代原来的薄板
+for i in range(22):
+    z = 1.15 + i * 0.82
+    box("Ladder_Rung_%d" % i, (0.62, 0.07, 0.055), (ATM_R + 0.42, -3.30, z), STEEL_DARK)
+box("Ladder_Rail_L", (0.07, 0.07, 18.0), (ATM_R + 0.75, -3.30, 9.5), STEEL_DARK)
+box("Ladder_Rail_R", (0.07, 0.07, 18.0), (ATM_R + 0.10, -3.30, 9.5), STEEL_DARK)
+
+# 塔体保温带（只作外观细节；l4 会在剖切时隐藏）
+for z in (7.5, 13.5, 20.5):
+    cyl("Insulation_Band_%d" % int(z), ATM_R + 0.035, 0.62, (ATM_X, 0, z), seg=40, material=INSULATION)
+
+# 平台楼梯（简化踏步）
+for i in range(10):
+    box("Stair_%d" % i, (0.80, 0.24, 0.10), (ATM_R + 1.05, -4.35 + i * 0.17, 0.65 + i * 0.92), STEEL_DARK)
 
 # 地坪网格（细线，便于站住空间感）
 bpy.ops.mesh.primitive_plane_add(size=120, location=(0, 0, 0))
@@ -314,6 +390,14 @@ ANCHORS = {
 for k, v in ANCHORS.items():
     empty(k, v)
 
+
+# ---------------------------------------------------------------- 保存可编辑源
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BLEND_DIR = os.path.join(ROOT, "assets-source", "blender")
+os.makedirs(BLEND_DIR, exist_ok=True)
+blend_path = os.path.join(BLEND_DIR, "tower_hero.blend")
+bpy.ops.wm.save_as_mainfile(filepath=blend_path)
+print("[ok] blend:", blend_path, os.path.getsize(blend_path) if os.path.exists(blend_path) else "MISSING")
 
 # ---------------------------------------------------------------- 导出
 obj_path = os.path.join(OUT, "tower.obj")

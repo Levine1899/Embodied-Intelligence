@@ -3,6 +3,7 @@
 
   const viewport = document.getElementById('viewport');
   let worldRoot = null;
+  let overviewWellbore = null;
   const stageButtons = Array.from(document.querySelectorAll('[data-stage]'));
   const depthSelect = document.getElementById('depth');
   const feedback = document.getElementById('feedback');
@@ -660,8 +661,11 @@
     loadHeroAsset(sep, 'separator', 'three_phase_separator', 0.88);
     /* 泵撬 */
     const pumpSkid = new THREE.Group();
+    pumpSkid.name = 'transfer_pump_overview';
+    pumpSkid.userData.objectId = 'transfer_pump';
     pumpSkid.position.set(3.2, 0, 2.0);
     gather.add(pumpSkid);
+    if (window.PETRO_DEVICE_STATE) window.PETRO_DEVICE_STATE.bind('transfer_pump', 'overview', pumpSkid);
     box(pumpSkid, 2.4, 0.2, 1.4, concrete, 0, 0.1, 0);
     cylinder(pumpSkid, 0.42, 0.7, steel, -0.6, 0.55, 0);
     box(pumpSkid, 0.9, 0.7, 0.8, darkSteel, 0.7, 0.55, 0);
@@ -1074,6 +1078,16 @@
     scene.add(warm);
 
     buildModels();
+    const wbAnchor = (modelGroups[0] && modelGroups[0].position) ? modelGroups[0].position : new THREE.Vector3(-24, 0, 8);
+    overviewWellbore = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.18, 0.18, 7.2, 16),
+      new THREE.MeshStandardMaterial({ color: 0x59635e, roughness: 0.45, metalness: 0.7 })
+    );
+    overviewWellbore.name = 'wellbore_overview';
+    overviewWellbore.userData.objectId = 'wellbore';
+    overviewWellbore.position.set(wbAnchor.x, -3.4, wbAnchor.z);
+    scene.add(overviewWellbore);
+    if (window.PETRO_DEVICE_STATE) window.PETRO_DEVICE_STATE.bind('wellbore', 'overview', overviewWellbore);
     raycaster = new THREE.Raycaster();
     resize();
     new ResizeObserver(resize).observe(viewport);
@@ -1334,6 +1348,9 @@
   }
   /* ---------- 设备级知识卡（点击三维设备时使用） ---------- */
   const DEVICE_INFO = {
+    underground_geology: { name: '地下地质剖面', stage: 0, ask: '地层和储层是什么关系？', text: '上覆地层、盖层、储层和基底是教学分层；真实油藏还要看构造、岩性和流体条件。' },
+    reservoir: { name: '储层', stage: 0, ask: '石油为什么会在岩石里？', text: '储层岩石有孔隙和裂缝，油、气、水赋存其中；孔隙大小和连通性影响流动，但不等于真实产能。' },
+    wellbore: { name: '井筒 / 套管', stage: 0, ask: '井筒和套管是做什么的？', text: '井筒连接储层与地面；套管加固井壁，水泥环封隔层位，射孔段让储层流体进入井筒。' },
     three_phase_separator: { name: '三相分离器', stage: 1, ask: '三相分离器怎么把油、气、水分开？', text: '按密度与相态把井口产出物分成气、油、水三路，再分别送去处理或储存。' },
     pumpjack: { name: '抽油机', stage: 0, ask: '抽油机是怎么把油从井里抽上来的？', text: '把地面动力转成上下往复运动，通过抽油杆带动井下泵，把油举升到地面。' },
     wellhead: { name: '井口采油树', stage: 0, ask: '采油树上的阀门是做什么的？', text: '井口阀组控制油流开关与压力，把地下产出的流体安全导入集输管线。' },
@@ -1648,23 +1665,24 @@
     });
   }
 
-  function setInteraction(action, value, unit) {
+  function setInteraction(action, value, unit, result) {
     if (!window.__sceneContext) syncSceneContext(currentStage, null, null, null);
     const ctx = window.__sceneContext;
     if (Array.isArray(ctx.history)) history = ctx.history.slice(-12);
+    const outcome = result == null ? null : result;
     const record = {
       action: action,
       value: value,
       unit: unit || '示意',
       actionId: action,
-      result: null
+      result: outcome
     };
     ctx.interaction = record;
     ctx.experienceMode = mode || ctx.experienceMode;
     ctx.mode = ctx.experienceMode;
     history.push({
       action: action, value: value, unit: unit || '示意',
-      actionId: action, result: null,
+      actionId: action, result: outcome,
       stageId: ctx.stageId, levelId: ctx.levelId || null,
       time: new Date().toTimeString().slice(0, 8)
     });
@@ -1909,8 +1927,23 @@
       document.dispatchEvent(new CustomEvent('stage-level'));
     },
     isLevel() { return !!activeScene; },
-    setInteraction(action, value, unit) { setInteraction(action, value, unit); },
+    setInteraction(action, value, unit, result) { setInteraction(action, value, unit, result); },
+    setContextObject(objectId, zoneId) {
+      const info = window.PETRO_REGISTRY ? window.PETRO_REGISTRY.getDevice(objectId) : null;
+      window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.select(objectId || null);
+      syncSceneContext(currentStage, objectId || null, null, zoneId || (info ? info.zoneId : null));
+    },
     showDevice(objectId) { const info = DEVICE_INFO[objectId]; if (info) selectStage(info.stage, true, objectId); },
+    getRoute(pathId) {
+      const hit = pipes.filter(function (p) { return p.pathId === pathId; })[0];
+      if (!hit) return null;
+      return {
+        pathId: pathId,
+        start: hit.curve.getPoint(0),
+        end: hit.curve.getPoint(1),
+        curve: hit.curve
+      };
+    },
     get scene() { return activeScene || scene; },
     get baseScene() { return scene; },
     get nodes() { return modelGroups.map(function (g) { return g.position.clone(); }); },
@@ -1918,6 +1951,11 @@
       modelGroups.forEach(function (g) { g.visible = v; });
       pipes.forEach(function (p) { if (p.object) p.object.visible = v; });
       particles.forEach(function (p) { p.visible = v; });
+      if (overviewWellbore) overviewWellbore.visible = v;
+      /* Material-merged overview heroes live outside modelGroups. */
+      scene.traverse(function (o) {
+        if (o.isMesh && /^separator__/.test(o.name || '')) o.visible = v;
+      });
     },
     setNodeDone(i, v) { if (v) doneSet.add(i); else doneSet.delete(i); saveDone(); applyBadge(i); syncStageTabs(); syncProgress(); syncTaskPanel(); maybeAllDone(); },
     resetProgress() {

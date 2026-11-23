@@ -244,3 +244,33 @@ flowchart LR
 - 相机实际：初始总览 `target(2,1.8,−1), radius 58, azimuth .52, elevation .40`；`focusZone` 读取 `CAMERAS` 的 position/lookAt 转换为 orbit；六区预设已按 1440×900 复核（地下 `position[-12,2.4,18]`/lookAt `[-24,-1.5,7]`，储运 `[15,10,7]`/`[10,2.5,-5]`，炼化 `[28,15,8]`/`[24,5.5,-11]`）。
 - 代码偏差：场景为程序化地形/基础几何体占位，不是最终 Hero 资产；地下剖面为开口 + 分层体块，不是可下潜的 Hero 井筒。
 - 证据：`docs/phase-reports/evidence/phase-03/overview-1440.png`、`subsurface-1440.png`、各区域图、`overview-1920.png`；五关 E2E 见 `level-e2e.json`。
+
+
+## 11. Phase 04 实际近景锚点
+
+Phase 04 复用阶段 03 实际 `subsurface` 中心 `[-24, 0, 8]`，而不是本文件早期设计近似值。
+
+| 项 | 实际值 | 说明 |
+|---|---|---|
+| 近景组 | `underground-experience` | `baseScene` 的子组，局部原点对齐 `[-24,0,8]` |
+| Hero 水平范围 | x −33…−15，z 2…14 | 18 × 12 m 局部体块 |
+| Hero 垂直范围 | y −12.28…1.73 | 4 层 + 井口；不是真实深度比例 |
+| 井口/地表中心 | 局部 (0,0,0)，世界 (−24,0,8) | `wellhead` / `wellhead_anchor` |
+| 储层锚点 | 局部约 (0,−6,0)，世界 (−24,−6,8) | `reservoir_anchor` |
+| 井筒底/射孔段 | 局部约 y −5.6…−7.3 | `well_perforation_*` |
+| 地面流向 | 井口 → 局部 +x/+z 到集输端点 | 同一 `wellhead` 与管线支撑 |
+| 深链 | 仍为 `#stage=0`，不新增 stage/zone | `zoneId=subsurface` 显式写入上下文 |
+
+地下近景与总览井口共享 `wellhead` objectId；井筒/储层/层组使用新增稳定 ID `wellbore`、`reservoir`、`underground_geology`，详见 `docs/underground-experience.md`。
+
+
+## 12. Phase 05 实际近景锚点/语义
+
+| 对象 | 位置（世界/局部） | objectId | 近景表示 |
+|---|---|---|---|
+| 三相分离器 | gathering，世界约 (−6,0,2)，局部分离器中心 (0,0,2.1) | `three_phase_separator` | `separator_detail`（OBJ `separator_hero`） |
+| 固定顶罐 | storage，局部罐中心；世界约 (10,0,−5) | `fixed_roof_tank` | l3 程序化罐组 detail |
+| 外浮顶罐 | storage，局部罐中心；世界约 (15,0,−4) | `floating_roof_tank` | l3 程序化罐组 detail |
+| 转输泵组 | storage，局部 (3.9,0,1.8) | `transfer_pump` | l3 泵撬 detail |
+
+阶段 05 不新增 stage；`l2` 仍挂 `gather/gathering`，`l3` 挂 `store/storage`。总览与近景使用同一 objectId，`PETRO_DEVICE_STATE` 保存 structure/animation/level/selection。

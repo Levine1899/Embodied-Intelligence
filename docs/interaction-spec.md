@@ -178,3 +178,31 @@ actionId | objectId | 前置条件 | 输入方式 | 状态变化 | 视觉反馈 
 - 旧字段与 `/api/ask` 契约兼容，不破坏 ai.js；
 - 会话复位/展厅下一位用户规则明确；
 - 不以按钮存在/卡片弹出/自动动画作为交互完成证明。
+
+
+## Phase 04 actionIds（地下）
+
+| actionId | 触发 | value/unit | 最小反馈 |
+|---|---|---|---|
+| `inspect_layer` | 点击地层/层按钮 | 层 key / 教学图层 | 名称、解释、高亮 |
+| `toggle_layer` | 层显示/隐藏按钮 | 层 key / 图层开关 | 层 visible 翻转 |
+| `inspect_reservoir` | 点击储层 | `reservoir` / 教学对象 | 储层高亮、油/气/水图例 |
+| `inspect_pores` | 孔隙放大 | `reservoir` / 教学示意 | 孔隙局部视图 + 非扫描声明 |
+| `inspect_wellbore_part` | 点击井筒部件 | casing/cement/tubing/perforation / 教学部件 | 部件解释 + 局部镜头 |
+| `toggle_wellbore_part` | 部件按钮 | 部件 key / 部件开关 | 部件显隐 |
+| `adjust_pressure` | 压力差示意滑块 | 0–100 / 示意百分比 | 粒子速度 + 因果说明，保留旧 action |
+| `trace_up_wellbore` | 沿井筒上行 | `wellhead` / 教学动作 | 镜头到井口 + 管线 |
+| `inspect_wellhead` | 井口选择 | `wellhead` / 教学设备 | 井口/管线解释 |
+
+
+## Phase 05 actionId
+
+| actionId | value | 说明 |
+|---|---|---|
+| `inspect_separator_structure` | `half`/`external` | 分离器内部/外壳 |
+| `start_separation` / `pause_separation` / `step_separation` / `replay_separation` | `-` | 分离过程控制 |
+| `choose_outlet` | `gas`/`oil`/`water` | 相态出口选择（保留旧 action） |
+| `assign_outlet_target` | `gas`/`oil`/`water` | 出口去向选择；错误返回解释 |
+| `inspect_tank_structure` | `fixed_roof_tank`/`floating_roof_tank` | 罐体剖面/罐型选择 |
+| `change_liquid_level` | 0–100 | 液位示意（保留旧 action） |
+| `start_pump` / `pause_pump` / `replay_pump` | `transfer_pump` | 泵送路径控制 |

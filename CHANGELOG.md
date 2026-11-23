@@ -1,4 +1,72 @@
+## 阶段 06 rev3 — 2026-11-23 · review 返修二
+
+- 修正常压渣油：移除中部 `GasOil` 错误侧线，改为塔底 `Pipe_Residue_Bottom` → `Box_Residue`；“常压瓦斯油”不再与常压渣油混称。
+- `tower.html` 的全剖进一步弱化半壳到 0.18、关闭 depthWrite，与半剖形成结构级差异；真实截图 `tower-full-cut.png`。
+- 明确 canonical 入口：sandbox l4 是主体验；overview 为 LOD；`tower.html` 是兼容/fallback 页，不冒充共享 Store。
+- 阶段 04/05 用户签收原话已记录；标准 handoff 与 refining-experience 文件在 `docs/phase-reports/` 与 `docs/` 可读。
+- 证据：新增常压渣油底部截图；重新验证、录屏、打包。
+
+## 阶段 06 rev2 — 2026-11-23 · review 返修
+
+- 修复 P0-ASSET-01：`make_tower.py` 新增换热器组（3 台卧式管壳式）、泵组（3 台+电机/阀轮）、管廊、平台/格栅/栏杆/直梯、设备基础、保温带；网页可辨识为成套装置。资产 151 Mesh / 14,328 verts / 27,054 tris；生成器导出前保存 `tower_hero.blend`。
+- 修复 P1：删除重复 `buildUi`；外观态“重播/塔板结构”自动切半剖；加载回调加 active 守卫；加入 5 个可点击 3D 语义热点；退出恢复世界、双次返回与重进测试；证据 5 张截图、57.15s 录屏。
+- 结论：**阶段 06 技术/交互范围建议 PASS；资产为教学示意，P1 高精度/全 Mesh 热点/面板布局保留；P2 性能/用户测试未执行；用户签收待定。**
+
+## 阶段 06 — 2026-11-23 · 炼化与常减压塔
+
+- `l4` 从简化程序化塔切换为 `tower.obj` 装置群：常压塔/减压塔/加热炉/冷凝器/泵组/管线/平台/产品箱，主 objectId `atmospheric_tower`，与 `vacuum_tower`/`heater` 共用注册表与 `PETRO_DEVICE_STATE`。
+- 实现外观/半剖/全剖：完整壳→半壳/塔板→弱化半壳/塔板/汽液/进料/侧线路径；加载完成后显式回外观。
+- 新增常压/减压两条教学进料路径、汽液接触启动/暂停/继续/重播、塔板结构、五个馏分路径、恢复外观与返回总览；HTML 按钮为可访问入口。
+- 新增 `docs/refining-experience.md`（设备群/三状态/5 个互动矩阵/科学边界）；更新 `scene-distillation-tower.md`。
+- 新增 `tower_hero.blend` 可编辑源、资产 manifest（哈希/语义/锚点/限制）；保留 `tower.html` 旧入口/fallback。
+- 证据：5 张 1440×900 截图、41.3s 连续录屏、`phase06-verify.json`；E2E l1–l5 与 navcheck exit 0。
+- 结论：**阶段 06 交互正向路径可用，但 review 发现 P0-ASSET-01：运行塔仍是基础几何拼装的遗留 `tower.obj`，视觉资产门禁未通过；建议 REVISE，不是 PASS。** P1 源脚本/死代码/空动作/迟到回调/边界测试未关闭；P2 性能/用户测试未执行；用户签收待定。
+
 # CHANGELOG
+
+## 阶段 05 — 2026-11-23 · 地面处理与储运
+
+- 新增三相分离器 Hero：Blender `.blend`、OBJ/MTL、GLB、半壳 `separator_cut_shell`、圆柱切片油/水/气层、堰板/挡板/雾沫捕集器、语义节点、5 张检查视图与许可记录。
+- l2 复用同一 `three_phase_separator`：Hero 加载、外部/内部结构、启动/暂停/单步/重播、三相路径、真实 pointer 出口/去向与错误反馈、返回总览；补齐全部 actionId。
+- l3 增补储罐剖面、固定顶/外浮顶对比、液位/气相空间、泵组/出口阀/管线、泵送暂停/重播/路径、选中高亮与重进 UI 同步；新增稳定 `transfer_pump` objectId。
+- 修正外浮顶表达：减少油气空间但**不等于零排放**；液位不换算排放量。
+- 文档：`production-storage-experience.md`、矩阵、场景/状态/actionId 补充；证据见 `docs/phase-reports/evidence/phase-05/`。
+- 修复 review 指出的 P0/P1：半壳/内部结构、actionId、真实 pointer、初始按钮、罐体选中高亮、重进状态；9 张证据含错误去向，66.15s 连续录屏。
+- 结论：**阶段 05 修复后技术/交互范围建议 PASS；视觉细节 P1；用户签收待定。** 未执行阶段 06。
+
+## 阶段 04 rev3 — 2026-11-23 · 交互一致性/导航语义返修
+
+- 增补 `updatePartChips()`，图层/部件在加载、reset、enter、exit-re-enter 后统一从实际 Mesh 反向同步按钮与 `aria-pressed`。
+- `traceUp()` 不再暗中修改压差值/动画状态；仅做镜头与结构导航；回调静默选中井口，保留 `trace_up_wellbore` 交互语义。
+- 修复 manifest 中 `wellhead_valve/outlet` 的 `objectId` 与 `assetId` 混用，部件级 `semanticId` 保留。
+- 更新地下体验验收表五关状态；关闭阶段 03 遗留的 Blender 导出待办（已由阶段 04 的 4.5.16 实际构建验证）。
+- 增补 reset/re-entry 控件一致性、traceUp 解耦的真实浏览器断言；用户签收仍待定，阶段 05 未启动。
+
+## 阶段 04 rev4 — 2026-11-23 · P1 控件同步/导航语义收口
+
+- 新增 `updatePartChips()`；加载、reset、enter、exit-re-enter 统一按实际 Mesh 同步按钮与 `aria-pressed`。
+- `traceUp()` 不再修改压差/暂停状态；镜头导航与 `adjust_pressure` 解耦，井口静默选中。
+- manifest 区分 `assetId/objectId/semanticId`；地下体验验收表引用实际五关证据。
+- 新增 `controlCheck`、`controlsBeforeExit`、`reentry`、`traceZero`、`trace75` 浏览器断言；重录 52.75s 录像。
+
+## 阶段 04 — 2026-11-23 · 地下开采（Hero 最小门禁通过）
+
+- 新增地下 Hero：Blender 4.5 源文件 `.blend`、运行 OBJ/MTL、GLB 备份、6 张资产检查视图、对象/语义/尺寸/锚点/材质清单与许可说明。
+- 新增 4 层波浪地层、储层透镜、井筒套管/水泥环/油管/射孔、井口树/地面管线；网页端由 ObjLite 实时加载，绑定 `underground_geology/reservoir/wellbore/wellhead`。
+- 重写 `web/levels/l1.js`：地层逐层显隐/剖切、储层图例/孔隙放大、井筒整体/射孔井段、沿井筒上行、地面集输端点、压力差示意与暂停/重置；保留 `adjust_pressure`。
+- 新增长逻辑 ID 3 个（`underground_geology`/`reservoir`/`wellbore`），`wellhead` 复用；总览与近景同 Store，退出恢复环境组/总览。
+- 文档：`underground-experience.md`、交互矩阵、资产门禁、场景/状态/actionId 补充；阶段 03 用户签收记录为 ACCEPTED。
+- 证据：9 张 1440×900 截图、52.75s 实时录屏、`phase04-verify.json`、五关/深链/章节/塔页/fallback 回归。
+- 结论：**阶段 04 技术范围 PASS（最小 Hero 门禁）；视觉细节/纹理列 P1；用户签收待定。** 未执行阶段 05。
+
+## 阶段 04 rev2 — 2026-11-23 · review 返修
+
+- 注册表缓存版本 `v39`，交付页实际 16 个设备；新增 `wellbore` overview 表示。
+- 修复重进关卡压力/视角/完成态未复位；`resetView` 同步清 `__sceneContext`。
+- 修复清除高亮覆盖剖切自发光；压力面板移入左侧滚动栏，教学声明去重。
+- 重新生成 9 张 1440×900 截图和 52.75s 实时录屏；`phase04-verify` 增加 16 设备/overview/reset/reentry 断言。
+- 地面场景增加地表平面/网格地平线；五关、深链、塔页、context-loss fallback 复跑通过。
+
 
 ## 阶段 03 — 2026-11-22 · 世界骨架（代码，未通过 Hero 视觉门禁）
 
