@@ -7,10 +7,10 @@
 - 状态建议：**PASS（复核修复后；技术/交互范围；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`f059728236711e410927dffd84f9004bf7efad22`（阶段 06 后、阶段 07 开始前）
-- 结束 Commit（真实 SHA）：`41b1d817383d00ca8cb4b44675482403d8ee2068`（阶段 07 修复/证据提交）
+- 结束 Commit（真实 SHA）：`1336288d0db53cb203151d3aabe973212d7b242a`（阶段 07 修复/证据/安全清理提交）
 - 分支：`main`
-- 线上：`http://120.26.198.46:8020/v18/`（根入口跳转 V18；备份 `index.html.bak-20261123-193444`）
-- 包：`dist/scienceagent-web-41b1d81.tgz`，SHA-256 `3388bbf14483b8c9eed04c98c32a253c569aedb60191ccd95fc215804d37a8b5`
+- 线上：`http://120.26.198.46:8020/v18/`（根入口跳转 V18；备份 `index.html.bak-20261123-193554`）
+- 包：`dist/scienceagent-web-41b1d81.tgz`，SHA-256 `1e2270f740b4bdb6a636cc9933468c4baa98a6572ec3dec765cb80470c691237`
 - 工作区 `git status --short`：阶段 07 提交后为空；本报告为后置文档提交
 
 ## 1. 前置检查
@@ -145,6 +145,11 @@ node tools/phase07-record.cjs mission
 | 截图/命令说明 | 通过 | `.../README.md` |
 
 ## 6. P0 / P1 / P2
+
+### Security advisory（仓库，2026-11-23）
+
+- 合并上游 `28fdec6` 时发现 `server/.env` 曾提交，含 `DIFY_API_KEY` / `DIFY_WRITE_API_KEY` 两项；本阶段已在 `1336288` 停止跟踪并加入 `.gitignore`，但**旧提交/远端历史仍含密钥**，本轮无法代替用户轮换。请立即在 Dify 控制台轮换两把 key，并视需要清理历史。
+- 这是仓库安全 P0，不是阶段 07 UI 功能 P0；未轮换前不应把仓库视为完全清理。
 
 ### P0（未关闭则不得 PASS）
 
