@@ -7,7 +7,7 @@
 - 重写 `web/levels/l1.js`：地层逐层显隐/剖切、储层图例/孔隙放大、井筒整体/射孔井段、沿井筒上行、地面集输端点、压力差示意与暂停/重置；保留 `adjust_pressure`。
 - 新增长逻辑 ID 3 个（`underground_geology`/`reservoir`/`wellbore`），`wellhead` 复用；总览与近景同 Store，退出恢复环境组/总览。
 - 文档：`underground-experience.md`、交互矩阵、资产门禁、场景/状态/actionId 补充；阶段 03 用户签收记录为 ACCEPTED。
-- 证据：9 张 1440×900 截图、56.8s 实时录屏、`phase04-verify.json`、五关/深链/章节/塔页/fallback 回归。
+- 证据：9 张 1440×900 截图、56.75s 实时录屏、`phase04-verify.json`、五关/深链/章节/塔页/fallback 回归。
 - 结论：**阶段 04 技术范围 PASS（最小 Hero 门禁）；视觉细节/纹理列 P1；用户签收待定。** 未执行阶段 05。
 
 ## 阶段 04 rev2 — 2026-11-23 · review 返修
@@ -15,8 +15,8 @@
 - 注册表缓存版本 `v39`，交付页实际 16 个设备；新增 `wellbore` overview 表示。
 - 修复重进关卡压力/视角/完成态未复位；`resetView` 同步清 `__sceneContext`。
 - 修复清除高亮覆盖剖切自发光；压力面板移入左侧滚动栏，教学声明去重。
-- 重新生成 9 张 1440×900 截图和 56.8s 实时录屏；`phase04-verify` 增加 16 设备/overview/reset/reentry 断言。
-- 五关、深链、塔页、context-loss fallback 复跑通过。
+- 重新生成 9 张 1440×900 截图和 56.75s 实时录屏；`phase04-verify` 增加 16 设备/overview/reset/reentry 断言。
+- 地面场景增加地表平面/网格地平线；五关、深链、塔页、context-loss fallback 复跑通过。
 
 
 ## 阶段 03 — 2026-11-22 · 世界骨架（代码，未通过 Hero 视觉门禁）

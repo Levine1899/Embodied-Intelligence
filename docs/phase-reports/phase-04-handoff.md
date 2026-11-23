@@ -40,7 +40,7 @@
 | 五关与其它区域未破坏 | **通过** | `phase04-regression.json` l1–l5 |
 | 深链/章节/塔页/fallback | **通过** | `#stage=0..4`、`chapter.html?id=store`、`tower.html`、context-loss |
 | 至少 6 张实际运行截图 | **通过** | 9 张 1440×900 |
-| 一段实时全流程录屏 | **通过** | `underground-continuity.mp4`，1440×900，56.8s |
+| 一段实时全流程录屏 | **通过** | `underground-continuity.mp4`，1440×900，56.75s |
 | 交互矩阵（≥3 核心） | **通过** | `docs/underground-experience.md` §4，5 个矩阵 |
 | Hero 的 `.blend`/语义/材质/尺度/许可/检查视图 | **通过（最小）** | manifest + README + 6 检查视图；授权记录为项目内自产 |
 | 阶段 03 签收记录 | **通过** | `phase-03-handoff.md` ACCEPTED + 原话 |
@@ -73,7 +73,7 @@ node --check web/immersion.js          # exit 0
 
 # 真实浏览器验证
 node tools/phase04-verify.cjs           # exit 0
-node tools/phase04-record.cjs           # exit 0; 1136 frames; 56.8s
+node tools/phase04-record.cjs           # exit 0; 1135 frames; 56.75s
 node C:\...\level-e2e-rev2.cjs          # l1–l5 全通过
 node C:\...\navcheck.cjs                # #stage=0..4/章节/塔页通过
 node C:\...\fallback-phase04.cjs        # context-loss fallback 通过
@@ -97,7 +97,7 @@ node C:\...\fallback-phase04.cjs        # context-loss fallback 通过
 | 压力差 | 通过 | `phase04-07-pressure.png` |
 | 地面井口/管线 | 通过 | `phase04-08-surface.png` |
 | 返回总览 | 通过 | `phase04-09-back-overview.png` |
-| 实时录屏 | 通过 | `underground-continuity.mp4`（1440×900, 56.8s, 1,998,338 B） |
+| 实时录屏 | 通过 | `underground-continuity.mp4`（1440×900, 56.75s, 1,966,339 B） |
 | 断言 | 通过 | `phase04-verify.json` |
 | 回归 | 通过 | `phase04-regression.json` |
 | fallback | 通过（运行时） | `fallback.json` |
@@ -117,6 +117,7 @@ node C:\...\fallback-phase04.cjs        # context-loss fallback 通过
 | 总览井筒只进关后创建，`overviewRepresentation=null` | `immersion.js` 世界构建时创建 `wellbore_overview` 并 bind；随 overview 显隐 | `overviewWellbore=true`，`representations=['overview']` |
 | 压力面板遮住剖面主体 | 压力面板移入左侧可滚动信息栏，不再绝对定位 | 1440×900 截图复验 |
 | 教学声明重复 | `setInfo` 去重，已有声明不再追加 | 信息栏单条声明 |
+| 地面场景仍像悬浮在黑洞中 | 增加地表大平面 + 网格地平线，入关时切深色背景、退出恢复 | `phase04-08` 复验 |
 
 ### P0（未关闭则不得 PASS）
 

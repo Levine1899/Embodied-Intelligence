@@ -35,7 +35,8 @@
   };
 
   let G = null, baseScene = null, anchor = null, camera = null, worldGroup = null;
-  let surfaceApron = null, surfaceEndpoint = null;
+  let surfaceApron = null, surfaceEndpoint = null, surfaceGround = null, surfaceGrid = null;
+  let savedBackground = null;
   let levelLights = [];
   let assetRoot = null, assetLoaded = false, assetFailed = false;
   let layerMeshes = {}, partMeshes = {}, reservoirLens = null, wellheadMeshes = [];
@@ -435,6 +436,8 @@
     applyLayerVisibility();
     updateLayerChips();
     if (surfaceApron) surfaceApron.visible = true;
+    if (surfaceGround) surfaceGround.visible = true;
+    if (surfaceGrid) surfaceGrid.visible = true;
     if (surfaceEndpoint) surfaceEndpoint.visible = true;
     if (surfaceFlow) surfaceFlow.visible = true;
     if (reservoirLens) reservoirLens.visible = false;
@@ -442,6 +445,8 @@
 
   function hideSurfaceScene() {
     if (surfaceApron) surfaceApron.visible = false;
+    if (surfaceGround) surfaceGround.visible = false;
+    if (surfaceGrid) surfaceGrid.visible = false;
     if (surfaceEndpoint) surfaceEndpoint.visible = false;
     if (surfaceFlow) surfaceFlow.visible = false;
   }
@@ -519,6 +524,8 @@
     G.visible = false;
     baseScene.add(G);
     if (window.__lvlGroup) window.__lvlGroup(0, G);
+    if (!savedBackground) savedBackground = baseScene.background;
+    baseScene.background = new THREE.Color(0x0d1518);
     layerVisibility = { overburden: true, caprock: true, reservoir: true, basement: true };
     buildPore();
     buildWellFlow();
@@ -938,6 +945,8 @@
     if (stage.isLevel()) return;
     if (!G) build();
     ensureCamera();
+    if (!savedBackground) savedBackground = baseScene.background;
+    baseScene.background = new THREE.Color(0x0d1518);
     layerVisibility = { overburden: true, caprock: true, reservoir: true, basement: true };
     applyLayerVisibility();
     pressure = 0;
