@@ -1305,6 +1305,10 @@
   function setRail(open, section) {
     if (!layoutEl) return;
     layoutEl.classList.toggle('rail-open', open);
+    if (open && section === 'task' && window.__mission) {
+      var ms = window.__mission.state;
+      if (!ms || ms.status !== 'active') window.__mission.start();
+    }
     if (open && section === 'source') {
       const src = document.querySelector('.source');
       if (src) src.scrollIntoView({ block: 'start', behavior: 'smooth' });
@@ -1837,6 +1841,8 @@
         ? '导览进行中 · 拖动或滚轮可暂停并接管镜头'
         : mode === 'task' ? '从右侧进入关卡，完成动手任务' : '拖动旋转 · 滚轮缩放 · 点击设备查看';
     }
+    var cta = document.getElementById('tour-cta');
+    if (cta) cta.textContent = mode === 'tour' ? '导览进行中' : '开始导览';
     if (tourPauseBtn) tourPauseBtn.textContent = tourPlaying ? '暂停' : '继续导览';
   }
 
@@ -1905,6 +1911,10 @@
         live.textContent = '任务关卡：从右栏进入当前环节，完成动手任务。';
       }
     });
+  });
+  var tourCta = document.getElementById('tour-cta');
+  if (tourCta) tourCta.addEventListener('click', function () {
+    if (mode !== 'tour') startTour();
   });
   if (tourPauseBtn) tourPauseBtn.addEventListener('click', function () {
     if (tourPlaying) { pauseTour(); return; }

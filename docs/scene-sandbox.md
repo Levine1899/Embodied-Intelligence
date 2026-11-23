@@ -47,7 +47,8 @@ window.__sceneContext = {
 
 ## 6. 模式与导览
 
-- `.modebar` 三个按钮：`data-mode="tour|free|task"`，`aria-pressed` 标记当前。
+- 页面只有一个可见入口 `#tour-cta`（“开始导览”）；三模式卡已从可见 UI 移除，默认是自由探索。
+- `.modebar` 三个旧按钮保留为 `hidden` 程序化兼容钩子：`data-mode="tour|free|task"`，不再占用页面空间；任务从右侧“任务”栏进入。
 - `window.__tour` 暴露 `start/stop/next/pause/state`，便于测试。
 - 导览卡片 `.tour-card` 显示步骤、标题、讲解、暂停/下一步/退出；任意 `pointerdown|wheel|touchstart` 暂停。
 - 导览走 `selectStage()`，因此右侧讲解、章节链接、场景上下文同步更新。

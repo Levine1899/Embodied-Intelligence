@@ -49,6 +49,29 @@ function getJson(url) {
   assert('context has sceneId', boot.ctx && boot.ctx.sceneId === 'oil_industry_journey', boot.ctx);
   assert('no boot errors', (boot.errors || []).length === 0, boot.errors);
 
+  // The three mode cards are merged into one visible tour CTA; legacy hooks stay hidden.
+  const merged = await ev(`({modebar:document.querySelector('.modebar'),modebarHidden:document.querySelector('.modebar').hidden,modebarDisplay:getComputedStyle(document.querySelector('.modebar')).display,cta:document.querySelector('#tour-cta'),ctaRect:(function(){var b=document.querySelector('#tour-cta').getBoundingClientRect();return {w:b.width,h:b.height};})(),stagesTop:document.querySelector('.stage-navigation').getBoundingClientRect().top})`);
+  assert('three mode cards removed from visible UI', merged.modebarHidden === true && merged.modebarDisplay === 'none' && merged.cta && merged.ctaRect.w > 0, merged);
+  assert('single tour CTA replaces mode row', merged.ctaRect.h > 0 && merged.stagesTop > 0, merged);
+  await shot('phase08-00-merged-ui.png');
+
+  await ev(`document.querySelector('#tour-cta').click();true`);
+  await WAIT(650);
+  const tourState = await ev(`({tour:window.__tour&&window.__tour.state,card:(function(){var e=document.querySelector('#tour-card');return e?{hidden:e.hidden,text:e.innerText.slice(0,60)}:null;})()})`);
+  assert('single CTA starts guided tour', tourState.tour && tourState.tour.active === true, tourState);
+  await ev(`document.querySelector('#tour-exit').click();true`);
+  await WAIT(350);
+  const tourStopped = await ev(`window.__tour.state`);
+  assert('tour exits back to free exploration', tourStopped && tourStopped.active === false, tourStopped);
+
+  // Task is now an optional right-rail utility, not a mode card.
+  await ev(`document.querySelector('.rail-btn[data-rail="task"]').click();true`);
+  await WAIT(450);
+  const taskRail = await ev(`({rail:document.querySelector('.layout').classList.contains('rail-open'),side:getComputedStyle(document.querySelector('.side__body')).display,mission:!!window.__mission})`);
+  assert('task rail opens without mode card', taskRail.rail === true && taskRail.side === 'block' && taskRail.mission === true, taskRail);
+  await ev(`(window.__mission&&window.__mission.exit&&window.__mission.exit());var c=document.querySelector('#rail-close');if(c)c.click();true`);
+  await WAIT(300);
+
   await ev(`window.__stage.selectStage(1,true);window.__stage.levelHook(1)();true`);
   await WAIT(1200);
   let c = await ev(`window.SceneContext.get()`);

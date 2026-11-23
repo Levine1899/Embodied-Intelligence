@@ -144,7 +144,7 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 <div class="heading"><div><h1>原油，怎样<span>走出地下？</span></h1><p>沿着生产流程，观察设备、物料与加工过程。</p></div><label class="reading">理解深度<select id="depth"><option value="0">亲子与青少年</option><option value="1" selected>普通公众</option><option value="2">科技／石油爱好者</option><option value="3">专业人士</option></select></label></div>
 <div class="layout">
 <section class="scene" aria-label="三维动态流程">
-<div class="scene-head"><p><strong>原油生产与加工</strong> · 产业链空间示意 / 非真实地理比例</p><div class="tools"><button type="button" id="play" aria-pressed="true">暂停流向</button><button type="button" id="device-list-btn" aria-expanded="false" aria-controls="device-list">设备</button><div class="more"><button type="button" id="more-btn" aria-expanded="false" aria-controls="more-menu">更多</button><div class="more__menu" id="more-menu" hidden><button type="button" id="sound" aria-pressed="false">声音</button></div></div></div></div>
+<div class="scene-head"><p><strong>原油生产与加工</strong> · 产业链空间示意 / 非真实地理比例</p><div class="tools"><button type="button" id="tour-cta">开始导览</button><button type="button" id="play" aria-pressed="true">暂停流向</button><button type="button" id="device-list-btn" aria-expanded="false" aria-controls="device-list">设备</button><div class="more"><button type="button" id="more-btn" aria-expanded="false" aria-controls="more-menu">更多</button><div class="more__menu" id="more-menu" hidden><button type="button" id="sound" aria-pressed="false">声音</button></div></div></div></div>
 <div class="viewport" id="viewport" role="group" aria-label="可旋转的原油开采、处理、储运、炼化和产品流程三维模型">
 <div class="view-hint"><b>拖动</b> 旋转 · <b>滚轮</b> 缩放 · 点击节点查看</div>
 <div class="device-list" id="device-list" hidden aria-label="设备列表">
@@ -153,7 +153,12 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 </div>
 <div class="fallback" id="fallback" hidden>三维场景正在准备。</div>
 </div>
-<div class="modebar" role="group" aria-label="体验模式"><button type="button" data-mode="tour">沉浸导览</button><button type="button" data-mode="free" aria-pressed="true">自由探索</button><button type="button" data-mode="task">任务关卡</button><span class="modehint" id="mode-hint">拖动旋转 · 滚轮缩放 · 点击设备查看</span></div>
+<!-- 旧模式开关保留为不可见的程序化兼容钩子；用户只看到“开始导览”，任务从右栏“任务”进入。 -->
+<div class="modebar modebar--legacy" hidden aria-hidden="true">
+  <button type="button" data-mode="tour">沉浸导览</button>
+  <button type="button" data-mode="free" aria-pressed="true">自由探索</button>
+  <button type="button" data-mode="task">任务关卡</button>
+</div>
 <nav class="stage-navigation" id="stages" aria-label="流程环节"><button type="button" data-stage="0" aria-current="step">地下开采<small>储层与井筒</small></button><button type="button" data-stage="1">地面处理<small>产出物的处理</small></button><button type="button" data-stage="2">储运<small>储罐与输送</small></button><button type="button" data-stage="3">炼化<small>分离与转化</small></button><button type="button" data-stage="4">产品去向<small>燃料与材料原料</small></button></nav>
 <div class="tour-card" id="tour-card" hidden>
   <div class="tour-top"><span id="tour-step">01 / 06</span><button type="button" id="tour-exit">退出</button></div>
@@ -197,7 +202,7 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 <script src="world/registry.js?v=v40"></script>
 <script src="world/state.js?v=v41"></script>
 <script src="scene-context.js?v=1"></script>
-<script src="immersion.js?v=fix78"></script>
+<script src="immersion.js?v=fix79"></script>
 <link rel="stylesheet" href="assets/site/tokens.css">
 <style>
   .view-hint{font-size:12px}
@@ -392,7 +397,7 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 <script src="journey-store.js?v=2"></script>
 <script src="voice.js?v=2"></script>
 <script src="mission.js?v=7"></script>
-<script src="journey.js?v=3"></script>
+<script src="journey.js?v=4"></script>
 <style>
 .device-card{position:absolute;left:0;top:0;transform:translate(-50%,-100%);z-index:8;width:min(280px,calc(100% - 24px));border:1px solid #3d3a33;background:rgba(11,15,17,.96);padding:12px 14px;box-shadow:0 10px 28px rgba(0,0,0,.38)}
 .device-card[hidden]{display:none}
@@ -415,6 +420,9 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 .device-item:hover,.device-item:focus-visible{border-color:#d8a24a;color:#f0e6d2;outline:none}
 @media(max-width:640px){.device-list{left:14px;right:14px;top:auto;bottom:14px;width:auto;max-height:52%}}
 .modebar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
+.modebar[hidden]{display:none}
+#tour-cta{border-color:#9a7440!important;color:#e5bd7d!important}
+body.journey-tour #tour-cta{display:none}
 .modebar button{background:#141816;border:1px solid #3d3a33;color:#cfc8ba;font-size:12px;padding:6px 11px;min-height:32px;cursor:pointer}
 .modebar button[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);background:#26221a}
 .modehint{margin-left:auto;font-size:12px;color:#8b867d}

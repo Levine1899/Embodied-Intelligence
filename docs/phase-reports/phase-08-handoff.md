@@ -4,7 +4,7 @@
 
 - 日期：2026-11-23
 - 阶段：08_AI_CONTEXT
-- 状态建议：**REVISE（仅剩继承 P0-SEC-01；P1 已修复并复测 36/0；用户签收待完成）**
+- 状态建议：**REVISE（仅剩继承 P0-SEC-01；P1 已修复；入口合并后复测 41/0；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`6047a59`（阶段 07 文档完成后的 main）
 - 结束 Commit（真实 SHA）：`9d435c7`（复审修复；本报告后置文档提交）
@@ -57,7 +57,7 @@
 | API Key 不在前端 | **通过** | 前端无 key；只使用 `/api/*`；服务端 env |
 | `docs/API.md` 更新 | **通过** | 新增 Dify 两端点；兼容段保留 |
 | `docs/ai-scene-context.md` | **通过** | 上下文形状、ID 表、样例、白名单、失败码 |
-| 真实浏览器验证 | **通过** | `phase08-verify.cjs` 36/0 |
+| 真实浏览器验证 | **通过** | `phase08-verify.cjs` 41/0 |
 | V23 线上静态检查 | **通过** | scene-context/ai-actions/AI 面板/动作入口加载，无 boot error |
 | 截图证据 | **通过** | 4 张 1440×900（context/AI/no-proxy/write handoff） |
 
@@ -280,3 +280,13 @@ phase08-02b-action-suggestion.png
 - Dify 写作生产实测：带场景记录边界的 `facts` 返回 200 与正文（`dify-api-proof.json` 的 `difyWriteWithSceneRecord`）。
 - `phase08-verify` 36/0；截图更新。
 - **仍未关闭：P0-SEC-01**（旧 Dify key 仍有效，需 Dify 控制台轮换/吊销并清理历史）；因此阶段 08 仍为 REVISE，用户签收待完成，不进入阶段 09。
+
+
+## 15. UI 入口合并（2026-11-24 用户追加）
+
+- 用户要求把“沉浸导览 / 自由探索 / 任务关卡”三张模式卡合并，减少选择与占用。
+- 已改为：**默认自由探索**；场景头只保留一个 “开始导览” 按钮；任务从右栏 “任务” 进入；旧的三个 `.modebar` 按钮保留为 `hidden` 程序化兼容钩子，不占页面空间。
+- 导览结束、任务退出、拖动接管仍回到自由探索；任务栏不再依赖模式卡。
+- 复测：`phase08-verify` **41 项断言 0 失败**；新增 `three mode cards removed from visible UI`、`single tour CTA replaces mode row`、`single CTA starts guided tour`、`tour exits back to free exploration`、`task rail opens without mode card`。
+- 截图：`phase08-00-merged-ui.png`；页面高度从约 1009px 降至约 954px（1440×900 下模式行消失）。
+- 此改动不改变阶段 08 的 P0-SEC-01 状态，仍为 REVISE/待签收。

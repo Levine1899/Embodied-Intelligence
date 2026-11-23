@@ -545,12 +545,12 @@
 
   /* ---------- 模式切换：接管旧 modebar，避免旧固定定时器导览 ---------- */
   document.addEventListener('click', function (event) {
-    var btn = event.target.closest && event.target.closest('.modebar [data-mode]');
+    var btn = event.target.closest && event.target.closest('.modebar [data-mode], #tour-cta');
     if (!btn) return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    var next = btn.getAttribute('data-mode');
-    if (next === 'tour') { startTour(); return; }
+    var next = btn.id === 'tour-cta' ? 'tour' : btn.getAttribute('data-mode');
+    if (next === 'tour') { if (!tour.active) startTour(); return; }
     if (next === 'task') {
       if (tour.active) stopTour(false);
       if (global.__mission) { global.__mission.start(); }

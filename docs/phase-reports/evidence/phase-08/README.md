@@ -1,6 +1,7 @@
 # Phase 08 证据
 
-- `phase08-verify.json`：36 项断言，真实 Chrome CDP、1440×900、本地 `:8796`。
+- `phase08-verify.json`：41 项断言，真实 Chrome CDP、1440×900、本地 `:8796`。
+- `phase08-00-merged-ui.png`：三张模式卡合并后的单入口页面（无模式行）。
 - `phase08-01-context-separator.png`：进入三相分离关卡后的上下文。
 - `phase08-02-ai-context.png`：设备卡“问 AI”打开侧栏后的上下文。
 - `phase08-02b-action-suggestion.png`：动作建议（模型动作块 → 用户点击执行）。
