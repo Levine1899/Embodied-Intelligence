@@ -641,6 +641,12 @@
     get selectedFraction() { return selectedFraction; },
     get groups() { return { full: fullMeshes.length, half: halfMeshes.length, trays: trayMeshes.length, hotspots: hotspotMeshes.length }; },
     selectHotspot: selectHotspot,
+    selectFraction: selectFraction,
+    startFlow: function () {
+      var b = ui && ui.querySelector('#l4-flow');
+      if (!b) return;
+      if (!flowOn) b.click();
+    },
     hotspotPoint: hotspotPoint,
     get detailBindings() { return detailBindings.slice(); },
     get detailGroups() {

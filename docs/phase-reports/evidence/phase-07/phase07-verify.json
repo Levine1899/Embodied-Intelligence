@@ -1,0 +1,1161 @@
+{
+  "generatedAt": "2026-11-23T10:44:00.765Z",
+  "base": "http://127.0.0.1:8796",
+  "passed": 63,
+  "failed": 0,
+  "results": [
+    {
+      "name": "tour API present",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "mission API present",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "tour has 10 steps",
+      "ok": true,
+      "detail": 10
+    },
+    {
+      "name": "mission has 5 steps",
+      "ok": true,
+      "detail": 5
+    },
+    {
+      "name": "audio control present",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "archive entry present",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "no boot errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "tour starts at step 0",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "index": 0,
+        "stepId": "tour_overview",
+        "playing": true,
+        "busy": false,
+        "status": "active",
+        "total": 10
+      }
+    },
+    {
+      "name": "tour next to 1 clicked",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "tour 1 tour_underground",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "index": 1,
+        "stepId": "tour_underground",
+        "playing": true,
+        "busy": false,
+        "status": "active",
+        "total": 10
+      }
+    },
+    {
+      "name": "tour 1 in l1",
+      "ok": true,
+      "detail": {
+        "level": true,
+        "levelId": "l1"
+      }
+    },
+    {
+      "name": "tour underground reservoir dynamic",
+      "ok": true,
+      "detail": {
+        "res": "reservoir",
+        "pressure": 0
+      }
+    },
+    {
+      "name": "tour next to 2 clicked",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "tour 2 tour_reservoir",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "index": 2,
+        "stepId": "tour_reservoir",
+        "playing": true,
+        "busy": false,
+        "status": "active",
+        "total": 10
+      }
+    },
+    {
+      "name": "tour 2 in l1",
+      "ok": true,
+      "detail": {
+        "level": true,
+        "levelId": "l1"
+      }
+    },
+    {
+      "name": "tour next to 3 clicked",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "tour 3 tour_wellhead",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "index": 3,
+        "stepId": "tour_wellhead",
+        "playing": true,
+        "busy": false,
+        "status": "active",
+        "total": 10
+      }
+    },
+    {
+      "name": "tour 3 in l1",
+      "ok": true,
+      "detail": {
+        "level": true,
+        "levelId": "l1"
+      }
+    },
+    {
+      "name": "tour next to 4 clicked",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "tour 4 tour_separator",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "index": 4,
+        "stepId": "tour_separator",
+        "playing": true,
+        "busy": false,
+        "status": "active",
+        "total": 10
+      }
+    },
+    {
+      "name": "tour 4 in l2",
+      "ok": true,
+      "detail": {
+        "level": true,
+        "levelId": "l2"
+      }
+    },
+    {
+      "name": "tour separator dynamic",
+      "ok": true,
+      "detail": {
+        "struct": true,
+        "running": true
+      }
+    },
+    {
+      "name": "tour next to 5 clicked",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "tour 5 tour_storage",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "index": 5,
+        "stepId": "tour_storage",
+        "playing": true,
+        "busy": false,
+        "status": "active",
+        "total": 10
+      }
+    },
+    {
+      "name": "tour 5 in l3",
+      "ok": true,
+      "detail": {
+        "level": true,
+        "levelId": "l3"
+      }
+    },
+    {
+      "name": "tour storage dynamic",
+      "ok": true,
+      "detail": {
+        "level": 0.72,
+        "pump": true
+      }
+    },
+    {
+      "name": "tour next to 6 clicked",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "tour 6 tour_refining",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "index": 6,
+        "stepId": "tour_refining",
+        "playing": true,
+        "busy": false,
+        "status": "active",
+        "total": 10
+      }
+    },
+    {
+      "name": "tour 6 in l4",
+      "ok": true,
+      "detail": {
+        "level": true,
+        "levelId": "l4"
+      }
+    },
+    {
+      "name": "tour refining dynamic",
+      "ok": true,
+      "detail": {
+        "level": 2,
+        "flow": true,
+        "fraction": null
+      }
+    },
+    {
+      "name": "tour next to 7 clicked",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "tour 7 tour_fractions",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "index": 7,
+        "stepId": "tour_fractions",
+        "playing": true,
+        "busy": false,
+        "status": "active",
+        "total": 10
+      }
+    },
+    {
+      "name": "tour 7 in l4",
+      "ok": true,
+      "detail": {
+        "level": true,
+        "levelId": "l4"
+      }
+    },
+    {
+      "name": "tour next to 8 clicked",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "tour 8 tour_products",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "index": 8,
+        "stepId": "tour_products",
+        "playing": true,
+        "busy": false,
+        "status": "active",
+        "total": 10
+      }
+    },
+    {
+      "name": "tour 8 in l5",
+      "ok": true,
+      "detail": {
+        "level": true,
+        "levelId": "l5"
+      }
+    },
+    {
+      "name": "tour products selected",
+      "ok": true,
+      "detail": {
+        "picked": [
+          0
+        ]
+      }
+    },
+    {
+      "name": "tour next to 9 clicked",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "tour 9 tour_summary",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "index": 9,
+        "stepId": "tour_summary",
+        "playing": true,
+        "busy": false,
+        "status": "completed",
+        "total": 10
+      }
+    },
+    {
+      "name": "tour summary archive open",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "tour pause keeps level and stops playing",
+      "ok": true,
+      "detail": {
+        "state": {
+          "active": true,
+          "index": 1,
+          "stepId": "tour_underground",
+          "playing": false,
+          "busy": false,
+          "status": "active",
+          "total": 10
+        },
+        "level": true
+      }
+    },
+    {
+      "name": "tour resume",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "index": 1,
+        "stepId": "tour_underground",
+        "playing": true,
+        "busy": false,
+        "status": "active",
+        "total": 10
+      }
+    },
+    {
+      "name": "tour exit clears level and card",
+      "ok": true,
+      "detail": {
+        "state": {
+          "active": false,
+          "index": 1,
+          "stepId": "tour_underground",
+          "playing": false,
+          "busy": false,
+          "status": "stopped",
+          "total": 10
+        },
+        "level": false,
+        "mode": "free",
+        "cardHidden": true
+      }
+    },
+    {
+      "name": "mission brief opens",
+      "ok": true,
+      "detail": {
+        "hidden": false,
+        "state": "idle"
+      }
+    },
+    {
+      "name": "mission M1 level active",
+      "ok": true,
+      "detail": {
+        "state": {
+          "version": 1,
+          "id": "M-YJ-001",
+          "title": "追踪批次 YJ-001",
+          "status": "active",
+          "step": 0,
+          "steps": [
+            {
+              "id": "M1",
+              "done": false,
+              "visited": true
+            },
+            {
+              "id": "M2",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M3",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M4",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M5",
+              "done": false,
+              "visited": false
+            }
+          ],
+          "flags": {},
+          "knowledge": [],
+          "hintsUsed": 0,
+          "hintLevel": 0,
+          "errors": [],
+          "lastHint": "",
+          "startedAt": "2026-11-23T10:42:47.352Z",
+          "finishedAt": null
+        },
+        "level": "l1",
+        "cardHidden": false
+      }
+    },
+    {
+      "name": "mission M1 complete by real operations",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "id": "M-YJ-001",
+        "title": "追踪批次 YJ-001",
+        "status": "active",
+        "step": 1,
+        "steps": [
+          {
+            "id": "M1",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M2",
+            "done": false,
+            "visited": false
+          },
+          {
+            "id": "M3",
+            "done": false,
+            "visited": false
+          },
+          {
+            "id": "M4",
+            "done": false,
+            "visited": false
+          },
+          {
+            "id": "M5",
+            "done": false,
+            "visited": false
+          }
+        ],
+        "flags": {
+          "reservoir": true,
+          "up": true
+        },
+        "knowledge": [
+          "kb_formation"
+        ],
+        "hintsUsed": 0,
+        "hintLevel": 0,
+        "errors": [],
+        "lastHint": "",
+        "startedAt": "2026-11-23T10:42:47.352Z",
+        "finishedAt": null
+      }
+    },
+    {
+      "name": "mission M2 level active",
+      "ok": true,
+      "detail": {
+        "state": {
+          "version": 1,
+          "id": "M-YJ-001",
+          "title": "追踪批次 YJ-001",
+          "status": "active",
+          "step": 1,
+          "steps": [
+            {
+              "id": "M1",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M2",
+              "done": false,
+              "visited": true
+            },
+            {
+              "id": "M3",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M4",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M5",
+              "done": false,
+              "visited": false
+            }
+          ],
+          "flags": {
+            "reservoir": true,
+            "up": true
+          },
+          "knowledge": [
+            "kb_formation"
+          ],
+          "hintsUsed": 0,
+          "hintLevel": 0,
+          "errors": [],
+          "lastHint": "",
+          "startedAt": "2026-11-23T10:42:47.352Z",
+          "finishedAt": null
+        },
+        "level": "l2"
+      }
+    },
+    {
+      "name": "mission records wrong destination error",
+      "ok": true,
+      "detail": {
+        "state": {
+          "version": 1,
+          "id": "M-YJ-001",
+          "title": "追踪批次 YJ-001",
+          "status": "active",
+          "step": 1,
+          "steps": [
+            {
+              "id": "M1",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M2",
+              "done": false,
+              "visited": true
+            },
+            {
+              "id": "M3",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M4",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M5",
+              "done": false,
+              "visited": false
+            }
+          ],
+          "flags": {
+            "reservoir": true,
+            "up": true,
+            "started": true
+          },
+          "knowledge": [
+            "kb_formation"
+          ],
+          "hintsUsed": 0,
+          "hintLevel": 1,
+          "errors": [
+            {
+              "at": "2026-11-23T10:43:03.515Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            }
+          ],
+          "lastHint": "",
+          "startedAt": "2026-11-23T10:42:47.352Z",
+          "finishedAt": null
+        },
+        "feedback": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。",
+        "cls": "mission-feedback is-error"
+      }
+    },
+    {
+      "name": "mission hint visible",
+      "ok": true,
+      "detail": {
+        "hint": "提示 2：气 → 回收/处理，油 → 储运，水 → 水处理；不要把气送进油罐。",
+        "feedback": "提示 2：气 → 回收/处理，油 → 储运，水 → 水处理；不要把气送进油罐。",
+        "cls": "mission-feedback is-note"
+      }
+    },
+    {
+      "name": "mission pause",
+      "ok": true,
+      "detail": {
+        "status": "paused",
+        "text": "继续任务"
+      }
+    },
+    {
+      "name": "mission resume",
+      "ok": true,
+      "detail": "active"
+    },
+    {
+      "name": "mission M2 complete after three correct outlets",
+      "ok": true,
+      "detail": {
+        "state": {
+          "version": 1,
+          "id": "M-YJ-001",
+          "title": "追踪批次 YJ-001",
+          "status": "active",
+          "step": 2,
+          "steps": [
+            {
+              "id": "M1",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M2",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M3",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M4",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M5",
+              "done": false,
+              "visited": false
+            }
+          ],
+          "flags": {
+            "reservoir": true,
+            "up": true,
+            "started": true
+          },
+          "knowledge": [
+            "kb_formation",
+            "kb_gather"
+          ],
+          "hintsUsed": 1,
+          "hintLevel": 0,
+          "errors": [
+            {
+              "at": "2026-11-23T10:43:03.515Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            }
+          ],
+          "lastHint": "",
+          "startedAt": "2026-11-23T10:42:47.352Z",
+          "finishedAt": null
+        },
+        "solved": {
+          "gas": true,
+          "oil": true,
+          "water": true
+        }
+      }
+    },
+    {
+      "name": "mission M3 level active",
+      "ok": true,
+      "detail": {
+        "state": {
+          "version": 1,
+          "id": "M-YJ-001",
+          "title": "追踪批次 YJ-001",
+          "status": "active",
+          "step": 2,
+          "steps": [
+            {
+              "id": "M1",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M2",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M3",
+              "done": false,
+              "visited": true
+            },
+            {
+              "id": "M4",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M5",
+              "done": false,
+              "visited": false
+            }
+          ],
+          "flags": {
+            "reservoir": true,
+            "up": true,
+            "started": true
+          },
+          "knowledge": [
+            "kb_formation",
+            "kb_gather"
+          ],
+          "hintsUsed": 1,
+          "hintLevel": 0,
+          "errors": [
+            {
+              "at": "2026-11-23T10:43:03.515Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            }
+          ],
+          "lastHint": "",
+          "startedAt": "2026-11-23T10:42:47.352Z",
+          "finishedAt": null
+        },
+        "level": "l3"
+      }
+    },
+    {
+      "name": "mission M3 complete",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "id": "M-YJ-001",
+        "title": "追踪批次 YJ-001",
+        "status": "active",
+        "step": 3,
+        "steps": [
+          {
+            "id": "M1",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M2",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M3",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M4",
+            "done": false,
+            "visited": false
+          },
+          {
+            "id": "M5",
+            "done": false,
+            "visited": false
+          }
+        ],
+        "flags": {
+          "reservoir": true,
+          "up": true,
+          "started": true,
+          "level": 75,
+          "pump": true
+        },
+        "knowledge": [
+          "kb_formation",
+          "kb_gather",
+          "kb_store"
+        ],
+        "hintsUsed": 1,
+        "hintLevel": 0,
+        "errors": [
+          {
+            "at": "2026-11-23T10:43:03.515Z",
+            "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+          }
+        ],
+        "lastHint": "",
+        "startedAt": "2026-11-23T10:42:47.352Z",
+        "finishedAt": null
+      }
+    },
+    {
+      "name": "mission M4 level active",
+      "ok": true,
+      "detail": {
+        "state": {
+          "version": 1,
+          "id": "M-YJ-001",
+          "title": "追踪批次 YJ-001",
+          "status": "active",
+          "step": 3,
+          "steps": [
+            {
+              "id": "M1",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M2",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M3",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M4",
+              "done": false,
+              "visited": true
+            },
+            {
+              "id": "M5",
+              "done": false,
+              "visited": false
+            }
+          ],
+          "flags": {
+            "reservoir": true,
+            "up": true,
+            "started": true,
+            "level": 75,
+            "pump": true
+          },
+          "knowledge": [
+            "kb_formation",
+            "kb_gather",
+            "kb_store"
+          ],
+          "hintsUsed": 1,
+          "hintLevel": 0,
+          "errors": [
+            {
+              "at": "2026-11-23T10:43:03.515Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            }
+          ],
+          "lastHint": "",
+          "startedAt": "2026-11-23T10:42:47.352Z",
+          "finishedAt": null
+        },
+        "level": "l4"
+      }
+    },
+    {
+      "name": "mission M4 complete",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "id": "M-YJ-001",
+        "title": "追踪批次 YJ-001",
+        "status": "active",
+        "step": 4,
+        "steps": [
+          {
+            "id": "M1",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M2",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M3",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M4",
+            "done": true,
+            "visited": true
+          },
+          {
+            "id": "M5",
+            "done": false,
+            "visited": false
+          }
+        ],
+        "flags": {
+          "reservoir": true,
+          "up": true,
+          "started": true,
+          "level": 75,
+          "pump": true,
+          "full": true,
+          "fraction": "diesel"
+        },
+        "knowledge": [
+          "kb_formation",
+          "kb_gather",
+          "kb_store",
+          "kb_refine"
+        ],
+        "hintsUsed": 1,
+        "hintLevel": 0,
+        "errors": [
+          {
+            "at": "2026-11-23T10:43:03.515Z",
+            "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+          }
+        ],
+        "lastHint": "",
+        "startedAt": "2026-11-23T10:42:47.352Z",
+        "finishedAt": null
+      }
+    },
+    {
+      "name": "mission M5 level active",
+      "ok": true,
+      "detail": {
+        "state": {
+          "version": 1,
+          "id": "M-YJ-001",
+          "title": "追踪批次 YJ-001",
+          "status": "active",
+          "step": 4,
+          "steps": [
+            {
+              "id": "M1",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M2",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M3",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M4",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M5",
+              "done": false,
+              "visited": true
+            }
+          ],
+          "flags": {
+            "reservoir": true,
+            "up": true,
+            "started": true,
+            "level": 75,
+            "pump": true,
+            "full": true,
+            "fraction": "diesel"
+          },
+          "knowledge": [
+            "kb_formation",
+            "kb_gather",
+            "kb_store",
+            "kb_refine"
+          ],
+          "hintsUsed": 1,
+          "hintLevel": 0,
+          "errors": [
+            {
+              "at": "2026-11-23T10:43:03.515Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            }
+          ],
+          "lastHint": "",
+          "startedAt": "2026-11-23T10:42:47.352Z",
+          "finishedAt": null
+        },
+        "level": "l5"
+      }
+    },
+    {
+      "name": "mission complete",
+      "ok": true,
+      "detail": {
+        "state": {
+          "version": 1,
+          "id": "M-YJ-001",
+          "title": "追踪批次 YJ-001",
+          "status": "complete",
+          "step": 4,
+          "steps": [
+            {
+              "id": "M1",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M2",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M3",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M4",
+              "done": true,
+              "visited": true
+            },
+            {
+              "id": "M5",
+              "done": true,
+              "visited": true
+            }
+          ],
+          "flags": {
+            "reservoir": true,
+            "up": true,
+            "started": true,
+            "level": 75,
+            "pump": true,
+            "full": true,
+            "fraction": "diesel",
+            "product": "柴油",
+            "products": 2
+          },
+          "knowledge": [
+            "kb_formation",
+            "kb_gather",
+            "kb_store",
+            "kb_refine",
+            "kb_use"
+          ],
+          "hintsUsed": 1,
+          "hintLevel": 0,
+          "errors": [
+            {
+              "at": "2026-11-23T10:43:03.515Z",
+              "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
+            }
+          ],
+          "lastHint": "",
+          "startedAt": "2026-11-23T10:42:47.352Z",
+          "finishedAt": "2026-11-23T10:43:37.579Z"
+        },
+        "done": true
+      }
+    },
+    {
+      "name": "mission archive opens",
+      "ok": true,
+      "detail": {
+        "open": true,
+        "title": "我走过什么、理解了什么"
+      }
+    },
+    {
+      "name": "mission reset",
+      "ok": true,
+      "detail": {
+        "state": {
+          "version": 1,
+          "id": "M-YJ-001",
+          "title": "追踪批次 YJ-001",
+          "status": "idle",
+          "step": 0,
+          "steps": [
+            {
+              "id": "M1",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M2",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M3",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M4",
+              "done": false,
+              "visited": false
+            },
+            {
+              "id": "M5",
+              "done": false,
+              "visited": false
+            }
+          ],
+          "flags": {},
+          "knowledge": [],
+          "hintsUsed": 0,
+          "hintLevel": 0,
+          "errors": [],
+          "lastHint": "",
+          "startedAt": null,
+          "finishedAt": null
+        },
+        "card": true,
+        "level": false,
+        "mode": "free"
+      }
+    },
+    {
+      "name": "audio opt-in works",
+      "ok": true,
+      "detail": {
+        "on": true,
+        "stage": 0,
+        "volume": 0.044800000000000006,
+        "supported": true
+      }
+    },
+    {
+      "name": "audio mute works",
+      "ok": true,
+      "detail": {
+        "on": false,
+        "stage": 0,
+        "volume": 0.044800000000000006,
+        "supported": true
+      }
+    },
+    {
+      "name": "journey record accessible",
+      "ok": true,
+      "detail": {
+        "open": true,
+        "cols": "足迹区域 6 · 环节 5 · 设备 7oilfield · subsurface · gathering · storage · refining · city知识kb_drill · kb_formation · kb_gather · kb_store · kb_refine · kb_use任务追踪批次 YJ-001：进行中/暂停（0/5）导览已完成 1 次 · 最近 stopped（1/10 站）"
+      }
+    }
+  ]
+}

@@ -256,5 +256,5 @@
 
   back.onclick = exit;
   window.__lvlEntry(4, '进入 05 产品去向', enter);
-  window.__l5 = { enter: enter, exit: exit, toggle: toggle };
+  window.__l5 = { enter: enter, exit: exit, toggle: toggle, select: function (i) { if (!picked.has(i)) toggle(i); }, get picked() { return Array.from(picked); } };
 })();

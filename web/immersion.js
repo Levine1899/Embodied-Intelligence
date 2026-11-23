@@ -2064,6 +2064,12 @@
     },
     isNodeDone(i) { return doneSet.has(i); },
     levelHook(i) { const h = (window.__levelHooks && window.__levelHooks[i]) || null; if (h) markLevel(i); return h; },
+    setMode(next) {
+      mode = next;
+      paintModes();
+      if (typeof applyModeLayout === 'function') applyModeLayout(next);
+    },
+    getMode() { return mode; },
     refreshTaskPanel() { syncTaskPanel(); },
     get camera() { return activeCamera || camera; },
     setCut(on) { applyUnitCut(on); },

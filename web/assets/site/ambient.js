@@ -12,6 +12,7 @@
   var hum = null;
   var on = false;
   var stage = 0;
+  var volume = 0.05;
 
   var STAGE_FREQ = [180, 280, 220, 380, 460];
 
@@ -20,7 +21,7 @@
     if (!AC) return false;
     ctx = new AC();
     master = ctx.createGain();
-    master.gain.value = 0.05;
+    master.gain.value = 0;
     master.connect(ctx.destination);
 
     // 低频噪声：模拟厂房/风道底噪
@@ -74,7 +75,7 @@
     }
     if (ctx.state === 'suspended') ctx.resume();
     on = !on;
-    ramp(master.gain, on ? 0.05 : 0, 0.5);
+    ramp(master.gain, on ? volume : 0, 0.5);
     return { supported: true, on: on };
   }
 
@@ -82,6 +83,21 @@
     stage = Math.max(0, Math.min(STAGE_FREQ.length - 1, Number(index) || 0));
     if (filter) ramp(filter.frequency, STAGE_FREQ[stage], 1.2);
   }
+
+  function setVolume(value) {
+    volume = Math.max(0, Math.min(0.16, Number(value) || 0.05));
+    if (master) ramp(master.gain, on ? volume : 0, 0.25);
+    return volume;
+  }
+
+  function setMuted(muted) {
+    on = !muted;
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+    if (master) ramp(master.gain, on ? volume : 0, 0.25);
+    return { supported: !!ctx, on: on };
+  }
+
+  function getVolume() { return volume; }
 
   function blip() {
     if (!ctx || !on) return;
@@ -102,7 +118,10 @@
   global.Ambient = {
     toggle: toggle,
     setStage: setStage,
+    setVolume: setVolume,
+    getVolume: getVolume,
+    setMuted: setMuted,
     blip: blip,
-    state: function () { return { on: on, stage: stage, supported: !!ctx }; }
+    state: function () { return { on: on, stage: stage, volume: volume, supported: !!ctx }; }
   };
 })(window);

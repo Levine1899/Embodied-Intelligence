@@ -1071,7 +1071,12 @@
       traceUp: traceUp,
       focusWellbore: focusWellbore,
       toggleLayer: toggleLayer,
-      togglePart: togglePart
+      togglePart: togglePart,
+      setPressure: function (v) {
+        if (!press) return;
+        press.value = String(Math.max(0, Math.min(100, Number(v) || 0)));
+        press.dispatchEvent(new Event('input', { bubbles: true }));
+      }
     };
   }
 

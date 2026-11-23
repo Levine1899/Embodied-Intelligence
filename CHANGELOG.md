@@ -1,3 +1,13 @@
+## 阶段 07 — 2026-11-23 · 系统整合（导览/任务/音频/档案）
+
+- 新增 `web/journey.js`：10 站沉浸导览状态机，显式「开始/继续/暂停/退出」，用户拖动/滚轮立即暂停；真实驱动 l1 储层/井筒、l2 半剖/分离、l3 浮顶液位/泵送、l4 全剖/馏分、l5 产品选择。
+- 新增 `web/mission.js`：M-YJ-001 任务状态机（M1–M5），成功由真实 `scene-context` 操作判定；含错误去向反馈、分级提示、暂停/退出/继续/重置、总结。
+- 新增 `web/journey-store.js`：本机探索档案（区域/环节/设备/知识/任务/导览），不上传；新增档案查看与清空确认。
+- 扩展 `web/assets/site/ambient.js`：合成环境音开关/音量/静音；默认关闭，无资产不阻塞。
+- 新增 l1 `setPressure`、l3 `setLevel/startPump/pausePump`、l4 `selectFraction/startFlow`、l5 `select/picked` 供导览/任务稳定调用。
+- 新增 `docs/tour-state-machine.md`、`docs/mission-state-machine.md`；`tools/phase07-verify.cjs`（63 断言）与 `tools/phase07-record.cjs`；两段 1440×900 真实浏览器录屏。
+- 结论：**阶段 07 技术/交互范围建议 PASS；用户签收待完成**。P1：语音讲解未提供、设备音仅环境音、用户测试/移动端未执行。
+
 ## 阶段 06 rev4 — 2026-11-23 · audit-2 定点返修
 
 - l4 拆分 atmospheric_tower / vacuum_tower / heater 的独立 detail Object3D 子组，修复同一 root 绑定三个 objectId。

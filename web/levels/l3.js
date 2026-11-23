@@ -389,6 +389,14 @@
 
   back.onclick = exit;
   window.__lvlEntry(2, '进入 03 储运', enter);
-  window.__l3 = { enter: enter, exit: exit, selectTank: selectTank, get routeInfo() { return routeInfo; }, get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; }, get cutMode() { return cutMode; }, get pumpRunning() { return pumpRunning; }, get pumpPaused() { return pumpPaused; }, get level() { return level; } };
+  window.__l3 = { enter: enter, exit: exit, selectTank: selectTank, get routeInfo() { return routeInfo; }, get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; }, get cutMode() { return cutMode; }, get pumpRunning() { return pumpRunning; }, get pumpPaused() { return pumpPaused; }, get level() { return level; },
+    setLevel: function (pct) {
+      if (!slider) return;
+      slider.value = String(Math.max(0, Math.min(100, Number(pct) || 0)));
+      slider.dispatchEvent(new Event('input', { bubbles: true }));
+    },
+    startPump: function () { if (pumpStart) pumpStart.click(); },
+    pausePump: function () { if (pumpPause) pumpPause.click(); }
+  };
 })();
 
