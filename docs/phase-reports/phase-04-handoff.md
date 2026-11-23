@@ -7,7 +7,7 @@
 - 状态建议：**PASS（阶段 04 技术范围；Hero 最小门禁通过）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`b97816471bb2256b5245dd65f7ba21f1c46e642a`（阶段 03 签收后的 rev3）
-- 结束 Commit（真实 SHA）：`<PHASE04_SHA>`
+- 结束 Commit（真实 SHA）：`ddb470a`
 - 分支：`main`
 - 工作区 `git status --short`：见提交后记录（目标为空）
 
@@ -80,7 +80,7 @@ node C:\...\fallback-phase04.cjs        # context-loss fallback 通过
 ```
 
 - 浏览器：Chrome 157 headless CDP；页面 1440×900；本地 `http://127.0.0.1:8796`。
-- `phase04-verify.json`：`assetLoaded=true`、`assetFailed=false`、4 layers、4 parts、`zoneId=subsurface`、history 9 条、`__auditErrors=[]`。
+- `phase04-verify.json`：`assetLoaded=true`、`assetFailed=false`、4 layers、4 parts、`zoneId=subsurface`、交互后 history 9 条、`__auditErrors=[]`。
 - 五关：l1 adjust_pressure、l2 choose_outlet、l3 change_liquid_level、l4 choose_fraction、l5 select_product；退出均 `levelId=null`。
 - fallback：context-loss 后 sandbox 显示恢复文案；塔页显示 2D 剖面。
 
