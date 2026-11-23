@@ -7,7 +7,7 @@
 - 状态建议：**PASS（阶段 05 技术/交互范围；视觉细节 P1）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`3890822b66041c4d4d0dca6ad9a976cd08d288f5`（阶段 04 rev4）
-- 结束 Commit：`<PHASE05_SHA>`
+- 结束 Commit：`09a26e4da858b2e99f0d25f0df18bc6d349f0979`
 - 分支：`main`
 - 工作区 `git status --short`：提交后记录（目标为空）
 
