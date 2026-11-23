@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-23",
+  "browser": "Chrome 157 headless via CDP",
+  "page": "http://127.0.0.1:8796/sandbox.html",
+  "assertions": {
+    "focusSubsurface": {"zoneId": "subsurface", "stageId": "drill", "stageAlias": 0, "result": "passed"},
+    "focusOilfield": {"zoneId": "oilfield", "stageId": "drill", "result": "passed"},
+    "detailSeparator": {"zoneId": "gathering", "objectId": "three_phase_separator", "deviceName": "三相分离器", "storeSelected": "three_phase_separator", "result": "passed"},
+    "detailTank": {"zoneId": "storage", "objectId": "floating_roof_tank", "deviceName": "外浮顶储罐", "storeSelected": "floating_roof_tank", "result": "passed"},
+    "detailTower": {"zoneId": "refining", "objectId": "atmospheric_tower", "deviceName": "常压蒸馏塔", "storeSelected": "atmospheric_tower", "result": "passed"},
+    "legacyAliases": {"scene": "oil_industry_journey", "stage": 2, "object": "floating_roof_tank", "knowledge": "kb_store", "mode": "free", "result": "passed"},
+    "interaction": {"action": "choose_fraction", "value": "topgas", "unit": "示意", "actionId": "choose_fraction", "resultNull": true, "result": "passed"},
+    "historyAcrossDetail": {"count": 2, "preservedAfterEnter": true, "preservedAfterExit": true, "result": "passed"},
+    "exitRestoresSelection": {"selectedBefore": "floating_roof_tank", "selectedAfter": "floating_roof_tank", "structureAfter": "full", "animationAfter": "paused", "result": "passed"}
+  },
+  "notes": "Actual browser test; no FPS/API."
+}

@@ -168,6 +168,28 @@ def join_by_material(asset_id):
     return merged
 
 
+def join_by_prefix(asset_id):
+    groups = {}
+    for obj in [o for o in bpy.context.scene.objects if o.type == "MESH"]:
+        prefix = obj.name.split("__")[0] if "__" in obj.name else "static"
+        groups.setdefault(prefix, []).append(obj)
+    merged = []
+    for prefix, objects in groups.items():
+        bpy.ops.object.select_all(action="DESELECT")
+        for obj in objects:
+            obj.select_set(True)
+        bpy.context.view_layer.objects.active = objects[0]
+        if len(objects) > 1:
+            bpy.ops.object.join()
+        joined = bpy.context.object
+        joined.name = "%s_%s" % (asset_id, prefix)
+        merged.append(joined)
+    bpy.ops.object.select_all(action="SELECT")
+    bpy.context.view_layer.objects.active = merged[0]
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    return merged
+
+
 def asset_stats(asset_id, anchors, budget):
     triangles = 0
     vertices = 0
@@ -356,7 +378,16 @@ def build_pumpjack():
         rod_between("walk_rail_%02d" % i, dark, (-0.9 + i * 0.32, 1.62, 1.0), (-0.9 + i * 0.32, 1.62, 1.7), 0.02, 6)
     rod_between("walk_top", dark, (-0.9, 1.62, 1.7), (1.6, 1.62, 1.7), 0.025, 8)
 
-    join_by_material("pumpjack")
+    beam_names = {"beam", "beam_rear", "horsehead", "horsehead_mount", "horsehead_back", "bridle", "carrier_bar"}
+    for obj in [o for o in bpy.context.scene.objects if o.type == "MESH"]:
+        name = obj.name
+        if name.split(".")[0] in beam_names or name.startswith(("beam", "horsehead", "bridle", "carrier")):
+            obj.name = "beam__" + name
+        elif name.startswith(("crank", "counterweight")):
+            obj.name = "crank__" + name
+        else:
+            obj.name = "static__" + name
+    join_by_prefix("pumpjack")
     anchors = [
         {"id": "horsehead", "name": "驴头", "pos": [2.7, 0, 3.45]},
         {"id": "beam", "name": "游梁", "pos": [0.3, 0, 3.5]},
@@ -426,14 +457,18 @@ def build_floating_tank():
     for i in range(8):
         cyl("ladder_%02d" % i, dark, 0.03, 0.5, (R + 0.15, 0, 0.6 + i * 0.75), rot=(math.pi / 2, 0, 0), verts=8)
         cyl("ladder_side_%02d" % i, dark, 0.025, 0.7, (R + 0.15, -0.25, 0.6 + i * 0.75), verts=6)
+    # front ladder (facing the default camera) + top guard rail
+    for sx in (-0.35, 0.35):
+        cyl("front_ladder_rail_%.2f" % sx, dark, 0.035, H, (sx, -(R + 0.12), H / 2), verts=8)
+    for i in range(10):
+        cyl("front_ladder_rung_%02d" % i, dark, 0.03, 0.8, (0, -(R + 0.12), 0.5 + i * 0.55), rot=(0, math.pi / 2, 0), verts=8)
+    for i in range(10):
+        a = i / 9 * math.pi
+        cyl("top_rail_%02d" % i, dark, 0.03, 0.55, (math.cos(a) * (R - 0.15), math.sin(a) * (R - 0.15), H + 0.55), verts=8)
+    torus("top_rail_ring", dark, R - 0.15, 0.03, (0, 0, H + 0.55), major_seg=48)
     # inlet / outlet
     cyl("inlet", amber, 0.24, 0.8, (R + 0.35, 0, 1.2), rot=(0, math.pi / 2, 0), verts=24)
     cyl("outlet", amber, 0.24, 0.8, (R + 0.35, 0, 0.7), rot=(0, math.pi / 2, 0), verts=24)
-    # bund wall (teaching signal, low)
-    for sign in (-1, 1):
-        box("bund_%s" % sign, dark, (0.3, 12.0, 0.5), (sign * 6.6, 0, 0.25))
-        box("bund_%s_z" % sign, dark, (13.5, 0.3, 0.5), (0, sign * 6.6, 0.25))
-
     join_by_material("floating_roof_tank")
     anchors = [
         {"id": "deck", "name": "浮盘", "pos": [0, 0, H * 0.45]},
@@ -454,8 +489,13 @@ def build_heater():
     box("roof", light, (4.4, 3.4, 0.2), (0, 0, 3.1))
     cyl("stack", dark, 0.42, 6.0, (1.2, 0, 6.0), verts=28)
     cyl("stack_cap", steel, 0.55, 0.12, (1.2, 0, 9.05), verts=28)
-    # burner
-    box("burner", dark, (0.9, 0.9, 0.5), (-1.8, 0, 1.4))
+    # doors on the front face + burner outside + roof duct
+    for sx in (-0.95, 0.95):
+        box("door_%.2f" % sx, dark, (1.1, 2.0, 0.10), (sx, 0, 1.63))
+        box("door_frame_%.2f" % sx, amber, (1.2, 2.1, 0.05), (sx, 0, 1.60))
+    box("burner", dark, (0.9, 0.9, 0.6), (-1.8, 0, 1.85))
+    box("duct", steel, (1.4, 1.0, 0.7), (0.6, 0, 3.4))
+    cyl("duct_stack", dark, 0.22, 2.4, (0.6, 0, 4.6), verts=18)
     cyl("fuel_line", amber, 0.10, 1.4, (-2.7, 0, 0.7), rot=(0, math.pi / 2, 0), verts=18)
     # tubes on the outside of the cabin front (visible teaching abstraction)
     for i in range(4):

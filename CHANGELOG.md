@@ -1,5 +1,45 @@
 # CHANGELOG
 
+## 阶段 03 — 2026-11-22 · 世界骨架（代码，未通过 Hero 视觉门禁）
+
+- 六区概念空间：真实地面开口 + 台地高差 + S 形对角管线，五 stage/深链保持；页面标注“产业链空间示意 / 非真实地理比例”。
+- 新增 `web/world/registry.js`（6 zone / 13 device / 5 route）与 `web/world/state.js`（单一逻辑设备状态、overview/detail 绑定）。
+- 相机：总览/区域/设备近景/返回；`enterDetail/exitDetail` 相机级连续；用户拖动可接管。
+- 新增 `scene-architecture.md`、`asset-gaps.md`、`asset-pipeline.md`、`device-state-contract.md`、Blender 导出脚本与目录约定。
+- 修复 `ai.js` 右栏 AI 面板 `insertBefore` 回归；AI 内容归入 `.side__body`，不再撑破侧栏。
+- 证据：1440/1920 全景、六区截图、`detail-continuity-1440.mp4`；均标注程序化占位，不是 Hero 验收。
+- **Hero Asset Gate 仍未通过（BLOCKED）**；阶段 03 不宣称视觉/PASS。产品版本仍 3.4.0。
+
+## 阶段 03 rev3 — 2026-11-23 · 上下文契约返修
+
+- `syncSceneContext` 增量更新旧 context：保留 `scene/stage/object/knowledge/mode` 别名、interaction 旧键 + `actionId/result`、history 跨场景（12 条）。
+- `focusZone` 显式传 zoneId；`subsurface` 与 `oilfield` 共用 drill 但上下文不再一律 oilfield。
+- `enterDetail` 进入后同步 `selectedObjectId/object/deviceName/zoneId`，Store 与 context 同源；返回恢复进入前选择/上下文。
+- 分离器完成文案改为油→储运、气→回收/处理（特定工况火炬）、水→水处理；同步导览/设备卡/关卡/章节/AI 检索。
+- `reset()` 恢复 `overviewVisible=true` 并 apply；异步 Hero 替换后重新绑定，13/13 设备有实际 overview 表示。
+- 修正阶段 02 交接任务行“用户设计签收”为已执行/ACCEPTED（整段签收，未逐项勾选）。
+- 新增 `context-contract.json`；五关/深链/章节/塔页/fallback 重新通过；Hero 仍归 04–06。
+
+## 阶段 03 rev2 — 2026-11-22 · 审查返修
+
+- 修复设备状态 Store：bind 即时应用、切换重置旧设备 structure/animation、overview/detail 可见性分离、setOverviewVisible 全量重应用。
+- 区域镜头改为消费 `CAMERAS` position/lookAt；地下/储运/炼化按 1440 截图重新校准。
+- `enterDetail/exitDetail` 恢复 stage/章节/任务面板/`__sceneContext`/进入前选择；清空选择不重置设备状态。
+- 地面 Mesh 保留 `layerType=environment` 且不参与静态合并；合并桶保留 layerTypes；图层计数可断言。
+- 清理五关/完成弹窗/AI/chapters/kb-sources 中的浮顶零损耗、四种产品、产品绝对化表述。
+- 真实浏览器 l1–l5 进入/操作/退出、#stage 0–4、章节回链、塔页、context-loss fallback 回归；新增 `state-contract.json`、`level-e2e.json`、`fallback.json`。
+- 阶段 02 用户签收记录为 ACCEPTED（用户原话「签收阶段02。」）；Hero 仍归 04–06，不作为阶段 03 P0。
+
+
+## 设计基线 — 2026-11-22 · 阶段 02 体验设计（文档基线，非产品运行版本）
+
+- 方向 C《批次 YJ-001：一张能源通行证》；六区、三层地图、三个 Hero Moments、T0–T7 任务/五关映射。
+- 五知识章 + 两流程标记；T5 单一 priority；fraction→application→cityObject 映射与 5 张必做应用卡。
+- 六维正交状态、上下文兼容、N=5 验证方案、展厅显式复位、整场景性能预算。
+- 5 张浏览器灰盒参考、Hero 规格/阶段门禁、总控/交接模板落库。
+- **不改变产品版本号 3.4.0**；本条目只标识设计文档基线，不代表网页/3D 已实现或验收。
+
+
 ## 3.4.0 — 2026-11-21 · 连续产业链数字展馆（沙盘重构 + 导览 + 科学修正）
 
 - **空间重构**：五块漂浮底座改为一块 78×34 连续地形 + 五个嵌地分区 + 工艺脊线（物流带/管架/管线）+ 远景轮廓；新增下沉式地质剖面台阶（6 层岩性、储层油点、井筒/井口/抽油机）。
@@ -9,6 +49,22 @@
 - **科学修正**：l1 压力差示意边界；l3 删除排放量推断与“压没”；l4 改为五种馏分并说明馏分≠成品油；l5 产品路线不绝对化。
 - **稳定性**：l1–l4 真实 deltaTime；塔页 WebGL2 检测、上下文丢失处理、加载后 `setLevel(0)`。
 - **文档**：新增 audit-baseline / asset-inventory / experience-design / scene-map / scene-sandbox / implementation-report，重写塔场景文档；版本号统一 3.4.0。
+- **布局 B**：场景全宽、右栏可收成 46px、工具分两级、说明条压成一行、声明移入「关于本页」。
+- **主管线接入**：炼化区新增主管到装置进料口的连接管；程序化塔组 skipMerge 并隐藏，修复残留巨型楼梯。
+- **上下文恢复**：沙盘处理 `webglcontextlost/restored`，并用渲染帧数兜底隐藏提示；实测丢失提示出现、恢复后自动消失。
+- **录屏证据**：新增 100 秒导览与 65 秒自由探索录屏（CDP screencast + ffmpeg），并补充用户测试方案（未执行）。
+- **合成环境音**：新增 `assets/site/ambient.js` 与「声音」按钮，默认关闭、无音频资产、按环节变调、失败静默；明确标注非现场录音。
+- **塔页语义锚点**：热点坐标与对象匹配改读 `tower.meta.json`，旧坐标/正则仅作兜底；移动端本期明确不适配。
+- **设备列表 + 移动抽查**：新增可键盘操作的设备列表（13 项，与 3D 共用 objectId）；390/820 设备模拟无横向滚动。
+- **默认动画 + 装置清理**：流向默认播放、自动旋转默认开启、点选环节自动停；剔除常减压装置在总览下呈细线的 Ladder/Railing/Post 等。
+- **常减压装置 + 半剖 + 运动**：tower.obj 接入炼化区替换程序化双塔；新增「半剖」「自动旋转」按钮；抽油机按 static/beam/crank 三组导出并动画；地下开采相机拉远。
+- **五关 E2E**：headed Chrome 下五关全部「进入→操作→退出」通过，l1 压力 / l2 出口 / l3 液位 / l4 馏分 / l5 产品均写回 interaction 且退出后 levelId 清空；新增 `tools/level-e2e.cjs` 与 l2/l5 测试钩子。
+- **五关回归**：l1/l2/l3/l4/l5 入口与面板全部可进，l1/l3/l4 控件写回 interaction；修复退出后 `levelId` 残留；l2 退出与 3D 点选仍未自动化，见 `docs/scene-levels-qa.md`。
+- **真实帧率**：headed Chrome + CDP 实测 90 fps（105 calls / 50.5k 面 / DPR2 / AMD 集显），p95 11.3 ms；脚本 `tools/fps-probe.cjs`。
+- **静态合批**：按材质外观合并程序化杆件/栏杆/梯档，并把区域间管线与场景静态件并入，总览 draw calls 348 → 104（-70%），三角面基本不变；hero 容器 skipMerge 保证异步替换不被吞。
+- **性能基线**：新增 `__stage.stats()`；总览 348 draw calls / 49,010 面，地面处理 69 / 10,930，炼化 263 / 27,162。
+- **五台 Hero 资产接入**：抽油机/井口/外浮顶罐/加热炉也接入，合计 20 个材质 mesh，点击均弹对应卡片；缩放按场景校准。
+- **Hero 资产接入**：新增共享 OBJ 解析器 `obj-lite.js`；三相分离器已替换为 Blender 资产（5 材质 mesh、OBJ 8 ms），点击可弹设备卡片；其余四台未接入。
 - **Hero 资产 v1**：Blender 脚本生成五台设备（分离器 8,236 / 抽油机 1,208 / 井口 3,948 / 外浮顶罐 5,448 / 加热炉 1,364 三角面），按材质合并为 4–5 个对象，输出 OBJ/MTL/meta/stats 与 Cycles 预览；抽油机与加热炉标记“需美术复审/重做”，未接入沙盘。
 - **GLB spike**：Blender 三相分离器（10.4k 面 / 500 KB）导出并在真实浏览器加载（72 ms / 29 draw calls）；确认现有 three 包缺 GLTFLoader，近期推荐 OBJ 管线，见 `docs/asset-spike-separator.md`。
 

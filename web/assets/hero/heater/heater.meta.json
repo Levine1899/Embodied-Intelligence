@@ -1,7 +1,7 @@
 {
   "asset": "heater",
-  "triangles": 1364,
-  "vertices": 748,
+  "triangles": 1492,
+  "vertices": 824,
   "meshes": 4,
   "materials": 4,
   "size_m": {
@@ -46,7 +46,7 @@
   "up_axis_after_export": "Y",
   "note": "Teaching-grade medium detail; not an engineering model.",
   "files": {
-    "obj_bytes": 66996,
+    "obj_bytes": 74831,
     "mtl_bytes": 781
   }
 }

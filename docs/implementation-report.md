@@ -114,3 +114,57 @@ heater | 1,364 | 4 | 65 KB | 需重做结构 |
 - 全部在面数预算内；按材质合并，理论 draw call ≤ 5/台；
 - 未接入沙盘：缺共享 OBJ 解析器、材质映射、锚点注册与 LOD；
 - 预览为 Cycles CPU 渲染，不是应用内截图。
+
+
+## 附录 · Hero 资产接入（2026-11-22）
+
+- 新增 `web/assets/obj-lite.js` 共享 OBJ 解析器（静态网格，无贴图/骨骼）；
+- 分离器已替换为 Blender 资产：OBJ 8 ms / MTL 5 ms，5 个材质 mesh，点击弹「三相分离器」设备卡片；
+- 其余四台未接入：管线锚点、材质映射与 LOD 仍待处理；
+- 已知：管线与法兰未对齐，一根青色管线在画面上遮挡筒体。
+
+
+## 附录 · 五台 Hero 资产全部接入（2026-11-22）
+
+- 五台资产全部通过 `obj-lite.js` 接入，失败回退程序化模型；
+- 20 个材质 mesh，点击均能弹出对应设备卡片（名称逐一验证）；
+- 缩放：分离器 0.88 / 抽油机 0.55 / 井口 0.50 / 外浮顶罐 0.46 / 加热炉 0.80；
+- 遗留：管线未对齐、构图未按新资产调整、无 LOD。
+
+
+## 附录 · 性能基线（2026-11-22）
+
+`__stage.stats()` 实测（headless Chromium）：
+
+| 视角 | draw calls | 三角面 |
+|---|---|---|
+总览 | **104**（全部合批后） | 50,406 |
+地面处理 | 约 60 | 约 10,900 |
+炼化 | 约 120 | 约 27,000 |
+
+- Hero 资产本身只贡献 21 个 mesh；draw call 主要来自程序化杆件/塔环；
+- 真实 headed Chrome（CDP，AMD 集显 / DPR 2）实测 **90 fps**（p95 11.3 ms，0 长帧），headless 数字不可用于推断；
+- 若上移动端，348 calls 偏高，需合并杆件或做实例化。
+
+
+## 附录 · 五关回归（2026-11-22）
+
+逐关刷新 + 真实入口 `levelHook(i)` 测试：五关均可进入、面板可见、`levelId` 正确；l1 压力、l3 液位、l4 馏分选择写回 interaction；l5 退出后 `levelId` 残留，已在 `__stage.back()` 清除。l2 出口点选、l5 产品点选与 l2 退出动画未自动化，详见 [scene-levels-qa.md](scene-levels-qa.md)。
+
+
+## 附录 · 录屏与用户测试（2026-11-22）
+
+- `docs/recordings/01-guided-tour.mp4`：真实 headed Chrome 通过 CDP `Page.startScreencast` 录制，100 秒，7 步导览自动播放；
+- `docs/recordings/02-free-explore.mp4`：65 秒，覆盖总览、环节切换、设备列表、半剖、产品区；
+- 录制方式：Chrome 1280×800 + 禁用后台节流，帧序列经 ffmpeg 以 12 fps 编码；不是后期合成；
+- 用户理解测试**尚未执行**，仅提供方案与记录表：`docs/user-test-protocol.md`；
+- 限制：录制环境是 Windows + Chrome + AMD 集显，非真机、非 Safari。
+
+
+## 附录 · WebGL 上下文丢失与恢复（2026-11-22）
+
+- `webglcontextlost`：阻止默认行为、显示降级提示“三维上下文丢失，正在尝试恢复；下方流程节点与讲解仍可使用”；
+- `webglcontextrestored`：隐藏提示并 resize；
+- 兜底：恢复事件不一定触发（Chrome `WEBGL_lose_context` 实测只收到 lost），渲染循环在丢失 1.2 秒后若检测到 `renderer.info.render.calls > 0` 自动隐藏提示；
+- 实测：`loseContext()` 后提示出现；`restoreContext()` 后 3 秒内提示消失，calls 恢复 116、三角面 61,774；
+- 限制：这是沙盘主画布；塔页已有自己的 WebGL2 检测，但未做同样的恢复提示。

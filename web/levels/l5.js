@@ -1,5 +1,5 @@
 /* 关卡 05｜产品去向 —— 同样长在 V2 的场景里
-   台面上摆 8 件东西，挑出「来自石油」的那几件。
+   台面上摆 10 件东西，挑出「石油化工常见下游产品」的那几件。
    多选判断：点亮选中的，点「确认」校验。 */
 (function () {
   const stage = window.__stage;
@@ -10,7 +10,7 @@
   const pickables = [];
   const built = {};
 
-  /* 石基 = true 表示来自石油 */
+  /* oil = true 表示石油化工常见下游产品；不表示只能由石油生产 */
   const ITEMS = [
     { name: '汽油', oil: true, shape: 'box' },
     { name: '柴油', oil: true, shape: 'cyl' },
@@ -113,9 +113,9 @@
   const ui = document.createElement('div');
   ui.className = 'lvl lvl--bottom';
   ui.innerHTML = [
-    '<div class="lvl__bar"><span class="lvl__step">05 / 05</span><b>产品去向 · 挑出来自石油的</b><span class="lvl__hint" id="l5-hint">镜头正在靠近产品台…</span></div>',
+    '<div class="lvl__bar"><span class="lvl__step">05 / 05</span><b>产品去向 · 挑出石油化工常见下游产品</b><span class="lvl__hint" id="l5-hint">镜头正在靠近产品台…</span></div>',
     '<div class="lvl__act" id="l5-act" hidden>',
-    '<p>这些是同一批出厂的东西。<b>点出真正来自石油的</b>，其他不用管。</p>',
+    '<p>这些是同一批出厂的东西。<b>点出石油化工常见下游产品</b>；它们也可能存在其他原料路线。</p>',
     '<div class="lvl__row"><b id="l5-count">已选 0</b><button type="button" class="lvl__chip on" id="l5-check">确认选择</button></div>',
     '<div class="lvl__out"><span id="l5-note">还没选</span></div>',
     '</div>',
@@ -184,7 +184,7 @@
     });
     const log = (window.__leadai && window.__leadai.ledger) || [];
     log.push({ k: '看', t: '产品去向：石油制品与它以外的东西' });
-    log.push({ k: '动手', t: '挑出真正来自石油的', d: picked.size + ' 件' });
+    log.push({ k: '动手', t: '挑出石油化工常见下游产品', d: picked.size + ' 件' });
     if (stage.setNodeDone) stage.setNodeDone(4, true);
     back.classList.add('pulse');
     back.textContent = '完成，返回总览 →';
@@ -234,7 +234,7 @@
 
     fly(startPos, startT,
       new THREE.Vector3(anchor.x, 11.5, anchor.z + 10.5), new THREE.Vector3(anchor.x, 1.2, anchor.z), 1800, function () {
-        hint.textContent = '点出真正来自石油的';
+        hint.textContent = '点出石油化工常见下游产品';
         act.hidden = false;
       });
   }
@@ -255,5 +255,5 @@
 
   back.onclick = exit;
   window.__lvlEntry(4, '进入 05 产品去向', enter);
-  window.__l5 = { enter: enter, exit: exit };
+  window.__l5 = { enter: enter, exit: exit, toggle: toggle };
 })();

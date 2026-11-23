@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-22",
+  "browser": "Chrome 157 headless via CDP",
+  "test": "dispatch webglcontextlost on live canvas; verify fallback UI",
+  "sandbox": {
+    "fallbackHidden": false,
+    "fallbackVisible": true,
+    "text": "三维上下文丢失，正在尝试恢复；下方流程节点与讲解仍可使用。"
+  },
+  "tower": {
+    "fallbackVisible": true,
+    "textPrefix": "三维场景不可用，已切换到 2D 剖面。",
+    "content": "塔顶气 → 冷凝器；石脑油（上部侧线）；煤油；柴油；常压渣油 → 减压塔；原油进料（加热后）"
+  },
+  "limitation": "这是运行时上下文丢失触发的 fallback，不是重新以无 WebGL 浏览器冷启动；冷启动路径仍由代码保证。"
+}

@@ -43,3 +43,11 @@
 - 常压塔按沸点范围分出：塔顶油气、石脑油馏分、煤油馏分、柴油馏分、常压渣油；**馏分不等于成品油**。
 - 减压塔的作用是降低压力、降低沸点，避免高温裂解。
 - 汽相/液相粒子只解释塔内接触方向，不表示真实流量、温度或塔板效率。
+
+
+## 语义锚点（2026-11-22）
+
+- 热点位置与对象匹配改为读取 `assets/tower/tower.meta.json`：`anchor_web_y_up` 提供目标点，`groups.hotspots` 提供对象名；
+- 映射：`hs_crude_feed → anchor_tower_feed`、`hs_atm_tower → anchor_tower_overview`、`hs_vacuum → anchor_tower_vacuum`、`hs_products → anchor_tower_products`；加热炉用 `heater_bbox_obj_y_up` 中心；
+- 取不到 meta 时保留旧的坐标/正则作为兜底；
+- 实测 `tower.meta.json` 200，5 个热点可点，详情正常。

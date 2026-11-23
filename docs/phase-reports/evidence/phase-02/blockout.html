@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Phase 02 灰盒参考 · 六区与三个 Hero</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#d6d6d6;color:#222;font-family:"Microsoft YaHei",sans-serif}
+  canvas{display:block}
+  .hud{position:fixed;left:24px;top:20px;z-index:3;background:rgba(245,245,242,.85);border:1px solid #999;padding:12px 14px;max-width:420px}
+  .hud b{font-size:16px;letter-spacing:.06em}
+  .hud p{margin:6px 0 0;font-size:11px;line-height:1.5;color:#444}
+  .labels{position:fixed;inset:0;pointer-events:none;z-index:2}
+  .lbl{position:absolute;transform:translate(-50%,-50%);font-size:11px;background:rgba(255,255,255,.72);border:1px solid #888;padding:3px 6px;white-space:nowrap}
+  .lbl.hero{background:#222;color:#fff;border-color:#222;font-weight:700}
+  .note{position:fixed;left:24px;bottom:18px;z-index:3;font-size:11px;color:#333;background:rgba(255,255,255,.72);padding:5px 8px;border:1px solid #999}
+  .view{position:fixed;right:24px;bottom:18px;z-index:3;font-size:11px;color:#444;background:rgba(255,255,255,.72);padding:5px 8px;border:1px solid #999}
+</style>
+</head>
+<body>
+<div class="hud">
+  <b id="title">六区世界总览 · 灰盒</b>
+  <p id="desc">设计 blockout：只锁定体量、前中远景、S 形路线与视觉焦点；不是最终资产、不是网页截图。</p>
+</div>
+<div class="labels" id="labels"></div>
+<div class="note">Phase 02 视觉参考 · 灰盒占位 · 非最终 Hero Asset</div>
+<div class="view" id="view">overview</div>
+
+<script src="../../../../web/assets/three.browser.js"></script>
+<script>
+(function(){
+  const params = new URLSearchParams(location.search);
+  const view = params.get('view') || 'overview';
+  document.getElementById('view').textContent = view;
+  const titles = {
+    overview:['六区世界总览 · 灰盒','前：城市/地下切口；中：集输/罐区；远：炼化高地。S 形路线与高差。'],
+    subsurface:['地下 Hero · 灰盒','地层/储层/井筒/井口关系；垂直夸张，不是真实井深。'],
+    separator:['三相分离器 Hero · 灰盒','半剖关系：壳体/挡板/堰板/三个出口；仅锁体量与可读性。'],
+    tower:['蒸馏塔 Hero · 灰盒','全剖关系：塔板/降液管/侧线；外观与内部同轴。'],
+    entry:['首次入场 · 灰盒','地下剖面唯一主焦点；城市不进入高对比，留到 T6 揭示。']
+  };
+  document.getElementById('title').textContent = titles[view][0];
+  document.getElementById('desc').textContent = titles[view][1];
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xd6d6d6);
+  scene.fog = new THREE.Fog(0xd6d6d6, 55, 110);
+
+  const camera = new THREE.PerspectiveCamera(40, innerWidth/innerHeight, 0.1, 300);
+  const renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.shadowMap.enabled = true;
+  document.body.appendChild(renderer.domElement);
+
+  const hemi = new THREE.HemisphereLight(0xffffff, 0x777777, 2.2); scene.add(hemi);
+  const sun = new THREE.DirectionalLight(0xffffff, 2.0);
+  sun.position.set(-30, 42, 28); sun.castShadow = true;
+  sun.shadow.mapSize.set(1024,1024);
+  sun.shadow.camera.left=-55; sun.shadow.camera.right=55; sun.shadow.camera.top=55; sun.shadow.camera.bottom=-55;
+  scene.add(sun);
+
+  const mat = (v, rough=0.9) => new THREE.MeshStandardMaterial({color:v, roughness:rough, metalness:0.05});
+  const dark = mat(0x3a3a3a, .8), mid = mat(0x777777, .9), light = mat(0xb8b8b8, .95), pale = mat(0xdadada, 1);
+  const lineMat = new THREE.LineBasicMaterial({color:0x555555});
+
+  function box(w,h,d,x,y,z,m){ const g=new THREE.BoxGeometry(w,h,d); const o=new THREE.Mesh(g,m||mid); o.position.set(x,y,z); o.castShadow=o.receiveShadow=true; scene.add(o); return o; }
+  function cyl(rt,rb,h,x,y,z,m,seg=20){ const o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg),m||mid); o.position.set(x,y,z); o.castShadow=o.receiveShadow=true; scene.add(o); return o; }
+
+  // ground + S route
+  // ground with a rectangular cutout so the subsurface blockout is visible
+  box(10,0.6,72,-39,-0.4,-2,pale);   // west strip
+  box(62,0.6,72,17,-0.4,-2,pale);    // east strip
+  box(20,0.6,38,-24,-0.4,-19,pale);  // north strip
+  const routePts = [
+    new THREE.Vector3(-24,-0.05,10), new THREE.Vector3(-18,-0.05,15),
+    new THREE.Vector3(-2,-0.05,4), new THREE.Vector3(12,-0.05,-3),
+    new THREE.Vector3(22,-0.05,-13), new THREE.Vector3(29,-0.05,8)
+  ];
+  const curve = new THREE.CatmullRomCurve3(routePts);
+  const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 80, 0.12, 6, false), new THREE.MeshStandardMaterial({color:0x333333, roughness:.8}));
+  scene.add(tube);
+
+  // subsurface cutaway (left foreground)
+  const sub = new THREE.Group(); scene.add(sub);
+  const layers = [
+    [0,-1.2, 0xb8b8b8],[-1.2,-3.0,0x9f9f9f],[-3.0,-5.0,0x8a8a8a],
+    [-5.0,-7.2,0x747474],[-7.2,-9.6,0x606060]
+  ];
+  layers.forEach(([top,bottom,c])=>{
+    const h=Math.abs(top-bottom);
+    const b=box(15,h,11,-24,(top+bottom)/2,8, mat(c,1));
+    b.receiveShadow=true;
+  });
+  // reservoir lens and wellbore
+  box(9,0.7,6.5,-24,-3.2,8, mat(0x4d4d4d,1));
+  for(let i=0;i<18;i++){
+    const s=cyl(0.08,0.08,0.10,-28+Math.random()*8,-3.15,6+Math.random()*4,dark,6);
+    s.rotation.x=Math.PI/2;
+  }
+  // front-face schematic: wellbore + reservoir band (blockout only)
+  cyl(0.32,0.32,12,-20.5,-3,13.85,dark,12);
+  box(8,0.7,0.22,-24,-3.2,13.85, mat(0x4a4a4a,1));
+  for(let i=0;i<10;i++){ box(0.12,0.12,0.24,-28+Math.random()*8,-3.2,14.0,dark); }
+  cyl(0.35,0.35,12,-20.5,3,8,dark,12);
+  box(2.2,0.5,2.2,-20.5,0.6,8,mid);
+  cyl(0.2,0.2,2.4,-20.5,2.4,8,dark,10);
+
+  // oilfield
+  const field = new THREE.Group(); scene.add(field);
+  for(let i=0;i<3;i++){
+    const x=-26+i*4.2, z=16+(i%2)*2;
+    const parts=[];
+    parts.push(box(2.6,0.5,2.0,x,0.25,z,mid));
+    parts.push(box(0.5,2.8,0.5,x-0.5,1.7,z,mid));
+    const beam=box(3.6,0.35,0.45,x+0.8,3.0,z,dark); beam.rotation.z=-0.15; parts.push(beam);
+    parts.push(box(1.0,0.9,0.7,x+2.4,2.8,z,mid));
+    parts.push(cyl(0.28,0.34,1.2,x-1.1,0.8,z,dark,10));
+    parts.push(cyl(0.18,0.18,1.8,x-1.1,1.8,z,mid,8));
+    parts.forEach(o=>field.add(o));
+  }
+  // gathering
+  const sepFull = new THREE.Group(); scene.add(sepFull);
+  const sepBody = new THREE.Mesh(new THREE.CylinderGeometry(1.1,1.1,6,20), mid);
+  sepBody.rotation.z=Math.PI/2; sepBody.position.set(-2,2.1,4); sepBody.castShadow=true; sepFull.add(sepBody);
+  box(1.0,1.7,1.8,-2,0.85,4,dark);
+  box(1.0,1.7,1.8,2.2,0.85,4,dark);
+  cyl(0.25,0.25,1.4,-2,3.3,4,mid,10);
+  // separator cut group (shown in separator view)
+  const sepCut = new THREE.Group(); scene.add(sepCut); sepCut.visible=false;
+  const half = new THREE.Mesh(new THREE.CylinderGeometry(1.1,1.1,6,20,1,true,0,Math.PI), mid);
+  half.rotation.z=Math.PI/2; half.rotation.y=Math.PI; half.position.set(-2,2.1,4); half.castShadow=true; sepCut.add(half);
+  // internals: inlet baffle, weir, trays
+  box(0.18,1.8,1.9,-3.4,2.1,4,dark);
+  box(0.18,1.3,1.9,-1.2,1.8,4,dark);
+  box(0.18,0.9,1.9,0.8,1.4,4,dark);
+  // three outlets
+  cyl(0.18,0.18,1.3,-2,3.6,4,mid,8);
+  cyl(0.18,0.18,1.3,1.0,2.6,5.6,mid,8).rotation.x=Math.PI/2;
+  cyl(0.18,0.18,1.3,-2,0.5,4,mid,8);
+  // storage
+  for(let i=0;i<2;i++) cyl(2.2,2.2,3.2,10+i*5,1.6,-5,mid,24);
+  box(12,0.5,1.0,12,0.25,1.8,dark);
+  // refining (elevated)
+  const plat = box(19,1.4,17,22,0.7,-16, mat(0x888888,1));
+  const towerFull = cyl(1.3,1.5,15,22,8.5,-17,mid,18);
+  cyl(0.9,1.0,9,26,5.5,-19,mid,16);
+  box(2.6,2.8,2.6,19,2.1,-14,dark);
+  cyl(0.45,0.55,14,27,7,-22,dark,12);
+  // tower cut: half shell + trays/downcomers/side lines
+  const towerCut = new THREE.Group(); scene.add(towerCut); towerCut.visible=false;
+  const shellHalf = new THREE.Mesh(new THREE.CylinderGeometry(1.3,1.5,15,18,1,true,0,Math.PI), mid);
+  shellHalf.position.set(22,8.5,-17); shellHalf.rotation.y=Math.PI; shellHalf.castShadow=true; towerCut.add(shellHalf);
+  for(let i=0;i<8;i++){
+    const y=2.2+i*1.7;
+    box(3.0,0.12,2.2,22,y,-17,light);
+    box(0.16,1.2,0.9,23.2,y+0.5,-16.4,dark); // downcomer
+  }
+  for(let i=0;i<3;i++){ const p=cyl(0.13,0.13,2.4,24.2,5.2+i*3.0,-17,mid,8); p.rotation.z=Math.PI/2; }
+  // city
+  for(let i=0;i<9;i++){
+    const h=2+((i*7)%5);
+    box(2.2,h,2.2,25+(i%4)*3.2, h/2, 8+Math.floor(i/4)*4, mat(0x9a9a9a,1));
+  }
+  box(14,0.25,4,30,0.1,6,dark);
+  box(1.2,1.2,1.2,28,0.7,10,mid);
+  // product table
+  box(5,0.8,2.5,33,0.5,12,light);
+
+  // labels
+  const labels = [
+    ['地下剖面', new THREE.Vector3(-24,-3,8), 'hero'],
+    ['油田地面', new THREE.Vector3(-18,4,16), ''],
+    ['集输/分离', new THREE.Vector3(-2,4.5,4), 'hero'],
+    ['储运', new THREE.Vector3(12,4.5,-5), ''],
+    ['炼化高地', new THREE.Vector3(23,17,-17), 'hero'],
+    ['城市应用', new THREE.Vector3(31,6,10), '']
+  ];
+  const labelEls = labels.map(([text,pos,cls])=>{
+    const el=document.createElement('div'); el.className='lbl '+cls; el.textContent=text;
+    document.getElementById('labels').appendChild(el); return {el,pos};
+  });
+
+  const cam = {
+    overview:{p:new THREE.Vector3(40,24,50), t:new THREE.Vector3(0,1,2)},
+    subsurface:{p:new THREE.Vector3(-24,3,32), t:new THREE.Vector3(-24,-4,8)},
+    separator:{p:new THREE.Vector3(-7,5.5,15), t:new THREE.Vector3(-1.8,2,4)},
+    tower:{p:new THREE.Vector3(31,12,-3), t:new THREE.Vector3(22,7,-17)},
+    entry:{p:new THREE.Vector3(-24,9,32), t:new THREE.Vector3(-25,-2,4)}
+  }[view];
+  camera.position.copy(cam.p); camera.lookAt(cam.t);
+
+  if(view==='separator'){ sepFull.visible=false; sepCut.visible=true; }
+  if(view==='tower'){ towerFull.visible=false; towerCut.visible=true; }
+  if(view==='subsurface' || view==='entry'){ field.visible=false; }
+
+  function project(v){
+    const p=v.clone().project(camera);
+    return {x:(p.x*.5+.5)*innerWidth, y:(-.5*p.y+.5)*innerHeight, z:p.z};
+  }
+  function animate(){
+    requestAnimationFrame(animate);
+    labelEls.forEach(({el,pos})=>{
+      const q=project(pos);
+      el.style.display = q.z<1 ? 'block':'none';
+      el.style.left=q.x+'px'; el.style.top=q.y+'px';
+    });
+    renderer.render(scene,camera);
+  }
+  animate();
+  window.addEventListener('resize',()=>{
+    camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth,innerHeight);
+  });
+})();
+</script>
+</body>
+</html>

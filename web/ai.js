@@ -59,7 +59,7 @@
       a: '会。油温降下来黏度上升，蜡会析出。<b>加热输送 + 清管</b>是常规手段，高凝油还要掺稀或加降凝剂。',
       c: ['公开管道输送资料 · 含蜡原油', '中国石油 · 管道业务公开介绍'] },
     { k: ['储罐', '浮顶'], t: '储罐为什么是浮顶',
-      a: '浮顶跟着液面升降，<b>把油气空间压到几乎为零</b>，既减少蒸发损耗，也降低爆炸风险。',
+      a: '浮盘随液位升降，<b>减少油气空间</b>，通常可降低蒸发损耗，也有助于降低风险；但密封、附件和操作仍影响实际损耗，<b>不是零损耗</b>。',
       c: ['公开储运资料 · 浮顶罐', '中国石油 · 储运公开介绍'] },
     { k: ['运输', '一吨', '火车', '船'], t: '一吨油怎么运最划算',
       a: '长距离走<b>管道</b>最便宜；跨海走油轮；铁路和公路只适合短途或没有管道的地方。',
@@ -88,6 +88,7 @@
 
   /* ---------- 面板 DOM ---------- */
   const side = document.querySelector('.side');
+  const sideBody = side ? (side.querySelector('.side__body') || side) : null;
   if (!side) return;
 
   const box = document.createElement('div');
@@ -101,7 +102,7 @@
     '<div class="leadai__foot"><span id="leadai-pending">待审补库 0 条</span><span class="leadai__tiers" id="leadai-tiers">档位：<button type="button" data-tier="kid">童话</button><button type="button" data-tier="mid" aria-pressed="true" class="on">通俗</button><button type="button" data-tier="pro">工程</button></span></div>'
   ].join('');
   const src = side.querySelector('.source');
-  if (src) side.insertBefore(box, src); else side.appendChild(box);
+  if (src && src.parentNode) src.parentNode.insertBefore(box, src); else sideBody.appendChild(box);
 
   const logEl = box.querySelector('#leadai-log');
 
@@ -131,7 +132,7 @@
   const ext = document.createElement('div');
   ext.className = 'lext';
   ext.innerHTML = '<h3>延伸阅读 <em id="lext-n"></em></h3><ul id="lext-list"></ul>';
-  side.appendChild(ext);
+  sideBody.appendChild(ext);
 
   function renderExt() {
     const i = stageIndex();
@@ -404,7 +405,7 @@
   genBtn.className = 'genbtn genbtn--side';
   genBtn.innerHTML = '<b>生成本场材料</b><span>讲解词 / 推文 / 短视频脚本</span>';
   genBtn.onclick = () => { dlg.showModal(); runGen(); };
-  if (src) side.insertBefore(genBtn, src); else side.appendChild(genBtn);
+  if (src) sideBody.insertBefore(genBtn, src); else sideBody.appendChild(genBtn);
 
   dlg.querySelectorAll('#gen-genres [data-genre]').forEach(b => {
     b.onclick = () => {

@@ -168,8 +168,8 @@ footer a:hover{color:var(--accent)}
   </div>
 </footer>
 
-<script src="kb-sources.js"></script>
-<script src="chapters.js"></script>
+<script src="kb-sources.js?v=5"></script>
+<script src="chapters.js?v=ch2"></script>
 <script>
 (function () {
   var C = window.__CHAPTERS || [];
@@ -281,7 +281,7 @@ footer a:hover{color:var(--accent)}
     s += '<line x1="90" y1="120" x2="330" y2="120" stroke="' + AM + '" stroke-width="2.2"/>';
     s += '<text x="100" y="140" fill="' + AM + '" font-size="10.5">浮盘贴着油面升降</text>';
     s += '<text x="100" y="196" fill="#c9a06a" font-size="10.5">原油</text>';
-    s += '<text x="100" y="80" fill="' + MU + '" font-size="10.5">浮盘以上几乎没有气体空间 → 蒸发损耗小</text>';
+    s += '<text x="100" y="80" fill="' + MU + '" font-size="10.5">浮盘以上气体空间很小 → 蒸发损耗较低</text>';
     s += '<line x1="330" y1="60" x2="330" y2="210" stroke="' + AX + '" stroke-width="4"/>';
     s += '<line x1="330" y1="180" x2="470" y2="180" stroke="#4a6572" stroke-width="5"/>';
     s += '<circle cx="500" cy="180" r="16" fill="#132631" stroke="' + CY + '"/>';
@@ -289,7 +289,7 @@ footer a:hover{color:var(--accent)}
     s += '<line x1="516" y1="180" x2="640" y2="180" stroke="#4a6572" stroke-width="5"/>';
     s += '<text x="540" y="168" fill="' + MU + '" font-size="10.5">长距离管道</text>';
     s += '<text x="90" y="236" fill="' + MU + '" font-size="10.5">温度变化与收发油会造成"大小呼吸"，气体要回收或处理，不能直排。</text>';
-    return fig(s, '外浮顶罐剖面：浮盘随液位升降，油面上几乎没有气体空间；右侧为外输泵与管道（示意）');
+    return fig(s, '外浮顶罐剖面：浮盘随液位升降，油面上气体空间很小；右侧为外输泵与管道（示意）');
   }
 
   function svgProcess() {
