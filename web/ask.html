@@ -124,15 +124,33 @@
   .edit-actions button:disabled{opacity:.5;cursor:default}
   @media(hover:none){.user-actions{opacity:1}}
   .ans{margin:0;padding:0;border:0;background:transparent;border-radius:0}
-  .ans__t{font-size:15px;line-height:1.9;color:#cfc8ba;white-space:normal}
-  .ans__t h2{margin:0 0 16px;color:#e8e1d4;font-size:22px;line-height:1.4}
-  .ans__t h3{margin:22px 0 8px;color:#e2dbc9;font-size:16px}
-  .ans__t p{margin:0 0 12px}
-  .ans__t ul{margin:8px 0 16px;padding-left:22px}
-  .ans__t li{padding-left:3px;margin:6px 0}
-  .ans__t blockquote{margin:20px 0 0;padding:2px 0 2px 16px;border-left:3px solid #b38a4a;color:#b6b0a2}
+  .ans__t{font-size:16px;line-height:1.75;color:#cfc8ba;overflow-wrap:anywhere;white-space:normal}
+  .ans__t p{margin:.6em 0}
+  .ans__t > :first-child{margin-top:0}
+  .ans__t > :last-child{margin-bottom:0}
+  .ans__t h1,.ans__t h2,.ans__t h3,.ans__t h4,.ans__t strong{color:#e8e1d4}
+  .ans__t h1{font-size:1.7em;line-height:1.2;margin:0 0 .5em}
+  .ans__t h2{font-size:1.35em;line-height:1.35;margin:1.8em 0 .5em}
+  .ans__t h3{font-size:1.1em;line-height:1.6;margin:1.4em 0 .4em}
+  .ans__t h4{font-size:1em;line-height:1.5;margin:1em 0 .4em}
+  .ans__t strong{font-weight:600}
+  .ans__t ul,.ans__t ol{margin:.5em 0 1em;padding-inline-start:1.2rem}
+  .ans__t li{margin:.25em 0}
+  .ans__t li::marker{color:#9a948a}
+  .ans__t li > p{margin:.25em 0}
+  .ans__t blockquote{margin:1.4em 0;padding-inline-start:1em;border-inline-start:.25rem solid #4a4438;color:#e2dbc9}
+  .ans__t a{color:#d8a24a;text-decoration:none;overflow-wrap:anywhere}
+  .ans__t a:hover{text-decoration:underline}
+  .ans__t :not(pre)>code{padding:.15em .4em;border-radius:.3em;background:#23241f;font-size:.875em}
+  .ans__t pre{overflow:auto;padding:1em;border:1px solid #3d3a33;border-radius:6px;background:#141816;white-space:pre}
+  .ans__t table{width:100%;margin:1em 0;border-collapse:collapse;font-size:.875em}
+  .ans__t th,.ans__t td{padding:.4em .6em;text-align:left;border-bottom:1px solid #3d3a33}
+  .ans__t hr{margin:1.4em 0;border:0;border-top:1px solid #3d3a33}
   .answer-actions{display:flex;align-items:center;gap:4px;margin-top:16px;color:#789099;font-size:12px}
-  .loading{color:#9aafb6;font-size:14px}
+  .loading{display:flex;align-items:center;gap:9px;color:#9aafb6;font-size:14px}
+  .loading::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amber);animation:answer-pulse 1.2s ease-in-out infinite}
+  @keyframes answer-pulse{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+  @media(prefers-reduced-motion:reduce){.loading::before{animation:none}}
   body:not(.is-empty) .composer{position:fixed;z-index:2;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,800px);padding:16px 24px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#0b0f11 18%)}
   body:not(.is-empty) .hintbox{text-align:center;color:#758b93}
   @media(max-width:600px){body:not(.is-empty) main{padding:24px 18px 270px}body:not(.is-empty) .composer{padding-inline:18px}.turn__q{max-width:90%}.ans__t h2{font-size:20px}}
@@ -245,6 +263,8 @@
   <div class="chips" id="chips"></div>
 </main>
 
+<script src="assets/vendor/marked.umd.js"></script>
+<script src="assets/vendor/purify.min.js"></script>
 <script>
 (function () {
   const $ = selector => document.querySelector(selector);
@@ -254,6 +274,8 @@
   const chips = $('#chips');
   const initialPlaceholder = questionInput.placeholder;
   let pending = null;
+  let conversationId = '';
+  let userId = crypto.randomUUID();
   const examples = [
     { question:'石油为什么是黑色的', keys:/黑色|颜色/, title:'石油为什么通常是黑色的？', intro:'石油并不都是黑色的。它的颜色可以从浅黄、棕褐到深黑，主要取决于其中不同成分的比例。', points:['原油由多种烃类和少量其他物质组成，成分不同，外观也会不同。','较重的组分以及胶质、沥青质含量较高时，原油往往颜色更深。','颜色较浅的原油通常含有较多轻质组分，但不能仅凭颜色判断品质。'], summary:'简单说，石油的颜色是多种成分共同作用的结果。' },
     { question:'为什么油藏在石头里', keys:/石头|岩石|油藏|岩心/, title:'油为什么能藏在石头里？', intro:'地下的石油通常不是聚集在巨大的空洞中，而是存在于储层岩石的微小孔隙里。', points:['砂岩等储层岩石内部有许多细小孔隙，像海绵一样可以容纳流体。','孔隙相互连通时，油和气能够在一定条件下流动。','上方的致密盖层可以阻挡油气继续向上运移，帮助形成油藏。'], summary:'理解油藏的关键，是岩石的孔隙、连通性和封闭条件。' },
@@ -294,6 +316,13 @@
       points:['可以试试询问石油的颜色、油藏、浮顶罐、汽油与柴油、合成纤维或原油黏度。'],
       summary:'也可以从推荐问题开始探索。'
     };
+  }
+  function renderAnswer(content, text) {
+    // 流式输出尚未闭合的加粗标记时，也按加粗显示。
+    const lastLine = text.slice(text.lastIndexOf('\n') + 1);
+    if ((lastLine.match(/\*\*/g) || []).length % 2) text += text.endsWith('*') && !text.endsWith('**') ? '*' : '**';
+    else if (text.endsWith('*') && !text.endsWith('**')) text = text.slice(0, -1);
+    content.innerHTML = DOMPurify.sanitize(marked.parse(text));
   }
   function createUserMessage(question, prompt, turn) {
     const wrapper = node('div', 'user-message');
@@ -338,6 +367,8 @@
         event.preventDefault();
         const value = input.value.trim();
         if (!value || value === question || pending) return;
+        conversationId = '';
+        userId = crypto.randomUUID();
         let next = turn;
         while (next) { const following = next.nextElementSibling; next.remove(); next = following; }
         ask(value);
@@ -353,7 +384,7 @@
     wrapper.append(prompt, actions);
     return wrapper;
   }
-  function ask(value, existingTurn = null) {
+  async function ask(value, existingTurn = null) {
     const question = value.trim().slice(0, 300);
     if (!question || pending) return;
     if (document.body.classList.contains('is-empty')) {
@@ -376,50 +407,59 @@
       output.append(turn);
       window.scrollTo({ top:document.documentElement.scrollHeight });
     }
-    const request = { timer:null };
+    const request = { controller:new AbortController() };
     pending = request;
-    request.timer = setTimeout(() => {
-      if (pending !== request) return;
-      const data = answerFor(question);
-      const content = node('div', 'ans__t');
-      const blocks = [
-        { tag:'h2', text:data.title },
-        { tag:'p', text:data.intro },
-        { tag:'h3', text:'可以这样理解' },
-        ...data.points.map(text => ({ tag:'li', text })),
-        { tag:'blockquote', text:data.summary }
-      ];
-      const list = node('ul');
-      answer.replaceChildren(content);
-      let blockIndex = 0;
-      let charIndex = 0;
-      let current = null;
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      function stream() {
-        if (pending !== request) return;
-        const followScroll = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 300;
-        const block = blocks[blockIndex];
-        if (!current) {
-          current = node(block.tag);
-          if (block.tag === 'li') {
-            if (!list.isConnected) content.append(list);
-            list.append(current);
-          } else {
-            content.append(current);
+    const content = node('div', 'ans__t');
+    let text = '';
+    let rawText = '';
+    try {
+      const response = await fetch('/api/dify-chat', {
+        method:'POST', headers:{ 'Content-Type':'application/json' }, signal:request.controller.signal,
+        body:JSON.stringify({ question, conversation_id:conversationId, user:userId })
+      });
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.error || '请求失败，请稍后重试');
+      }
+      if (!response.body) throw new Error('浏览器不支持流式响应');
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let completed = false;
+      while (true) {
+        const part = await reader.read();
+        buffer += decoder.decode(part.value || new Uint8Array(), { stream:!part.done });
+        const events = buffer.split(/\r?\n\r?\n/);
+        buffer = events.pop();
+        for (const event of events) {
+          const data = event.split(/\r?\n/).filter(line => line.startsWith('data:')).map(line => line.slice(5).trimStart()).join('\n');
+          if (!data) continue;
+          let message;
+          try { message = JSON.parse(data); } catch { continue; }
+          if (message.event === 'error') throw new Error(message.message || '回答生成失败');
+          if (message.event === 'message' || message.event === 'agent_message') {
+            if (message.conversation_id) conversationId = message.conversation_id;
+            if (typeof message.answer === 'string') {
+              const followScroll = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 300;
+              rawText += message.answer;
+              text = rawText.replace(/<think\b[^>]*>[\s\S]*?<\/think\s*>/gi, '')
+                .replace(/<think\b[^>]*>[\s\S]*$/i, '')
+                .replace(/<\/think\s*>/gi, '')
+                .replace(/<think\b[^>]*$/i, '')
+                .replace(/<\/?t(?:h(?:i(?:n(?:k)?)?)?)?$/i, '');
+              if (text.trim()) {
+                if (!content.isConnected) answer.replaceChildren(content);
+                renderAnswer(content, text.trimStart());
+              }
+              if (followScroll) window.scrollTo({ top:document.documentElement.scrollHeight });
+            }
           }
+          if (message.event === 'message_end') completed = true;
         }
-        charIndex = Math.min(block.text.length, charIndex + (reducedMotion ? block.text.length : 2));
-        current.textContent = block.text.slice(0, charIndex);
-        if (charIndex === block.text.length) {
-          blockIndex += 1;
-          charIndex = 0;
-          current = null;
-        }
-        if (followScroll) window.scrollTo({ top:document.documentElement.scrollHeight });
-        if (blockIndex < blocks.length) {
-          request.timer = setTimeout(stream, reducedMotion ? 0 : 25);
-          return;
-        }
+        if (part.done) break;
+      }
+      if (!completed) throw new Error('回答中断，请重试');
+      if (!text) throw new Error('没有收到回答，请重试');
         const actions = node('div', 'answer-actions');
         actions.setAttribute('role', 'group');
         actions.setAttribute('aria-label', '回答操作');
@@ -441,16 +481,21 @@
         retry.title = '重新生成';
         retry.setAttribute('aria-label', '重新生成回答');
         retry.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4v5h-5M4 20v-5h5"/><path d="M5 9a8 8 0 0 1 13-3l2 3M19 15a8 8 0 0 1-13 3l-2-3"/></svg>';
-        retry.addEventListener('click', () => { if (!pending) ask(question, turn); });
+        retry.addEventListener('click', () => { if (!pending) { conversationId = ''; userId = crypto.randomUUID(); let next = turn.nextElementSibling; while (next) { const following = next.nextElementSibling; next.remove(); next = following; } ask(question, turn); } });
         actions.append(copy, retry);
         answer.append(actions);
+    } catch (error) {
+      if (error.name !== 'AbortError' && pending === request) {
+        content.textContent = (text ? text + '\n\n' : '') + (error.message || '回答失败，请稍后重试');
+        answer.replaceChildren(content);
+      }
+    } finally {
+      if (pending === request) {
         pending = null;
         sendButton.disabled = false;
         questionInput.placeholder = '继续追问…';
-        if (followScroll) window.scrollTo({ top:document.documentElement.scrollHeight });
       }
-      stream();
-    }, 650);
+    }
   }
   function resizeInput() {
     questionInput.style.height = 'auto';
@@ -471,7 +516,9 @@
   }
   $('#ask-form').addEventListener('submit', event => { event.preventDefault(); ask(questionInput.value); });
   $('#new-chat').addEventListener('click', () => {
-    if (pending) clearTimeout(pending.timer);
+    if (pending) pending.controller.abort();
+    conversationId = '';
+    userId = crypto.randomUUID();
     pending = null;
     output.replaceChildren();
     document.body.classList.add('is-empty');

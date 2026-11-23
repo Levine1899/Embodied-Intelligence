@@ -3,6 +3,7 @@
 // key 只存在于本机环境变量 / .env，浏览器拿不到。
 
 import http from 'node:http';
+import { Readable } from 'node:stream';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,15 +11,17 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 8790);
 
-async function loadKey() {
-  if (process.env.DEEPSEEK_API_KEY) return process.env.DEEPSEEK_API_KEY.trim();
+async function loadKey(name = 'DEEPSEEK_API_KEY') {
+  if (process.env[name]) return process.env[name].trim();
   try {
     const t = await readFile(path.join(ROOT, '.env'), 'utf8');
-    const m = t.match(/^\s*DEEPSEEK_API_KEY\s*=\s*(\S+)\s*$/m);
+    const m = t.match(new RegExp('^\\s*' + name + '\\s*=\\s*(\\S+)\\s*$', 'm'));
     return m ? m[1] : '';
   } catch { return ''; }
 }
 const KEY = await loadKey();
+const DIFY_KEY = await loadKey('DIFY_API_KEY');
+const DIFY_URL = (await loadKey('DIFY_API_URL') || 'http://121.196.165.49:8888/v1').replace(/\/$/, '');
 
 const SYS = `你是科普编辑。用户会给你一场参观/演示的过程记录，每条记录有类型（问 / 答 / 看 / 段）。
 请据此写一篇 220–300 字的科普短文，给普通公众看。
@@ -168,7 +171,7 @@ async function callAsk(question, ctx, tier, mode) {
 const server = http.createServer(async (req, res) => {
   const url = req.url.split('?')[0];
 
-  if (url !== '/api/gen' && url !== '/api/ask') {
+  if (url !== '/api/gen' && url !== '/api/ask' && url !== '/api/dify-chat') {
     res.writeHead(404, { 'Content-Type': 'application/json' });
     return res.end('{"error":"not found"}');
   }
@@ -176,7 +179,7 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(405, { 'Content-Type': 'application/json' });
     return res.end('{"error":"post only"}');
   }
-  if (!KEY) {
+  if (url !== '/api/dify-chat' && !KEY) {
     res.writeHead(503, { 'Content-Type': 'application/json' });
     return res.end('{"error":"no key"}');
   }
@@ -191,6 +194,38 @@ const server = http.createServer(async (req, res) => {
 
   let payload = {};
   try { payload = JSON.parse(body || '{}'); } catch {}
+
+  if (url === '/api/dify-chat') {
+    if (!DIFY_KEY) {
+      res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8' });
+      return res.end(JSON.stringify({ error: '尚未配置 Dify API Key，请检查 server/.env' }));
+    }
+    if (typeof payload.question !== 'string' || !payload.question.trim() || payload.question.length > 300 || typeof payload.user !== 'string' || !/^[a-zA-Z0-9-]{1,80}$/.test(payload.user) || (payload.conversation_id && !/^[a-f0-9-]{36}$/i.test(payload.conversation_id))) {
+      res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+      return res.end(JSON.stringify({ error: '请求参数无效' }));
+    }
+    const controller = new AbortController();
+    res.on('close', () => controller.abort());
+    try {
+      const upstream = await fetch(DIFY_URL + '/chat-messages', {
+        method: 'POST', signal: controller.signal,
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + DIFY_KEY },
+        body: JSON.stringify({ inputs: {}, query: payload.question.trim(), response_mode: 'streaming', conversation_id: payload.conversation_id || '', user: payload.user })
+      });
+      if (!upstream.ok || !upstream.body) {
+        res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
+        return res.end(JSON.stringify({ error: 'Dify 请求失败（' + upstream.status + '），请检查应用配置。' }));
+      }
+      res.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache, no-transform', 'X-Accel-Buffering': 'no' });
+      Readable.fromWeb(upstream.body).on('error', () => res.destroy()).pipe(res);
+    } catch (e) {
+      if (!res.destroyed) {
+        res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ error: '无法连接 Dify 服务' }));
+      }
+    }
+    return;
+  }
 
   const t0 = Date.now();
   if (url === '/api/ask') {
