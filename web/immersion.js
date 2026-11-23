@@ -1132,6 +1132,7 @@
     });
     viewport.addEventListener('pointermove', function (event) {
       if (!dragging) return;
+      if (!event.buttons) { dragging = null; return; }
       if (Math.abs(event.clientX - dragging.x) + Math.abs(event.clientY - dragging.y) > 5) dragging.moved = true;
     if (activeScene && dragging) {
       if (!dragging.moved) return;
@@ -1160,40 +1161,40 @@
     });
     viewport.addEventListener('pointerup', function (event) {
       levelPivot = null;
-      if (activeScene) { dragging = null; return; }
-      if (dragging && !dragging.moved) {
-        const bounds = viewport.getBoundingClientRect();
-        raycaster.setFromCamera(new THREE.Vector2(
-          (event.clientX - bounds.left) / bounds.width * 2 - 1,
-          1 - (event.clientY - bounds.top) / bounds.height * 2
-        ), camera);
-        const hits = raycaster.intersectObjects(modelGroups, true);
-        if (hits.length) {
-          const hitPoint = hits[0].point.clone();
-          let object = hits[0].object;
-          let objectId = null;
-          let probe = object;
-          while (probe) {
-            if (probe.userData && probe.userData.objectId) { objectId = probe.userData.objectId; break; }
-            probe = probe.parent;
+      const drag = dragging;
+      dragging = null;
+      if (activeScene) return;
+      if (!drag || drag.moved) return;
+      const bounds = viewport.getBoundingClientRect();
+      raycaster.setFromCamera(new THREE.Vector2(
+        (event.clientX - bounds.left) / bounds.width * 2 - 1,
+        1 - (event.clientY - bounds.top) / bounds.height * 2
+      ), camera);
+      const hits = raycaster.intersectObjects(modelGroups, true);
+      if (hits.length) {
+        const hitPoint = hits[0].point.clone();
+        let object = hits[0].object;
+        let objectId = null;
+        let probe = object;
+        while (probe) {
+          if (probe.userData && probe.userData.objectId) { objectId = probe.userData.objectId; break; }
+          probe = probe.parent;
+        }
+        // 只有命中真实设备/节点才切换环节。地面、厂房等背景网格没有 objectId，
+        // 旧逻辑会把“空地”当成炼化地坪（stage=3）直接进入炼化，必须忽略。
+        if (!objectId) return;
+        while (object && object.userData.stage === undefined) object = object.parent;
+        if (object) {
+          const idx = object.userData.stage;
+          if (objectId) {
+            selectStage(idx, true, objectId, hitPoint);
+            return;
           }
-          // 只有命中真实设备/节点才切换环节。地面、厂房等背景网格没有 objectId，
-          // 旧逻辑会把“空地”当成炼化地坪（stage=3）直接进入炼化，必须忽略。
-          if (!objectId) return;
-          while (object && object.userData.stage === undefined) object = object.parent;
-          if (object) {
-            const idx = object.userData.stage;
-            if (objectId) {
-              selectStage(idx, true, objectId, hitPoint);
-              return;
-            }
-            const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
-            if (hook) { markLevel(idx); hook(); return; }
-            selectStage(idx, true, null, hitPoint);
-          }
+          const hook = window.__stage && window.__stage.levelHook && window.__stage.levelHook(idx);
+          if (hook) { markLevel(idx); hook(); return; }
+          selectStage(idx, true, null, hitPoint);
         }
       }
-      dragging = null;
     });
     viewport.addEventListener('pointercancel', function () { dragging = null; });
     viewport.addEventListener('contextmenu', function (event) { if (activeScene) event.preventDefault(); });
