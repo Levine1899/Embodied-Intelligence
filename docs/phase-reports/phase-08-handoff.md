@@ -4,7 +4,7 @@
 
 - 日期：2026-11-23
 - 阶段：08_AI_CONTEXT
-- 状态建议：**PASS（阶段 08 技术/交互范围；用户签收待完成）**
+- 状态建议：**REVISE（复审发现 1 个继承 P0 + 3 个功能/证据 P1；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`6047a59`（阶段 07 文档完成后的 main）
 - 结束 Commit（真实 SHA）：`4f3cec1fee38791e894471c66123cf0ae20e0159`
@@ -160,8 +160,8 @@ POST /api/gen        -> 200, textLength 477
 
 ## 9. Agent recommendation
 
-- **建议：PASS（阶段 08 技术/交互范围）**
-- 理由：
+- **建议：REVISE（复审后；阶段 08 技术实现可复现，但 P0 security 与 P1 入口/上下文链路未闭合）**
+- 理由（原技术实现）：
   - 场景上下文现在是单一 store，选中/关卡/交互/退出均有真实状态变化与断言；
   - AI 请求包含当前设备、知识点、已核验要点和最近操作；写作 handoff 带入事实并在无 handoff 时不继承；
   - 三类动作边界和执行前场景切换均安全拒绝，未修改当前场景；
@@ -182,3 +182,44 @@ POST /api/gen        -> 200, textLength 477
 - 本阶段是否停止：**是**。
 - 下一阶段是否允许开始：**否**；等待用户明确签收阶段 08 后才执行 `09_ACCEPTANCE_HARDENING.md`。
 - 等待事项：用户签收；P1 真实模型动作/独立问答上下文/跨浏览器等后续项；继承安全事项。
+
+
+## 12. Review addendum（2026-11-24，复审）
+
+复审结论：**REVISE**。29/0 断言只能证明被测试的路径；以下问题未被现有断言覆盖，不能在复审中建议 PASS。
+
+### P0-SEC-01（继承，未关闭）
+
+- 旧的上游 `server/.env` 历史仍可能含旧 Dify key；本轮部署已改为服务端 env（权限 600，前端无 key），但没有完成历史清理或第三方密钥吊销证明。
+- 这是仓库/部署安全 P0，不是 stage 08 UI P0；按 MASTER “任一 P0 未关闭不得建议 PASS”，本轮建议 REVISE。
+- 需要：确认旧 key 已轮换/吊销；清理远端历史（或至少记录风险接受人）。
+
+### P1-08-07（AI 入口在自由模式不可直接使用）
+
+- 设备卡的 `#device-ask` 只执行 `input.focus()` / `scrollIntoView`；自由模式下 `.layout` 没有 `rail-open`，`.side__body` 仍是 `display:none`，输入框 rect 为 0×0。
+- 实测：点击 `#device-ask` 后 `rail=false`、`sideDisplay=none`、`inputRect=0x0`；用户看不到 AI 面板，也没有低干扰的“已在等问题”提示。
+- 只有先点右栏“任务/资料”展开侧栏，才能使用 AI。入口体验不满足“设备选中时提供问问 AI”的可达性要求。
+- 建议：设备卡按钮同时调用 `setRail(true,'task')` 并聚焦/滚动到输入框；或提供独立可见的 AI 入口。
+
+### P1-08-08（写作 handoff 丢失场景记录）
+
+- `SceneContext.handoff()` / `buildForWriting()` 确实包含 `interaction`、`ledger`、`contextLines`；但 `write.html` 的 Dify 请求只发送 `topic/genre/facts/audience/style/draft/comment`，**interaction/ledger 没有进入请求**。
+- 因此“生成文案能继承已核验知识和场景记录”只验证了设备名与 facts；最近操作/操作记录没有进入 Dify，平台侧无法利用。
+- 建议：明确将 `scene` 作为独立字段送到写作代理/Dify 输入（标注“教学记录，不是已核验事实”），或在写入前把场景记录转成可见的“场景记录”段落；不得把它混入事实底稿冒充事实。
+
+### P1-08-09（AI 动作未做真实模型端到端）
+
+- 白名单、`parse()` 与 `AIActions.execute()` 已存在；但当前 `/api/ask` 提示词没有要求模型输出 fenced action block，Dify 页面也没有动作协议。
+- 本轮 3 个边界测试通过的是 `beforeApply`/直接调用 `AIActions` 的代码级注入，不是模型实际返回动作后的 UI 点击路径。
+- 建议：在受控提示词中加入动作块格式，或明确把动作建议降级为“仅本地白名单按钮”，并补一次真实模型 -> 解析 -> 用户点击的测试。
+
+### P1-08-10（证据与测试覆盖不足）
+
+- 测试使用 `__stage.selectStage` + `__stage.levelHook`、`SceneContext.handoff` 等 API，未覆盖真实 pointer 点击设备卡/入口。
+- `phase08-02-ai-context.png` 没有显示 AI 面板；现有截图不能作为“AI 入口可见”的证据。
+- 仅 1440×900 Chrome；无跨浏览器/移动端/长会话；无用户测试。
+
+### 复审建议
+
+- 先修 P1-08-07（入口可达）与 P1-08-08（场景记录进入写作），补真实 pointer 与真实模型动作证据；P0-SEC-01 由用户确认密钥/历史处置。
+- 在以上完成前，阶段 08 保持 **REVISE**；不得进入阶段 09。
