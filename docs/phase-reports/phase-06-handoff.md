@@ -7,7 +7,7 @@
 - 状态建议：**PASS（技术/交互范围；P0-ASSET-01 已修复；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`34c7839abcfec13da75f55fe61d8a23b73a86c77`
-- 结束 Commit（真实 SHA）：`__AUDIT2_SHA__`（阶段 06 audit-2 定点返修）
+- 结束 Commit（真实 SHA）：`555d6c992dd84b300453d449e9033673083e894b`（阶段 06 audit-2 定点返修）
 - 分支：`main`
 - 工作区 `git status --short`：提交后记录（目标为空）
 
