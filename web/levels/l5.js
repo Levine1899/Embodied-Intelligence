@@ -7,7 +7,7 @@
   const THREE = window.THREE;
 
   let G = null, camera = null, baseScene = null, anchor = null;
-  let processLines = null, processLinesVisible = true;
+  let factoryGroup = null, factoryVisible = true;
   const pickables = [];
   const built = {};
 
@@ -244,11 +244,11 @@
     if (stage.isLevel()) return;
     if (!G) build();
     ensureCamera();
-    /* 产品台近景前有厂区工艺管线，会遮挡“航空煤油”；本关只留产品台。 */
-    processLines = stage.scene && stage.scene.getObjectByName ? stage.scene.getObjectByName('processLines') : null;
-    if (processLines) {
-      processLinesVisible = processLines.visible;
-      processLines.visible = false;
+    /* 产品台近景里有厂区地面/工艺管线穿过，会遮挡“航空煤油”；本关只留产品台。 */
+    factoryGroup = stage.scene && stage.scene.getObjectByName ? stage.scene.getObjectByName('industry-sandbox') : null;
+    if (factoryGroup) {
+      factoryVisible = factoryGroup.visible;
+      factoryGroup.visible = false;
     }
 
     const startPos = stage.camera.position.clone();
@@ -272,9 +272,9 @@
   }
 
   function exit() {
-    if (processLines) {
-      processLines.visible = processLinesVisible;
-      processLines = null;
+    if (factoryGroup) {
+      factoryGroup.visible = factoryVisible;
+      factoryGroup = null;
     }
     act.hidden = true;
     ui.classList.remove('on', 'done');
