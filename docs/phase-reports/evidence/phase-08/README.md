@@ -83,3 +83,5 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase08-verify.cjs
 
 - `v62-l1-layer.png` / `v62-l1-casing.png`：地下开采地层与套管选中高亮（V62）。
 - `l1-flow-visible.png`：井筒与射孔段粒子动画（47% 压差）。
+
+- `v63-l5-labels-2.png`：V63 产品去向标签置顶检查（场景相机直接进入时仅作回归截图）。
