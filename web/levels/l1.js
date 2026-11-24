@@ -433,11 +433,12 @@
   }
 
   function addSurfacePipe() {
+    /* 地面集输管抬到地表以上，避免被台地/地层棱线截成两段。 */
     const pts = [
-      new THREE.Vector3(8.2, 0.55, -1.2),
-      new THREE.Vector3(11.5, 0.35, -2.8),
-      new THREE.Vector3(15.2, 0.25, -4.8),
-      new THREE.Vector3(18.0, 0.2, -6.0)
+      new THREE.Vector3(8.2, 1.05, -1.2),
+      new THREE.Vector3(11.5, 1.55, -2.8),
+      new THREE.Vector3(15.2, 1.9, -4.8),
+      new THREE.Vector3(18.0, 1.9, -6.0)
     ];
     const curve = new THREE.CatmullRomCurve3(pts);
     const pipe = new THREE.Mesh(

@@ -43,3 +43,5 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase08-verify.cjs
 - `l4-clipped.png`：炼化半剖与管道剖切。
 
 - `l3-pipe-fixed.png`：转输泵出口在罐区右侧，管线不再穿过罐体。
+
+- `l1-pipe-fixed.png`：地下开采地面集输管完整跨过台地。
