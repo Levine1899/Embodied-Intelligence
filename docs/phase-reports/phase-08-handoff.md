@@ -389,3 +389,5 @@ phase08-02b-action-suggestion.png
 - 朗读改为讯飞超拟人语音合成：服务端签名 + `/api/tts` 返回 MP3，浏览器不再用系统语音。
 
 - 密钥仅存 `server/.env` / 远程服务环境；前端只调用同源 `/api/tts`。
+
+- 语音音色：展厅接待女声 `x6_zhantingnvjiedai_pro`（可用 `XFYUN_VCN` 覆盖）。

@@ -28,6 +28,7 @@ const DIFY_WRITE_URL = (await loadKey('DIFY_WRITE_API_URL') || 'http://121.196.1
 const XF_APPID = await loadKey('XFYUN_APPID');
 const XF_SECRET = await loadKey('XFYUN_API_SECRET');
 const XF_KEY = await loadKey('XFYUN_API_KEY');
+const XF_VCN = (await loadKey('XFYUN_VCN')) || 'x6_zhantingnvjiedai_pro';
 const XF_TTS_HOST = 'cbm01.cn-huabei-1.xf-yun.com';
 const XF_TTS_PATH = '/v1/private/mcd9m97e6';
 const DIFY_URL = (await loadKey('DIFY_API_URL') || 'http://121.196.165.49:8888/v1').replace(/\/$/, '');
@@ -236,7 +237,7 @@ function synthesize(text) {
     ws.onopen = () => {
       ws.send(JSON.stringify({
         header: { app_id: XF_APPID, status: 2 },
-        parameter: { tts: { vcn: 'x6_lingxiaoxuan_pro', speed: 50, volume: 50, pitch: 50, audio: { encoding: 'lame', sample_rate: 24000 } } },
+        parameter: { tts: { vcn: XF_VCN, speed: 50, volume: 50, pitch: 50, audio: { encoding: 'lame', sample_rate: 24000 } } },
         payload: { text: { encoding: 'utf8', status: 2, seq: 0, text: Buffer.from(text, 'utf8').toString('base64') } }
       }));
     };
