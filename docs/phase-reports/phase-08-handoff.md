@@ -7,11 +7,11 @@
 - 状态建议：**REVISE（仅剩继承 P0-SEC-01；P1 已修复；自动孔隙视图与滑块联动后复测 51/0；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`6047a59`（阶段 07 文档完成后的 main）
-- 结束 Commit（真实 SHA）：`903ca43`（朗读/声音入口合并；部署后置文档提交）
+- 结束 Commit（真实 SHA）：`4f06751`（自动孔隙视图 + 滑块联动颗粒；部署后置文档提交）
 - 分支：`main`
 - 工作区 `git status --short`：提交后为空；本报告为后置文档提交
-- 线上页面：`http://120.26.198.46:8020/v29/`（根入口跳转 V29；备份 `index.html.bak-20261124-091245`）
-- 发布包：`dist/scienceagent-web-903ca43.tgz`，SHA-256 `95414a5a38139c9717b79b1f2913b3bcceba36f17d80494bae14c9b4d8f37ac1`
+- 线上页面：`http://120.26.198.46:8020/v30/`（根入口跳转 V30；备份 `index.html.bak-20261124-092502`）
+- 发布包：`dist/scienceagent-web-4f06751.tgz`，SHA-256 `e52b1620abdfcf65dbcdf0036798138d2665df9c4bf8f9f2497ea0bc576628ab`
 - 线上 API：`http://120.26.198.46:8020/api/dify-chat`、`/api/dify-write`；兼容 `/api/ask`、`/api/gen`
 
 ## 1. 前置检查
@@ -310,4 +310,4 @@ phase08-02b-action-suggestion.png
 - `#voice-stop` 初始禁用，播放后才可用。
 - 验证：阶段 08 **48/0**（新增朗读文本非空、重复声音入口移除、停止按钮初始禁用）；阶段 07 回归 76/0。
 - 注意：无语音包的浏览器仍可能没有声音；此时顶部朗读会保持可见但无音频，需要系统中文语音。
-- 线上 V29 复测：`Voice.state().text` 非空，`#voice-stop` 初始禁用，`#more-btn/#sound/#speak` 不存在，顶部 `#audio-toggle` 与顶部朗读为唯一入口。
+- 线上 V30 复测：进入地下开采自动 `poreMode=true`；0% 时底部颗粒 30/30；拉至 60% 时井筒流可见、底部颗粒 12/30、`pore_upflow` 可见，写入 `trace_up_wellbore`。
