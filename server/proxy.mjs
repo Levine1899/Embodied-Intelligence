@@ -3,6 +3,8 @@
 // key 只存在于本机环境变量 / .env，浏览器拿不到。
 
 import http from 'node:http';
+import crypto from 'node:crypto';
+import WebSocket from './vendor/ws/index.js';
 import { Readable } from 'node:stream';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -23,6 +25,11 @@ const KEY = await loadKey();
 const DIFY_KEY = await loadKey('DIFY_API_KEY');
 const DIFY_WRITE_KEY = await loadKey('DIFY_WRITE_API_KEY');
 const DIFY_WRITE_URL = (await loadKey('DIFY_WRITE_API_URL') || 'http://121.196.165.49:8888/v1').replace(/\/$/, '');
+const XF_APPID = await loadKey('XFYUN_APPID');
+const XF_SECRET = await loadKey('XFYUN_API_SECRET');
+const XF_KEY = await loadKey('XFYUN_API_KEY');
+const XF_TTS_HOST = 'cbm01.cn-huabei-1.xf-yun.com';
+const XF_TTS_PATH = '/v1/private/mcd9m97e6';
 const DIFY_URL = (await loadKey('DIFY_API_URL') || 'http://121.196.165.49:8888/v1').replace(/\/$/, '');
 
 const SYS = `你是科普编辑。用户会给你一场参观/演示的过程记录，每条记录有类型（问 / 答 / 看 / 段）。
@@ -204,10 +211,58 @@ async function callAsk(question, ctx, tier, mode, actionMode) {
   }
   return text;
 }
+
+function xfTtsUrl() {
+  const date = new Date().toUTCString();
+  const origin = `host: ${XF_TTS_HOST}\ndate: ${date}\nGET ${XF_TTS_PATH} HTTP/1.1`;
+  const signature = crypto.createHmac('sha256', XF_SECRET).update(origin).digest('base64');
+  const authorization = Buffer.from(`api_key="${XF_KEY}", algorithm="hmac-sha256", headers="host date request-line", signature="${signature}"`).toString('base64');
+  return `wss://${XF_TTS_HOST}${XF_TTS_PATH}?` + new URLSearchParams({ host: XF_TTS_HOST, date, authorization });
+}
+
+function synthesize(text) {
+  return new Promise((resolve, reject) => {
+    const ws = new WebSocket(xfTtsUrl());
+    const chunks = [];
+    let settled = false;
+    const finish = (error, audio) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      try { ws.close(); } catch {}
+      if (error) reject(error); else resolve(audio);
+    };
+    const timer = setTimeout(() => finish(new Error('讯飞语音合成超时')), 20000);
+    ws.onopen = () => {
+      ws.send(JSON.stringify({
+        header: { app_id: XF_APPID, status: 2 },
+        parameter: { tts: { vcn: 'x6_lingxiaoxuan_pro', speed: 50, volume: 50, pitch: 50, audio: { encoding: 'lame', sample_rate: 24000 } } },
+        payload: { text: { encoding: 'utf8', status: 2, seq: 0, text: Buffer.from(text, 'utf8').toString('base64') } }
+      }));
+    };
+    ws.onmessage = (event) => {
+      let msg;
+      try { msg = JSON.parse(event.data); } catch { return; }
+      if (msg.header && msg.header.code) {
+        return finish(new Error(msg.header.message || ('讯飞语音合成失败 ' + msg.header.code)));
+      }
+      const audio = msg.payload && msg.payload.audio && msg.payload.audio.audio;
+      if (audio) chunks.push(Buffer.from(audio, 'base64'));
+      if (msg.header && msg.header.status === 2) {
+        const out = Buffer.concat(chunks);
+        if (!out.length) finish(new Error('讯飞语音合成返回空音频'));
+        else finish(null, out);
+      }
+    };
+    ws.onerror = () => finish(new Error('无法连接讯飞语音合成服务'));
+    ws.onclose = () => { if (!settled) finish(new Error('讯飞语音合成连接提前关闭')); };
+  });
+}
+
 const server = http.createServer(async (req, res) => {
   const url = req.url.split('?')[0];
 
-  if (url !== '/api/gen' && url !== '/api/ask' && url !== '/api/dify-chat' && url !== '/api/dify-write') {
+  if (url !== '/api/gen' && url !== '/api/ask' && url !== '/api/dify-chat' && url !== '/api/dify-write' && url !== '/api/tts') {
     res.writeHead(404, { 'Content-Type': 'application/json' });
     return res.end('{"error":"not found"}');
   }
@@ -215,7 +270,7 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(405, { 'Content-Type': 'application/json' });
     return res.end('{"error":"post only"}');
   }
-  if (url !== '/api/dify-chat' && url !== '/api/dify-write' && !KEY) {
+  if (url !== '/api/dify-chat' && url !== '/api/dify-write' && url !== '/api/tts' && !KEY) {
     res.writeHead(503, { 'Content-Type': 'application/json' });
     return res.end('{"error":"no key"}');
   }
@@ -230,6 +285,27 @@ const server = http.createServer(async (req, res) => {
 
   let payload = {};
   try { payload = JSON.parse(body || '{}'); } catch {}
+
+
+  if (url === '/api/tts') {
+    const text = typeof payload.text === 'string' ? payload.text.replace(/\s+/g, ' ').trim() : '';
+    if (!XF_APPID || !XF_SECRET || !XF_KEY) {
+      res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8' });
+      return res.end(JSON.stringify({ error: '尚未配置讯飞语音合成密钥，请检查 server/.env' }));
+    }
+    if (!text || text.length > 1200) {
+      res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+      return res.end(JSON.stringify({ error: '朗读文本为空或过长' }));
+    }
+    try {
+      const audio = await synthesize(text);
+      res.writeHead(200, { 'Content-Type': 'audio/mpeg', 'Content-Length': audio.length, 'Cache-Control': 'no-store' });
+      return res.end(audio);
+    } catch (e) {
+      res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
+      return res.end(JSON.stringify({ error: String(e.message || e) }));
+    }
+  }
 
   if (url === '/api/dify-write') {
     const respond = (status, data) => { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(data)); };
