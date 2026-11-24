@@ -410,7 +410,27 @@
         /* 储罐上方横穿的台板/走道：薄、长、深，且位于罐体中段；一并隐藏。 */
         const slab = sy < 1.2 && sx > 5 && sz > 0.8 && b.max.y > 1.2;
         const darkSlab = c === '3a3830' || c === '2a2822' || c === '33312a';
-        if (largeTerrain || (slab && darkSlab)) occluderMeshes.push(o);
+        /* 储运展台的大幅侧墙/围板，顶边会横穿罐体；只在本关隐藏。 */
+        const stageWall = c === '14140f' && sx > 70 && sz > 6;
+        if (largeTerrain || (slab && darkSlab) || stageWall) occluderMeshes.push(o);
+      });
+    }
+    /* 有些台板/走道是合并后的通用材质，颜色不可靠；按“横穿罐区的薄长板”再兜一层。 */
+    if (hide) {
+      function inLevelGroup(o) {
+        let p = o;
+        while (p) { if (p === G) return true; p = p.parent; }
+        return false;
+      }
+      window.__stage.baseScene.traverse(function (o) {
+        if (!o.isMesh || !o.visible || inLevelGroup(o)) return;
+        const b = new THREE.Box3().setFromObject(o);
+        const s = b.getSize(new THREE.Vector3());
+        const cx = (b.min.x + b.max.x) / 2, cz = (b.min.z + b.max.z) / 2;
+        if (s.y < 1.6 && s.x > 4 && s.z > 0.6 && b.max.y > 1.2 && b.min.y < 3.2 &&
+            Math.abs(cx - anchor.x) < 8 && Math.abs(cz - anchor.z) < 7) {
+          if (occluderMeshes.indexOf(o) < 0) occluderMeshes.push(o);
+        }
       });
     }
     occluderMeshes.forEach(function (o) { o.visible = !hide; });
