@@ -77,31 +77,47 @@
 
 ## 4. AI 上下文样例
 
-用户进入三相分离关卡、选中三相分离器、启动分离后提问：
+### 4.1 沙盘设备卡 → 浮动 Dify 问答（当前主路径）
+
+用户进入三相分离关卡、选中三相分离器、启动分离后，点击设备卡「问 AI」；`web/float-chat.js` 在发送前读取 `SceneContext`，把**场景数据**和**用户操作记录**分成两个字段：
 
 ```json
 {
   "question": "为什么要先分离再外输？",
-  "ctx": [
-    "场景：石油产业链数字沙盘",
-    "环节：地面处理",
-    "关卡：l2",
-    "当前设备：三相分离器（objectId=three_phase_separator）",
-    "区域：gathering",
-    "关联知识点：kb_gather（本地人工审核）",
-    "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
-    "刚才的操作：start_separation=started（示意，结果：未记录）",
-    "最近操作：start_separation=started",
-    "体验模式：free；设备数值均为教学示意，不是真实生产数据。"
-  ],
-  "tier": "mid",
-  "mode": "open"
+  "conversation_id": "",
+  "user": "guest-...",
+  "sceneContext": {
+    "sceneId": "oil_industry_journey",
+    "stageId": "gather",
+    "levelId": "l2",
+    "zoneId": "gathering",
+    "objectId": "three_phase_separator",
+    "objectName": "三相分离器",
+    "knowledgeIds": ["kb_gather"],
+    "verifiedFacts": [
+      "井口产出物通常包含油、气、水，需要先进行分离处理。",
+      "三相分离器按相态和密度差异分离，不是过滤。"
+    ],
+    "contextLines": ["场景：石油产业链数字沙盘", "环节：地面处理", "关卡：l2", "当前设备：三相分离器（objectId=three_phase_separator）", "区域：gathering", "体验模式：free；设备数值均为教学示意，不是真实生产数据。"],
+    "experienceMode": "free"
+  },
+  "recentActions": [
+    {"action": "start_separation", "value": "started", "unit": "示意", "result": null, "levelId": "l2"}
+  ]
 }
 ```
 
-沙盘侧栏（`web/ai.js`）保留 `/api/ask` 的 `question/ctx/tier/mode` 兼容字段；当前独立问答页和写作页仍沿用已接入的 Dify：
+- `sceneContext.verifiedFacts` 只来自本地人工审核知识底稿，是唯一可作为事实的字段。
+- `recentActions` 只表示“用户刚才做了什么”，服务端用显式边界标明“不是客观事实”。
+- 服务端按白名单字段过滤，单字段和总上下文长度上限 1800 字符；在 Dify 请求的 `sys.query` 前注入受控场景块，再附用户问题。
+- 每次发送都会重新读取上下文；切换设备/关卡后下一条请求自动更新。
+- 退出关卡后 `SceneContext.exitLevel()` 清空 `levelId`、旧设备、deviceName 和 interaction，下一条请求不再携带旧设备。
 
-- `ask.html` → `POST /api/dify-chat`
+### 4.2 旧侧栏 / 独立问答页
+
+沙盘侧栏（`web/ai.js`）保留 `/api/ask` 的 `question/ctx/tier/mode` 兼容字段；`ask.html` 是独立问答页，不加载 `scene-context.js`/`float-chat.js`，因此保持**无场景上下文**模式：
+
+- `ask.html` → `POST /api/dify-chat`（无 `sceneContext`）
 - `write.html` → `POST /api/dify-write`
 
 ## 5. 写作 handoff 样例

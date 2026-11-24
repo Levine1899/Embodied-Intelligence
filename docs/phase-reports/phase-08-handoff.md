@@ -403,3 +403,8 @@ phase08-02b-action-suggestion.png
 - 产品去向：进入时隐藏 processLines 厂区管线，产品提亮；航空煤油使用箱体造型，避免落在地面暗部不可见。
 
 - 产品去向：进入时隐藏 `industry-sandbox` 整个厂区组，只留产品台，彻底消除管线/地面遮挡。
+
+- V67：设备卡浮动 Dify 问答发送 `sceneContext` + `recentActions`；服务端过滤并注入上下文块。
+- V67：l3 固定顶/外浮顶油气空间分支、双罐型完成条件；泵送终点对齐 `path_store_refine`。
+- V67：导览暂停恢复只还原原始运行状态。
+- P2-04 仍是静态优化与统计接口，未实现持续 FPS 自适应降级；P2-08 仍是视觉深化建议。
