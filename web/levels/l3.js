@@ -401,7 +401,7 @@
       window.__stage.baseScene.traverse(function (o) {
         if (!o.isMesh || !o.material || !o.material.color) return;
         const c = o.material.color.getHexString();
-        if (c !== '4a4235' && c !== '6b5a3a' && c !== '1e1e18' && c !== '14140f' && c !== '3a3830' && c !== '2a2822' && c !== '33312a') return;
+        if (c !== '4a4235' && c !== '6b5a3a' && c !== '1e1e18' && c !== '14140f' && c !== '3a3830' && c !== '2a2822' && c !== '33312a' && c !== '22221b') return;
         if (!o.geometry) return;
         o.geometry.computeBoundingBox();
         const b = o.geometry.boundingBox;
@@ -414,7 +414,9 @@
         const stageWall = c === '14140f' && sx > 70 && sz > 6;
         /* 储运区上方的展台地板：横跨罐区，遮住罐体中下部。 */
         const stageDeck = c === '2a2822' && sx > 8 && sz > 7 && b.min.y > 1.2 && b.max.y < 3.2;
-        if (largeTerrain || (slab && darkSlab) || stageWall || stageDeck) occluderMeshes.push(o);
+        /* 储运展台的大地台/围墙，顶面会形成横穿视野的长条。 */
+        const stageBackdrop = c === '22221b' && sx > 70 && sz > 20;
+        if (largeTerrain || (slab && darkSlab) || stageWall || stageDeck || stageBackdrop) occluderMeshes.push(o);
       });
     }
     /* 有些台板/走道是合并后的通用材质，颜色不可靠；按“横穿罐区的薄长板”再兜一层。 */
@@ -429,13 +431,26 @@
         const b = new THREE.Box3().setFromObject(o);
         const s = b.getSize(new THREE.Vector3());
         const cx = (b.min.x + b.max.x) / 2, cz = (b.min.z + b.max.z) / 2;
-        if (s.y < 1.6 && s.x > 4 && s.z > 0.6 && b.max.y > 1.2 && b.min.y < 3.2 &&
-            Math.abs(cx - anchor.x) < 8 && Math.abs(cz - anchor.z) < 7) {
+        let keep = false, q = o;
+        while (q) {
+          if (/tank|pump|pipe|well|store/i.test(q.name || '')) { keep = true; break; }
+          q = q.parent;
+        }
+        const crossing = s.y < 1.6 && s.x > 4 && s.z > 0.6 && b.max.y > 1.2 && b.min.y < 3.2 &&
+            Math.abs(cx - anchor.x) < 8 && Math.abs(cz - anchor.z) < 7;
+        /* 储运关只保留罐、泵、管路；其余高于地面的展台/走道/围板从视线里移除。 */
+        const backdrop = !keep && b.min.y > 1.0;
+        if (crossing || backdrop) {
           if (occluderMeshes.indexOf(o) < 0) occluderMeshes.push(o);
         }
       });
     }
     occluderMeshes.forEach(function (o) { o.visible = !hide; });
+  }
+
+  function setProcessLines(hide) {
+    const root = window.__stage.baseScene.getObjectByName('processLines');
+    if (root) root.visible = !hide;
   }
 
   function enter() {
@@ -452,6 +467,7 @@
     stage.use(baseScene, camera);
     if (stage.setOverviewVisible) stage.setOverviewVisible(false);
     G.visible = true;
+    setProcessLines(true);
     setStorageOccluders(true);
     if (stage.deviceState) {
       stage.deviceState.set('fixed_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
@@ -476,6 +492,7 @@
   }
 
   function exit() {
+    setProcessLines(false);
     act.hidden = true;
     ui.classList.remove('on', 'done');
     document.body.classList.remove('in-level');

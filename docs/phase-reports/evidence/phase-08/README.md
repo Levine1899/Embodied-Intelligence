@@ -60,3 +60,5 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase08-verify.cjs
 - `l3-no-walkway-final.png`：储运关内走道/侧墙隐藏后的罐体。
 
 - `l3-no-walkway-final3.png`：展台侧墙/地板隐藏后的储运罐体。
+
+- `l3-clean-final.png`：储运关卡隐藏展台地台后的干净视野。
