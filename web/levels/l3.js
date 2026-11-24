@@ -65,6 +65,12 @@
       body.position.y = 1.8;
       g.add(body);
 
+      /* 半剖罐壁：只保留背向镜头的后半圈，前面敞开，能直接看到液面。 */
+      const bodyHalf = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.55, 3.6, 26, 1, true, Math.PI / 2, Math.PI), bodyMat);
+      bodyHalf.position.y = 1.8;
+      bodyHalf.visible = false;
+      g.add(bodyHalf);
+
       const base = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 0.12, 26), mSteel);
       base.position.y = 0.06;
       g.add(base);
@@ -104,7 +110,7 @@
       selRing.visible = false;
       g.add(selRing);
       G.add(g);
-      return { group: g, body: body, bodyMat: bodyMat, oil: oil, roof: roof, ventFlow: ventFlow, selRing: selRing, floating: floating, x: x, z: z };
+      return { group: g, body: body, bodyHalf: bodyHalf, bodyMat: bodyMat, oil: oil, roof: roof, ventFlow: ventFlow, selRing: selRing, floating: floating, x: x, z: z };
     }
 
     built.fixed = tank(-2.0, 0, false);
@@ -245,9 +251,9 @@
   function applyTankCut(on) {
     [built.fixed, built.float].forEach(function (t) {
       if (!t || !t.body) return;
-      /* 剖面模式直接隐藏罐壁，只留底座/顶盖/罐内液体；比材质裁剪更稳定，
-         任何液位下都能直接看到液面。 */
+      /* 剖面模式只保留后半圈罐壁，前面敞开；既有罐体轮廓，又能直接看到液面。 */
       t.body.visible = !on;
+      if (t.bodyHalf) t.bodyHalf.visible = on;
       if (!t.bodyMat.userData.cutOrig) {
         t.bodyMat.userData.cutOrig = { transparent: t.bodyMat.transparent, opacity: t.bodyMat.opacity, side: t.bodyMat.side };
       }

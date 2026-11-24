@@ -12,6 +12,8 @@
 - `phase08-l3-cut-70-final.png`：修复后的 70% 液位。
 - `phase08-l3-select-float.png`：点“外浮顶罐”后，罐底高亮环与“已选”标记。
 - `phase08-l3-select-pump.png`：点“转输泵组”后，泵组高亮环与“已选”标记。
+- `phase08-l3-halfshell-0.png`：真正的半剖罐壁，2% 液位。
+- `phase08-l3-halfshell-45.png`：真正半剖罐壁，45% 液位。
 - `phase08-l3-cut-public.png`：线上 V35 默认半剖，液位 70% 的最终效果。
 - `phase08-l3-default.png`：储运默认面板，设备选择与液位调节分开，无通用引导/教学免责声明。
 - `phase08-l3-clean.png`：展开“演示与结构”并启动泵送后的面板。
