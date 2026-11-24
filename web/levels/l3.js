@@ -405,7 +405,12 @@
         if (!o.geometry) return;
         o.geometry.computeBoundingBox();
         const b = o.geometry.boundingBox;
-        if ((b.max.x - b.min.x) > 10 && (b.max.z - b.min.z) > 10) occluderMeshes.push(o);
+        const sx = b.max.x - b.min.x, sy = b.max.y - b.min.y, sz = b.max.z - b.min.z;
+        const largeTerrain = sx > 10 && sz > 10;
+        /* 储罐上方横穿的台板/走道：薄、长、深，且位于罐体中段；一并隐藏。 */
+        const slab = sy < 1.2 && sx > 5 && sz > 0.8 && b.max.y > 1.2;
+        const darkSlab = c === '3a3830' || c === '2a2822' || c === '33312a';
+        if (largeTerrain || (slab && darkSlab)) occluderMeshes.push(o);
       });
     }
     occluderMeshes.forEach(function (o) { o.visible = !hide; });

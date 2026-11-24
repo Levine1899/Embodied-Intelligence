@@ -54,3 +54,5 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase08-verify.cjs
 
 - `l1-pore-overlay-final.png`：退出放大后回到含小气泡的孔隙叠加。
 
+
+- `l3-no-slab.png`：储运罐体不再被台板横穿。
