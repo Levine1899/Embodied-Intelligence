@@ -1087,7 +1087,7 @@
     scene.fog = new THREE.FogExp2(0x0b0f11, 0.004);
     camera = new THREE.PerspectiveCamera(40, 1, 0.1, 220);
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setPixelRatio(Math.max(1, Math.min(window.devicePixelRatio || 1, 2)));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
     viewport.prepend(renderer.domElement);
