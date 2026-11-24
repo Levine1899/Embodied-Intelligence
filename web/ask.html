@@ -360,10 +360,43 @@
     content.innerHTML = DOMPurify.sanitize(marked.parse(text));
     content.querySelectorAll('a[href]').forEach(link => { link.target = '_blank'; link.rel = 'noopener noreferrer'; });
   }
+  function attachVideoPlayer(item, heading, url, start, end, label) {
+    const details = node('details');
+    const summary = node('summary', 'video-source__heading');
+    summary.append(...heading.childNodes);
+    summary.append(node('span', 'video-source__action video-source__play', '播放片段'), node('span', 'video-source__action video-source__close', '收起视频'));
+    const player = node('video', 'video-source__player');
+    player.controls = true;
+    player.playsInline = true;
+    player.preload = 'none';
+    player.setAttribute('aria-label', label);
+    const status = node('p', 'video-source__error');
+    status.setAttribute('role', 'status');
+    player.addEventListener('error', () => { status.textContent = '视频加载失败，请收起后重新打开。'; });
+    player.addEventListener('play', () => {
+      output.querySelectorAll('.video-source__player').forEach(other => {
+        if (other !== player) other.pause();
+      });
+    });
+    player.addEventListener('loadedmetadata', () => { player.currentTime = start; });
+    summary.addEventListener('click', () => {
+      if (details.open) {
+        player.pause();
+        return;
+      }
+      status.textContent = '';
+      if (!player.hasAttribute('src') || player.error) player.src = `${url}#t=${start},${end}`;
+      if (player.readyState) player.currentTime = start;
+      player.play().catch(() => {});
+    });
+    details.append(summary, player, status);
+    item.replaceChildren(details);
+  }
   function appendVideoSources(answer, resources) {
     const section = node('section', 'video-sources');
     const list = node('ul');
     const seen = new Set();
+    const availability = new Map();
     for (const resource of resources) {
       if (typeof resource?.content !== 'string') continue;
       const [titleLine, fileLine, timeLine, topicLine] = resource.content.trimStart().split(/\r?\n/, 4);
@@ -373,51 +406,33 @@
       if (!title || !file || !times) continue;
       const [, from, to] = times;
       const [start, end] = [from, to].map(time => time.split(':').reduce((seconds, part) => seconds * 60 + Number(part), 0));
-      const key = `${title}\n${file}`;
+      const sourceId = resource.document_id ?? resource.metadata?.document_id;
+      const hasDocumentId = typeof sourceId === 'string' && /^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i.test(sourceId);
+      const documentId = hasDocumentId ? sourceId.toLowerCase() : '';
+      const key = documentId || `${title}\n${file}`;
       const segment = `${key}\n${start}\n${end}`;
       if (end <= start || seen.has(segment)) continue;
       seen.add(segment);
 
-      const url = videoFiles.get(key);
       const topic = topicLine?.match(/^片段[：:]\s*(\S.*)$/)?.[1].trim();
       const item = node('li', 'video-source');
-      const heading = node(url ? 'summary' : 'div', 'video-source__heading');
+      const heading = node('div', 'video-source__heading');
       const label = node('span', 'video-source__title', `《${title}》`);
       if (topic) label.append(node('small', '', topic));
       heading.append(node('span', 'video-source__time', `${from}–${to}`), label);
-      if (url) {
-        heading.append(node('span', 'video-source__action video-source__play', '播放片段'), node('span', 'video-source__action video-source__close', '收起视频'));
-        const details = node('details');
-        const player = node('video', 'video-source__player');
-        player.controls = true;
-        player.playsInline = true;
-        player.preload = 'none';
-        player.setAttribute('aria-label', `《${title}》 ${from}–${to}`);
-        const status = node('p', 'video-source__error');
-        status.setAttribute('role', 'status');
-        player.addEventListener('error', () => { status.textContent = '视频加载失败，请收起后重新打开。'; });
-        player.addEventListener('play', () => {
-          output.querySelectorAll('.video-source__player').forEach(other => {
-            if (other !== player) other.pause();
-          });
-        });
-        player.addEventListener('loadedmetadata', () => { player.currentTime = start; });
-        heading.addEventListener('click', () => {
-          if (details.open) {
-            player.pause();
-            return;
-          }
-          status.textContent = '';
-          if (!player.hasAttribute('src') || player.error) player.src = `${url}#t=${start},${end}`;
-          if (player.readyState) player.currentTime = start;
-          player.play().catch(() => {});
-        });
-        details.append(heading, player, status);
-        item.append(details);
-      } else {
-        item.append(heading);
-      }
+      item.append(heading);
       list.append(item);
+      if (!documentId) continue;
+      const url = `assets/videos/${documentId}.mp4`;
+      if (!availability.has(url)) {
+        const check = fetch(url, { method:'HEAD', redirect:'error' })
+          .then(response => response.ok && response.headers.get('Content-Type')?.split(';')[0].toLowerCase() === 'video/mp4')
+          .catch(() => false);
+        availability.set(url, check);
+      }
+      availability.get(url).then(exists => {
+        if (exists && item.isConnected) attachVideoPlayer(item, heading, url, start, end, `《${title}》 ${from}–${to}`);
+      });
     }
     if (list.childElementCount) {
       section.append(node('h2', '', '视频出处'), list);
