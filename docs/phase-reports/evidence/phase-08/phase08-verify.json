@@ -1,0 +1,1848 @@
+{
+  "generatedAt": "2026-11-24T07:31:17.408Z",
+  "passed": 58,
+  "failed": 0,
+  "results": [
+    {
+      "name": "scene context loads",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "AI action whitelist loads",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "AI panel present",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "context has sceneId",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "b5e5cecd-72e1-430d-91ef-bf04e9e9e366",
+        "createdAt": "2026-11-24T07:30:51.766Z",
+        "updatedAt": "2026-11-24T07:30:51.766Z",
+        "revision": 1,
+        "stageId": "overview",
+        "stageIndex": null,
+        "levelId": null,
+        "zoneId": null,
+        "selectedObjectId": null,
+        "object": null,
+        "deviceName": null,
+        "knowledgeIds": [],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [],
+        "ledger": [],
+        "source": "init"
+      }
+    },
+    {
+      "name": "no boot errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "read control has current narration text",
+      "ok": true,
+      "detail": {
+        "supported": true,
+        "playing": false,
+        "paused": false,
+        "text": "地下开采。地下开采先建立井筒通道，再根据储层和流体条件组织生产。这里用一口井说明从地下到地面的连接。"
+      }
+    },
+    {
+      "name": "duplicate sound menu removed",
+      "ok": true,
+      "detail": {
+        "voice": {
+          "supported": true,
+          "playing": false,
+          "paused": false,
+          "text": "地下开采。地下开采先建立井筒通道，再根据储层和流体条件组织生产。这里用一口井说明从地下到地面的连接。"
+        },
+        "more": false,
+        "sound": false,
+        "audio": "声音关",
+        "stopDisabled": true
+      }
+    },
+    {
+      "name": "stop read starts disabled",
+      "ok": true,
+      "detail": true
+    },
+    {
+      "name": "three mode cards removed from visible UI",
+      "ok": true,
+      "detail": {
+        "modebar": {},
+        "modebarHidden": true,
+        "modebarDisplay": "none",
+        "cta": {},
+        "ctaRect": {
+          "w": 48,
+          "h": 31.354167938232422
+        },
+        "stagesTop": 896.1041870117188
+      }
+    },
+    {
+      "name": "single tour CTA replaces mode row",
+      "ok": true,
+      "detail": {
+        "modebar": {},
+        "modebarHidden": true,
+        "modebarDisplay": "none",
+        "cta": {},
+        "ctaRect": {
+          "w": 48,
+          "h": 31.354167938232422
+        },
+        "stagesTop": 896.1041870117188
+      }
+    },
+    {
+      "name": "single CTA starts guided tour",
+      "ok": true,
+      "detail": {
+        "tour": {
+          "active": true,
+          "index": 0,
+          "stepId": "tour_overview",
+          "playing": true,
+          "busy": false,
+          "status": "active",
+          "total": 10
+        },
+        "card": {
+          "hidden": false,
+          "text": "01 / 10\n退出\n产业链全景\n\n这是一条按产业链组织的概念沙盘，不是某一座真实油田，也不是一桶原油的固定加工路线。先"
+        }
+      }
+    },
+    {
+      "name": "tour exits back to free exploration",
+      "ok": true,
+      "detail": {
+        "active": false,
+        "index": 0,
+        "stepId": "tour_overview",
+        "playing": false,
+        "busy": false,
+        "status": "stopped",
+        "total": 10
+      }
+    },
+    {
+      "name": "task rail opens without mode card",
+      "ok": true,
+      "detail": {
+        "rail": true,
+        "side": "block",
+        "mission": true
+      }
+    },
+    {
+      "name": "l1 enters cross-section + pore overlay by default",
+      "ok": true,
+      "detail": {
+        "pore": true,
+        "asset": true,
+        "cross": {
+          "pore": true,
+          "overburden": true,
+          "caprock": true,
+          "reservoir": true,
+          "basement": true,
+          "poreGroup": true
+        },
+        "bounds": {
+          "minY": -12.20139992237091,
+          "maxY": -7.59860007762909
+        }
+      }
+    },
+    {
+      "name": "l1 pore overlay stays inside bottom basement layer",
+      "ok": true,
+      "detail": {
+        "minY": -12.20139992237091,
+        "maxY": -7.59860007762909
+      }
+    },
+    {
+      "name": "l1 annotations and pause controls removed",
+      "ok": true,
+      "detail": {
+        "extraction": {
+          "wellFlow": false,
+          "inflows": 0,
+          "pulse": false,
+          "started": false,
+          "marked": false,
+          "pressure": 0,
+          "reservoirTotal": 30,
+          "reservoirVisible": 30,
+          "poreFlow": false,
+          "wellCut": true,
+          "wellFluid": false
+        },
+        "last": null,
+        "hidden": {
+          "info": true,
+          "act": false,
+          "readout": true,
+          "up": true,
+          "play": true,
+          "foot": true
+        },
+        "slider": {
+          "hidden": false,
+          "rect": {
+            "x": 141.6666717529297,
+            "y": 574.625,
+            "width": 300,
+            "height": 16,
+            "top": 574.625,
+            "right": 441.6666717529297,
+            "bottom": 590.625,
+            "left": 141.6666717529297
+          }
+        }
+      }
+    },
+    {
+      "name": "l1 original pressure slider is visible",
+      "ok": true,
+      "detail": {
+        "hidden": false,
+        "rect": {
+          "x": 141.6666717529297,
+          "y": 574.625,
+          "width": 300,
+          "height": 16,
+          "top": 574.625,
+          "right": 441.6666717529297,
+          "bottom": 590.625,
+          "left": 141.6666717529297
+        }
+      }
+    },
+    {
+      "name": "l1 reservoir starts full at 0%",
+      "ok": true,
+      "detail": {
+        "wellFlow": false,
+        "inflows": 0,
+        "pulse": false,
+        "started": false,
+        "marked": false,
+        "pressure": 0,
+        "reservoirTotal": 30,
+        "reservoirVisible": 30,
+        "poreFlow": false,
+        "wellCut": true,
+        "wellFluid": false
+      }
+    },
+    {
+      "name": "l1 extraction animation is live",
+      "ok": true,
+      "detail": {
+        "wellFlow": true,
+        "inflows": 2,
+        "pulse": true,
+        "started": true,
+        "marked": true,
+        "pressure": 60,
+        "reservoirTotal": 30,
+        "reservoirVisible": 12,
+        "poreFlow": true,
+        "wellCut": true,
+        "wellFluid": true
+      }
+    },
+    {
+      "name": "l1 wellbore is half-cut with visible fluid",
+      "ok": true,
+      "detail": {
+        "wellFlow": true,
+        "inflows": 2,
+        "pulse": true,
+        "started": true,
+        "marked": true,
+        "pressure": 60,
+        "reservoirTotal": 30,
+        "reservoirVisible": 12,
+        "poreFlow": true,
+        "wellCut": true,
+        "wellFluid": true
+      }
+    },
+    {
+      "name": "l1 reservoir particles decrease with slider",
+      "ok": true,
+      "detail": {
+        "wellFlow": true,
+        "inflows": 2,
+        "pulse": true,
+        "started": true,
+        "marked": true,
+        "pressure": 60,
+        "reservoirTotal": 30,
+        "reservoirVisible": 12,
+        "poreFlow": true,
+        "wellCut": true,
+        "wellFluid": true
+      }
+    },
+    {
+      "name": "l1 extraction particles move upward",
+      "ok": true,
+      "detail": {
+        "a": [
+          -2.9264583330699043,
+          -2.668858868320831,
+          -2.4076590004904523
+        ],
+        "b": [
+          -0.26242204708827166,
+          0.06705908209880958,
+          0.3955359135984228
+        ]
+      }
+    },
+    {
+      "name": "l3 uses separated device/liquid steps",
+      "ok": true,
+      "detail": {
+        "text": "储运操作选设备，再调液位固定顶罐两个罐装同样的油。拖动液位，比较固定顶与外浮顶的油气空间。1选择设备点按钮，或点场景标签固定顶罐外浮顶罐转输泵组2调节液位拖动滑块2%油气空间 98%演示与结构结构恢复罐壁泵送启动泵送暂停泵送重播路径路径：储罐 → 转输泵 → 炼化入口",
+        "demo": false,
+        "more": true,
+        "moreOpen": false,
+        "fixed": "true",
+        "state": "固定顶罐",
+        "steps": 2
+      }
+    },
+    {
+      "name": "l3 starts in cutaway showing liquid",
+      "ok": true,
+      "detail": true
+    },
+    {
+      "name": "l3 generic instruction removed",
+      "ok": true,
+      "detail": {
+        "text": "储运操作选设备，再调液位固定顶罐两个罐装同样的油。拖动液位，比较固定顶与外浮顶的油气空间。1选择设备点按钮，或点场景标签固定顶罐外浮顶罐转输泵组2调节液位拖动滑块2%油气空间 98%演示与结构结构恢复罐壁泵送启动泵送暂停泵送重播路径路径：储罐 → 转输泵 → 炼化入口",
+        "demo": false,
+        "more": true,
+        "moreOpen": false,
+        "fixed": "true",
+        "state": "固定顶罐",
+        "steps": 2
+      }
+    },
+    {
+      "name": "l3 teaching disclaimers removed",
+      "ok": true,
+      "detail": "储运操作选设备，再调液位固定顶罐两个罐装同样的油。拖动液位，比较固定顶与外浮顶的油气空间。1选择设备点按钮，或点场景标签固定顶罐外浮顶罐转输泵组2调节液位拖动滑块2%油气空间 98%演示与结构结构恢复罐壁泵送启动泵送暂停泵送重播路径路径：储罐 → 转输泵 → 炼化入口"
+    },
+    {
+      "name": "l3 pump operation works from details",
+      "ok": true,
+      "detail": {
+        "running": true,
+        "moreOpen": true
+      }
+    },
+    {
+      "name": "level entry sets l2",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "b5e5cecd-72e1-430d-91ef-bf04e9e9e366",
+        "createdAt": "2026-11-24T07:30:51.766Z",
+        "updatedAt": "2026-11-24T07:31:06.615Z",
+        "revision": 19,
+        "stageId": "gather",
+        "stageIndex": 1,
+        "levelId": "l2",
+        "zoneId": "gathering",
+        "selectedObjectId": "three_phase_separator",
+        "object": "three_phase_separator",
+        "deviceName": "三相分离器",
+        "knowledgeIds": [
+          "kb_gather"
+        ],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [
+          {
+            "action": "adjust_pressure",
+            "actionId": "adjust_pressure",
+            "value": 60,
+            "unit": "示意百分比",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "zoneId": "subsurface",
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "action": "trace_up_wellbore",
+            "actionId": "trace_up_wellbore",
+            "value": "wellhead",
+            "unit": "抽取动画",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "zoneId": "subsurface",
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "action": "inspect_tank_structure",
+            "actionId": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T07:31:02.615Z"
+          },
+          {
+            "action": "start_pump",
+            "actionId": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T07:31:04.219Z"
+          }
+        ],
+        "ledger": [
+          {
+            "type": "操作",
+            "action": "adjust_pressure",
+            "value": 60,
+            "unit": "示意百分比",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "objectId": null,
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "type": "操作",
+            "action": "trace_up_wellbore",
+            "value": "wellhead",
+            "unit": "抽取动画",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "objectId": null,
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T07:31:02.615Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T07:31:04.219Z"
+          }
+        ],
+        "source": "immersion",
+        "scene": "oil_industry_journey",
+        "stage": 1,
+        "knowledge": "kb_gather",
+        "mode": "free"
+      }
+    },
+    {
+      "name": "level entry selects separator",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "b5e5cecd-72e1-430d-91ef-bf04e9e9e366",
+        "createdAt": "2026-11-24T07:30:51.766Z",
+        "updatedAt": "2026-11-24T07:31:06.615Z",
+        "revision": 19,
+        "stageId": "gather",
+        "stageIndex": 1,
+        "levelId": "l2",
+        "zoneId": "gathering",
+        "selectedObjectId": "three_phase_separator",
+        "object": "three_phase_separator",
+        "deviceName": "三相分离器",
+        "knowledgeIds": [
+          "kb_gather"
+        ],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [
+          {
+            "action": "adjust_pressure",
+            "actionId": "adjust_pressure",
+            "value": 60,
+            "unit": "示意百分比",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "zoneId": "subsurface",
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "action": "trace_up_wellbore",
+            "actionId": "trace_up_wellbore",
+            "value": "wellhead",
+            "unit": "抽取动画",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "zoneId": "subsurface",
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "action": "inspect_tank_structure",
+            "actionId": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T07:31:02.615Z"
+          },
+          {
+            "action": "start_pump",
+            "actionId": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T07:31:04.219Z"
+          }
+        ],
+        "ledger": [
+          {
+            "type": "操作",
+            "action": "adjust_pressure",
+            "value": 60,
+            "unit": "示意百分比",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "objectId": null,
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "type": "操作",
+            "action": "trace_up_wellbore",
+            "value": "wellhead",
+            "unit": "抽取动画",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "objectId": null,
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T07:31:02.615Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T07:31:04.219Z"
+          }
+        ],
+        "source": "immersion",
+        "scene": "oil_industry_journey",
+        "stage": 1,
+        "knowledge": "kb_gather",
+        "mode": "free"
+      }
+    },
+    {
+      "name": "knowledge ids from registry",
+      "ok": true,
+      "detail": [
+        "kb_gather"
+      ]
+    },
+    {
+      "name": "device ask opens AI rail",
+      "ok": true,
+      "detail": {
+        "rail": true,
+        "display": "block",
+        "rect": {
+          "w": 258.66668701171875,
+          "h": 34
+        },
+        "value": "三相分离器怎么把油、气、水分开？"
+      }
+    },
+    {
+      "name": "device ask focuses visible input",
+      "ok": true,
+      "detail": {
+        "rail": true,
+        "display": "block",
+        "rect": {
+          "w": 258.66668701171875,
+          "h": 34
+        },
+        "value": "三相分离器怎么把油、气、水分开？"
+      }
+    },
+    {
+      "name": "AI request keeps question/ctx/tier/mode",
+      "ok": true,
+      "detail": {
+        "question": "这个设备的维护周期是多久",
+        "ctx": [
+          "场景：石油产业链数字沙盘",
+          "环节：地面处理",
+          "关卡：l2",
+          "当前设备：三相分离器（objectId=three_phase_separator）",
+          "区域：gathering",
+          "关联知识点：kb_gather（本地人工审核）",
+          "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
+          "刚才的操作：inspect_separator_structure=half（示意，结果：correct）",
+          "最近操作：inspect_separator_structure=half(correct)",
+          "体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+          "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
+        ],
+        "tier": "mid",
+        "mode": "open",
+        "action": false
+      }
+    },
+    {
+      "name": "AI context includes selected device",
+      "ok": true,
+      "detail": [
+        "场景：石油产业链数字沙盘",
+        "环节：地面处理",
+        "关卡：l2",
+        "当前设备：三相分离器（objectId=three_phase_separator）",
+        "区域：gathering",
+        "关联知识点：kb_gather（本地人工审核）",
+        "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
+        "刚才的操作：inspect_separator_structure=half（示意，结果：correct）",
+        "最近操作：inspect_separator_structure=half(correct)",
+        "体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+        "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
+      ]
+    },
+    {
+      "name": "AI context includes recent interaction",
+      "ok": true,
+      "detail": [
+        "场景：石油产业链数字沙盘",
+        "环节：地面处理",
+        "关卡：l2",
+        "当前设备：三相分离器（objectId=three_phase_separator）",
+        "区域：gathering",
+        "关联知识点：kb_gather（本地人工审核）",
+        "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
+        "刚才的操作：inspect_separator_structure=half（示意，结果：correct）",
+        "最近操作：inspect_separator_structure=half(correct)",
+        "体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+        "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
+      ]
+    },
+    {
+      "name": "AI context labels verified local facts",
+      "ok": true,
+      "detail": [
+        "场景：石油产业链数字沙盘",
+        "环节：地面处理",
+        "关卡：l2",
+        "当前设备：三相分离器（objectId=three_phase_separator）",
+        "区域：gathering",
+        "关联知识点：kb_gather（本地人工审核）",
+        "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
+        "刚才的操作：inspect_separator_structure=half（示意，结果：correct）",
+        "最近操作：inspect_separator_structure=half(correct)",
+        "体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+        "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
+      ]
+    },
+    {
+      "name": "no-proxy AI still answers local knowledge",
+      "ok": true,
+      "detail": "星火这一层看到的东西，可以随时问我。库里有答案我直接给；库里没有、但属于石油这行的，我调模型组织一段，并标出来源属性。\n这个设备的维护周期是多久\n模型补充 · 未逐条核验 · 通俗版\n模型补充示例\n换个工程档重讲\n加入待审补库\n复制\n这段是模型按通用知识组织的：公司沿革、数字请以官方公开资料为准。\n为什么油藏在石头里\n库外 · 未采用模型\n这个我答不了。（offline）\n知识库里没有对应条目，这类问题也不适合让模型即兴发挥。\n要不要试试：石油为什么是黑的油气藏在哪儿"
+    },
+    {
+      "name": "legal AI action accepted",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "actionId": "start_separation",
+        "result": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "name": "legal action changed separation",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "missing object rejected",
+      "ok": true,
+      "detail": {
+        "ok": false,
+        "reason": "OBJECT_NOT_FOUND",
+        "message": "该对象在当前场景不存在"
+      }
+    },
+    {
+      "name": "missing object keeps context",
+      "ok": true,
+      "detail": {
+        "r": {
+          "ok": false,
+          "reason": "OBJECT_NOT_FOUND",
+          "message": "该对象在当前场景不存在"
+        },
+        "after": {
+          "version": 1,
+          "sceneId": "oil_industry_journey",
+          "registrySceneId": "petro-chain-v3",
+          "sessionId": "b5e5cecd-72e1-430d-91ef-bf04e9e9e366",
+          "createdAt": "2026-11-24T07:30:51.766Z",
+          "updatedAt": "2026-11-24T07:31:09.633Z",
+          "revision": 23,
+          "stageId": "gather",
+          "stageIndex": 1,
+          "levelId": "l2",
+          "zoneId": "gathering",
+          "selectedObjectId": "three_phase_separator",
+          "object": "three_phase_separator",
+          "deviceName": "三相分离器",
+          "knowledgeIds": [
+            "kb_gather"
+          ],
+          "experienceMode": "free",
+          "interaction": {
+            "action": "start_separation",
+            "actionId": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "at": "2026-11-24T07:31:09.633Z"
+          },
+          "history": [
+            {
+              "action": "adjust_pressure",
+              "actionId": "adjust_pressure",
+              "value": 60,
+              "unit": "示意百分比",
+              "result": null,
+              "stageId": "drill",
+              "levelId": "l1",
+              "zoneId": "subsurface",
+              "at": "2026-11-24T07:31:00.656Z"
+            },
+            {
+              "action": "trace_up_wellbore",
+              "actionId": "trace_up_wellbore",
+              "value": "wellhead",
+              "unit": "抽取动画",
+              "result": null,
+              "stageId": "drill",
+              "levelId": "l1",
+              "zoneId": "subsurface",
+              "at": "2026-11-24T07:31:00.656Z"
+            },
+            {
+              "action": "inspect_tank_structure",
+              "actionId": "inspect_tank_structure",
+              "value": "fixed_roof_tank",
+              "unit": "罐型",
+              "result": null,
+              "stageId": "store",
+              "levelId": "l3",
+              "zoneId": "storage",
+              "at": "2026-11-24T07:31:02.615Z"
+            },
+            {
+              "action": "start_pump",
+              "actionId": "start_pump",
+              "value": "transfer_pump",
+              "unit": "运行",
+              "result": null,
+              "stageId": "store",
+              "levelId": "l3",
+              "zoneId": "storage",
+              "at": "2026-11-24T07:31:04.219Z"
+            },
+            {
+              "action": "inspect_separator_structure",
+              "actionId": "inspect_separator_structure",
+              "value": "half",
+              "unit": "示意",
+              "result": "correct",
+              "stageId": "gather",
+              "levelId": "l2",
+              "zoneId": "gathering",
+              "at": "2026-11-24T07:31:08.413Z"
+            },
+            {
+              "action": "inspect_separator_structure",
+              "actionId": "inspect_separator_structure",
+              "value": "half",
+              "unit": "示意",
+              "result": null,
+              "stageId": "gather",
+              "levelId": "l2",
+              "zoneId": "gathering",
+              "at": "2026-11-24T07:31:09.633Z"
+            },
+            {
+              "action": "start_separation",
+              "actionId": "start_separation",
+              "value": "started",
+              "unit": "示意",
+              "result": null,
+              "stageId": "gather",
+              "levelId": "l2",
+              "zoneId": "gathering",
+              "at": "2026-11-24T07:31:09.633Z"
+            }
+          ],
+          "ledger": [
+            {
+              "type": "操作",
+              "action": "adjust_pressure",
+              "value": 60,
+              "unit": "示意百分比",
+              "result": null,
+              "stageId": "drill",
+              "levelId": "l1",
+              "objectId": null,
+              "at": "2026-11-24T07:31:00.656Z"
+            },
+            {
+              "type": "操作",
+              "action": "trace_up_wellbore",
+              "value": "wellhead",
+              "unit": "抽取动画",
+              "result": null,
+              "stageId": "drill",
+              "levelId": "l1",
+              "objectId": null,
+              "at": "2026-11-24T07:31:00.656Z"
+            },
+            {
+              "type": "操作",
+              "action": "inspect_tank_structure",
+              "value": "fixed_roof_tank",
+              "unit": "罐型",
+              "result": null,
+              "stageId": "store",
+              "levelId": "l3",
+              "objectId": "fixed_roof_tank",
+              "at": "2026-11-24T07:31:02.615Z"
+            },
+            {
+              "type": "操作",
+              "action": "start_pump",
+              "value": "transfer_pump",
+              "unit": "运行",
+              "result": null,
+              "stageId": "store",
+              "levelId": "l3",
+              "objectId": "fixed_roof_tank",
+              "at": "2026-11-24T07:31:04.219Z"
+            },
+            {
+              "type": "操作",
+              "action": "inspect_separator_structure",
+              "value": "half",
+              "unit": "示意",
+              "result": "correct",
+              "stageId": "gather",
+              "levelId": "l2",
+              "objectId": "three_phase_separator",
+              "at": "2026-11-24T07:31:08.413Z"
+            },
+            {
+              "type": "操作",
+              "action": "inspect_separator_structure",
+              "value": "half",
+              "unit": "示意",
+              "result": null,
+              "stageId": "gather",
+              "levelId": "l2",
+              "objectId": "three_phase_separator",
+              "at": "2026-11-24T07:31:09.633Z"
+            },
+            {
+              "type": "操作",
+              "action": "start_separation",
+              "value": "started",
+              "unit": "示意",
+              "result": null,
+              "stageId": "gather",
+              "levelId": "l2",
+              "objectId": "three_phase_separator",
+              "at": "2026-11-24T07:31:09.633Z"
+            }
+          ],
+          "source": "interaction",
+          "scene": "oil_industry_journey",
+          "stage": 1,
+          "knowledge": "kb_gather",
+          "mode": "free"
+        },
+        "same": true
+      }
+    },
+    {
+      "name": "scene mismatch rejected",
+      "ok": true,
+      "detail": {
+        "ok": false,
+        "reason": "SCENE_MISMATCH",
+        "message": "该动作只能在三相分离关卡执行"
+      }
+    },
+    {
+      "name": "scene mismatch keeps current level",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "b5e5cecd-72e1-430d-91ef-bf04e9e9e366",
+        "createdAt": "2026-11-24T07:30:51.766Z",
+        "updatedAt": "2026-11-24T07:31:09.641Z",
+        "revision": 24,
+        "stageId": "store",
+        "stageIndex": 2,
+        "levelId": "l3",
+        "zoneId": "storage",
+        "selectedObjectId": "floating_roof_tank",
+        "object": "floating_roof_tank",
+        "deviceName": "外浮顶储罐",
+        "knowledgeIds": [
+          "kb_store"
+        ],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [
+          {
+            "action": "adjust_pressure",
+            "actionId": "adjust_pressure",
+            "value": 60,
+            "unit": "示意百分比",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "zoneId": "subsurface",
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "action": "trace_up_wellbore",
+            "actionId": "trace_up_wellbore",
+            "value": "wellhead",
+            "unit": "抽取动画",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "zoneId": "subsurface",
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "action": "inspect_tank_structure",
+            "actionId": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T07:31:02.615Z"
+          },
+          {
+            "action": "start_pump",
+            "actionId": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T07:31:04.219Z"
+          },
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-24T07:31:08.413Z"
+          },
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-24T07:31:09.633Z"
+          },
+          {
+            "action": "start_separation",
+            "actionId": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-24T07:31:09.633Z"
+          }
+        ],
+        "ledger": [
+          {
+            "type": "操作",
+            "action": "adjust_pressure",
+            "value": 60,
+            "unit": "示意百分比",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "objectId": null,
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "type": "操作",
+            "action": "trace_up_wellbore",
+            "value": "wellhead",
+            "unit": "抽取动画",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "objectId": null,
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T07:31:02.615Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T07:31:04.219Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-24T07:31:08.413Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-24T07:31:09.633Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-24T07:31:09.633Z"
+          }
+        ],
+        "source": "level",
+        "scene": "oil_industry_journey",
+        "stage": 1,
+        "knowledge": "kb_gather",
+        "mode": "free"
+      }
+    },
+    {
+      "name": "scene switch during action rejected",
+      "ok": true,
+      "detail": {
+        "ok": false,
+        "reason": "SCENE_CHANGED_DURING_ACTION",
+        "message": "动作执行前场景已切换，未执行以避免状态不一致"
+      }
+    },
+    {
+      "name": "scene switch preserved user target",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "b5e5cecd-72e1-430d-91ef-bf04e9e9e366",
+        "createdAt": "2026-11-24T07:30:51.766Z",
+        "updatedAt": "2026-11-24T07:31:09.644Z",
+        "revision": 26,
+        "stageId": "store",
+        "stageIndex": 2,
+        "levelId": "l3",
+        "zoneId": "storage",
+        "selectedObjectId": "floating_roof_tank",
+        "object": "floating_roof_tank",
+        "deviceName": "外浮顶储罐",
+        "knowledgeIds": [
+          "kb_store"
+        ],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [
+          {
+            "action": "adjust_pressure",
+            "actionId": "adjust_pressure",
+            "value": 60,
+            "unit": "示意百分比",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "zoneId": "subsurface",
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "action": "trace_up_wellbore",
+            "actionId": "trace_up_wellbore",
+            "value": "wellhead",
+            "unit": "抽取动画",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "zoneId": "subsurface",
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "action": "inspect_tank_structure",
+            "actionId": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T07:31:02.615Z"
+          },
+          {
+            "action": "start_pump",
+            "actionId": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T07:31:04.219Z"
+          },
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-24T07:31:08.413Z"
+          },
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-24T07:31:09.633Z"
+          },
+          {
+            "action": "start_separation",
+            "actionId": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-24T07:31:09.633Z"
+          }
+        ],
+        "ledger": [
+          {
+            "type": "操作",
+            "action": "adjust_pressure",
+            "value": 60,
+            "unit": "示意百分比",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "objectId": null,
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "type": "操作",
+            "action": "trace_up_wellbore",
+            "value": "wellhead",
+            "unit": "抽取动画",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "objectId": null,
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T07:31:02.615Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T07:31:04.219Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-24T07:31:08.413Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-24T07:31:09.633Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-24T07:31:09.633Z"
+          }
+        ],
+        "source": "level",
+        "scene": "oil_industry_journey",
+        "stage": 1,
+        "knowledge": "kb_gather",
+        "mode": "free"
+      }
+    },
+    {
+      "name": "unknown action rejected",
+      "ok": true,
+      "detail": {
+        "ok": false,
+        "reason": "NOT_ALLOWED",
+        "message": "该动作不在白名单内"
+      }
+    },
+    {
+      "name": "action mode sends action flag",
+      "ok": true,
+      "detail": {
+        "question": "请给下一步操作建议",
+        "ctx": [
+          "场景：石油产业链数字沙盘",
+          "环节：地面处理",
+          "关卡：l2",
+          "当前设备：三相分离器（objectId=three_phase_separator）",
+          "区域：gathering",
+          "关联知识点：kb_gather（本地人工审核）",
+          "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
+          "最近操作：inspect_separator_structure=half(correct)；inspect_separator_structure=half；start_separation=started",
+          "体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+          "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
+        ],
+        "tier": "mid",
+        "mode": "open",
+        "action": true
+      }
+    },
+    {
+      "name": "model action block renders execute button",
+      "ok": true,
+      "detail": {
+        "payload": {
+          "question": "请给下一步操作建议",
+          "ctx": [
+            "场景：石油产业链数字沙盘",
+            "环节：地面处理",
+            "关卡：l2",
+            "当前设备：三相分离器（objectId=three_phase_separator）",
+            "区域：gathering",
+            "关联知识点：kb_gather（本地人工审核）",
+            "已核验要点：井口产出物通常包含油、气、水，需要先进行分离处理。；三相分离器按相态和密度差异分离，不是过滤。",
+            "最近操作：inspect_separator_structure=half(correct)；inspect_separator_structure=half；start_separation=started",
+            "体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+            "当前可用动作（只能建议，需用户点击确认）：select_object、clear_selection、start_separation、pause_separation"
+          ],
+          "tier": "mid",
+          "mode": "open",
+          "action": true
+        },
+        "buttons": [
+          "换个工程档重讲",
+          "加入待审补库",
+          "复制",
+          "换个工程档重讲",
+          "加入待审补库",
+          "复制",
+          "执行建议动作 · clear_selection"
+        ],
+        "hasAction": true
+      }
+    },
+    {
+      "name": "model action executes only after click",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "b5e5cecd-72e1-430d-91ef-bf04e9e9e366",
+        "createdAt": "2026-11-24T07:30:51.766Z",
+        "updatedAt": "2026-11-24T07:31:10.311Z",
+        "revision": 29,
+        "stageId": "gather",
+        "stageIndex": 1,
+        "levelId": "l2",
+        "zoneId": "gathering",
+        "selectedObjectId": null,
+        "object": null,
+        "deviceName": null,
+        "knowledgeIds": [
+          "kb_gather"
+        ],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [
+          {
+            "action": "adjust_pressure",
+            "actionId": "adjust_pressure",
+            "value": 60,
+            "unit": "示意百分比",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "zoneId": "subsurface",
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "action": "trace_up_wellbore",
+            "actionId": "trace_up_wellbore",
+            "value": "wellhead",
+            "unit": "抽取动画",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "zoneId": "subsurface",
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "action": "inspect_tank_structure",
+            "actionId": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T07:31:02.615Z"
+          },
+          {
+            "action": "start_pump",
+            "actionId": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T07:31:04.219Z"
+          },
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-24T07:31:08.413Z"
+          },
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-24T07:31:09.633Z"
+          },
+          {
+            "action": "start_separation",
+            "actionId": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-24T07:31:09.633Z"
+          }
+        ],
+        "ledger": [
+          {
+            "type": "操作",
+            "action": "adjust_pressure",
+            "value": 60,
+            "unit": "示意百分比",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "objectId": null,
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "type": "操作",
+            "action": "trace_up_wellbore",
+            "value": "wellhead",
+            "unit": "抽取动画",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "objectId": null,
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T07:31:02.615Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T07:31:04.219Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-24T07:31:08.413Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-24T07:31:09.633Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-24T07:31:09.633Z"
+          }
+        ],
+        "source": "clear-selection",
+        "scene": "oil_industry_journey",
+        "stage": 1,
+        "knowledge": "kb_gather",
+        "mode": "free"
+      }
+    },
+    {
+      "name": "exit clears level and selection",
+      "ok": true,
+      "detail": {
+        "version": 1,
+        "sceneId": "oil_industry_journey",
+        "registrySceneId": "petro-chain-v3",
+        "sessionId": "b5e5cecd-72e1-430d-91ef-bf04e9e9e366",
+        "createdAt": "2026-11-24T07:30:51.766Z",
+        "updatedAt": "2026-11-24T07:31:10.741Z",
+        "revision": 32,
+        "stageId": "gather",
+        "stageIndex": 1,
+        "levelId": null,
+        "zoneId": "gathering",
+        "selectedObjectId": null,
+        "object": null,
+        "deviceName": null,
+        "knowledgeIds": [
+          "kb_gather"
+        ],
+        "experienceMode": "free",
+        "interaction": null,
+        "history": [
+          {
+            "action": "adjust_pressure",
+            "actionId": "adjust_pressure",
+            "value": 60,
+            "unit": "示意百分比",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "zoneId": "subsurface",
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "action": "trace_up_wellbore",
+            "actionId": "trace_up_wellbore",
+            "value": "wellhead",
+            "unit": "抽取动画",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "zoneId": "subsurface",
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "action": "inspect_tank_structure",
+            "actionId": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T07:31:02.615Z"
+          },
+          {
+            "action": "start_pump",
+            "actionId": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T07:31:04.219Z"
+          },
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-24T07:31:08.413Z"
+          },
+          {
+            "action": "inspect_separator_structure",
+            "actionId": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-24T07:31:09.633Z"
+          },
+          {
+            "action": "start_separation",
+            "actionId": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "zoneId": "gathering",
+            "at": "2026-11-24T07:31:09.633Z"
+          }
+        ],
+        "ledger": [
+          {
+            "type": "操作",
+            "action": "adjust_pressure",
+            "value": 60,
+            "unit": "示意百分比",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "objectId": null,
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "type": "操作",
+            "action": "trace_up_wellbore",
+            "value": "wellhead",
+            "unit": "抽取动画",
+            "result": null,
+            "stageId": "drill",
+            "levelId": "l1",
+            "objectId": null,
+            "at": "2026-11-24T07:31:00.656Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T07:31:02.615Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T07:31:04.219Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": "correct",
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-24T07:31:08.413Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_separator_structure",
+            "value": "half",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-24T07:31:09.633Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_separation",
+            "value": "started",
+            "unit": "示意",
+            "result": null,
+            "stageId": "gather",
+            "levelId": "l2",
+            "objectId": "three_phase_separator",
+            "at": "2026-11-24T07:31:09.633Z"
+          }
+        ],
+        "source": "exit-level",
+        "scene": "oil_industry_journey",
+        "stage": 1,
+        "knowledge": "kb_gather",
+        "mode": "free"
+      }
+    },
+    {
+      "name": "writing handoff prefills device topic",
+      "ok": true,
+      "detail": {
+        "topic": "外浮顶储罐：它在这一环节做什么",
+        "facts": "外浮顶罐的浮盘随液位升降，可减少油气空间。\n浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。",
+        "banner": "已带入当前场景：外浮顶储罐 · 仅用于本次写作；已核验要点 2 条。\n清除",
+        "errors": []
+      }
+    },
+    {
+      "name": "writing handoff carries verified facts",
+      "ok": true,
+      "detail": "外浮顶罐的浮盘随液位升降，可减少油气空间。\n浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。"
+    },
+    {
+      "name": "writing handoff banner visible",
+      "ok": true,
+      "detail": "已带入当前场景：外浮顶储罐 · 仅用于本次写作；已核验要点 2 条。\n清除"
+    },
+    {
+      "name": "writing Dify request includes scene record",
+      "ok": true,
+      "detail": {
+        "topic": "外浮顶储罐：它在这一环节做什么",
+        "genre": "科普推文",
+        "facts": "外浮顶罐的浮盘随液位升降，可减少油气空间。\n浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。\n\n【场景记录 · 教学操作，不是已核验事实，不得当作事实】\n场景：石油产业链数字沙盘\n环节：储运\n关卡：l3\n当前设备：外浮顶储罐（objectId=floating_roof_tank）\n区域：storage\n关联知识点：kb_store（本地人工审核）\n刚才的操作：inspect_tank_structure=floating_roof_tank（示意，结果：correct）\n最近操作：inspect_tank_structure=fixed_roof_tank；start_pump=transfer_pump；inspect_tank_structure=floating_roof_tank(correct)\n体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+        "audience": "普通公众",
+        "style": "严谨",
+        "draft": "",
+        "comment": ""
+      }
+    },
+    {
+      "name": "writing Dify request keeps facts separate",
+      "ok": true,
+      "detail": "外浮顶罐的浮盘随液位升降，可减少油气空间。\n浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。\n\n【场景记录 · 教学操作，不是已核验事实，不得当作事实】\n场景：石油产业链数字沙盘\n环节：储运\n关卡：l3\n当前设备：外浮顶储罐（objectId=floating_roof_tank）\n区域：storage\n关联知识点：kb_store（本地人工审核）\n刚才的操作：inspect_tank_structure=floating_roof_tank（示意，结果：correct）\n最近操作：inspect_tank_structure=fixed_roof_tank；start_pump=transfer_pump；inspect_tank_structure=floating_roof_tank(correct)\n体验模式：free；设备数值均为教学示意，不是真实生产数据。"
+    },
+    {
+      "name": "direct writing does not inherit scene",
+      "ok": true,
+      "detail": {
+        "banner": false,
+        "topic": "原油怎样从地下走到加油站"
+      }
+    },
+    {
+      "name": "no-proxy write shows editable template",
+      "ok": true,
+      "detail": "【预置模板 · 未连接模型，不是模型生成】\n主题：测试主题\n\n可以这样写：先从一个具体问题切入，再解释这个环节的作用，最后说明它和日常生活的联系。\n\n可核验的事实底稿：\n· 三相分离器按相态和密度差异分离，不是过滤。\n\n请把以上材料改写成一篇科普推文；不要编造没有底稿支持的数字或工程参数。"
+    },
+    {
+      "name": "no-proxy write does not claim model ran",
+      "ok": true,
+      "detail": {
+        "out": "【预置模板 · 未连接模型，不是模型生成】\n主题：测试主题\n\n可以这样写：先从一个具体问题切入，再解释这个环节的作用，最后说明它和日常生活的联系。\n\n可核验的事实底稿：\n· 三相分离器按相态和密度差异分离，不是过滤。\n\n请把以上材料改写成一篇科普推文；不要编造没有底稿支持的数字或工程参数。",
+        "meta": "134 字 · 科普推文 · 预置模板 · 未连接模型",
+        "note": "模型服务未连接，已放入可编辑的预置模板，不是模型输出。"
+      }
+    }
+  ]
+}

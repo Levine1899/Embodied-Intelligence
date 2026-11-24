@@ -292,10 +292,25 @@
   const initialPlaceholder = questionInput.placeholder;
   let pending = null;
   let conversationId = '';
-  let userId = crypto.randomUUID();
-  const videoFiles = new Map([
-    ['会说话的抽油机\n中油e学 (8).mp4', 'assets/videos/talking-pumpjack.mp4']
-  ]);
+  function makeId() {
+    try {
+      if (typeof crypto !== 'undefined' && crypto && typeof crypto.randomUUID === 'function') {
+        return crypto.randomUUID();
+      }
+    } catch (e) {}
+    var b = new Uint8Array(16);
+    try {
+      if (typeof crypto !== 'undefined' && crypto && crypto.getRandomValues) crypto.getRandomValues(b);
+      else for (var i = 0; i < 16; i += 1) b[i] = Math.floor(Math.random() * 256);
+    } catch (e2) {
+      for (var j = 0; j < 16; j += 1) b[j] = Math.floor(Math.random() * 256);
+    }
+    b[6] = (b[6] & 0x0f) | 0x40;
+    b[8] = (b[8] & 0x3f) | 0x80;
+    var h = Array.prototype.map.call(b, function (x) { return ('0' + x.toString(16)).slice(-2); }).join('');
+    return h.slice(0,8) + '-' + h.slice(8,12) + '-4' + h.slice(13,16) + '-a' + h.slice(17,20) + '-' + h.slice(20);
+  }
+  let userId = makeId();
   const examples = [
     { question:'石油为什么是黑色的', keys:/黑色|颜色/, title:'石油为什么通常是黑色的？', intro:'石油并不都是黑色的。它的颜色可以从浅黄、棕褐到深黑，主要取决于其中不同成分的比例。', points:['原油由多种烃类和少量其他物质组成，成分不同，外观也会不同。','较重的组分以及胶质、沥青质含量较高时，原油往往颜色更深。','颜色较浅的原油通常含有较多轻质组分，但不能仅凭颜色判断品质。'], summary:'简单说，石油的颜色是多种成分共同作用的结果。' },
     { question:'为什么油藏在石头里', keys:/石头|岩石|油藏|岩心/, title:'油为什么能藏在石头里？', intro:'地下的石油通常不是聚集在巨大的空洞中，而是存在于储层岩石的微小孔隙里。', points:['砂岩等储层岩石内部有许多细小孔隙，像海绵一样可以容纳流体。','孔隙相互连通时，油和气能够在一定条件下流动。','上方的致密盖层可以阻挡油气继续向上运移，帮助形成油藏。'], summary:'理解油藏的关键，是岩石的孔隙、连通性和封闭条件。' },
@@ -453,7 +468,7 @@
         const value = input.value.trim();
         if (!value || value === question || pending) return;
         conversationId = '';
-        userId = crypto.randomUUID();
+        userId = makeId();
         let next = turn;
         while (next) { const following = next.nextElementSibling; next.remove(); next = following; }
         ask(value);
@@ -577,7 +592,7 @@
         retry.title = '重新生成';
         retry.setAttribute('aria-label', '重新生成回答');
         retry.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4v5h-5M4 20v-5h5"/><path d="M5 9a8 8 0 0 1 13-3l2 3M19 15a8 8 0 0 1-13 3l-2-3"/></svg>';
-        retry.addEventListener('click', () => { if (!pending) { conversationId = ''; userId = crypto.randomUUID(); let next = turn.nextElementSibling; while (next) { const following = next.nextElementSibling; next.remove(); next = following; } ask(question, turn); } });
+        retry.addEventListener('click', () => { if (!pending) { conversationId = ''; userId = makeId(); let next = turn.nextElementSibling; while (next) { const following = next.nextElementSibling; next.remove(); next = following; } ask(question, turn); } });
         actions.append(copy, retry);
         answer.append(actions);
     } catch (error) {
@@ -614,7 +629,7 @@
   $('#new-chat').addEventListener('click', () => {
     if (pending) pending.controller.abort();
     conversationId = '';
-    userId = crypto.randomUUID();
+    userId = makeId();
     pending = null;
     output.replaceChildren();
     document.body.classList.add('is-empty');

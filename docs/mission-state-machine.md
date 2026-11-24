@@ -35,9 +35,9 @@ active(step=0..4)
 |---|---|---|---|---|---|---|
 | M1 | l1 | 把油带到井口 | 储层图例、井筒 | ① 点击储层；② 点「沿井筒上行」 | `inspect_reservoir` + `trace_up_wellbore` | kb_formation |
 | M2 | l2 | 把混合物分开 | 三个出口、颜色/位置 | 剖开、启动分离；气/油/水出口分别选正确去向 | `__l2.solved` 三项全 true 且已启动分离 | kb_gather |
-| M3 | l3 | 选择怎么存、怎么送 | 浮盘贴液面、油气空间 | 将液位调到 ≥70%，启动泵送 | `change_liquid_level≥70` + `start_pump` | kb_store |
+| M3 | l3 | 选择怎么存、怎么送 | 浮盘贴液面、油气空间 | 当前液位 ≥70%，启动泵送 | `当前 change_liquid_level≥70` + `start_pump` | kb_store |
 | M4 | l4 | 打开蒸馏塔 | 塔板、侧线、馏分 | 切到全剖；选择柴油馏分 | `inspect_tower_structure=full` + `select_fraction=diesel` | kb_refine |
-| M5 | l5 | 选择一个终端去向 | 产品台、路线提示 | 至少选择一个石油路线产品 | `select_product` 至少一次 | kb_use |
+| M5 | l5 | 选择一个终端去向 | 产品台、路线提示 | 新增选择一个石油路线产品 | `select_product` 使 picked 数量增加 | kb_use |
 
 这不是“点开始任务就自动通关”：M2 必须亲手完成三路去向；M3 必须改变液位并启动泵；M4 必须全剖并选对馏分。
 
@@ -50,11 +50,11 @@ active(step=0..4)
 | M2 剖开/启动 | 按钮 | 进入 l2 | structure=half, animation=running | 内部/三相路径出现 | 可暂停/重播 |
 | M2 三路去向 | 选出口→选去向 | 分离运行 | solved.gas/oil/water=true | 路径/落位；错误回流 | 错误红色拦截，可改选 |
 | M2 完成 | 三路正确 | M2 | step 完成 | 知识章 + 本段反馈 | 不扣分 |
-| M3 液位 | 拖 slider | 进入 l3 | flags.level | 浮盘/油气空间变化 | 低于阈值提示 |
+| M3 液位 | 拖 slider | 进入 l3 | flags.level（当前值） | 浮盘/油气空间变化 | 低于阈值提示；先升后降再泵不通过 |
 | M3 泵送 | 点启动 | 液位≥70% | flags.pump=true | 泵送粒子/管线 | 可暂停/重播 |
 | M4 全剖 | 点「全剖」 | 进入 l4 | flags.full=true | 塔板/侧线可见 | 可恢复外观 |
 | M4 馏分 | 点柴油 | 全剖 | flags.fraction=diesel | 侧线路径 | 选错只提示，不失败 |
-| M5 产品 | 点产品台/物品 | 进入 l5 | flags.product | 产品高亮/计数 | 可再选 |
+| M5 产品 | 点产品台/物品 | 进入 l5 | flags.product + pickedCount | 产品高亮/计数 | 取消选中不完成 |
 | 提示 | 点「提示」 | active | hintLevel/hintsUsed | 本段提示文本 | 自动 25s 提示，最多 3 级 |
 | 暂停 | 点「暂停」 | active | status=paused | 面板暂停说明 | 点继续恢复 |
 | 退出 | 点「退出」 | active/paused | paused + free | 返回总览、进度保留 | 可再次任务恢复 |
@@ -102,3 +102,9 @@ __mission.summary
 - 暂停/退出/继续/重置：分别可观察。
 - 任务完整记录只在本机；不承诺工程仿真、真实收率或真实物流。
 - 语音、AI 生成、移动端不在本阶段范围。
+
+## 8. 复核修复与验证（2026-11-23）
+
+- M3 保存当前液位，不再使用历史最大值；新增 `75→0→泵` 负例。
+- M5 以 `pickedCount` 增长判定新选择；取消选中不会完成。
+- `phase07-verify.cjs` 当前 75 passed / 0 failed；暂停/继续覆盖 l2、l3、l4。

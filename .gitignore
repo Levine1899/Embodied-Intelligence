@@ -6,3 +6,5 @@ Thumbs.db
 web/_*.png
 
 dist/
+
+server/.env

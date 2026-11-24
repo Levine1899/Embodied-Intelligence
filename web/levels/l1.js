@@ -40,18 +40,21 @@
   let levelLights = [];
   let assetRoot = null, assetLoaded = false, assetFailed = false;
   let layerMeshes = {}, partMeshes = {}, reservoirLens = null, wellheadMeshes = [];
-  let poreGroup = null, poreDrops = [];
+  let poreGroup = null, poreDrops = [], poreFlow = null;
   let wellFlow = null, surfaceFlow = null, flowCurve = null;
+  let wellFluid = null, wellCut = false;
+  let convFlows = [], extractionRing = null, extractionAt = 0, extractionMarked = false, extractionStarted = false;
   let running = false, lastT = 0, flyHandle = null;
   let pressure = 0, paused = false, completed = false, clipped = true;
   const clipPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0);
-  let selectedLayer = null, selectedPart = null, poreMode = false, highlightedLayer = null;
+  let selectedLayer = null, selectedPart = null, poreMode = false, poreZoom = false, highlightedLayer = null;
   let viewMode = 'block';
   let layerVisibility = { overburden: true, caprock: true, reservoir: true, basement: true };
   let originalVisibility = null;
   let down = null, dragged = false;
   let orbit = { target: new THREE.Vector3(), yaw: 0.36, pitch: 0.22, dist: 25 };
   let ui = null, hint = null, info = null, panel = null, legend = null;
+  let autoPoreTimer = 0;
   let lastInteraction = null;
 
   function style() {
@@ -59,6 +62,8 @@
     const s = document.createElement('style');
     s.id = 'ug-style';
     s.textContent = `
+      .ug-left.lvl2{width:min(392px,calc(100% - 28px));max-width:392px;max-height:calc(100% - 100px);top:58px;border-radius:10px;border-left:3px solid #f0a22e;padding:14px 15px 12px}
+      @media(max-width:900px){.ug-left.lvl2{width:min(360px,calc(100% - 28px))}}
       .ug-left{position:absolute;left:14px;top:58px;width:286px;max-height:calc(100% - 100px);overflow:auto;pointer-events:auto;
         background:linear-gradient(180deg,rgba(8,17,24,.95),rgba(8,17,24,.86));border:1px solid #2a3d47;padding:12px 13px;z-index:3}
       .ug-kicker{font:600 10.5px/1.2 ui-monospace,Consolas,monospace;letter-spacing:.13em;color:#8da2ad;text-transform:uppercase;margin-bottom:8px}
@@ -67,6 +72,7 @@
         padding:6px 9px;cursor:pointer;pointer-events:auto}
       .ug-chip:hover{border-color:#e3ad58;color:#f2cf91}
       .ug-chip.on{border-color:#e3ad58;color:#f0bd6e;background:#1b1509}
+      .ug-chip.active{border-color:#f0a22e;color:#1b1508;background:#f0a22e;font-weight:700;box-shadow:0 0 0 2px #f0a22e33}
       .ug-chip.off{opacity:.48;text-decoration:line-through}
       .ug-info{font-size:12.5px;line-height:1.7;color:#c7d3d8;border-top:1px solid #263a44;padding-top:9px;margin-top:3px}
       .ug-info b{color:#efc16e;font-size:13px}
@@ -83,6 +89,11 @@
       .ug-btn:disabled{opacity:.4;cursor:not-allowed}
       .ug-scale{font:11px/1.5 ui-monospace,Consolas,monospace;color:#89a1ab;background:rgba(8,17,24,.8);padding:6px 8px;border-left:2px solid #e3ad58;max-width:150px}
       .ug-readout{font:11.5px/1.5 "Microsoft YaHei UI",sans-serif;color:#adc0c8;border-top:1px solid #263a44;margin-top:8px;padding-top:7px}
+      .ug-task{margin-top:10px;padding:10px 11px;border:1px solid #8a6a33;background:#1b1509;pointer-events:auto}
+      .ug-task b{display:block;color:#f0c476;font-size:13px;margin-bottom:4px}
+      .ug-task p{margin:0 0 8px;color:#c8d3d7;font-size:11.5px;line-height:1.65}
+      .ug-task button{width:100%;border:1px solid #e3ad58;background:#2a1d0b;color:#f3c77d;padding:8px 10px;font:600 12.5px/1 "Microsoft YaHei UI",sans-serif;cursor:pointer}
+      .ug-task button:hover{background:#3b2a10}
       .ug-tag{display:inline-block;border:1px solid #385561;color:#9fc0cc;border-radius:2px;padding:1px 5px;font-size:10.5px;margin-right:4px}
       .lvl.on #l1-act{position:static;left:auto;right:auto;bottom:auto;max-width:none;background:transparent;border:0;padding:10px 0 4px;margin-top:8px;border-top:1px solid #263a44}
       .lvl.on #l1-act p{font-size:12px;line-height:1.65}
@@ -97,36 +108,37 @@
     ui.className = 'lvl';
     ui.innerHTML = [
       '<div class="lvl__bar"><span class="lvl__step">01 / 05</span><b>地下开采 · 地质剖面</b><span class="lvl__hint" id="l1-hint">镜头正在进入地下…</span></div>',
-      '<div class="ug-left" id="l1-panel">',
-      '  <div class="ug-kicker">地层 / 储层 / 井筒</div>',
+      '<div class="ug-left lvl2" id="l1-panel">',
+      '  <div class="lvl2__head"><div><span class="lvl2__eyebrow">地下开采</span><b>选层位，看井筒</b></div><span class="lvl2__state" id="l1-state">地质剖面</span></div>',
+      '  <p class="lvl2__lede">先看地层和储层，再沿井筒看流体怎样到地面。</p>',
+      '  <div class="lvl2__step">',
+      '  <div class="lvl2__stephead"><span class="lvl2__num">1</span><b>选择层位</b><span class="lvl2__stepnote">点按钮切换显示</span></div>',
       '  <div class="ug-chips" id="l1-layers" aria-label="地层显示切换"></div>',
+      '  </div>',
+      '  <div class="lvl2__step">',
+      '  <div class="lvl2__stephead"><span class="lvl2__num">2</span><b>查看井筒</b><span class="lvl2__stepnote">套管 / 水泥环 / 油管</span></div>',
       '  <div class="ug-chips" id="l1-parts" aria-label="井筒部件显示切换"></div>',
-      '  <div class="ug-info" id="l1-info"><b>先找到储层</b><p>点击剖面中的岩层、储层或井筒部件。标签和解释只在你选中时出现。</p><small>教学示意：不是真实油藏数据，也不是真实地质比例。</small></div>',
+      '  </div>',
+      '  <div class="lvl2__step">',
+      '  <div class="lvl2__stephead"><span class="lvl2__num">3</span><b>调节压力</b><span class="lvl2__stepnote">拖动滑块</span></div>',
+      '  <div class="lvl__row"><input type="range" min="0" max="100" value="0" id="l1-press" aria-label="压力差示意（教学控制量）"><b id="l1-pct">0%</b></div>',
+      '  <div id="l1-act" aria-hidden="true"></div>',
+      '  </div>',
+      '  <div class="ug-info" id="l1-info" hidden><b>先找到储层</b><p>点击剖面中的岩层、储层或井筒部件。标签和解释只在你选中时出现。</p></div>',
       '  <div class="ug-legend" id="l1-legend"><span><i class="ug-dot" style="background:#d8a24a"></i>油（示意）</span><span><i class="ug-dot" style="background:#8fd3c6"></i>气（示意）</span><span><i class="ug-dot" style="background:#6f9fc4"></i>水（示意）</span></div>',
-      '  <div class="ug-readout" id="l1-readout">状态：总览剖面 · 流体静止</div>',
+      '  <div class="ug-readout" id="l1-readout" hidden>状态：总览剖面 · 流体静止</div>',
       '</div>',
       '<div class="ug-controls">',
-      '  <button type="button" class="ug-btn" id="l1-up">沿井筒上行 ↑</button>',
+      '  <button type="button" class="ug-btn" id="l1-up" hidden>沿井筒上行 ↑</button>',
       '  <button type="button" class="ug-btn" id="l1-pore">孔隙放大（示意）</button>',
       '  <button type="button" class="ug-btn" id="l1-well">井筒整体</button>',
       '  <button type="button" class="ug-btn" id="l1-perf">射孔井段</button>',
-      '  <button type="button" class="ug-btn" id="l1-play" aria-pressed="false">播放流动</button>',
+      '  <button type="button" class="ug-btn" id="l1-play" aria-pressed="false" hidden>播放流动</button>',
       '  <button type="button" class="ug-btn" id="l1-cut">显示完整地层</button>',
-      '  <button type="button" class="ug-btn" id="l1-reset">重置观察</button>',
-      '  <div class="ug-scale">地层/井筒 Hero<br>OBJ + Blender 源文件</div>',
-      '</div>',
-      '<div class="lvl__act" id="l1-act">',
-      '  <p>油不在“油湖”里，它赋存在<b>岩石孔隙</b>中。拖动“压力差示意”，观察示意流体向井筒方向移动。</p>',
-      '  <p style="color:#9a948a;font-size:12px;margin:4px 0 8px">教学示意：滑块不代表真实井底压力、注入量、产量或采收率。</p>',
-      '  <div class="lvl__row"><input type="range" min="0" max="100" value="0" id="l1-press" aria-label="压力差示意（教学控制量）"><b id="l1-pct">0%</b></div>',
-      '  <div class="lvl__out"><span id="l1-note">孔隙里的流体还没有明显运移</span></div>',
       '</div>',
       '<button type="button" class="lvl__back" id="l1-back">返回总览</button>'
     ].join('');
     stage.viewport.appendChild(ui);
-    const actPanel = ui.querySelector('#l1-act');
-    const leftPanel = ui.querySelector('#l1-panel');
-    if (actPanel && leftPanel) leftPanel.appendChild(actPanel);
 
     hint = ui.querySelector('#l1-hint');
     info = ui.querySelector('#l1-info');
@@ -146,8 +158,8 @@
       b.dataset.layer = layer.key;
       b.textContent = layer.name;
       b.setAttribute('aria-pressed', 'true');
-      b.title = '显示/隐藏' + layer.name;
-      b.onclick = function () { toggleLayer(layer.key); };
+      b.title = '选择并讲解' + layer.name;
+      b.onclick = function () { selectByChip(layer.key, false); };
       layers.appendChild(b);
     });
     PARTS.forEach(function (part) {
@@ -157,8 +169,8 @@
       b.dataset.part = part.key;
       b.textContent = part.name;
       b.setAttribute('aria-pressed', 'true');
-      b.title = '显示/隐藏' + part.name;
-      b.onclick = function () { togglePart(part.key); };
+      b.title = '选择并讲解' + part.name;
+      b.onclick = function () { selectByChip(part.key, true); };
       parts.appendChild(b);
     });
 
@@ -167,6 +179,7 @@
       pct.textContent = pressure + '%';
       if (stage.setInteraction) stage.setInteraction('adjust_pressure', pressure, '示意百分比');
       lastInteraction = { actionId: 'adjust_pressure', value: pressure, unit: '示意百分比' };
+      if (pressure >= 50) startExtraction();
       updatePressureUI();
     });
     back.onclick = exitLevel;
@@ -177,16 +190,16 @@
       applyClip();
       e.currentTarget.textContent = clipped ? '显示完整地层' : '剖切地层';
     };
-    ui.querySelector('#l1-pore').onclick = function () { poreMode ? exitPore() : enterPore(); };
+    ui.querySelector('#l1-pore').onclick = function () { poreZoom ? exitPore() : enterPore(); };
     ui.querySelector('#l1-well').onclick = function () { focusWellbore('whole'); };
     ui.querySelector('#l1-perf').onclick = function () { focusWellbore('perforation'); };
+
     ui.querySelector('#l1-play').onclick = function (e) {
       paused = !paused;
       e.currentTarget.setAttribute('aria-pressed', String(paused));
       e.currentTarget.textContent = paused ? '继续流动' : '暂停流动';
       setReadout();
     };
-    ui.querySelector('#l1-reset').onclick = resetView;
 
     // raycast + free observation on the actual renderer.
     const canvas = stage.renderer.domElement;
@@ -308,7 +321,7 @@
           node.userData.objectId = 'wellhead';
           if (name.indexOf('wellhead') === 0) wellheadMeshes.push(node);
         }
-        if (name === 'well_flowline') node.userData.ugFlowline = true;
+        if (name === 'well_flowline') { node.userData.ugFlowline = true; node.visible = false; }
       });
       // Cement is deliberately translucent so casing/cement relationship is visible.
       (partMeshes.cement || []).forEach(function (m) {
@@ -324,8 +337,10 @@
       G.add(geologyProxy);
       G.userData.geologyProxy = geologyProxy;
       assetLoaded = true;
+      if (stage.isLevel() && !poreMode) setTimeout(function () { if (stage.isLevel() && !poreMode) enterPoreOverlay(); }, 400);
       bindAssetState();
       applyClip();
+      prepareWellboreCutaway();
       addSurfacePipe();
       updateLayerChips();
       updatePartChips();
@@ -376,18 +391,68 @@
     wellheadMeshes.forEach(function (m) { st.bind('wellhead', 'detail', m); });
   }
 
+  function prepareWellboreCutaway() {
+    if (wellCut || !G) return;
+    const targetNames = ['well_casing', 'well_cement', 'well_tubing', 'wellbore_overview'];
+    const cutPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), 8.0);
+    targetNames.forEach(function (name) {
+      const obj = G.getObjectByName(name);
+      if (!obj) return;
+      obj.traverse(function (m) {
+        if (!m.isMesh || !m.material) return;
+        m.material = m.material.clone();
+        m.material.clippingPlanes = [cutPlane];
+        m.material.clipShadows = true;
+        m.material.side = THREE.DoubleSide;
+        m.material.needsUpdate = true;
+      });
+    });
+    /* 半剖后能看到管腔内的液体柱；流动粒子叠在液体柱上。 */
+    const geo = new THREE.CylinderGeometry(0.11, 0.11, 7.9, 12, 1, true);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xff8a1e, transparent: true, opacity: 0.72, depthWrite: false, depthTest: false, side: THREE.DoubleSide, toneMapped: false });
+    wellFluid = new THREE.Mesh(geo, mat);
+    wellFluid.name = 'well_fluid_column';
+    const local = G.worldToLocal(new THREE.Vector3(-24, -2.9, 8));
+    wellFluid.position.copy(local);
+    wellFluid.renderOrder = 5;
+    wellFluid.visible = false;
+    G.add(wellFluid);
+    /* 切割边缘线，明确“半剖”的管壁厚度。 */
+    const rimMat = new THREE.MeshBasicMaterial({ color: 0xcfd8df, transparent: true, opacity: 0.95 });
+    const tubeRimMat = new THREE.MeshBasicMaterial({ color: 0xffcf67, transparent: true, opacity: 0.95 });
+    [[-24.30, rimMat], [-23.70, rimMat], [-24.13, tubeRimMat], [-23.87, tubeRimMat]].forEach(function (pair) {
+      const rim = new THREE.Mesh(new THREE.BoxGeometry(0.022, 8.55, 0.022), pair[1]);
+      const localRim = G.worldToLocal(new THREE.Vector3(pair[0], -3.0, 8.0));
+      rim.position.copy(localRim);
+      rim.renderOrder = 4;
+      G.add(rim);
+    });
+    if (wellFlow) {
+      wellFlow.children.forEach(function (m) {
+        m.material = m.material.clone();
+        m.material.depthTest = false;
+        m.material.opacity = 0.95;
+        m.material.toneMapped = false;
+        m.renderOrder = 6;
+      });
+    }
+    wellCut = true;
+  }
+
   function addSurfacePipe() {
+    /* 地面集输管抬到地表以上，避免被台地/地层棱线截成两段。 */
     const pts = [
-      new THREE.Vector3(8.2, 0.55, -1.2),
-      new THREE.Vector3(11.5, 0.35, -2.8),
-      new THREE.Vector3(15.2, 0.25, -4.8),
-      new THREE.Vector3(18.0, 0.2, -6.0)
+      new THREE.Vector3(0.9, 1.35, 0.0),
+      new THREE.Vector3(6.0, 2.4, -1.0),
+      new THREE.Vector3(12.0, 3.2, -2.2),
+      new THREE.Vector3(18.0, 3.3, -3.2)
     ];
     const curve = new THREE.CatmullRomCurve3(pts);
     const pipe = new THREE.Mesh(
       new THREE.TubeGeometry(curve, 40, 0.075, 8, false),
-      new THREE.MeshStandardMaterial({ color: 0x7b8075, roughness: 0.55, metalness: 0.55 })
+      new THREE.MeshStandardMaterial({ color: 0x7b8075, roughness: 0.55, metalness: 0.55, depthTest: false, depthWrite: false })
     );
+    pipe.renderOrder = 6;
     pipe.name = 'surface_gathering_pipe';
     pipe.userData.ugSurfacePipe = true;
     G.add(pipe);
@@ -484,6 +549,16 @@
         poreDrops.push(d);
       }
     });
+    const upCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, -2.65, 0),
+      new THREE.Vector3(0.02, -0.6, 0.02),
+      new THREE.Vector3(0, 1.4, 0),
+      new THREE.Vector3(0, 2.65, 0)
+    ]);
+    poreFlow = buildFlow(upCurve, 16, 0xffc45f, 0.24, 0.09);
+    poreFlow.name = 'pore_upflow';
+    poreFlow.children.forEach(function (m) { m.material.depthTest = false; m.renderOrder = 4; });
+    poreGroup.add(poreFlow);
     const shell = new THREE.Mesh(
       new THREE.SphereGeometry(3.1, 24, 16),
       new THREE.MeshBasicMaterial({ color: 0x8b6b3f, transparent: true, opacity: 0.08, side: THREE.DoubleSide, depthWrite: false })
@@ -504,15 +579,36 @@
   }
 
   function buildWellFlow() {
+    /* 抽取演示：储层两侧的油滴汇入射孔段，再沿井筒上行（V3 动画的可见版本）。 */
     const curve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(0, -6.0, 0),
       new THREE.Vector3(0.05, -4.2, 0.02),
       new THREE.Vector3(0.03, -2.0, 0),
       new THREE.Vector3(0, 0.8, 0)
     ]);
-    wellFlow = buildFlow(curve, 14, 0xd8a24a, 0.18, 0.06);
+    wellFlow = buildFlow(curve, 26, 0xffcf67, 0.26, 0.105);
     wellFlow.name = 'wellbore_flow_particles';
     G.add(wellFlow);
+    const c1 = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-2.8, -5.7, 0.8),
+      new THREE.Vector3(-1.4, -5.35, 0.35),
+      new THREE.Vector3(0, -5.2, 0)
+    ]);
+    const c2 = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(2.6, -5.5, -0.8),
+      new THREE.Vector3(1.2, -5.25, -0.3),
+      new THREE.Vector3(0, -5.2, 0)
+    ]);
+    convFlows = [buildFlow(c1, 9, 0xf7b24a, 0.16, 0.055), buildFlow(c2, 9, 0xf7b24a, 0.16, 0.055)];
+    convFlows.forEach(function (f, i) { f.name = 'reservoir_inflow_' + i; G.add(f); });
+    extractionRing = new THREE.Mesh(
+      new THREE.TorusGeometry(0.62, 0.035, 8, 36),
+      new THREE.MeshBasicMaterial({ color: 0xffc56a, transparent: true, opacity: 0.55, depthWrite: false })
+    );
+    extractionRing.rotation.x = Math.PI / 2;
+    extractionRing.position.set(0, -5.2, 0);
+    extractionRing.name = 'extraction_pulse';
+    G.add(extractionRing);
   }
 
   function build() {
@@ -567,6 +663,7 @@
   }
 
   function flyTo(position, target, duration, done) {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { camera.position.copy(position); camera.lookAt(target); if (typeof done === 'function') done(); return; }
     if (!camera) return;
     if (flyHandle) cancelAnimationFrame(flyHandle);
     const from = camera.position.clone();
@@ -634,6 +731,7 @@
       const on = key !== 'reservoir' ? layerVisibility[key] : (layerMeshes.reservoir && layerMeshes.reservoir.visible);
       b.classList.toggle('on', on);
       b.classList.toggle('off', !on);
+      b.classList.toggle('active', selectedLayer === key || (key === 'reservoir' && selectedLayer === 'reservoir'));
       b.setAttribute('aria-pressed', String(on));
     });
   }
@@ -646,6 +744,7 @@
       const on = list.length ? list.every(function (m) { return m.visible; }) : false;
       b.classList.toggle('on', on);
       b.classList.toggle('off', !on);
+      b.classList.toggle('active', selectedPart === key);
       b.setAttribute('aria-pressed', String(on));
     });
   }
@@ -656,6 +755,38 @@
       if (m) m.visible = !!layerVisibility[l.key];
     });
     if (reservoirLens) reservoirLens.visible = !!layerVisibility.reservoir;
+  }
+
+  function speakSelection(text) {
+    if (!window.Voice) return;
+    try { window.Voice.setText(text); window.Voice.speak(text); } catch (e) {}
+  }
+
+  function selectByChip(key, isPart) {
+    if (isPart) {
+      const list = partMeshes[key] || [];
+      list.forEach(function (m) { m.visible = true; });
+      wellheadMeshes.forEach(function (m) { m.visible = true; });
+      selectPart(key);
+      const p = PARTS.filter(function (x) { return x.key === key; })[0];
+      if (p) speakSelection(p.name + '。' + p.desc);
+    } else {
+      layerVisibility[key] = true;
+      applyLayerVisibility();
+      if (key === 'reservoir') {
+        selectReservoir();
+        const r = LAYERS.filter(function (x) { return x.key === 'reservoir'; })[0];
+        if (r) speakSelection(r.name + '。' + r.desc);
+      } else {
+        selectLayer(key);
+        const layer = LAYERS.filter(function (x) { return x.key === key; })[0];
+        if (layer) speakSelection(layer.name + '。' + layer.desc);
+      }
+      legend.classList.toggle('on', key === 'reservoir');
+    }
+    if (info) info.hidden = false;
+    updateLayerChips();
+    updatePartChips();
   }
 
   function toggleLayer(key) {
@@ -753,6 +884,9 @@
     if (stage.setContextObject) stage.setContextObject('underground_geology', 'subsurface');
     if (stage.setInteraction) stage.setInteraction('inspect_layer', key, '教学图层');
     lastInteraction = { actionId: 'inspect_layer', value: key, unit: '教学图层' };
+    if (info) info.hidden = false;
+    updateLayerChips();
+    updatePartChips();
   }
 
   function selectReservoir() {
@@ -765,6 +899,9 @@
     if (stage.setContextObject) stage.setContextObject('reservoir', 'subsurface');
     if (stage.setInteraction) stage.setInteraction('inspect_reservoir', 'reservoir', '教学对象');
     lastInteraction = { actionId: 'inspect_reservoir', value: 'reservoir', unit: '教学对象' };
+    if (info) info.hidden = false;
+    updateLayerChips();
+    updatePartChips();
   }
 
   function selectPart(key) {
@@ -778,6 +915,9 @@
     if (stage.setContextObject) stage.setContextObject('wellbore', 'subsurface');
     if (stage.setInteraction) stage.setInteraction('inspect_wellbore_part', key, '教学部件');
     lastInteraction = { actionId: 'inspect_wellbore_part', value: key, unit: '教学部件' };
+    if (info) info.hidden = false;
+    updateLayerChips();
+    updatePartChips();
   }
 
   function selectWellhead(silent) {
@@ -791,12 +931,15 @@
     if (!silent) {
       if (stage.setInteraction) stage.setInteraction('inspect_wellhead', 'wellhead', '教学设备');
       lastInteraction = { actionId: 'inspect_wellhead', value: 'wellhead', unit: '教学设备' };
+    if (info) info.hidden = false;
     }
   }
 
   function focusWellbore(mode) {
     if (!assetLoaded) return;
-    if (poreMode) exitPore();
+    const target = mode === 'perforation' ? 'wellbore-local' : 'wellbore';
+    if (viewMode === target) { resetView(); hint.textContent = '总览剖面 · 已取消井筒选择'; return; }
+    if (poreMode) exitPore(true);
     if (!clipped) {
       clipped = true;
       applyClip();
@@ -816,15 +959,35 @@
     setReadout();
   }
 
-  function enterPore() {
+  function enterPoreOverlay() {
     if (poreMode) return;
     if (!assetLoaded || !poreGroup) return;
     poreMode = true;
+    originalVisibility = Object.assign({}, layerVisibility);
+    poreGroup.visible = true;
+    /* 叠加态放到最底层（基底）内，避免孔隙球跨过储层/盖层。 */
+    poreGroup.position.y = -9.9;
+    poreGroup.scale.set(1.05, 0.74, 1.05);
+    applyExtractionProgress();
+    const btn = ui.querySelector('#l1-pore');
+    if (btn) btn.textContent = '孔隙放大（示意）';
+    poreZoom = false;
+    setReadout();
+  }
+
+  function enterPore() {
+    if (poreZoom) return;
+    if (!assetLoaded || !poreGroup) return;
+    poreMode = true;
+    poreZoom = true;
     clearLayerHighlight();
+    poreGroup.position.y = -5.8;
+    poreGroup.scale.setScalar(1);
     originalVisibility = Object.assign({}, layerVisibility);
     LAYERS.forEach(function (l) { if (layerMeshes[l.key]) layerMeshes[l.key].visible = false; });
     if (reservoirLens) reservoirLens.visible = false;
     poreGroup.visible = true;
+    applyExtractionProgress();
     selectedLayer = 'reservoir';
     selectedPart = null;
     legend.classList.add('on');
@@ -837,9 +1000,32 @@
     setReadout();
   }
 
-  function exitPore() {
+  function exitPore(full) {
     if (!poreMode) return;
+    if (!full && poreZoom) {
+      /* 从放大退回默认的半透明孔隙叠加，小气泡仍留在基底里。 */
+      poreZoom = false;
+      if (originalVisibility) {
+        layerVisibility = Object.assign({}, originalVisibility);
+        applyLayerVisibility();
+        updateLayerChips();
+        originalVisibility = null;
+      }
+      poreGroup.position.y = -9.9;
+      poreGroup.scale.set(1.05, 0.74, 1.05);
+      poreGroup.visible = true;
+      applyExtractionProgress();
+      const btn = ui.querySelector('#l1-pore');
+      if (btn) btn.textContent = '孔隙放大（示意）';
+      topView();
+      setInfo('储层 · 孔隙与流体', '已退出孔隙放大，回到地层剖面；基底里的小气泡仍表示孔隙中的流体。');
+      setReadout();
+      return;
+    }
     poreMode = false;
+    poreZoom = false;
+    poreGroup.position.y = -5.8;
+    poreGroup.scale.setScalar(1);
     poreGroup.visible = false;
     if (originalVisibility) {
       layerVisibility = Object.assign({}, originalVisibility);
@@ -847,7 +1033,8 @@
       updateLayerChips();
       originalVisibility = null;
     }
-    ui.querySelector('#l1-pore').textContent = '孔隙放大（示意）';
+    const btn = ui.querySelector('#l1-pore');
+    if (btn) btn.textContent = '孔隙放大（示意）';
     topView();
     setInfo('储层 · 孔隙与流体', '已退出局部放大。继续点击其他岩层或井筒部件，或沿井筒上行到地面。');
     setReadout();
@@ -855,7 +1042,7 @@
 
   function traceUp() {
     if (!assetLoaded) return;
-    if (poreMode) exitPore();
+    if (poreMode) exitPore(true);
     viewMode = 'surface';
     clearLayerHighlight();
     LAYERS.forEach(function (l) {
@@ -881,16 +1068,53 @@
     setReadout();
   }
 
+  function startExtraction() {
+    extractionStarted = true;
+    extractionAt = performance.now();
+    extractionMarked = true;
+    if (wellFlow) wellFlow.visible = true;
+    if (extractionRing) extractionRing.visible = true;
+    if (ui) hint.textContent = '抽取演示 · 油滴从孔隙进入井筒并上升';
+    if (stage.setInteraction) stage.setInteraction('trace_up_wellbore', 'wellhead', '抽取动画');
+    lastInteraction = { actionId: 'trace_up_wellbore', value: 'wellhead', unit: '抽取动画' };
+    setReadout();
+  }
+
+  function applyExtractionProgress() {
+    const p = Math.max(0, Math.min(1, pressure / 100));
+    if (wellFlow) {
+      wellFlow.visible = p > 0.001;
+      wellFlow.userData.speed = 0.03 + p * 0.62;
+    }
+    convFlows.forEach(function (f) {
+      f.visible = p > 0.001;
+      f.userData.speed = 0.02 + p * 0.32;
+    });
+    if (extractionRing) extractionRing.visible = p > 0.001;
+    if (wellFluid) {
+      wellFluid.visible = p > 0.001;
+      wellFluid.material.opacity = 0.12 + p * 0.3;
+    }
+    if (poreFlow) {
+      poreFlow.visible = p > 0.001;
+      poreFlow.userData.speed = 0.04 + p * 0.62;
+    }
+    if (surfaceFlow) surfaceFlow.userData.speed = 0.1 + p * 0.35;
+    /* 储层孔隙里的油/气/水颗粒随抽取进度减少；反向拖动会恢复。 */
+    const visible = Math.ceil(poreDrops.length * (1 - p));
+    poreDrops.forEach(function (d, i) { d.visible = i < visible; });
+  }
+
   function updatePressureUI() {
     if (!ui) return;
     const note = ui.querySelector('#l1-note');
-    if (!note) return;
-    if (pressure < 25) note.textContent = '孔隙里的流体还没有明显运移';
-    else if (pressure < 55) note.textContent = '示意流体开始向井筒方向移动';
-    else if (pressure < 85) note.textContent = '更多流体向井筒方向移动（教学示意）';
-    else note.textContent = '示意：压差推动流体向井筒流动；真实产能还受渗透性、流体性质、井底流压和开发方式影响';
-    if (wellFlow) wellFlow.userData.speed = 0.16 + pressure / 100 * 0.5;
-    if (surfaceFlow) surfaceFlow.userData.speed = 0.1 + pressure / 100 * 0.35;
+    if (note) {
+      if (pressure < 25) note.textContent = '孔隙里的流体还没有明显运移';
+      else if (pressure < 55) note.textContent = '示意流体开始向井筒方向移动';
+      else if (pressure < 85) note.textContent = '更多流体向井筒方向移动（教学示意）';
+      else note.textContent = '示意：压差推动流体向井筒流动；真实产能还受渗透性、流体性质、井底流压和开发方式影响';
+    }
+    applyExtractionProgress();
     setReadout();
   }
 
@@ -941,7 +1165,21 @@
     const dt = Math.min(0.05, (now - lastT) / 1000 || 0.016);
     lastT = now;
     if (!paused) {
-      if (wellFlow) wellFlow.userData.update(dt);
+      if (pressure > 0) {
+        if (wellFlow) wellFlow.userData.update(dt);
+        if (poreMode && poreFlow) poreFlow.userData.update(dt);
+        convFlows.forEach(function (f) { f.userData.update(dt); });
+      }
+      if (extractionRing) {
+        var pulse = 1 + 0.18 * Math.sin(now * 0.004);
+        extractionRing.scale.setScalar(pulse);
+        extractionRing.material.opacity = 0.32 + 0.22 * (0.5 + 0.5 * Math.sin(now * 0.004));
+      }
+      if (!extractionMarked && extractionStarted && extractionAt && now - extractionAt > 2600) {
+        extractionMarked = true;
+        if (stage.setInteraction) stage.setInteraction('trace_up_wellbore', 'wellhead', '抽取动画');
+        lastInteraction = { actionId: 'trace_up_wellbore', value: 'wellhead', unit: '抽取动画' };
+      }
       if (surfaceFlow && surfaceFlow.visible) surfaceFlow.userData.update(dt);
       if (poreMode) {
         poreDrops.forEach(function (d) {
@@ -950,6 +1188,14 @@
         });
       }
     }
+  }
+
+  function schedulePoreOnEntry() {
+    if (autoPoreTimer) clearTimeout(autoPoreTimer);
+    autoPoreTimer = setTimeout(function () {
+      autoPoreTimer = 0;
+      if (stage.isLevel() && assetLoaded && !poreMode) enterPoreOverlay();
+    }, 1200);
   }
 
   function enterLevel() {
@@ -966,6 +1212,9 @@
     pressure = 0;
     completed = false;
     paused = false;
+    extractionAt = performance.now();
+    extractionMarked = false;
+    extractionStarted = false;
     viewMode = 'block';
     const press = ui.querySelector('#l1-press');
     if (press) press.value = 0;
@@ -1016,12 +1265,14 @@
       setInfo('地下地质剖面', '四层岩性、储层透镜和井筒都在这一个空间里。点击剖面岩层，或使用左侧按钮逐层查看。',
         '教学示意：不是真实油藏数据，也不是真实地质比例。');
     });
-    setTimeout(function () { if (stage.isLevel()) { const act = ui.querySelector('#l1-act'); if (act) act.hidden = false; } }, 1500);
     lastInteraction = null;
+    schedulePoreOnEntry();
   }
 
   function exitLevel() {
     if (!G) return;
+    if (autoPoreTimer) { clearTimeout(autoPoreTimer); autoPoreTimer = 0; }
+    if (poreMode) exitPore(true);
     if (flyHandle) { cancelAnimationFrame(flyHandle); flyHandle = null; }
     ui.classList.remove('on', 'done');
     document.body.classList.remove('in-level');
@@ -1034,6 +1285,9 @@
     if (window.PETRO_DEVICE_STATE) window.PETRO_DEVICE_STATE.select(null);
     if (stage.setContextObject) stage.setContextObject(null, null);
     running = false;
+    extractionMarked = false;
+    extractionStarted = false;
+    extractionAt = 0;
     stage.back();
     const seg = document.querySelector('#stages [data-stage="0"]');
     if (seg) seg.classList.add('done-level');
@@ -1050,13 +1304,16 @@
       get assetObject() { return ASSET_OBJECT; },
       get layers() { return Object.keys(layerMeshes); },
       get parts() { return Object.keys(partMeshes); },
-      get poreMode() { return poreMode; },
+      get poreMode() { return poreMode; }, get poreZoom() { return poreZoom; },
       get pressure() { return pressure; },
       get paused() { return paused; },
+      get extraction() { return { wellFlow: !!wellFlow && wellFlow.visible, inflows: convFlows.filter(function (f) { return f.visible; }).length, pulse: !!extractionRing && extractionRing.visible, started: extractionStarted, marked: extractionMarked, pressure: pressure, reservoirTotal: poreDrops.length, reservoirVisible: poreDrops.filter(function (d) { return d.visible; }).length, poreFlow: !!poreFlow && poreFlow.visible, wellCut: wellCut, wellFluid: !!wellFluid && wellFluid.visible }; },
       get lastInteraction() { return lastInteraction; },
       get objectId() { return window.__sceneContext && window.__sceneContext.selectedObjectId; },
       get selected() { return selectedPart || selectedLayer || null; },
       get clipped() { return clipped; },
+      get crossSection() { return { pore: poreMode, overburden: !!(layerMeshes.overburden && layerMeshes.overburden.visible), caprock: !!(layerMeshes.caprock && layerMeshes.caprock.visible), reservoir: !!(layerMeshes.reservoir && layerMeshes.reservoir.visible), basement: !!(layerMeshes.basement && layerMeshes.basement.visible), poreGroup: !!(poreGroup && poreGroup.visible) }; },
+      get poreBounds() { if (!poreGroup) return null; const b = new THREE.Box3().setFromObject(poreGroup); return { minY: b.min.y, maxY: b.max.y }; },
       get viewMode() { return viewMode; },
       get layerState() { return Object.assign({}, layerVisibility); },
       get layerVisible() { var out = {}; Object.keys(layerMeshes).forEach(function (k) { out[k] = !!(layerMeshes[k] && layerMeshes[k].visible); }); return out; },
@@ -1065,6 +1322,7 @@
       get camera() { return camera; },
       selectLayer: selectLayer,
       selectReservoir: selectReservoir,
+      selectWellhead: selectWellhead,
       selectPart: selectPart,
       enterPore: enterPore,
       exitPore: exitPore,
@@ -1073,6 +1331,7 @@
       toggleLayer: toggleLayer,
       togglePart: togglePart,
       setPressure: function (v) {
+        var press = ui && ui.querySelector('#l1-press');
         if (!press) return;
         press.value = String(Math.max(0, Math.min(100, Number(v) || 0)));
         press.dispatchEvent(new Event('input', { bubbles: true }));

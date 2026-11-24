@@ -47,10 +47,15 @@ window.__sceneContext = {
 
 ## 6. 模式与导览
 
-- `.modebar` 三个按钮：`data-mode="tour|free|task"`，`aria-pressed` 标记当前。
+- 顶部“朗读/停止朗读”使用浏览器语音读取当前 `#chapter + #explanation`；侧栏重复的“朗读讲解”已合并移除，不再有空的文本导致点击无反应。
+- 顶部音频控制（声音关/音量）是唯一环境音入口；“更多→声音”重复入口已移除。
+- 页面只有一个可见入口 `#tour-cta`（“开始导览”）；三模式卡已从可见 UI 移除，默认是自由探索。
+- `.modebar` 三个旧按钮保留为 `hidden` 程序化兼容钩子：`data-mode="tour|free|task"`，不再占用页面空间；任务从右侧“任务”栏进入。
 - `window.__tour` 暴露 `start/stop/next/pause/state`，便于测试。
 - 导览卡片 `.tour-card` 显示步骤、标题、讲解、暂停/下一步/退出；任意 `pointerdown|wheel|touchstart` 暂停。
 - 导览走 `selectStage()`，因此右侧讲解、章节链接、场景上下文同步更新。
+- 地下开采（l1）清理：不再显示长教学信息框、状态/压力滑条、底部工具条，以及“沿井筒上行/暂停流动”按钮；保留地层/井筒 chip 与观察控制。
+- l1 抽取动画：储层两侧汇入流 + 井筒上升粒子 + 射孔脉动环；左栏恢复原压力滑块，不显示文字说明/操作引导；滑块 ≥50% 写入 `trace_up_wellbore`（抽取动画）。
 
 ## 7. 已知限制
 

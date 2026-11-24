@@ -58,6 +58,13 @@ function getJson(url) {
   async function click(sel) {
     return ev(`(()=>{var el=document.querySelector(${JSON.stringify(sel)});if(!el)return false;el.click();return true})()`);
   }
+  async function pointer(sel) {
+    const r = await ev(`(()=>{var el=document.querySelector(${JSON.stringify(sel)});if(!el)return null;var b=el.getBoundingClientRect();return {x:b.left+b.width/2,y:b.top+b.height/2,w:b.width,h:b.height,vis:getComputedStyle(el).display!=='none'&&b.width>0&&b.height>0}})()`);
+    if (!r || !r.vis) return false;
+    await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: r.x, y: r.y, button: 'left', clickCount: 1 });
+    await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: r.x, y: r.y, button: 'left', clickCount: 1 });
+    return true;
+  }
 
   await send('Page.navigate', { url: `${BASE}/sandbox.html?rev=phase07-verify-${Date.now()}` });
   await WAIT(3200);
@@ -100,9 +107,37 @@ function getJson(url) {
     assert(`tour ${index} ${stepId}`, t.state.active && t.state.index === index && t.state.stepId === stepId, t.state);
     if (level) assert(`tour ${index} in ${level}`, t.level && t.levelId === level, { level: t.level, levelId: t.levelId });
     if (index === 1) { assert('tour underground reservoir dynamic', !!(t.l1 && t.l1.res), t.l1); await shot('phase07-03-tour-underground.png'); }
-    if (index === 4) { assert('tour separator dynamic', !!(t.l2 && t.l2.struct && t.l2.running), t.l2); await shot('phase07-04-tour-separator.png'); }
-    if (index === 5) { assert('tour storage dynamic', !!(t.l3 && t.l3.pump && t.l3.level >= 0.7), t.l3); await shot('phase07-05-tour-storage.png'); }
-    if (index === 6) { assert('tour refining dynamic', !!(t.l4 && t.l4.level === 2 && t.l4.flow), t.l4); await shot('phase07-06-tour-refining.png'); }
+    if (index === 2) { assert('tour wellhead dynamic', !!(t.l1 && t.l1.res === 'wellhead'), t.l1); }
+    if (index === 4) {
+      assert('tour separator dynamic', !!(t.l2 && t.l2.struct && t.l2.running), t.l2);
+      await click('#tour-pause'); await WAIT(450);
+      const p = await ev(`({running:window.__l2.running,cls:document.body.classList.contains('journey-paused'),act:getComputedStyle(document.querySelector('#l2-act')).display})`);
+      assert('tour l2 pause stops separation and shows controls', p.running === false && p.cls && p.act !== 'none', p);
+      await click('#tour-pause'); await WAIT(700);
+      const r = await ev(`({running:window.__l2.running,playing:window.__tour.state.playing})`);
+      assert('tour l2 resume restarts separation', r.running === true && r.playing === true, r);
+      await shot('phase07-04-tour-separator.png');
+    }
+    if (index === 5) {
+      assert('tour storage dynamic', !!(t.l3 && t.l3.pump && t.l3.level >= 0.7), t.l3);
+      await click('#tour-pause'); await WAIT(450);
+      const p = await ev(`({running:window.__l3.pumpRunning,cls:document.body.classList.contains('journey-paused')})`);
+      assert('tour l3 pause stops pump', p.running === false && p.cls, p);
+      await click('#tour-pause'); await WAIT(700);
+      const r = await ev(`({running:window.__l3.pumpRunning,playing:window.__tour.state.playing})`);
+      assert('tour l3 resume restarts pump', r.running === true && r.playing === true, r);
+      await shot('phase07-05-tour-storage.png');
+    }
+    if (index === 6) {
+      assert('tour refining dynamic', !!(t.l4 && t.l4.level === 2 && t.l4.flow), t.l4);
+      await click('#tour-pause'); await WAIT(450);
+      const p = await ev(`({flow:window.__l4.flowOn,paused:window.__l4.flowPaused,cls:document.body.classList.contains('journey-paused')})`);
+      assert('tour l4 pause stops flow', p.flow === true && p.paused === true && p.cls, p);
+      await click('#tour-pause'); await WAIT(700);
+      const r = await ev(`({flow:window.__l4.flowOn,paused:window.__l4.flowPaused,playing:window.__tour.state.playing})`);
+      assert('tour l4 resume restarts flow', r.flow === true && r.paused === false && r.playing === true, r);
+      await shot('phase07-06-tour-refining.png');
+    }
     if (index === 8) { assert('tour products selected', !!(t.l5 && t.l5.picked && t.l5.picked.length >= 1), t.l5); await shot('phase07-07-tour-products.png'); }
     if (index === 9) {
       assert('tour summary archive open', !!t.archive);
@@ -142,9 +177,8 @@ function getJson(url) {
   assert('mission M1 level active', m.level === 'l1' && m.state.status === 'active', m);
   await shot('phase07-10-mission-active.png');
   await ev(`window.__l1.selectReservoir()`);
-  await WAIT(350);
-  await click('#l1-up');
-  await WAIT(1400);
+  await ev(`window.__l1.setPressure(60)`);
+  await WAIT(800);
   m = await ev(`window.__mission.state`);
   assert('mission M1 complete by real operations', m.steps[0].done && m.step === 1, m);
   await click('#mission-enter');
@@ -154,8 +188,11 @@ function getJson(url) {
 
   // deliberate failure + hint
   await ev(`window.__l2.applyStructure(true,false);window.__l2.startSeparation();`);
-  await WAIT(500);
+  await WAIT(700);
+  const started2 = await ev(`window.__l2.running`);
+  assert('mission M2 separation started', started2 === true, started2);
   await ev(`window.__l2.pickOutlet('gas');window.__l2.assignTank('oil');`);
+  await WAIT(500);
   await WAIT(1500);
   m = await ev(`({state:window.__mission.state,feedback:document.querySelector('#mission-feedback').textContent,cls:document.querySelector('#mission-feedback').className})`);
   assert('mission records wrong destination error', m.state.errors.length >= 1 && /is-error/.test(m.cls), m);
@@ -176,30 +213,41 @@ function getJson(url) {
   m = await ev(`window.__mission.state.status`);
   assert('mission resume', m === 'active', m);
 
-  // complete three outlets with correct targets
-  await ev(`window.__l2.applyStructure(true,false);window.__l2.startSeparation();`);
-  await WAIT(500);
+  // complete three outlets with correct targets, pointer-level
   for (const key of ['gas', 'oil', 'water']) {
-    await ev(`window.__l2.pickOutlet('${key}');window.__l2.assignTank('${key}');`);
+    await pointer(`[data-outlet="${key}"]`);
+    await WAIT(250);
+    await pointer(`[data-target="${key}"]`);
     await WAIT(2300);
   }
   m = await ev(`({state:window.__mission.state,solved:window.__l2.solved})`);
   assert('mission M2 complete after three correct outlets', m.state.steps[1].done && m.state.step === 2, m);
+  assert('mission clears stale error after M2', (m.state.errors || []).length === 0 && (m.state.errorHistory || []).length >= 1, m.state);
   await click('#mission-enter');
   await WAIT(4800);
   m = await ev(`({state:window.__mission.state,level:window.__sceneContext.levelId})`);
   assert('mission M3 level active', m.level === 'l3' && m.state.step === 2, m);
 
-  await ev(`window.__l3.selectTank('floating_roof_tank');window.__l3.setLevel(75);window.__l3.startPump();`);
-  await WAIT(1200);
+  await ev(`window.__l3.selectTank('floating_roof_tank');window.__l3.setLevel(75);`);
+  await WAIT(500);
+  await ev(`window.__l3.setLevel(0);`);
+  await WAIT(500);
+  await ev(`document.querySelector('#l3-more').open=true;true`);
+  await pointer('#l3-pumpstart');
+  await WAIT(900);
+  m = await ev(`({state:window.__mission.state,level:window.__l3.level})`);
+  assert('mission M3 does not complete after level drops', m.state.steps[2].done === false && m.level < 70, m);
+  await ev(`window.__l3.setLevel(75);`);
+  await WAIT(900);
   m = await ev(`window.__mission.state`);
-  assert('mission M3 complete', m.steps[2].done && m.step === 3, m);
+  assert('mission M3 completes at current level >=70', m.steps[2].done && m.step === 3, m);
   await click('#mission-enter');
   await WAIT(4800);
   m = await ev(`({state:window.__mission.state,level:window.__sceneContext.levelId})`);
   assert('mission M4 level active', m.level === 'l4' && m.state.step === 3, m);
 
-  await ev(`window.__l4.setLevel(2);window.__l4.selectFraction('diesel');`);
+  await pointer('[data-level="2"]');
+  await pointer('[data-fraction="diesel"]');
   await WAIT(1200);
   m = await ev(`window.__mission.state`);
   assert('mission M4 complete', m.steps[3].done && m.step === 4, m);
@@ -207,11 +255,18 @@ function getJson(url) {
   await WAIT(4800);
   m = await ev(`({state:window.__mission.state,level:window.__sceneContext.levelId})`);
   assert('mission M5 level active', m.level === 'l5' && m.state.step === 4, m);
+  const picked0 = await ev(`window.__l5.picked||[]`);
+  if (picked0.length) {
+    await ev(`window.__l5.toggle(${picked0[0]})`);
+    await WAIT(700);
+    m = await ev(`window.__mission.state`);
+    assert('mission M5 deselect does not complete', m.steps[4].done === false, m);
+  }
   const productIndex = await ev(`(()=>{var p=window.__l5.picked||[];for(var i=0;i<6;i++){if(p.indexOf(i)<0)return i}return 0})()`);
   await ev(`window.__l5.select(${productIndex})`);
   await WAIT(1100);
   m = await ev(`({state:window.__mission.state,done:!document.querySelector('#mission-done').hidden})`);
-  assert('mission complete', m.state.status === 'complete' && m.done, m);
+  assert('mission complete by product selection', m.state.status === 'complete' && m.done, m);
   await shot('phase07-13-mission-done.png');
   await click('#mission-archive');
   await WAIT(500);
@@ -240,6 +295,16 @@ function getJson(url) {
   await WAIT(300);
   const audioOff = await ev(`window.Ambient.state()`);
   assert('audio mute works', audioOff.on === false, audioOff);
+
+  const voice = await ev(`({supported:!!(window.Voice&&window.Voice.supported),api:!!window.Voice,play:!!document.querySelector('#voice-play'),stop:!!document.querySelector('#voice-stop'),text:(document.querySelector('#tour-card')?.hidden?false:true)})`);
+  assert('optional narration controls present', voice.api && voice.play && voice.stop, voice);
+  if (voice.supported) {
+    await ev(`window.Voice.setText('石油产业链数字沙盘，测试朗读。')`);
+    await click('#voice-play'); await WAIT(250);
+    const v1 = await ev(`window.Voice.state()`);
+    const v2 = await ev(`(()=>{document.querySelector('#voice-stop').click();return window.Voice.state()})()`);
+    assert('narration play/pause/stop API', v1.playing === true && v2.playing === false, { v1, v2 });
+  }
 
   // archive/review record
   await click('#journey-archive-open');

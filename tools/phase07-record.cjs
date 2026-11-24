@@ -58,6 +58,13 @@ function getJson(url) {
   async function click(sel) {
     return ev(`(()=>{var el=document.querySelector(${JSON.stringify(sel)});if(!el)return false;el.click();return true})()`);
   }
+  async function pointer(sel) {
+    const r = await ev(`(()=>{var el=document.querySelector(${JSON.stringify(sel)});if(!el)return null;var b=el.getBoundingClientRect();return {x:b.left+b.width/2,y:b.top+b.height/2,vis:getComputedStyle(el).display!=='none'&&b.width>0&&b.height>0}})()`);
+    if (!r || !r.vis) return false;
+    await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: r.x, y: r.y, button: 'left', clickCount: 1 });
+    await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: r.x, y: r.y, button: 'left', clickCount: 1 });
+    return true;
+  }
 
   await send('Page.navigate', { url: `${BASE}/sandbox.html?rev=record07-${MODE}-${Date.now()}` });
   await sleep(2800);
@@ -70,47 +77,51 @@ function getJson(url) {
     await click('.modebar [data-mode="tour"]');
     await sleep(2400);
     for (let i = 0; i < 9; i += 1) {
-      await click('#tour-next');
+      await pointer('#tour-next');
       await sleep(i === 8 ? 6500 : 4900);
     }
     await sleep(2600);
   } else {
     await click('.modebar [data-mode="task"]');
     await sleep(1500);
-    await click('#mission-begin');
+    await pointer('#mission-begin');
     await sleep(4700);
 
     await ev(`window.__l1.selectReservoir()`);
-    await sleep(650);
-    await click('#l1-up');
-    await sleep(1900);
+    await ev(`window.__l1.setPressure(60)`);
+    await sleep(900);
 
-    await click('#mission-enter');
+    await pointer('#mission-enter');
     await sleep(4700);
     await ev(`window.__l2.applyStructure(true,false);window.__l2.startSeparation();`);
     await sleep(700);
     // Deliberate wrong destination, then recover.
     await ev(`window.__l2.pickOutlet('gas');window.__l2.assignTank('oil');`);
     await sleep(1800);
-    await click('#mission-hint');
+    await pointer('#mission-hint');
     await sleep(1200);
     for (const key of ['gas', 'oil', 'water']) {
-      await ev(`window.__l2.pickOutlet('${key}');window.__l2.assignTank('${key}');`);
+      await pointer(`[data-outlet="${key}"]`);
+      await sleep(240);
+      await pointer(`[data-target="${key}"]`);
       await sleep(2400);
     }
     await sleep(700);
 
-    await click('#mission-enter');
+    await pointer('#mission-enter');
     await sleep(4700);
-    await ev(`window.__l3.selectTank('floating_roof_tank');window.__l3.setLevel(75);window.__l3.startPump();`);
+    await ev(`window.__l3.selectTank('floating_roof_tank');window.__l3.setLevel(75);`);
+    await ev(`document.querySelector('#l3-more').open=true;true`);
+  await pointer('#l3-pumpstart');
     await sleep(2100);
 
-    await click('#mission-enter');
+    await pointer('#mission-enter');
     await sleep(4700);
-    await ev(`window.__l4.setLevel(2);window.__l4.selectFraction('diesel');`);
+    await pointer('[data-level="2"]');
+    await pointer('[data-fraction="diesel"]');
     await sleep(2100);
 
-    await click('#mission-enter');
+    await pointer('#mission-enter');
     await sleep(4700);
     const product = await ev(`(()=>{var p=window.__l5.picked||[];for(var i=0;i<6;i++){if(p.indexOf(i)<0)return i}return 0})()`);
     await ev(`window.__l5.select(${product})`);

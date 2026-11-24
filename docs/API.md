@@ -1,6 +1,8 @@
 # 接口契约
 
-两个端点，都在 `server/proxy.mjs`。前端只调用这两个，**API Key 不出服务器**。
+当前有四个端点，都在 `server/proxy.mjs`：Dify 问答/写作（现用）与兼容的 `/api/ask`、`/api/gen`。**API Key 不出服务器**。
+
+> 2026-11-23 起，独立问答页使用 `/api/dify-chat`，写作页使用 `/api/dify-write`；原有的 `/api/ask`、`/api/gen` 继续保留，供沙盘侧栏与旧客户端使用。
 
 ## POST /api/ask
 
@@ -81,3 +83,49 @@
 
 - `web/index.html` 里脚本带版本号（如 `ai.js?v=kb7`）；**改了 ai.js / immersion.js 必须递增**，否则浏览器会用旧文件。
 - 生产用 nginx 托管 `web/`，`/api/` 反代到服务端代理；见 README §5。
+
+
+## POST /api/dify-chat（当前问答页）
+
+请求：
+
+```json
+{
+  "question": "石油为什么是黑色的？",
+  "conversation_id": "",
+  "user": "一个 UUID 或稳定用户标识"
+}
+```
+
+- `question`：1–300 字。
+- `conversation_id`：可空；有值时必须为 UUID，保持 Dify 多轮。
+- `user`：1–80 位字母、数字或短横线。
+- 响应为 `text/event-stream`，透传 Dify 的 `workflow_started` / `message` / `message_end` 等事件；前端不要把它当 JSON。
+- 错误：400 参数无效，503 未配置 Key，502 上游失败。
+
+## POST /api/dify-write（当前写作页）
+
+请求：
+
+```json
+{
+  "topic": "三相分离器：它在这一环节做什么",
+  "genre": "展品讲解词",
+  "facts": "一行一条已核验事实",
+  "audience": "普通公众",
+  "style": "严谨",
+  "draft": "",
+  "comment": ""
+}
+```
+
+- 字段均为字符串；`topic`、`facts`、`draft` 至少一个非空。
+- 响应：`{ "text": "……" }`。
+- 场景 handoff 通过预填 `topic` / `facts` 进入 Dify，不改变 Dify 请求字段；场景记录以“不是已核验事实”边界追加在 `facts` 末尾。
+
+## 场景上下文兼容
+
+- `/api/ask` 继续接收 `question`、`ctx`（string[]）、`tier`、`mode`；阶段 08 把设备、关卡、已核验要点和最近操作放进 `ctx`，不新增必填字段；可选 `action:true` 只启用动作建议模式。
+- `/api/gen` 继续接收 `ledger`、`genre`、`facts`；阶段 08 将场景记录放入 `ledger`、已核验知识放入 `facts`。
+- Dify 两个端点字段保持现状；`Ask`/`Write` 页面不直接接触 API Key。
+- 无代理时前端降级，不伪造模型输出。

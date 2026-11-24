@@ -25,7 +25,7 @@
 
 ### P2 · 导览、模式、上下文与 AI
 
-- 三种模式工具栏：沉浸导览 / 自由探索 / 任务关卡（`aria-pressed`）。
+- 单入口体验：场景头“开始导览” + 右栏“任务”；旧的三种模式工具栏已隐藏，默认自由探索。
 - 7 步导览（约 90 秒）：卡片、步骤号、暂停/继续、下一步、退出；拖动/滚轮/触摸立即暂停；`prefers-reduced-motion` 不自动播放。
 - `window.__sceneContext`：sceneId/stageId/selectedObjectId/knowledgeIds/experienceMode/interaction；`selectStage` 与设备点击同步。
 - 设备级 objectId：`three_phase_separator`、`fixed_roof_tank`、`floating_roof_tank`、`atmospheric_tower`、`vacuum_tower`、`heater`、`pumpjack`、`wellhead`、`fuel_dispenser`、`plastic_bottle`、`fiber_spool`、`lubricant_can`、`asphalt_slab`（点击命中后写入上下文）。

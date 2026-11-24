@@ -758,9 +758,42 @@
   </div>
 </main>
 
+<script src="scene-context.js?v=1"></script>
 <script src="assets/vendor/marked.umd.js"></script>
 <script src="assets/vendor/purify.min.js"></script>
 <script src="docx.js"></script>
+<script>
+(function () {
+  if (!window.SceneContext) return;
+  var params = new URLSearchParams(location.search);
+  if (params.get('from') !== 'scene') return;
+  var data = SceneContext.readHandoff({ consume: true });
+  if (!data) return;
+  window.__sceneHandoffData = data;
+  function byId(id) { return document.getElementById(id); }
+  function addBanner() {
+    var main = document.querySelector('main');
+    if (!main) return;
+    var box = document.createElement('div');
+    box.id = 'scene-handoff';
+    box.setAttribute('role', 'status');
+    box.style.cssText = 'margin:14px 0 0;padding:10px 12px;border:1px solid #2d4c58;border-radius:8px;background:#0d1b22;color:#b8cbd3;font-size:12px;line-height:1.7;display:flex;gap:10px;align-items:flex-start;justify-content:space-between';
+    var text = document.createElement('span');
+    text.textContent = '已带入当前场景：' + (data.objectName || data.stageId || '总览') + ' · 仅用于本次写作；已核验要点 ' + (data.facts || []).length + ' 条。';
+    var clear = document.createElement('button');
+    clear.type = 'button';
+    clear.textContent = '清除';
+    clear.style.cssText = 'background:transparent;border:1px solid #355864;color:#cfe3ea;border-radius:4px;padding:3px 8px;cursor:pointer;flex:none';
+    clear.onclick = function () { box.remove(); window.__sceneHandoffData = null; };
+    box.append(text, clear);
+    main.insertBefore(box, main.firstChild);
+  }
+  addBanner();
+  var topic = byId('topic'), facts = byId('facts');
+  if (topic && (!topic.value.trim() || topic.value === topic.defaultValue)) topic.value = data.topic || '';
+  if (facts && !facts.value.trim()) facts.value = (data.facts || []).join('\n');
+})();
+</script>
 <script>
 (function () {
   const $ = s => document.querySelector(s);
@@ -854,13 +887,39 @@
   async function requestDraft(draft, comment) {
     const audience = { youth: '亲子与青少年', public: '普通公众', enthusiast: '科技／石油爱好者', professional: '专业人士' };
     const style = { rigorous: '严谨', lively: '活泼', storytelling: '故事化' };
+    const scene = window.__sceneHandoffData;
+    let factText = factsArr().join('\n');
+    if (scene) {
+      const record = ['【场景记录 · 教学操作，不是已核验事实，不得当作事实】'];
+      const lines = (scene.contextLines || []).slice();
+      if (!lines.length) {
+        if (scene.objectName) lines.push('当前设备：' + scene.objectName + '（' + (scene.levelId || '') + '）');
+        if (scene.interaction) lines.push('刚才操作：' + scene.interaction.action + '=' + (scene.interaction.value == null ? '' : scene.interaction.value) + '（' + (scene.interaction.unit || '示意') + '）');
+      }
+      lines.forEach(function (line) { if (record.indexOf(line) < 0) record.push(line); });
+      factText += '\n\n' + record.join('\n');
+    }
+    const body = { topic: $('#topic').value.trim(), genre: GENRE_NAME[genre], facts: factText, audience: audience[$('#audience').value], style: style[$('#style').value], draft, comment };
+    window.__lastWriteBody = body;
     const response = await fetch('/api/dify-write', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topic: $('#topic').value.trim(), genre: GENRE_NAME[genre], facts: factsArr().join('\n'), audience: audience[$('#audience').value], style: style[$('#style').value], draft, comment })
+      body: JSON.stringify(body)
     });
     const result = await response.json();
     if (!response.ok || !result.text) throw new Error(result.error || '生成失败，请稍后重试。');
     return result.text;
+  }
+
+  function templateDraft() {
+    const topic = $('#topic').value.trim() || '石油产业链中的这一环节';
+    const facts = factsArr();
+    const verified = facts.length ? facts.slice(0, 6).map(x => '· ' + x).join('\n') : '· 尚未填写事实底稿';
+    const genreName = GENRE_NAME[genre] || '科普短文';
+    return '【预置模板 · 未连接模型，不是模型生成】\n\n' +
+      '主题：' + topic + '\n\n' +
+      '可以这样写：先从一个具体问题切入，再解释这个环节的作用，最后说明它和日常生活的联系。\n\n' +
+      '可核验的事实底稿：\n' + verified + '\n\n' +
+      '请把以上材料改写成一篇' + genreName + '；不要编造没有底稿支持的数字或工程参数。';
   }
 
   async function generate() {
@@ -876,7 +935,13 @@
       setOrigin('初稿');
     } catch (e) {
       if (version !== draftVersion) return;
-      if (!last) setEmpty(e.message); else $('#revnote').textContent = e.message;
+      if (!last) {
+        renderManuscript(templateDraft());
+        setOrigin('预置模板 · 未连接模型');
+        $('#revnote').textContent = '模型服务未连接，已放入可编辑的预置模板，不是模型输出。';
+      } else {
+        $('#revnote').textContent = e.message;
+      }
     } finally { setBusy(false); }
   }
 
@@ -922,7 +987,7 @@
   };
   $('#clear').onclick = clearDraft;
 
-  $('#topic').value = '原油怎样从地下走到加油站';
+  if (!$('#topic').value) $('#topic').value = '原油怎样从地下走到加油站';
   setEmpty();
   $('#revise').disabled = true;
 })();

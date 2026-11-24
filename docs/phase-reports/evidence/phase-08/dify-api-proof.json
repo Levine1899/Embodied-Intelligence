@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-11-23T20:33:42.8100897+08:00",
+  "base": "http://120.26.198.46:8020",
+  "difyChat": {
+    "status": 200,
+    "eventCount": 218,
+    "streaming": true,
+    "bytes": 81492,
+    "contentType": "text/event-stream; charset=utf-8"
+  },
+  "difyWrite": {
+    "status": 200,
+    "hasText": true,
+    "bytes": 370,
+    "textLength": 353
+  },
+  "legacyAsk": {
+    "fields": "question,ctx,tier,mode",
+    "status": 200,
+    "hasText": true,
+    "textLength": 175
+  },
+  "legacyGen": {
+    "status": 200,
+    "textLength": 477,
+    "hasText": true,
+    "fields": "ledger,genre,facts"
+  },
+  "difyWriteWithSceneRecord": {
+    "status": 200,
+    "textLength": 196,
+    "hasText": true,
+    "factFieldKeepsBoundary": true,
+    "verifiedAt": "2026-11-24T07:40:00+08:00"
+  }
+}

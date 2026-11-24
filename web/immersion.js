@@ -180,6 +180,7 @@
   function updateTask() {
     document.getElementById('chapter').textContent = stageNames[currentStage];
     document.getElementById('explanation').textContent = explanations[currentStage][Number(depthSelect.value)];
+    if (window.Voice) window.Voice.setText(document.getElementById('chapter').textContent + '。' + document.getElementById('explanation').textContent);
     document.getElementById('source-link').href = sourceUrls[currentStage];
   stageButtons.forEach(function (button, index) {
       if (index === currentStage) button.setAttribute('aria-current', 'step');
@@ -649,7 +650,7 @@
     const pump = new THREE.Group();
     pump.userData.objectId = 'pumpjack';
     pump.userData.skipMerge = true;
-    pump.position.set(-4.6, 0.16, 3.2);
+    pump.position.set(3.0, 0.16, 0.8);
     drill.add(pump);
     box(pump, 1.6, 0.25, 1.1, concrete, 0, 0.12, 0);
     rod(pump, [-1.4, 0.2, 0], [-1.4, 2.5, 0], 0.09, steel);
@@ -858,20 +859,30 @@
     const pipeGroup = new THREE.Group();
     pipeGroup.name = 'processLines';
     sceneRoot.add(pipeGroup);
+    /* 管线端口直接落在设备上，而不是区域边界。
+       端口坐标相对各自区域中心；这样井口→分离器、分离器→储罐、
+       储罐泵→加热炉、炼化管廊→产品端都能真正接上。 */
+    const ROUTE_PORTS = [
+      { start: [-0.6, 0.9, -2.2], end: [-1.6, 2.45, 0] },    // 井口 → 三相分离器入口（插入罐体 0.5）
+      { start: [2.1, 2.45, 0], end: [-4.2, 3.2, -1.6] },      // 分离器出口 → 固定顶罐侧面
+      { start: [-3.6, 1.0, 2.6], end: [-5.9, 2.2, 3.6] },     // 储运泵 → 加热炉侧面
+      { start: [4.4, 3.15, 2.8], end: [-3.4, 1.8, 2.2] }      // 炼化管廊 → 产品端
+    ];
     function routeEndpoints(i) {
       const a = REGIONS[i], b = REGIONS[i + 1];
+      const port = ROUTE_PORTS[i] || ROUTE_PORTS[ROUTE_PORTS.length - 1];
       const dx = b.x - a.x, dz = b.z - a.z;
       const len = Math.max(0.001, Math.sqrt(dx * dx + dz * dz));
       const ux = dx / len, uz = dz / len;
       const start = new THREE.Vector3(
-        a.x + ux * (a.w * 0.36),
-        a.y + 2.15,
-        a.z + uz * (a.d * 0.36)
+        a.x + port.start[0],
+        a.y + port.start[1],
+        a.z + port.start[2]
       );
       const end = new THREE.Vector3(
-        b.x - ux * (b.w * 0.36),
-        b.y + 2.15,
-        b.z - uz * (b.d * 0.36)
+        b.x + port.end[0],
+        b.y + port.end[1],
+        b.z + port.end[2]
       );
       return { a: a, b: b, start: start, end: end, ux: ux, uz: uz };
     }
@@ -886,6 +897,7 @@
       return road;
     }
     const routeIds = ['path_oil_gather', 'path_gather_store', 'path_store_refine', 'path_refine_city'];
+    const flangeMat = new THREE.MeshBasicMaterial({ color: 0xf0a22e, toneMapped: false });
     for (let i = 0; i < REGIONS.length - 1; i += 1) {
       const e = routeEndpoints(i);
       const midY = Math.max(e.start.y, e.end.y) + 1.2;
@@ -901,6 +913,12 @@
       const pipe = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.11, 8, false), amber.clone());
       pipe.userData.pathId = routeIds[i];
       pipeGroup.add(pipe);
+      /* 端口法兰：管线与设备相接处给一个可见接头，避免看起来悬空。 */
+      [e.start, e.end].forEach(function (p) {
+        const flange = new THREE.Mesh(new THREE.SphereGeometry(0.24, 12, 9), flangeMat);
+        flange.position.copy(p);
+        pipeGroup.add(flange);
+      });
       pipes.push({ curve: curve, object: pipe, pathId: routeIds[i] });
       /* 支架：从地面/台地到工艺管，强调高差 */
       for (let k = 1; k <= 6; k += 1) {
@@ -1305,6 +1323,10 @@
   function setRail(open, section) {
     if (!layoutEl) return;
     layoutEl.classList.toggle('rail-open', open);
+    if (open && section === 'task' && window.__mission) {
+      var ms = window.__mission.state;
+      if (!ms || ms.status !== 'active') window.__mission.start();
+    }
     if (open && section === 'source') {
       const src = document.querySelector('.source');
       if (src) src.scrollIntoView({ block: 'start', behavior: 'smooth' });
@@ -1389,7 +1411,8 @@
   document.getElementById('read-more').addEventListener('click', function () { openDetails(false); });
   document.getElementById('photo').addEventListener('click', function () { openDetails(true); });
   document.getElementById('close-dialog').addEventListener('click', function () { dialog.close(); });
-  document.getElementById('speak').addEventListener('click', function () {
+  const speakBtn = document.getElementById('speak');
+  if (speakBtn) speakBtn.addEventListener('click', function () {
     if (!window.speechSynthesis) {
       live.textContent = '当前环境无法朗读，可查看屏幕上的完整讲解。';
       return;
@@ -1537,9 +1560,14 @@
     askBtn.onclick = function () {
       const input = document.getElementById('leadai-q');
       if (!input) return;
+      /* 自由模式下右栏是折叠的；先展开任务侧栏，否则输入框 rect 为 0×0。 */
+      if (typeof setRail === 'function') setRail(true, 'task');
+      else if (layoutEl) layoutEl.classList.add('rail-open');
       input.value = info.ask;
-      input.focus();
-      input.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      setTimeout(function () {
+        input.focus();
+        input.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }, 60);
     };
     const close = document.getElementById('device-close');
     close.onclick = function () {
@@ -1580,6 +1608,7 @@
     ctx.registrySceneId = reg ? reg.sceneId : (prev.registrySceneId || null);
     ctx.stageId = stageId;
     ctx.stage = index == null ? null : index;
+    ctx.stageIndex = index;
     ctx.zoneId = zone ? zone.zoneId : null;
     ctx.levelId = prev.levelId || null;
     ctx.selectedObjectId = objectId || null;
@@ -1593,8 +1622,11 @@
     else if (ctx.interaction === undefined) ctx.interaction = null;
     if (Array.isArray(prev.history) && prev.history.length) history = prev.history.slice(-12);
     ctx.history = history.slice(-12);
-    window.__sceneContext = ctx;
-    document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
+    if (window.SceneContext) window.SceneContext.update(ctx, 'immersion');
+    else {
+      window.__sceneContext = ctx;
+      document.dispatchEvent(new CustomEvent('scene-context', { detail: ctx }));
+    }
     var box = document.getElementById('leadai-ctx');
     if (box && index != null) box.textContent = '上下文 · ' + stageNames[index];
   }
@@ -1611,6 +1643,10 @@
   }
 
   function markLevel(index) {
+    if (window.SceneContext) {
+      window.SceneContext.setLevel('l' + (index + 1), { experienceMode: mode });
+      return;
+    }
     if (!window.__sceneContext) syncSceneContext(index, null, null);
     const ctx = window.__sceneContext;
     ctx.levelId = 'l' + (index + 1);
@@ -1762,6 +1798,10 @@
   }
 
   function setInteraction(action, value, unit, result) {
+    if (window.SceneContext) {
+      window.SceneContext.recordInteraction(action, value, unit, result);
+      return;
+    }
     if (!window.__sceneContext) syncSceneContext(currentStage, null, null, null);
     const ctx = window.__sceneContext;
     if (Array.isArray(ctx.history)) history = ctx.history.slice(-12);
@@ -1820,6 +1860,8 @@
         ? '导览进行中 · 拖动或滚轮可暂停并接管镜头'
         : mode === 'task' ? '从右侧进入关卡，完成动手任务' : '拖动旋转 · 滚轮缩放 · 点击设备查看';
     }
+    var cta = document.getElementById('tour-cta');
+    if (cta) cta.textContent = mode === 'tour' ? '导览进行中' : '开始导览';
     if (tourPauseBtn) tourPauseBtn.textContent = tourPlaying ? '暂停' : '继续导览';
   }
 
@@ -1888,6 +1930,10 @@
         live.textContent = '任务关卡：从右栏进入当前环节，完成动手任务。';
       }
     });
+  });
+  var tourCta = document.getElementById('tour-cta');
+  if (tourCta) tourCta.addEventListener('click', function () {
+    if (mode !== 'tour') startTour();
   });
   if (tourPauseBtn) tourPauseBtn.addEventListener('click', function () {
     if (tourPlaying) { pauseTour(); return; }
@@ -2015,7 +2061,8 @@
     back() {
       activeScene = null; activeCamera = null;
       viewport.classList.remove('in-level');
-      if (window.__sceneContext) {
+      if (window.SceneContext) window.SceneContext.exitLevel();
+      else if (window.__sceneContext) {
         window.__sceneContext.levelId = null;
         window.__sceneContext.interaction = null;
         document.dispatchEvent(new CustomEvent('scene-context', { detail: window.__sceneContext }));

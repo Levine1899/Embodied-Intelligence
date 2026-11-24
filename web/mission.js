@@ -11,12 +11,12 @@
       id: 'M1', stage: 0, level: 'l1', title: '把油带到井口',
       short: '地下 · 储层→井筒',
       role: '你是能源探索见习员，接手教学批次 YJ-001。',
-      clue: '先找到储层，再沿井筒向上看：油不是“油湖”，而是在岩石孔隙里。',
-      goal: '在 01 地下开采里完成：① 点击储层；② 点击“沿井筒上行”。',
+      clue: '先点击储层，观察油滴从孔隙汇入井筒并向上抽取：油不是“油湖”，而是在岩石孔隙里。',
+      goal: '在 01 地下开采里完成：① 点击储层；② 把压力差滑块拖到 50% 以上，观察流体沿井筒上升。',
       hints: [
         '看左侧按钮和剖面：储层是带油气水图例的透镜体。',
-        '先点储层，再点“沿井筒上行 ↑”；两个动作都要做。',
-        '储层和井筒都在 01 地下开采这一关，不需要去别的区域。'
+        '先点储层，再拖动左侧压力差滑块到 50% 以上；油滴会汇入井筒并上升。',
+        '储层和井筒都在 01 地下开采这一关；动画出现后即表示抽取链路已建立。'
       ],
       knowledge: 'kb_formation',
       knowledgeLabel: '储层与井筒：油在孔隙中，井筒连接地下与地面。'
@@ -43,7 +43,7 @@
       goal: '在 03 储运里把液位调到 70% 以上，再启动泵送。',
       hints: [
         '拖液位滑块，观察浮盘与油气空间。',
-        '液位要超过 70%，然后点“启动泵送”。',
+        '液位超过 70% 后，打开“演示与结构”，点“启动泵送”。',
         '两种罐型都可完成任务；这里比较的是油气空间，不是零排放。'
       ],
       knowledge: 'kb_store',
@@ -241,6 +241,7 @@
     if (step) {
       ui.querySelector('#mission-goal').textContent = step.goal;
       ui.querySelector('#mission-clue').textContent = '线索：' + step.clue;
+      global.__narrationText = step.title + '。' + step.goal + '。线索：' + step.clue;
     }
     var fb = ui.querySelector('#mission-feedback');
     if (state.status === 'paused') {
@@ -302,7 +303,9 @@
     if (state.status !== 'active') state.status = 'active';
     var step = current();
     if (!step) return;
+    if (step.id === 'M5' && global.__l5) state.flags.pickedCount = (global.__l5.picked || []).length;
     busy = true;
+    if (global.Voice) global.Voice.stop();
     render();
     var st = currentState();
     st.visited = true;
@@ -329,6 +332,11 @@
     if (!step || !st || st.done) return;
     st.done = true;
     state.lastHint = '';
+    /* 过渡后不把上一段的红色错误留在下一段；保留到 errorHistory 供复盘。 */
+    if (state.errors && state.errors.length) {
+      state.errorHistory = (state.errorHistory || []).concat(state.errors);
+      state.errors = [];
+    }
     addKnowledge(step.knowledge);
     if (global.JourneyStore) global.JourneyStore.recordMission(state);
     if (state.step < STEP_DEFS.length - 1) {
@@ -361,11 +369,9 @@
       var solved = global.__l2 && global.__l2.solved;
       if (solved && solved.gas && solved.oil && solved.water && state.flags.started) completeStep();
     } else if (step.id === 'M3') {
-      if (action === 'change_liquid_level') {
-        state.flags.level = Math.max(state.flags.level || 0, Number(value) || 0);
-        if ((Number(value) || 0) < 70) state.flags.level = Math.max(state.flags.level || 0, Number(value) || 0);
-      }
+      if (action === 'change_liquid_level') state.flags.level = Number(value) || 0;
       if (action === 'start_pump') state.flags.pump = true;
+      /* 必须用“启动泵时的当前液位”，不能用历史最高液位。 */
       if ((state.flags.level || 0) >= 70 && state.flags.pump) completeStep();
     } else if (step.id === 'M4') {
       if (action === 'inspect_tower_structure' && value === 'full') state.flags.full = true;
@@ -374,12 +380,16 @@
     } else if (step.id === 'M5') {
       if (action === 'select_product') {
         var picked = (global.__l5 && global.__l5.picked) || [];
-        if (picked.length > 0) {
+        var before = Number(state.flags.pickedCount) || 0;
+        state.flags.pickedCount = picked.length;
+        /* 必须是新增选择，取消选中/无变化不能完成任务。 */
+        if (picked.length > before) {
           state.flags.product = value;
           state.flags.products = picked.length;
           completeStep();
         } else {
-          addError('至少保留一个选中的产品，再完成这一段。');
+          state.lastHint = 'M5 需要新增一个产品选择；取消选中不算完成任务。';
+          save();
         }
       }
     }
