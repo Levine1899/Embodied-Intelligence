@@ -42,7 +42,7 @@
   let layerMeshes = {}, partMeshes = {}, reservoirLens = null, wellheadMeshes = [];
   let poreGroup = null, poreDrops = [];
   let wellFlow = null, surfaceFlow = null, flowCurve = null;
-  let convFlows = [], extractionRing = null, extractionAt = 0, extractionMarked = false;
+  let convFlows = [], extractionRing = null, extractionAt = 0, extractionMarked = false, extractionStarted = false;
   let running = false, lastT = 0, flyHandle = null;
   let pressure = 0, paused = false, completed = false, clipped = true;
   const clipPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0);
@@ -84,6 +84,11 @@
       .ug-btn:disabled{opacity:.4;cursor:not-allowed}
       .ug-scale{font:11px/1.5 ui-monospace,Consolas,monospace;color:#89a1ab;background:rgba(8,17,24,.8);padding:6px 8px;border-left:2px solid #e3ad58;max-width:150px}
       .ug-readout{font:11.5px/1.5 "Microsoft YaHei UI",sans-serif;color:#adc0c8;border-top:1px solid #263a44;margin-top:8px;padding-top:7px}
+      .ug-task{margin-top:10px;padding:10px 11px;border:1px solid #8a6a33;background:#1b1509;pointer-events:auto}
+      .ug-task b{display:block;color:#f0c476;font-size:13px;margin-bottom:4px}
+      .ug-task p{margin:0 0 8px;color:#c8d3d7;font-size:11.5px;line-height:1.65}
+      .ug-task button{width:100%;border:1px solid #e3ad58;background:#2a1d0b;color:#f3c77d;padding:8px 10px;font:600 12.5px/1 "Microsoft YaHei UI",sans-serif;cursor:pointer}
+      .ug-task button:hover{background:#3b2a10}
       .ug-tag{display:inline-block;border:1px solid #385561;color:#9fc0cc;border-radius:2px;padding:1px 5px;font-size:10.5px;margin-right:4px}
       .lvl.on #l1-act{position:static;left:auto;right:auto;bottom:auto;max-width:none;background:transparent;border:0;padding:10px 0 4px;margin-top:8px;border-top:1px solid #263a44}
       .lvl.on #l1-act p{font-size:12px;line-height:1.65}
@@ -105,6 +110,7 @@
       '  <div class="ug-info" id="l1-info" hidden><b>先找到储层</b><p>点击剖面中的岩层、储层或井筒部件。标签和解释只在你选中时出现。</p><small>教学示意：不是真实油藏数据，也不是真实地质比例。</small></div>',
       '  <div class="ug-legend" id="l1-legend"><span><i class="ug-dot" style="background:#d8a24a"></i>油（示意）</span><span><i class="ug-dot" style="background:#8fd3c6"></i>气（示意）</span><span><i class="ug-dot" style="background:#6f9fc4"></i>水（示意）</span></div>',
       '  <div class="ug-readout" id="l1-readout" hidden>状态：总览剖面 · 流体静止</div>',
+      '  <div class="ug-task" id="l1-task"><b>任务 · 地下开采</b><p>先点击储层，再启动抽油，观察油滴从孔隙进入井筒并上升。</p><button type="button" id="l1-extract">开始抽取</button></div>',
       '</div>',
       '<div class="ug-controls">',
       '  <button type="button" class="ug-btn" id="l1-up" hidden>沿井筒上行 ↑</button>',
@@ -188,6 +194,8 @@
       setReadout();
     };
     ui.querySelector('#l1-reset').onclick = resetView;
+    var extractBtn = ui.querySelector('#l1-extract');
+    if (extractBtn) extractBtn.onclick = startExtraction;
 
     // raycast + free observation on the actual renderer.
     const canvas = stage.renderer.domElement;
@@ -904,6 +912,18 @@
     setReadout();
   }
 
+  function startExtraction() {
+    extractionStarted = true;
+    extractionAt = performance.now();
+    extractionMarked = true;
+    if (wellFlow) wellFlow.visible = true;
+    if (extractionRing) extractionRing.visible = true;
+    if (ui) hint.textContent = '抽取演示 · 油滴从孔隙进入井筒并上升';
+    if (stage.setInteraction) stage.setInteraction('trace_up_wellbore', 'wellhead', '抽取动画');
+    lastInteraction = { actionId: 'trace_up_wellbore', value: 'wellhead', unit: '抽取动画' };
+    setReadout();
+  }
+
   function updatePressureUI() {
     if (!ui) return;
     const note = ui.querySelector('#l1-note');
@@ -971,7 +991,7 @@
         extractionRing.scale.setScalar(pulse);
         extractionRing.material.opacity = 0.32 + 0.22 * (0.5 + 0.5 * Math.sin(now * 0.004));
       }
-      if (!extractionMarked && extractionAt && now - extractionAt > 2600) {
+      if (!extractionMarked && extractionStarted && extractionAt && now - extractionAt > 2600) {
         extractionMarked = true;
         if (stage.setInteraction) stage.setInteraction('trace_up_wellbore', 'wellhead', '抽取动画');
         lastInteraction = { actionId: 'trace_up_wellbore', value: 'wellhead', unit: '抽取动画' };
@@ -1002,6 +1022,7 @@
     paused = false;
     extractionAt = performance.now();
     extractionMarked = false;
+    extractionStarted = false;
     viewMode = 'block';
     const press = ui.querySelector('#l1-press');
     if (press) press.value = 0;
@@ -1070,6 +1091,7 @@
     if (stage.setContextObject) stage.setContextObject(null, null);
     running = false;
     extractionMarked = false;
+    extractionStarted = false;
     extractionAt = 0;
     stage.back();
     const seg = document.querySelector('#stages [data-stage="0"]');
@@ -1090,7 +1112,7 @@
       get poreMode() { return poreMode; },
       get pressure() { return pressure; },
       get paused() { return paused; },
-      get extraction() { return { wellFlow: !!wellFlow, inflows: convFlows.length, pulse: !!extractionRing, marked: extractionMarked }; },
+      get extraction() { return { wellFlow: !!wellFlow, inflows: convFlows.length, pulse: !!extractionRing, started: extractionStarted, marked: extractionMarked }; },
       get lastInteraction() { return lastInteraction; },
       get objectId() { return window.__sceneContext && window.__sceneContext.selectedObjectId; },
       get selected() { return selectedPart || selectedLayer || null; },
