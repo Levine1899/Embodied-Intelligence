@@ -329,7 +329,7 @@
       G.add(geologyProxy);
       G.userData.geologyProxy = geologyProxy;
       assetLoaded = true;
-      if (stage.isLevel() && !poreMode) setTimeout(function () { if (stage.isLevel() && !poreMode) enterPore(); }, 400);
+      if (stage.isLevel() && !poreMode) setTimeout(function () { if (stage.isLevel() && !poreMode) enterPoreOverlay(); }, 400);
       bindAssetState();
       applyClip();
       addSurfacePipe();
@@ -854,11 +854,25 @@
     setReadout();
   }
 
+  function enterPoreOverlay() {
+    if (poreMode) return;
+    if (!assetLoaded || !poreGroup) return;
+    poreMode = true;
+    originalVisibility = Object.assign({}, layerVisibility);
+    poreGroup.visible = true;
+    poreGroup.scale.setScalar(1.35);
+    applyExtractionProgress();
+    const btn = ui.querySelector('#l1-pore');
+    if (btn) btn.textContent = '退出孔隙放大';
+    setReadout();
+  }
+
   function enterPore() {
     if (poreMode) return;
     if (!assetLoaded || !poreGroup) return;
     poreMode = true;
     clearLayerHighlight();
+    poreGroup.scale.setScalar(1);
     originalVisibility = Object.assign({}, layerVisibility);
     LAYERS.forEach(function (l) { if (layerMeshes[l.key]) layerMeshes[l.key].visible = false; });
     if (reservoirLens) reservoirLens.visible = false;
@@ -879,6 +893,7 @@
   function exitPore() {
     if (!poreMode) return;
     poreMode = false;
+    poreGroup.scale.setScalar(1);
     poreGroup.visible = false;
     if (originalVisibility) {
       layerVisibility = Object.assign({}, originalVisibility);
@@ -1042,7 +1057,7 @@
     if (autoPoreTimer) clearTimeout(autoPoreTimer);
     autoPoreTimer = setTimeout(function () {
       autoPoreTimer = 0;
-      if (stage.isLevel() && assetLoaded && !poreMode) enterPore();
+      if (stage.isLevel() && assetLoaded && !poreMode) enterPoreOverlay();
     }, 1200);
   }
 
@@ -1160,6 +1175,7 @@
       get objectId() { return window.__sceneContext && window.__sceneContext.selectedObjectId; },
       get selected() { return selectedPart || selectedLayer || null; },
       get clipped() { return clipped; },
+      get crossSection() { return { pore: poreMode, overburden: !!(layerMeshes.overburden && layerMeshes.overburden.visible), caprock: !!(layerMeshes.caprock && layerMeshes.caprock.visible), reservoir: !!(layerMeshes.reservoir && layerMeshes.reservoir.visible), basement: !!(layerMeshes.basement && layerMeshes.basement.visible), poreGroup: !!(poreGroup && poreGroup.visible) }; },
       get viewMode() { return viewMode; },
       get layerState() { return Object.assign({}, layerVisibility); },
       get layerVisible() { var out = {}; Object.keys(layerMeshes).forEach(function (k) { out[k] = !!(layerMeshes[k] && layerMeshes[k].visible); }); return out; },

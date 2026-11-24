@@ -81,8 +81,8 @@ function getJson(url) {
   await ev(`window.__stage.selectStage(0,true);window.__stage.levelHook(0)();true`);
   await WAIT(1600);
   await WAIT(2200);
-  const l1Entry = await ev(`window.__l1 ? {pore:window.__l1.poreMode, asset:window.__l1.assetLoaded} : null`);
-  assert('l1 enters pore effect by default', l1Entry && l1Entry.pore === true, l1Entry);
+  const l1Entry = await ev(`window.__l1 ? {pore:window.__l1.poreMode, asset:window.__l1.assetLoaded, cross:window.__l1.crossSection} : null`);
+  assert('l1 enters cross-section + pore overlay by default', l1Entry && l1Entry.pore === true && l1Entry.cross && l1Entry.cross.overburden && l1Entry.cross.reservoir && l1Entry.cross.poreGroup, l1Entry);
   await WAIT(250);
   const l1Zero = await ev(`window.__l1.extraction`);
   const l1 = await ev(`({extraction:window.__l1.extraction,last:window.__l1&&window.__l1.lastInteraction,hidden:{info:document.querySelector('#l1-info').hidden,act:document.querySelector('#l1-act').hidden,readout:document.querySelector('#l1-readout').hidden,up:document.querySelector('#l1-up').hidden,play:document.querySelector('#l1-play').hidden,foot:document.querySelector('.foot').hidden},slider:(function(){var e=document.querySelector('#l1-press');return e?{hidden:e.hidden,rect:e.getBoundingClientRect().toJSON()}:null})()})`);
