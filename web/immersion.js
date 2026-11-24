@@ -1317,7 +1317,7 @@
   const layoutEl = document.querySelector('.layout');
   function applyModeLayout(modeName) {
     if (!layoutEl) return;
-    layoutEl.classList.toggle('rail-open', modeName === 'task');
+    layoutEl.classList.remove('rail-open');
     layoutEl.classList.toggle('side-hidden', modeName === 'tour');
   }
   function setRail(open, section) {
