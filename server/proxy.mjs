@@ -231,7 +231,8 @@ function normalizeRecentActions(raw, scene) {
   if (!Array.isArray(raw)) return [];
   return raw.filter(x => x && typeof x === 'object').filter(x => {
     const lv = textField(x.levelId, 12);
-    return !lv || !scene.levelId || lv === scene.levelId;
+    /* 有关卡时 actions 必须带同一 levelId；无关卡时才允许空 level。 */
+    return scene.levelId ? lv === scene.levelId : !lv;
   }).slice(-6).map(x => ({
     action: singleLine(x.action, 60),
     value: singleLine(String(x.value == null ? '' : x.value), 80),
