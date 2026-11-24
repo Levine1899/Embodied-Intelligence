@@ -11,6 +11,9 @@
   var paused = false;
   var loading = false;
   var cache = new Map();
+  var narrationId = '';
+  var narrationMeta = null;
+  var boundButtons = [];
 
   function label(btn, text) { if (btn) { btn.textContent = text; } }
 
@@ -56,12 +59,53 @@
     label(play, loading ? '合成中…' : (paused ? '继续朗读' : (playing ? '暂停朗读' : '朗读')));
     var stop = document.getElementById('voice-stop');
     if (stop) stop.disabled = !loading && !playing && !paused;
+    boundButtons.forEach(function (btn) {
+      if (!btn || !btn.isConnected) return;
+      btn.textContent = loading ? '合成中…' : (paused ? '继续' : (playing ? '暂停' : (btn.dataset.voiceIdle || '朗读本段')));
+      btn.setAttribute('aria-pressed', String(playing));
+      btn.disabled = loading;
+    });
+  }
+
+  function setTextRaw(text) {
+    currentText = String(text || '').replace(/\s+/g, ' ').trim();
+    try { global.VoiceCurrentText = currentText; } catch (e) {}
   }
 
   function setText(text) {
-    if (global.Voice) global.Voice.text = String(text || '');
-    currentText = String(text || '').replace(/\s+/g, ' ').trim();
-    try { global.VoiceCurrentText = currentText; } catch (e) {}
+    var next = String(text || '').replace(/\s+/g, ' ').trim();
+    if (next === currentText) return;
+    /* 页面文字变了，旧音频必须立即失效，不能继续读上一屏。 */
+    stop();
+    narrationId = '';
+    narrationMeta = null;
+    setTextRaw(next);
+  }
+
+  function setNarration(options) {
+    var o = typeof options === 'string' ? { body: options } : (options || {});
+    var body = String(o.body || o.text || '').replace(/\s+/g, ' ').trim();
+    if (!body) return false;
+    var id = String(o.id || body).slice(0, 120);
+    if (id === narrationId && body === currentText) return true;
+    stop();
+    narrationId = id;
+    narrationMeta = { id: id, title: String(o.title || ''), source: String(o.source || ''), sceneId: String(o.sceneId || '') };
+    setTextRaw(body);
+    sync();
+    return true;
+  }
+
+  function bindButton(btn, idleLabel) {
+    if (!btn) return btn;
+    if (!btn.dataset.voiceBound) {
+      btn.dataset.voiceBound = '1';
+      btn.dataset.voiceIdle = idleLabel || '朗读本段';
+      btn.addEventListener('click', toggle);
+      boundButtons.push(btn);
+    }
+    sync();
+    return btn;
   }
 
   function clearAudio() {
@@ -171,6 +215,10 @@
     supported: supported,
     ensureControls: ensureControls,
     setText: setText,
+    setNarration: setNarration,
+    bindButton: bindButton,
+    get narrationId() { return narrationId; },
+    get narration() { return narrationMeta; },
     speak: speak,
     toggle: toggle,
     pause: pause,

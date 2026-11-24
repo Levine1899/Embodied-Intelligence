@@ -180,7 +180,7 @@
   function updateTask() {
     document.getElementById('chapter').textContent = stageNames[currentStage];
     document.getElementById('explanation').textContent = explanations[currentStage][Number(depthSelect.value)];
-    if (window.Voice) window.Voice.setText(document.getElementById('chapter').textContent + '。' + document.getElementById('explanation').textContent);
+    if (window.Voice && !document.body.classList.contains('journey-tour')) window.Voice.setText(document.getElementById('chapter').textContent + '。' + document.getElementById('explanation').textContent);
     document.getElementById('source-link').href = sourceUrls[currentStage];
   stageButtons.forEach(function (button, index) {
       if (index === currentStage) button.setAttribute('aria-current', 'step');
@@ -222,7 +222,6 @@
         object.material.emissiveIntensity = index === currentStage ? 0.25 : 0;
       });
     });
-    if (window.speechSynthesis) window.speechSynthesis.cancel();
   }
 
   function chooseAnswer(index) {
@@ -1411,20 +1410,6 @@
   document.getElementById('read-more').addEventListener('click', function () { openDetails(false); });
   document.getElementById('photo').addEventListener('click', function () { openDetails(true); });
   document.getElementById('close-dialog').addEventListener('click', function () { dialog.close(); });
-  const speakBtn = document.getElementById('speak');
-  if (speakBtn) speakBtn.addEventListener('click', function () {
-    if (!window.speechSynthesis) {
-      live.textContent = '当前环境无法朗读，可查看屏幕上的完整讲解。';
-      return;
-    }
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(explanations[currentStage][Number(depthSelect.value)]);
-    utterance.lang = 'zh-CN';
-    utterance.rate = Number(depthSelect.value) === 0 ? 0.85 : 0.95;
-    window.speechSynthesis.speak(utterance);
-    live.textContent = '正在朗读当前环节的讲解。';
-  });
-
   document.getElementById('export').addEventListener('click', function () {
     const lines = ['原油怎样走出地下 · 探索记录', '', '五关已通关 ' + doneSet.size + ' / ' + modelGroups.length, '探究任务完成 ' + discoveries.size + ' / 3', ''];
     Object.keys(questions).forEach(function (key) {
@@ -1560,9 +1545,15 @@
     askBtn.onclick = function () {
       if (window.__floatChat) window.__floatChat.open();
     };
+    const readBtn = document.getElementById('device-read');
+    if (readBtn && window.Voice) {
+      window.Voice.setNarration({ id: 'device-' + objectId, title: info.name, body: info.name + '。' + info.text, source: 'device', sceneId: SCENE_ID });
+      window.Voice.bindButton(readBtn, '朗读说明');
+    }
     const close = document.getElementById('device-close');
     close.onclick = function () {
       deviceCardEl.hidden = true;
+      if (window.Voice) window.Voice.stop();
       window.PETRO_DEVICE_STATE && window.PETRO_DEVICE_STATE.select(null);
       syncSceneContext(currentStage, null, null, window.__sceneContext ? window.__sceneContext.zoneId : null);
     };

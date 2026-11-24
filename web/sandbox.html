@@ -166,13 +166,14 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
   <div class="tour-top"><span id="tour-step">01 / 06</span><button type="button" id="tour-exit">退出</button></div>
   <h2 id="tour-title">石油产业链数字展馆</h2>
   <p id="tour-text"></p>
-  <div class="tour-actions"><button type="button" id="tour-pause">暂停</button><button type="button" id="tour-next">下一步 →</button></div>
+  <div class="tour-actions"><button type="button" id="tour-voice">朗读本段</button><button type="button" id="tour-pause">暂停</button><button type="button" id="tour-next">下一步 →</button></div>
 </div>
 <div class="device-card" id="device-card" hidden>
   <div class="device-top"><span id="device-stage">本环节</span><button type="button" id="device-close" aria-label="关闭设备卡片">关闭</button></div>
   <h3 id="device-name"></h3>
   <p id="device-text"></p>
   <div class="device-actions">
+    <button type="button" id="device-read">朗读说明</button>
     <button type="button" id="device-ask">问 AI</button>
     <a id="device-chapter" href="#">读本章知识 →</a>
   </div>
@@ -203,7 +204,7 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 <script src="world/registry.js?v=v40"></script>
 <script src="world/state.js?v=v41"></script>
 <script src="scene-context.js?v=1"></script>
-<script src="immersion.js?v=fix91"></script>
+<script src="immersion.js?v=fix92"></script>
 <link rel="stylesheet" href="assets/site/tokens.css">
 <style>
   .view-hint{font-size:12px}
@@ -399,16 +400,16 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 .tower-link,.chapter-link{font-size:12px}
 </style>
 <script src="levels/entry.js?v=v44"></script>
-<script src="levels/l1.js?v=v79"></script>
+<script src="levels/l1.js?v=v80"></script>
 <script src="levels/l2.js?v=v58"></script>
 <script src="levels/l3.js?v=v73"></script>
 <script src="levels/l4.js?v=v65"></script>
 <script src="levels/l5.js?v=v23"></script>
 <script src="ai-actions.js?v=1"></script>
 <script src="journey-store.js?v=2"></script>
-<script src="voice.js?v=6"></script>
-<script src="mission.js?v=9"></script>
-<script src="journey.js?v=6"></script>
+<script src="voice.js?v=7"></script>
+<script src="mission.js?v=10"></script>
+<script src="journey.js?v=7"></script>
 <script src="float-chat.js?v=6"></script>
 <style>
 .device-card{position:absolute;left:0;top:0;transform:translate(-50%,-100%);z-index:8;width:min(280px,calc(100% - 24px));border:1px solid #3d3a33;background:rgba(11,15,17,.96);padding:12px 14px;box-shadow:0 10px 28px rgba(0,0,0,.38)}

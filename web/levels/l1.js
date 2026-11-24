@@ -15,17 +15,17 @@
   const ASSET_OBJECT = 'underground_hero';
 
   const LAYERS = [
-    { key: 'overburden', name: '上覆地层', object: 'geo_overburden', tone: '#7d654d', desc: '地表以下的沉积岩层，像盖子一样压在上方。这里只表达“层层叠置”的概念，厚度不是真实比例。' },
-    { key: 'caprock', name: '盖层', object: 'geo_caprock', tone: '#73756d', desc: '致密、低渗透的岩层，可阻挡油气继续向上逸散；真实盖层是否有效还取决于连续性和封闭条件。' },
-    { key: 'reservoir', name: '储层', object: 'geo_reservoir_layer', tone: '#a87a2d', desc: '有孔隙/裂缝、能容纳流体的岩层。油、气、水赋存在孔隙中，不是地下“油湖”。' },
-    { key: 'basement', name: '基底', object: 'geo_basement', tone: '#3a4245', desc: '储层下方的致密岩层，通常不作为主要储集层；这里用深色表达剖面底部边界。' }
+    { key: 'overburden', name: '上覆地层', object: 'geo_overburden', tone: '#7d654d', desc: '这是储层上方的岩层。在漫长的地质过程中，沉积物逐层堆积并固结成岩。模型中的厚度只是教学示意，不代表真实地层比例。' },
+    { key: 'caprock', name: '盖层', object: 'geo_caprock', tone: '#73756d', desc: '盖层通常是渗透率较低的岩层，能够减缓或阻止油气继续向上运移。它能否有效封住油气，还取决于岩层连续性以及断层、裂缝等地质条件。' },
+    { key: 'reservoir', name: '储层', object: 'geo_reservoir_layer', tone: '#a87a2d', desc: '储层是能够储存并输导流体的岩层。油、气和水存在于岩石的孔隙、裂缝等空间中，不是聚在一个巨大的地下油湖里。' },
+    { key: 'basement', name: '基底', object: 'geo_basement', tone: '#3a4245', desc: '这里用基底表示储层下方的岩层。在这张教学剖面中，它主要用于表现地层的底部边界，不代表所有油藏都具有完全相同的结构。' }
   ];
 
   const PARTS = [
-    { key: 'casing', name: '套管', object: 'well_casing', desc: '钢制套管加固井壁，隔开松散地层；它不是“吸油管”，而是井筒的结构边界。' },
-    { key: 'cement', name: '水泥环', object: 'well_cement', desc: '套管与井壁之间的水泥环封隔不同层位，减少层间窜流；真实施工还要做固井质量检测。' },
-    { key: 'tubing', name: '油管', object: 'well_tubing', desc: '生产油管是把储层流体引到地面的通道；井口阀组再控制流出与压力。' },
-    { key: 'perforation', name: '射孔段', object: 'well_perforation', desc: '在目标储层段射开套管/水泥环，让储层流体进入井筒；这里只表达“打开通道”的概念。' }
+    { key: 'casing', name: '套管', object: 'well_casing', desc: '套管是下入井内的钢管，用来支撑井壁，并按设计隔离不同地层。它不是把油抽上来的管子；通常由井内的油管输送产出流体。' },
+    { key: 'cement', name: '水泥环', object: 'well_cement', desc: '水泥环位于套管和井壁之间。它帮助封隔不同地层，减少地下流体在不该连通的层位之间串流。现场还需要检测固井质量。' },
+    { key: 'tubing', name: '油管', object: 'well_tubing', desc: '油管通常位于套管内部，是油、气和水等产出流体通往地面的主要通道。井口阀门和控制设备负责调节流动与压力。' },
+    { key: 'perforation', name: '射孔段', object: 'well_perforation', desc: '射孔段位于目标储层位置。施工时通过射孔形成通道，让储层中的油气进入井筒。具体射孔位置和方式，要根据地质条件和完井设计确定。' }
   ];
 
   const FLUID = {
@@ -78,6 +78,7 @@
       .ug-info b{color:#efc16e;font-size:13px}
       .ug-info p{margin:4px 0 0}
       .ug-info small{color:#86a0ac;font-size:11.5px}
+.ug-info .ug-say{margin-top:7px;border:1px solid #3b555f;background:#10232b;color:#cfe4e8;font-size:12px;padding:5px 10px;cursor:pointer}.ug-info .ug-say:hover{border-color:#efc16e;color:#efc16e}.ug-info .ug-say[aria-pressed="true"]{color:#efc16e;border-color:#8a6a33}
       .ug-legend{display:none;gap:10px;flex-wrap:wrap;margin-top:9px;padding-top:8px;border-top:1px dashed #314650;font-size:11.5px;color:#b8c9d0}
       .ug-legend.on{display:flex}
       .ug-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:1px}
@@ -231,7 +232,14 @@
     const hasDisclaimer = (body + (extra || '')).indexOf('教学示意') >= 0 || (body + (extra || '')).indexOf('不是真实') >= 0;
     info.innerHTML = '<b>' + title + '</b><p>' + body + '</p>' +
       (extra ? '<p><small>' + extra + '</small></p>' : '') +
-      (hasDisclaimer ? '' : '<p><small>' + disclaimer + '</small></p>');
+      (hasDisclaimer ? '' : '<p><small>' + disclaimer + '</small></p>') +
+      (window.Voice ? '<button type="button" class="ug-say" id="l1-say">朗读这段</button>' : '');
+    if (window.Voice) {
+      if (!document.body.classList.contains('journey-tour')) {
+        window.Voice.setNarration({ id: 'l1-info-' + title, title: title, body: title + '。' + body + (extra ? '。' + extra : ''), source: 'level', sceneId: 'oil_industry_journey' });
+      }
+      window.Voice.bindButton(info.querySelector('#l1-say'), '朗读这段');
+    }
     setReadout();
   }
 
@@ -770,11 +778,6 @@
     if (reservoirLens) reservoirLens.visible = !!layerVisibility.reservoir;
   }
 
-  function speakSelection(text) {
-    if (!window.Voice) return;
-    try { window.Voice.setText(text); window.Voice.speak(text); } catch (e) {}
-  }
-
   function selectByChip(key, isPart) {
     if (isPart) {
       const list = partMeshes[key] || [];
@@ -782,18 +785,18 @@
       wellheadMeshes.forEach(function (m) { m.visible = true; });
       selectPart(key);
       const p = PARTS.filter(function (x) { return x.key === key; })[0];
-      if (p) speakSelection(p.name + '。' + p.desc);
+      if (!p) info.hidden = false;
     } else {
       layerVisibility[key] = true;
       applyLayerVisibility();
       if (key === 'reservoir') {
         selectReservoir();
         const r = LAYERS.filter(function (x) { return x.key === 'reservoir'; })[0];
-        if (r) speakSelection(r.name + '。' + r.desc);
+        if (!r) info.hidden = false;
       } else {
         selectLayer(key);
         const layer = LAYERS.filter(function (x) { return x.key === key; })[0];
-        if (layer) speakSelection(layer.name + '。' + layer.desc);
+        if (!layer) info.hidden = false;
       }
       legend.classList.toggle('on', key === 'reservoir');
     }

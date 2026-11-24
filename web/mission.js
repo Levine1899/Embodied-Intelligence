@@ -242,6 +242,7 @@
       ui.querySelector('#mission-goal').textContent = step.goal;
       ui.querySelector('#mission-clue').textContent = '线索：' + step.clue;
       global.__narrationText = step.title + '。' + step.goal + '。线索：' + step.clue;
+      if (global.Voice && !document.body.classList.contains('journey-tour')) global.Voice.setNarration({ id: 'mission-' + state.step, title: step.title, body: step.goal + '。线索：' + step.clue, source: 'mission', sceneId: 'oil_industry_journey' });
     }
     var fb = ui.querySelector('#mission-feedback');
     if (state.status === 'paused') {

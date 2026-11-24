@@ -13,6 +13,7 @@
   var pauseBtn = document.getElementById('tour-pause');
   var nextBtn = document.getElementById('tour-next');
   var exitBtn = document.getElementById('tour-exit');
+var voiceBtn = document.getElementById('tour-voice');
   var modeHint = document.getElementById('mode-hint');
   var legacyTour = global.__tour;
   var tour = { active: false, index: -1, playing: false, ready: false, busy: false, completed: 0, status: 'idle', token: 0 };
@@ -261,6 +262,11 @@
     titleEl.textContent = s.title;
     textEl.textContent = s.narration;
     global.__narrationText = s.title + '。' + s.narration;
+    if (global.Voice) {
+      /* 每次切站都换朗读文本并停掉上一段；按钮读到的必须是卡片上的当前旁白。 */
+      global.Voice.setNarration({ id: 'tour-' + s.stepId, title: s.title, body: s.narration, source: 'tour', sceneId: 'oil_industry_journey' });
+      if (voiceBtn) global.Voice.bindButton(voiceBtn, '朗读本段');
+    }
     var extra = document.getElementById('tour-context');
     if (!extra) {
       extra = document.createElement('p');
@@ -330,7 +336,7 @@
 
   async function stopTour(record) {
     if (!tour.active) return;
-    if (global.Voice) global.Voice.stop();
+    if (global.Voice) { global.Voice.stop(); global.Voice.setText(''); }
     tour.active = false;
     tour.playing = false;
     tour.token += 1;
@@ -346,6 +352,7 @@
     if (!tour.active || !tour.playing) return;
     tour.playing = false;
     document.body.classList.add('journey-paused');
+    if (global.Voice) global.Voice.pause();
     pauseScene();
     paint();
   }
@@ -354,6 +361,7 @@
     if (!tour.active) return;
     tour.playing = true;
     document.body.classList.remove('journey-paused');
+    if (global.Voice) global.Voice.resume();
     resumeScene();
     if (global.Ambient && TOUR_STEPS[tour.index] && TOUR_STEPS[tour.index].stage != null) global.Ambient.setStage(TOUR_STEPS[tour.index].stage);
     paint();
