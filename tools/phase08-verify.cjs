@@ -28,6 +28,7 @@ function getJson(url) {
   const send = (method, params) => new Promise((resolve, reject) => { id += 1; pending.set(id, { resolve, reject }); ws.send(JSON.stringify({ id, method, params: params || {} })); });
   await new Promise(resolve => { ws.onopen = resolve; });
   await send('Page.enable'); await send('Runtime.enable');
+  await send('Page.bringToFront').catch(function () {});
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   async function ev(expr) {
     const r = await send('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true });
@@ -99,8 +100,12 @@ function getJson(url) {
   assert('l1 reservoir particles decrease with slider', l1Started.reservoirVisible < l1Started.reservoirTotal && l1Started.reservoirVisible > 0, l1Started);
   await shot('phase08-00c-l1-slider-mid.png');
   const flowA = await ev(`Array.from(window.__stage.baseScene.getObjectByName('wellbore_flow_particles').children).map(function(c){return c.position.y})`);
-  await WAIT(500);
-  const flowB = await ev(`Array.from(window.__stage.baseScene.getObjectByName('wellbore_flow_particles').children).map(function(c){return c.position.y})`);
+  let flowB = flowA;
+  for (let i = 0; i < 5; i++) {
+    await WAIT(500);
+    flowB = await ev(`Array.from(window.__stage.baseScene.getObjectByName('wellbore_flow_particles').children).map(function(c){return c.position.y})`);
+    if (flowA.some(function(v, j) { return Math.abs(v - flowB[j]) > 0.001; })) break;
+  }
   assert('l1 extraction particles move upward', flowA.some(function(v,i){return Math.abs(v-flowB[i])>0.001;}), {a:flowA.slice(0,3),b:flowB.slice(0,3)});
   await shot('phase08-00b-l1-extraction.png');
   await ev(`window.__l1.exit();true`);
@@ -112,6 +117,8 @@ function getJson(url) {
   await WAIT(1600);
   const l3 = await ev(`({text:document.querySelector('#l3-act').innerText,demo:!!document.querySelector('#l3-act .lvl__demo'),more:!!document.querySelector('#l3-more'),moreOpen:document.querySelector('#l3-more')&&document.querySelector('#l3-more').open,fixed:(document.querySelector('#l3-fixed')||{}).getAttribute&&document.querySelector('#l3-fixed').getAttribute('aria-pressed'),state:document.querySelector('#l3-state')&&document.querySelector('#l3-state').textContent,steps:document.querySelectorAll('#l3-act .lvl2__step').length})`);
   assert('l3 uses separated device/liquid steps', l3 && l3.steps === 2 && l3.state === '固定顶罐' && l3.fixed === 'true', l3);
+  const l3Cut = await ev(`window.__l3&&window.__l3.cutMode`);
+  assert('l3 starts in cutaway showing liquid', l3Cut === true, l3Cut);
   assert('l3 generic instruction removed', l3 && l3.demo === false && !/按住液位条|往右拖/.test(l3.text), l3);
   assert('l3 teaching disclaimers removed', l3 && !/教学示意|不代表实际排放|（示意）/.test(l3.text), l3 && l3.text);
   await ev(`document.querySelector('#l3-more').open=true;document.querySelector('#l3-pumpstart').click();true`);

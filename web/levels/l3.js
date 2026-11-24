@@ -7,7 +7,7 @@
   const THREE = window.THREE;
 
   let G = null, camera = null, baseScene = null, anchor = null;
-  let pumpFlow = null, pumpRunning = false, pumpPaused = false, cutMode = false, pumpMesh = null, selectedTankId = 'fixed_roof_tank';
+  let pumpFlow = null, pumpRunning = false, pumpPaused = false, cutMode = true, pumpMesh = null, selectedTankId = 'fixed_roof_tank';
   let routeInfo = null;
   const flows = [];
   const built = {};
@@ -168,6 +168,9 @@
     pumpFlow = makeFlowInGroup(pumpCurve, 0x7fd6a8, 12, 0.28, 0.06, 0.8);
     pumpFlow.speed = 0;
 
+    /* 默认半剖：切掉朝镜头的前半罐壁，直接看到罐内液体。 */
+    G.updateMatrixWorld(true);
+    if (cutMode) applyTankCut(true);
     return built;
   }
 
@@ -222,6 +225,34 @@
       stage.deviceState.set('floating_roof_tank', { level: k }, 'level');
     }
     syncStorageUi();
+  }
+
+  function applyTankCut(on) {
+    G.updateMatrixWorld(true);
+    [built.fixed, built.float].forEach(function (t) {
+      if (!t || !t.bodyMat) return;
+      if (!t.bodyMat.userData.cutOrig) {
+        t.bodyMat.userData.cutOrig = { transparent: t.bodyMat.transparent, opacity: t.bodyMat.opacity, side: t.bodyMat.side };
+      }
+      if (on) {
+        const world = t.body.getWorldPosition(new THREE.Vector3());
+        t.cutPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), world.z);
+        t.bodyMat.clippingPlanes = [t.cutPlane];
+        t.bodyMat.clipShadows = true;
+        t.bodyMat.side = THREE.DoubleSide;
+        t.bodyMat.transparent = false;
+        t.bodyMat.opacity = 1;
+        t.bodyMat.depthWrite = true;
+      } else {
+        t.bodyMat.clippingPlanes = [];
+        t.bodyMat.clipShadows = false;
+        t.bodyMat.side = t.bodyMat.userData.cutOrig.side;
+        t.bodyMat.transparent = t.bodyMat.userData.cutOrig.transparent;
+        t.bodyMat.opacity = t.bodyMat.userData.cutOrig.opacity;
+        t.bodyMat.depthWrite = true;
+      }
+      t.bodyMat.needsUpdate = true;
+    });
   }
 
   /* ---------- UI ---------- */
@@ -306,10 +337,7 @@
   cutBtn.addEventListener('click', function () {
     cutMode = !cutMode; cutBtn.setAttribute('aria-pressed', String(cutMode));
     cutBtn.textContent = cutMode ? '恢复罐壁' : '罐体剖面';
-    [built.fixed, built.float].forEach(function (t) {
-      if (!t || !t.bodyMat) return;
-      t.bodyMat.transparent = true; t.bodyMat.opacity = cutMode ? 0.28 : 0.94; t.bodyMat.depthWrite = !cutMode; t.bodyMat.needsUpdate = true;
-    });
+    applyTankCut(cutMode);
     if (stage.deviceState) {
       stage.deviceState.set('fixed_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
       stage.deviceState.set('floating_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
@@ -345,6 +373,7 @@
   /* ---------- 进 / 出 ---------- */
   function ensureCamera() {
     if (!camera) camera = new THREE.PerspectiveCamera(42, 1, 0.1, 400);
+    stage.renderer.localClippingEnabled = true;
     camera.aspect = (stage.viewport.clientWidth || 800) / (stage.viewport.clientHeight || 480);
     camera.updateProjectionMatrix();
   }
@@ -364,6 +393,8 @@
     if (stage.setOverviewVisible) stage.setOverviewVisible(false);
     G.visible = true;
     if (stage.deviceState) {
+      stage.deviceState.set('fixed_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
+      stage.deviceState.set('floating_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
       stage.deviceState.bind('fixed_roof_tank', 'detail', built.fixed.group);
       stage.deviceState.bind('floating_roof_tank', 'detail', built.float.group);
       if (pumpMesh) stage.deviceState.bind('transfer_pump', 'detail', pumpMesh);
