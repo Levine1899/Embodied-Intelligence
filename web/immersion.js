@@ -180,6 +180,7 @@
   function updateTask() {
     document.getElementById('chapter').textContent = stageNames[currentStage];
     document.getElementById('explanation').textContent = explanations[currentStage][Number(depthSelect.value)];
+    if (window.Voice) window.Voice.setText(document.getElementById('chapter').textContent + '。' + document.getElementById('explanation').textContent);
     document.getElementById('source-link').href = sourceUrls[currentStage];
   stageButtons.forEach(function (button, index) {
       if (index === currentStage) button.setAttribute('aria-current', 'step');

@@ -11,8 +11,18 @@
 
   function label(btn, text) { if (btn) { btn.textContent = text; } }
 
+  function pageText() {
+    var chapter = document.getElementById('chapter');
+    var explanation = document.getElementById('explanation');
+    var parts = [];
+    if (chapter && chapter.textContent.trim()) parts.push(chapter.textContent.trim());
+    if (explanation && explanation.textContent.trim()) parts.push(explanation.textContent.trim());
+    return parts.join('。');
+  }
+
   function ensureControls() {
     if (!supported) return;
+    if (!currentText) currentText = pageText();
     var tools = document.querySelector('.scene-head .tools');
     if (!tools || document.getElementById('voice-play')) return;
     var play = document.createElement('button');
@@ -31,6 +41,7 @@
     stopBtn.addEventListener('click', stop);
     tools.insertBefore(play, tools.firstChild);
     tools.insertBefore(stopBtn, play.nextSibling);
+    sync();
   }
 
   function sync() {
@@ -46,7 +57,8 @@
 
   function speak(text) {
     if (!supported) return false;
-    var t = String(text || currentText || '').trim();
+    var t = String(text || currentText || pageText() || '').trim();
+    if (t && !currentText) currentText = t;
     if (!t) return false;
     try {
       synth.cancel();

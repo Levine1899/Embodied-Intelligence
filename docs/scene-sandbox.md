@@ -47,6 +47,8 @@ window.__sceneContext = {
 
 ## 6. 模式与导览
 
+- 顶部“朗读/停止朗读”使用浏览器语音读取当前 `#chapter + #explanation`；不再有空的文本导致点击无反应。
+- 顶部音频控制（声音关/音量）是唯一环境音入口；“更多→声音”重复入口已移除。
 - 页面只有一个可见入口 `#tour-cta`（“开始导览”）；三模式卡已从可见 UI 移除，默认是自由探索。
 - `.modebar` 三个旧按钮保留为 `hidden` 程序化兼容钩子：`data-mode="tour|free|task"`，不再占用页面空间；任务从右侧“任务”栏进入。
 - `window.__tour` 暴露 `start/stop/next/pause/state`，便于测试。

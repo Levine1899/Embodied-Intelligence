@@ -1,6 +1,6 @@
 # Phase 08 证据
 
-- `phase08-verify.json`：45 项断言，真实 Chrome CDP、1440×900、本地 `:8796`。
+- `phase08-verify.json`：48 项断言，真实 Chrome CDP、1440×900、本地 `:8796`。
 - `phase08-00-merged-ui.png`：三张模式卡合并后的单入口页面（无模式行）。
 - `phase08-00b-l1-extraction.png`：地下开采清理后，移除标注/底栏并运行抽取动画的截图。
 - `phase08-01-context-separator.png`：进入三相分离关卡后的上下文。

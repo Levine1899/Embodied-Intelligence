@@ -49,6 +49,11 @@ function getJson(url) {
   assert('context has sceneId', boot.ctx && boot.ctx.sceneId === 'oil_industry_journey', boot.ctx);
   assert('no boot errors', (boot.errors || []).length === 0, boot.errors);
 
+  const toolbar = await ev(`({voice:window.Voice&&window.Voice.state(),more:!!document.querySelector('#more-btn'),sound:!!document.querySelector('#sound'),audio:document.querySelector('#audio-toggle')&&document.querySelector('#audio-toggle').textContent,stopDisabled:(document.querySelector('#voice-stop')||{}).disabled})`);
+  assert('read control has current narration text', toolbar.voice && toolbar.voice.text && toolbar.voice.text.length > 10, toolbar.voice);
+  assert('duplicate sound menu removed', toolbar.more === false && toolbar.sound === false && !!toolbar.audio, toolbar);
+  assert('stop read starts disabled', toolbar.stopDisabled === true, toolbar.stopDisabled);
+
   // The three mode cards are merged into one visible tour CTA; legacy hooks stay hidden.
   const merged = await ev(`({modebar:document.querySelector('.modebar'),modebarHidden:document.querySelector('.modebar').hidden,modebarDisplay:getComputedStyle(document.querySelector('.modebar')).display,cta:document.querySelector('#tour-cta'),ctaRect:(function(){var b=document.querySelector('#tour-cta').getBoundingClientRect();return {w:b.width,h:b.height};})(),stagesTop:document.querySelector('.stage-navigation').getBoundingClientRect().top})`);
   assert('three mode cards removed from visible UI', merged.modebarHidden === true && merged.modebarDisplay === 'none' && merged.cta && merged.ctaRect.w > 0, merged);
