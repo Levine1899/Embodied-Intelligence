@@ -66,3 +66,13 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase08-verify.cjs
 - `float-chat.png`：右下角悬浮 AI 对话窗口；已验证 conversation_id 连续传递。
 
 - `float-chat-final.png`：生产 V53 上连续两轮 Dify 对话，`conversation_id` 保持。
+
+- `sidebar-reading-only.png`：资料卡隐藏，侧栏保留延伸阅读。
+
+- `sidebar-only-reading.png`：V55 侧栏只保留延伸阅读。
+
+- `scene-responsive.png`：宽屏/高分屏场景正常加载。
+
+- `scene-v56-prod.png`：生产 V56 首屏三维场景加载、宽屏铺满。
+
+- `v57-entry.png`：首屏不再自动展开资料栏，场景铺满，右下角 AI 按钮。

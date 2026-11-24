@@ -45,6 +45,7 @@ dialog{border:1px solid #526772;background:#101c25;color:var(--text);max-width:8
 
 
 /* ---------- Phase 07: tour / mission / archive / audio ---------- */
+.source,.side .leadai,.side .genbtn--side{display:none!important}
 .mission-card,.mission-modal{display:none!important}
 .tour-context{margin:0 0 8px;font-size:11.5px;color:#8f887b;line-height:1.6}
 .tour-progress{display:flex;gap:4px;margin:0 0 11px}
@@ -183,6 +184,7 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 </div>
 <div class="side__body">
 <button type="button" id="rail-close" class="rail-close" aria-label="收起侧栏">收起 ×</button>
+<div id="task-probe" hidden aria-hidden="true"><strong id="task-label"></strong><span id="task-state"></span><h2 id="question"></h2><div id="choices"></div><p id="feedback"></p><button type="button" id="read-more"></button></div>
 <div class="source"><h3>真实现场与知识依据</h3><button type="button" class="source-photo" id="photo"><img src="assets/reservoir-lab.jpg" alt="科研人员在实验室通过扫描电镜观察储层"><span>扫描电镜观察现场 · 中国石油报<br>点击查看照片与资料</span></button><a id="source-link" href="https://news.cnpc.com.cn/system/2025/09/08/030173060.shtml" target="_blank" rel="noopener noreferrer">查看本环节的参考资料 ↗</a><p class="context">模型用来观察流程关系，照片与原始资料用于进一步研读。</p></div>
 </div>
 </aside>
@@ -201,7 +203,7 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 <script src="world/registry.js?v=v40"></script>
 <script src="world/state.js?v=v41"></script>
 <script src="scene-context.js?v=1"></script>
-<script src="immersion.js?v=fix89"></script>
+<script src="immersion.js?v=fix91"></script>
 <link rel="stylesheet" href="assets/site/tokens.css">
 <style>
   .view-hint{font-size:12px}
@@ -505,8 +507,21 @@ body.journey-tour #tour-cta{display:none}
 .about-open{white-space:nowrap}
 .side__body{max-height:calc(clamp(480px,55vh,660px) + 140px)}
 @media(max-width:1100px){.viewport{height:clamp(440px,54vh,600px)}.side__body{max-height:calc(clamp(440px,54vh,600px) + 140px)}}
+/* 宽屏 / 高分屏：场景容器占满可用宽度与主要视口高度。 */
+@media(min-width:1101px){
+  .main{max-width:none;width:100%;padding-left:clamp(22px,2.6vw,44px);padding-right:clamp(22px,2.6vw,44px)}
+  .viewport{height:clamp(540px,calc(100vh - 300px),820px)}
+}
+
 body.in-level .scene-head{display:flex!important;padding:6px 12px!important}
-</style></body>
+</style><style id="fill-viewport">
+.main{display:flex;flex-direction:column;min-height:calc(100vh - 72px)}
+.layout{flex:1;min-height:520px}
+.scene{height:100%;display:flex;flex-direction:column}
+.viewport{flex:1;height:auto;min-height:480px}
+@media(max-width:800px){.main{min-height:0}.layout{min-height:0}.viewport{min-height:360px;height:clamp(360px,56vh,480px)}}
+</style>
+</body>
 </html>
 
 
