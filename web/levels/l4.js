@@ -16,7 +16,8 @@
   const flows = [];
   const fractionGroups = {};
   let feedGroup = null, feedGroups = {}, trayGroup = null, flowGroup = null;
-  let level = 0, flowOn = false, flowPaused = false, selectedFraction = null;
+  let level = 1, flowOn = false, flowPaused = false, selectedFraction = null;
+  const pipeMeshes = [];
   let running = false, lastT = performance.now();
   let enterTimer = null, exitTimer = null;
   const hiddenWorld = [];
@@ -26,11 +27,11 @@
 
   const SCALE = 0.46;
   const FRACTIONS = [
-    { key: 'topgas', name: '塔顶油气', y: 12.4, color: 0xbfd8cf, route: '冷凝/气分（典型示意）', target: 'atmospheric_tower' },
-    { key: 'naphtha', name: '石脑油馏分', y: 9.66, color: 0x9fd3c6, route: '重整 / 乙烯原料（典型示意）', target: 'atmospheric_tower' },
-    { key: 'kerosene', name: '煤油馏分', y: 8.46, color: 0xd8c9a0, route: '航煤 / 精制（典型示意）', target: 'atmospheric_tower' },
-    { key: 'diesel', name: '柴油馏分', y: 7.27, color: 0xd8a24a, route: '加氢精制 / 调和（典型示意）', target: 'atmospheric_tower' },
-    { key: 'residue', name: '常压渣油', y: 3.2, color: 0xb38a4a, route: '塔底 → 减压蒸馏 / 深加工（典型示意）', target: 'vacuum_tower' }
+    { key: 'topgas', name: '塔顶油气', y: 12.4, color: 0xbfd8cf, route: '冷凝/气分（典型路线）', target: 'atmospheric_tower' },
+    { key: 'naphtha', name: '石脑油馏分', y: 9.66, color: 0x9fd3c6, route: '重整 / 乙烯原料（典型路线）', target: 'atmospheric_tower' },
+    { key: 'kerosene', name: '煤油馏分', y: 8.46, color: 0xd8c9a0, route: '航煤 / 精制（典型路线）', target: 'atmospheric_tower' },
+    { key: 'diesel', name: '柴油馏分', y: 7.27, color: 0xd8a24a, route: '加氢精制 / 调和（典型路线）', target: 'atmospheric_tower' },
+    { key: 'residue', name: '常压渣油', y: 3.2, color: 0xb38a4a, route: '塔底 → 减压蒸馏 / 深加工（典型路线）', target: 'vacuum_tower' }
   ];
 
   function makeFlow(curve, color, count, speed, size, parent) {
@@ -126,6 +127,17 @@
     detailBindings = ['atmospheric_tower', 'vacuum_tower', 'heater'];
   }
 
+  /* 管道物质色：进料/油气/石脑油/煤油/柴油/渣油分开，便于在图里对应物质。 */
+  function pipeColor(name) {
+    if (/Pipe_Feed/.test(name)) return 0xe0a24a;
+    if (/Pipe_Top/.test(name)) return 0xbfd8cf;
+    if (/Naphtha/.test(name)) return 0x9fd3c6;
+    if (/Kerosene/.test(name)) return 0xd8c9a0;
+    if (/Diesel/.test(name)) return 0xd8a24a;
+    if (/Vacuum|Residue|Bottom/.test(name)) return 0xb38a4a;
+    return 0x9fb7c0;
+  }
+
   function loadAsset() {
     if (!window.ObjLite) { hint.textContent = '装置模型加载器不可用'; return; }
     window.ObjLite.load('assets/tower/tower.obj?v=08', 'assets/tower/tower.mtl?v=08').then(function (root) {
@@ -149,6 +161,19 @@
         } else if (/^Insulation_Band/.test(n)) {
           insulationMeshes.push(o);
         }
+        if (/^Pipe_/.test(n)) {
+          pipeMeshes.push(o);
+          if (o.material) {
+            o.material = o.material.clone();
+            o.material.color.setHex(pipeColor(n));
+            o.userData.pipeColor = pipeColor(n);
+            o.material.transparent = true;
+            o.material.opacity = 1;
+            o.material.depthWrite = true;
+            o.material.side = THREE.DoubleSide;
+            o.material.needsUpdate = true;
+          }
+        }
         if (/^Heater|^Pipe_Feed|^Pipe_Bottom|^Pipe_Side|^Pipe_Top|^Box_|^Pump_|^Railing_|^Ladder|^Skirt|^Manway_|^Nozzle_|^Flange_|^Exchanger_|^PumpSkid_|^PipeRack_|^Platform_|^Foundation_|^Stair_/.test(n)) {
           o.userData.towerPart = true;
         }
@@ -157,7 +182,7 @@
       splitAndBindDetails();
       if (!window.__l4active) { unit.visible = false; return; }
       unit.visible = true;
-      setLevel(0, false);
+      setLevel(1, false);
       if (stage.deviceState) stage.deviceState.select('atmospheric_tower');
       syncUi();
       hint.textContent = '常减压装置 · 常压塔 / 减压塔 / 加热炉';
@@ -168,18 +193,14 @@
 
   function buildTowerLabels() {
     const defs = [
-      ['常压塔', [0, 13.2, 0], '#c9d6dc'],
-      ['减压塔', [3.5, 8.0, 0], '#8fb6ad'],
-      ['加热炉', [-3.2, 4.4, 0], '#d8a24a'],
-      ['馏分出口', [4.5, 8.8, 0], '#d8c9a0'],
-      ['换热器组', [-5.8, 2.6, 0], '#9fb7c0'],
-      ['泵组', [1.95, 1.1, 2.9], '#d8a24a'],
-      ['管廊', [6.4, 3.2, 4.3], '#8fb6ad']
+      ['常压塔', [0, 12.8, 0], '#c9d6dc'],
+      ['减压塔', [4.5, 7.2, 0], '#8fb6ad'],
+      ['加热炉', [-3.7, 3.8, 0], '#d8a24a']
     ];
     defs.forEach(function (d) {
       const l = window.__lvlLabel(d[0], d[2]);
       l.position.set(d[1][0], d[1][1], d[1][2]);
-      l.scale.setScalar(0.72);
+      l.scale.multiplyScalar(1.9);
       G.add(l);
     });
   }
@@ -190,7 +211,7 @@
     { id: 'vacuum', objectId: 'vacuum_tower', label: '减压塔', pos: [3.5, 6.2, 0], color: 0x8fb6ad, text: '减压塔降低压力，让重油在较低温度继续分离，避免高温裂解。' },
     { id: 'heater', objectId: 'heater', label: '加热炉', pos: [-3.3, 4.2, 0], color: 0xd8a24a, text: '加热炉把原油加热到进塔条件；这里只做流程定位，不提供炉温/热负荷。' },
     { id: 'feed', objectId: 'atmospheric_tower', label: '进料口', pos: [-2.0, 5.8, 0], color: 0xe0b35c, text: '常压进料进塔中部；也可切换减压进料，观察常压塔底→减压塔。' },
-    { id: 'products', objectId: 'atmospheric_tower', label: '馏分出口', pos: [4.25, 8.7, 0], color: 0x9fd3c6, text: '从塔顶到塔底依次是油气、石脑油、煤油、柴油、常压渣油；常压渣油从塔底去减压塔，不是中部侧线。' }
+
   ];
   const hotspotItems = [];
 
@@ -227,7 +248,7 @@
     if (stage.setContextObject) stage.setContextObject(d.objectId, 'refining');
     if (stage.deviceState) stage.deviceState.select(d.objectId);
     if (stage.setInteraction) stage.setInteraction('select_refining_hotspot', id, '示意');
-    hint.textContent = d.label + ' · 3D 语义热点';
+    hint.textContent = d.label + ' · 设备热点';
     note.innerHTML = '<b>' + d.label + '</b><br>' + d.text;
     syncHotspots();
   }
@@ -264,7 +285,7 @@
     const vaporMat = new THREE.MeshBasicMaterial({ color: 0x9fd3c6, transparent: true, opacity: 0.9, depthWrite: false });
     const liqMat = new THREE.MeshBasicMaterial({ color: 0xd8a24a, transparent: true, opacity: 0.85, depthWrite: false });
     for (let i = 0; i < 20; i++) {
-      const v = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.26, 6), vaporMat);
+      const v = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.4, 6), vaporMat);
       const a = (i / 20) * Math.PI * 2;
       const rr = 0.15 + (i % 4) * 0.11;
       v.position.set(Math.cos(a) * rr, 1.4 + (i / 20) * 9.8, Math.sin(a) * rr);
@@ -274,7 +295,7 @@
       internals.push(v);
     }
     for (let i = 0; i < 14; i++) {
-      const q = new THREE.Mesh(new THREE.SphereGeometry(0.065, 6, 5), liqMat);
+      const q = new THREE.Mesh(new THREE.SphereGeometry(0.09, 6, 5), liqMat);
       const a = (i / 14) * Math.PI * 2;
       const rr = 0.48 + (i % 3) * 0.1;
       q.position.set(Math.cos(a) * rr, 1.2 + (i / 14) * 9.0, Math.sin(a) * rr);
@@ -366,6 +387,12 @@
     });
     const trayBtn = ui.querySelector('#l4-tray');
     if (trayBtn) trayBtn.setAttribute('aria-pressed', String(trayGroup && trayGroup.visible));
+    const stateEl = ui.querySelector('#l4-state');
+    if (stateEl) {
+      const names = ['外观', '半剖', '全剖'];
+      const f = FRACTIONS.filter(function (x) { return x.key === selectedFraction; })[0];
+      stateEl.textContent = (f ? f.name : '常压塔') + ' · ' + names[level];
+    }
     FRACTIONS.forEach(function (f) {
       const b = ui.querySelector('[data-fraction="' + f.key + '"]');
       if (b) b.setAttribute('aria-pressed', String(selectedFraction === f.key));
@@ -384,8 +411,31 @@
         o.material.needsUpdate = true;
       }
     });
-    trayMeshes.forEach(function (o) { o.visible = level > 0; });
+    trayMeshes.forEach(function (o) {
+      o.visible = level > 0 && trayGroup && trayGroup.userData.on === true;
+      if (!o.material) return;
+      if (!o.userData.cutMat) {
+        o.userData.cutMat = o.material.clone();
+        o.userData.cutMat.color = new THREE.Color(0x66777f);
+        o.userData.cutMat.transparent = true;
+        o.userData.cutMat.depthWrite = false;
+      }
+      o.material = o.userData.cutMat;
+      o.material.opacity = level === 2 ? 0.38 : 0.55;
+      o.material.needsUpdate = true;
+    });
     insulationMeshes.forEach(function (o) { o.visible = level === 0; });
+    pipeMeshes.forEach(function (o) {
+      if (!o.material) return;
+      o.material.transparent = level > 0;
+      o.material.opacity = level === 0 ? 1 : (level === 1 ? 0.68 : 0.42);
+      o.material.depthWrite = level === 0;
+      if (o.material.emissive && o.userData.pipeColor != null) {
+        o.material.emissive.setHex(o.userData.pipeColor);
+        o.material.emissiveIntensity = level === 0 ? 0 : 0.35;
+      }
+      o.material.needsUpdate = true;
+    });
     if (flowGroup) flowGroup.visible = flowOn && level > 0;
     if (trayGroup) trayGroup.visible = trayGroup.userData.on === true && level > 0;
     const names = ['外观', '半剖', '全剖'];
@@ -413,7 +463,7 @@
     if (stage.setInteraction) stage.setInteraction('select_fraction', key, '示意');
     if (stage.setContextObject) stage.setContextObject(f.target, 'refining');
     note.innerHTML = '<b>' + f.name + '</b> → ' + f.route + '<br><span style="color:#9a948a">' + (key === 'residue' ? '塔底渣油去向，不是中部侧线；' : '') + '馏分不是最终成品油；路线为典型示意，不代表唯一工艺。</span>';
-    hint.textContent = f.name + (key === 'residue' ? ' · 塔底至减压塔路径（教学示意）' : ' · 侧线馏分路径（教学示意）');
+    hint.textContent = f.name + (key === 'residue' ? ' · 塔底至减压塔路径' : ' · 侧线馏分路径');
     syncUi();
   }
 
@@ -427,25 +477,29 @@
     ui.dataset.levelId = 'l4';
     ui.innerHTML = [
       '<div class="lvl__bar"><span class="lvl__step">04 / 05</span><b>炼化 · 常减压</b><span class="lvl__hint" id="l4-hint">装置群正在加载…</span></div>',
-      '<div class="lvl__act" id="l4-act" hidden>',
-      '<p>常压塔按<b>沸点范围</b>切分馏分；切到半剖/全剖看塔板。馏分 ≠ 成品油。</p>',
-      '<div class="lvl__btns" role="group" aria-label="塔体剖切">',
-      '<button type="button" class="lvl__btn" data-level="0" aria-pressed="true">外观</button>',
-      '<button type="button" class="lvl__btn" data-level="1" aria-pressed="false">半剖</button>',
-      '<button type="button" class="lvl__btn" data-level="2" aria-pressed="false">全剖</button>',
+      '<div class="lvl__act lvl2" id="l4-act" hidden>',
+      '<div class="lvl2__head"><div><span class="lvl2__eyebrow">炼化操作</span><b>看塔内，先选剖切</b></div><span class="lvl2__state" id="l4-state">常压塔 · 半剖</span></div>',
+      '<p class="lvl2__lede">半剖看塔板、汽液和侧线路径；馏分不是成品油。</p>',
+      '<div class="lvl2__step">',
+      '<div class="lvl2__stephead"><span class="lvl2__num">1</span><b>塔体剖切</b><span class="lvl2__stepnote">默认半剖</span></div>',
+      '<div class="lvl__btns lvl2__choices" role="group" aria-label="塔体剖切"><button type="button" class="lvl__btn" data-level="0" aria-pressed="false">外观</button><button type="button" class="lvl__btn" data-level="1" aria-pressed="true">半剖</button><button type="button" class="lvl__btn" data-level="2" aria-pressed="false">全剖</button></div>',
       '</div>',
-      '<div class="lvl__btns" role="group" aria-label="塔内过程">',
-      '<button type="button" class="lvl__btn" id="l4-feed-atm" aria-pressed="false">常压进料</button><button type="button" class="lvl__btn" id="l4-feed-vac" aria-pressed="false">减压进料</button>',
-      '<button type="button" class="lvl__btn" id="l4-flow" aria-pressed="false">启动汽液接触</button>',
-      '<button type="button" class="lvl__btn" id="l4-tray" aria-pressed="false">塔板结构</button>',
-      '<button type="button" class="lvl__btn" id="l4-replay">重播</button>',
-      '<button type="button" class="lvl__btn" id="l4-reset">恢复外观</button>',
+      '<div class="lvl2__step">',
+      '<div class="lvl2__stephead"><span class="lvl2__num">2</span><b>观察过程</b><span class="lvl2__stepnote">进料 → 汽液 → 馏分</span></div>',
+      '<div class="lvl__btns lvl2__choices" role="group" aria-label="塔内过程"><button type="button" class="lvl__btn" id="l4-feed-atm" aria-pressed="false">常压进料</button><button type="button" class="lvl__btn" id="l4-feed-vac" aria-pressed="false">减压进料</button><button type="button" class="lvl__btn" id="l4-flow" aria-pressed="false">启动汽液接触</button><button type="button" class="lvl__btn" id="l4-tray" aria-pressed="false">塔板结构</button></div>',
       '</div>',
+      '<div class="lvl2__step">',
+      '<div class="lvl2__stephead"><span class="lvl2__num">3</span><b>选择馏分</b><span class="lvl2__stepnote">看它的典型去向</span></div>',
       '<div class="lvl__chips" id="l4-chips" role="group" aria-label="选择馏分">',
       FRACTIONS.map(function (f) { return '<button type="button" class="lvl__chip" data-fraction="' + f.key + '">' + f.name + '</button>'; }).join(''),
       '</div>',
-      '<div class="lvl__out"><span id="l4-note">先选一个馏分，查看它的典型去向。</span></div>',
       '</div>',
+      '<div class="lvl__out"><span id="l4-note">先选一个馏分，查看它的典型去向。</span></div>',
+      '<details class="lvl2__more" id="l4-more"><summary>演示与结构</summary><div class="lvl2__tools">',
+      '<div class="lvl2__toolrow"><span class="lvl2__tool-label">过程</span><button type="button" class="lvl__btn" id="l4-replay">重播</button><button type="button" class="lvl__btn" id="l4-reset">恢复外观</button></div>',
+      '</div></details>',
+      '</div>',
+      '<div class="l4-legend" aria-label="管道颜色"><span><i style="background:#e0a24a"></i>进料</span><span><i style="background:#bfd8cf"></i>油气</span><span><i style="background:#9fd3c6"></i>石脑油</span><span><i style="background:#d8c9a0"></i>煤油</span><span><i style="background:#d8a24a"></i>柴油</span><span><i style="background:#b38a4a"></i>渣油</span></div>',
       '<button type="button" class="lvl__back" id="l4-back">返回总览</button>'
     ].join('');
     stage.viewport.appendChild(ui);
@@ -594,14 +648,16 @@
       if (assetLoaded) bindDetails();
     }
     if (!running) { running = true; loop(); }
-    setLevel(0, false);
-    fly(startPos, startT,
-      new THREE.Vector3(anchor.x - 11.5, 10.8, anchor.z + 24.0),
-      new THREE.Vector3(anchor.x, 4.0, anchor.z), 1700);
+    flowOn = true;
+    flowPaused = false;
+    setLevel(1, false);
+    if (flowGroup) flowGroup.visible = true;
+    syncUi();
     enterTimer = setTimeout(function () {
       enterTimer = null;
       if (!window.__l4active) return;
       ui.querySelector('#l4-act').hidden = false;
+      ui.querySelector('#l4-act').scrollTop = 0;
       hint.textContent = assetLoaded ? '装置群 · 选择剖切、进料或馏分' : '装置模型加载中…';
       syncHotspots();
     }, 1500);
