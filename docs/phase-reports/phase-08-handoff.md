@@ -7,11 +7,11 @@
 - 状态建议：**REVISE（仅剩继承 P0-SEC-01；P1 已修复；入口合并与 l1 清理后复测 45/0；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`6047a59`（阶段 07 文档完成后的 main）
-- 结束 Commit（真实 SHA）：`4ee860b`（l1 清理与抽取动画；部署后置文档提交）
+- 结束 Commit（真实 SHA）：`2460bb6`（l1 任务卡与抽取动画；部署后置文档提交）
 - 分支：`main`
 - 工作区 `git status --short`：提交后为空；本报告为后置文档提交
-- 线上页面：`http://120.26.198.46:8020/v25/`（根入口跳转 V25；备份 `index.html.bak-20261124-084200`）
-- 发布包：`dist/scienceagent-web-4ee860b.tgz`，SHA-256 `33b479425cf1b89b7ec9e5b299776124ba776e5b1b5f1219fa506b41c22d66bb`
+- 线上页面：`http://120.26.198.46:8020/v26/`（根入口跳转 V26；备份 `index.html.bak-20261124-085048`）
+- 发布包：`dist/scienceagent-web-2460bb6.tgz`，SHA-256 `4adac572d0eaddb8b55c06a43b0724f9225074f1152bdbad69328f7239eaecf3`
 - 线上 API：`http://120.26.198.46:8020/api/dify-chat`、`/api/dify-write`；兼容 `/api/ask`、`/api/gen`
 
 ## 1. 前置检查
@@ -59,7 +59,7 @@
 | `docs/ai-scene-context.md` | **通过** | 上下文形状、ID 表、样例、白名单、失败码 |
 | 真实浏览器验证 | **通过** | `phase08-verify.cjs` 45/0 |
 | V23 线上静态检查 | **通过** | scene-context/ai-actions/AI 面板/动作入口加载，无 boot error |
-| 截图证据 | **通过** | 4 张 1440×900（context/AI/no-proxy/write handoff） |
+| 截图证据 | **通过** | 8 张 1440×900（总入口、AI、动作、l1 清理/抽取、写作 handoff） |
 
 ## 3. 修改文件
 
@@ -289,7 +289,7 @@ phase08-02b-action-suggestion.png
 - 导览结束、任务退出、拖动接管仍回到自由探索；任务栏不再依赖模式卡。
 - 复测：`phase08-verify` **41 项断言 0 失败**；新增 `three mode cards removed from visible UI`、`single tour CTA replaces mode row`、`single CTA starts guided tour`、`tour exits back to free exploration`、`task rail opens without mode card`。
 - 截图：`phase08-00-merged-ui.png`；页面高度从约 1009px 降至约 954px（1440×900 下模式行消失）。
-- 线上 V25 复测：l1 隐藏信息/滑条/底栏，抽取动画 `wellFlow+2 inflows+pulse`，自动写入 `trace_up_wellbore`；阶段 07 回归 76/0。
+- 线上 V26 复测：任务卡“开始抽取”可见可点；按钮写入 `trace_up_wellbore`，抽取动画 `wellFlow+2 inflows+pulse`；阶段 08 45/0、阶段 07 76/0。
 - 此改动不改变阶段 08 的 P0-SEC-01 状态，仍为 REVISE/待签收。
 
 
