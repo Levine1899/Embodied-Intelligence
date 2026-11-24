@@ -401,7 +401,7 @@
       window.__stage.baseScene.traverse(function (o) {
         if (!o.isMesh || !o.material || !o.material.color) return;
         const c = o.material.color.getHexString();
-        if (c !== '4a4235' && c !== '6b5a3a' && c !== '1e1e18') return;
+        if (c !== '4a4235' && c !== '6b5a3a' && c !== '1e1e18' && c !== '14140f' && c !== '3a3830' && c !== '2a2822' && c !== '33312a') return;
         if (!o.geometry) return;
         o.geometry.computeBoundingBox();
         const b = o.geometry.boundingBox;
@@ -412,7 +412,9 @@
         const darkSlab = c === '3a3830' || c === '2a2822' || c === '33312a';
         /* 储运展台的大幅侧墙/围板，顶边会横穿罐体；只在本关隐藏。 */
         const stageWall = c === '14140f' && sx > 70 && sz > 6;
-        if (largeTerrain || (slab && darkSlab) || stageWall) occluderMeshes.push(o);
+        /* 储运区上方的展台地板：横跨罐区，遮住罐体中下部。 */
+        const stageDeck = c === '2a2822' && sx > 8 && sz > 7 && b.min.y > 1.2 && b.max.y < 3.2;
+        if (largeTerrain || (slab && darkSlab) || stageWall || stageDeck) occluderMeshes.push(o);
       });
     }
     /* 有些台板/走道是合并后的通用材质，颜色不可靠；按“横穿罐区的薄长板”再兜一层。 */
