@@ -393,3 +393,5 @@ phase08-02b-action-suggestion.png
 - 语音音色：展厅接待女声 `x6_zhantingnvjiedai_pro`（可用 `XFYUN_VCN` 覆盖）。
 
 - 浮动 AI 对话已去掉「Dify · 连续对话」与「回答由 Dify 生成」提示。
+
+- 浮动入口：油宝数字人 `web/assets/oilbao.png`，头顶「有问题 问油宝」，面板标题「问油宝」。
