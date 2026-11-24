@@ -411,7 +411,17 @@
     letter-spacing: .02em;
   }
 
-  .out .m-body { max-width: 720px; }
+  .out .m-body { max-width: 720px; white-space: normal; }
+  .out .m-body p { margin: 0 0 1em; }
+  .out .m-body > :last-child { margin-bottom: 0; }
+  .out .m-body h1, .out .m-body h2, .out .m-body h3,
+  .out .m-body h4, .out .m-body h5, .out .m-body h6 { margin: 1em 0 .4em; line-height: 1.5; }
+  .out .m-body ul, .out .m-body ol { margin: 0 0 1em; padding-left: 1.8em; }
+  .out .m-body blockquote { margin: 1em 0; padding-left: 1em; border-left: 3px solid var(--amber); }
+  .out .m-body pre { overflow: auto; white-space: pre-wrap; }
+  .out .m-body table { border-collapse: collapse; }
+  .out .m-body th, .out .m-body td { padding: .3em .6em; border: 1px solid var(--line); }
+  .out .m-body a { color: var(--amber); }
 
   .out__empty {
     color: var(--muted);
@@ -748,6 +758,8 @@
   </div>
 </main>
 
+<script src="assets/vendor/marked.umd.js"></script>
+<script src="assets/vendor/purify.min.js"></script>
 <script src="docx.js"></script>
 <script>
 (function () {
@@ -773,20 +785,22 @@
   function renderManuscript(text) {
     const out = $('#out');
     out.replaceChildren();
-    if (TITLED[genre] && text.includes('\n')) {
-      const nl = text.indexOf('\n');
+    text = text.replace(/\r\n?/g, '\n').trim();
+    const nl = text.indexOf('\n');
+    const firstLine = nl < 0 ? text : text.slice(0, nl);
+    if (TITLED[genre] && nl >= 0 && !/^\s*(?:```|~~~|[-*+]\s|\d+[.)]\s|>)/.test(firstLine)) {
       const t = document.createElement('div');
       t.className = 'm-title';
-      t.textContent = text.slice(0, nl).trim();
+      t.innerHTML = DOMPurify.sanitize(marked.parseInline(firstLine.replace(/^\s*#{1,6}\s+/, '').trim()));
       out.appendChild(t);
       const b = document.createElement('div');
       b.className = 'm-body';
-      b.textContent = text.slice(nl + 1).replace(/^\n+/, '');
+      b.innerHTML = DOMPurify.sanitize(marked.parse(text.slice(nl + 1).replace(/^\n+/, ''), { breaks: true }));
       out.appendChild(b);
     } else {
       const b = document.createElement('div');
       b.className = 'm-body';
-      b.textContent = text;
+      b.innerHTML = DOMPurify.sanitize(marked.parse(text, { breaks: true }));
       out.appendChild(b);
     }
     out.contentEditable = 'true';
