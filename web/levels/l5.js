@@ -7,6 +7,7 @@
   const THREE = window.THREE;
 
   let G = null, camera = null, baseScene = null, anchor = null;
+  let processLines = null, processLinesVisible = true;
   const pickables = [];
   const built = {};
 
@@ -243,6 +244,12 @@
     if (stage.isLevel()) return;
     if (!G) build();
     ensureCamera();
+    /* 产品台近景前有厂区工艺管线，会遮挡“航空煤油”；本关只留产品台。 */
+    processLines = stage.scene && stage.scene.getObjectByName ? stage.scene.getObjectByName('processLines') : null;
+    if (processLines) {
+      processLinesVisible = processLines.visible;
+      processLines.visible = false;
+    }
 
     const startPos = stage.camera.position.clone();
     const startT = new THREE.Vector3(anchor.x, 1.4, anchor.z);
@@ -265,6 +272,10 @@
   }
 
   function exit() {
+    if (processLines) {
+      processLines.visible = processLinesVisible;
+      processLines = null;
+    }
     act.hidden = true;
     ui.classList.remove('on', 'done');
     document.body.classList.remove('in-level');
