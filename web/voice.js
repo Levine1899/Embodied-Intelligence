@@ -138,20 +138,26 @@
   function toggle() {
     if (!supported) return;
     if (loading) return;
-    if (paused && audio) {
-      audio.play().then(function () { playing = true; paused = false; sync(); }).catch(function () {});
+    if (paused) {
+      if (audio) {
+        audio.play().then(function () { playing = true; paused = false; sync(); }).catch(function () {});
+      } else {
+        speak(currentText);
+      }
       return;
     }
-    if (playing && audio) {
-      audio.pause(); playing = false; paused = true; sync();
+    if (playing) {
+      if (audio) { try { audio.pause(); } catch (e) {} }
+      playing = false; paused = true; sync();
       return;
     }
     speak(currentText);
   }
 
   function pause() {
-    if (!supported || !playing || !audio) return;
-    audio.pause(); playing = false; paused = true; sync();
+    if (!supported || !playing) return;
+    if (audio) { try { audio.pause(); } catch (e) {} }
+    playing = false; paused = true; sync();
   }
 
   function resume() {
@@ -159,7 +165,7 @@
     audio.play().then(function () { playing = true; paused = false; sync(); }).catch(function () {});
   }
 
-  function state() { return { supported: supported, playing: playing, paused: paused, loading: loading, text: currentText }; }
+  function state() { return { supported: supported, playing: playing, paused: paused, loading: loading, hasAudio: !!audio, text: currentText }; }
 
   global.Voice = {
     supported: supported,
