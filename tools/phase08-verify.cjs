@@ -72,6 +72,20 @@ function getJson(url) {
   await ev(`(window.__mission&&window.__mission.exit&&window.__mission.exit());var c=document.querySelector('#rail-close');if(c)c.click();true`);
   await WAIT(300);
 
+  // First level: annotations/footer removed; V3-style extraction animation is live.
+  await ev(`window.__stage.selectStage(0,true);window.__stage.levelHook(0)();true`);
+  await WAIT(2900);
+  const l1 = await ev(`({extraction:window.__l1&&window.__l1.extraction,last:window.__l1&&window.__l1.lastInteraction,hidden:{info:document.querySelector('#l1-info').hidden,act:document.querySelector('#l1-act').hidden,readout:document.querySelector('#l1-readout').hidden,up:document.querySelector('#l1-up').hidden,play:document.querySelector('#l1-play').hidden,foot:document.querySelector('.foot').hidden}})`);
+  assert('l1 annotations and pause controls removed', l1.hidden.info && l1.hidden.act && l1.hidden.readout && l1.hidden.up && l1.hidden.play && l1.hidden.foot, l1);
+  assert('l1 extraction animation is live', l1.extraction && l1.extraction.wellFlow && l1.extraction.inflows >= 2 && l1.extraction.pulse && l1.extraction.marked, l1.extraction);
+  const flowA = await ev(`Array.from(window.__stage.baseScene.getObjectByName('wellbore_flow_particles').children).map(function(c){return c.position.y})`);
+  await WAIT(500);
+  const flowB = await ev(`Array.from(window.__stage.baseScene.getObjectByName('wellbore_flow_particles').children).map(function(c){return c.position.y})`);
+  assert('l1 extraction particles move upward', flowA.some(function(v,i){return Math.abs(v-flowB[i])>0.001;}), {a:flowA.slice(0,3),b:flowB.slice(0,3)});
+  await shot('phase08-00b-l1-extraction.png');
+  await ev(`window.__l1.exit();true`);
+  await WAIT(500);
+
   await ev(`window.__stage.selectStage(1,true);window.__stage.levelHook(1)();true`);
   await WAIT(1200);
   let c = await ev(`window.SceneContext.get()`);

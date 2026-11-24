@@ -42,6 +42,7 @@
   let layerMeshes = {}, partMeshes = {}, reservoirLens = null, wellheadMeshes = [];
   let poreGroup = null, poreDrops = [];
   let wellFlow = null, surfaceFlow = null, flowCurve = null;
+  let convFlows = [], extractionRing = null, extractionAt = 0, extractionMarked = false;
   let running = false, lastT = 0, flyHandle = null;
   let pressure = 0, paused = false, completed = false, clipped = true;
   const clipPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0);
@@ -101,21 +102,21 @@
       '  <div class="ug-kicker">地层 / 储层 / 井筒</div>',
       '  <div class="ug-chips" id="l1-layers" aria-label="地层显示切换"></div>',
       '  <div class="ug-chips" id="l1-parts" aria-label="井筒部件显示切换"></div>',
-      '  <div class="ug-info" id="l1-info"><b>先找到储层</b><p>点击剖面中的岩层、储层或井筒部件。标签和解释只在你选中时出现。</p><small>教学示意：不是真实油藏数据，也不是真实地质比例。</small></div>',
+      '  <div class="ug-info" id="l1-info" hidden><b>先找到储层</b><p>点击剖面中的岩层、储层或井筒部件。标签和解释只在你选中时出现。</p><small>教学示意：不是真实油藏数据，也不是真实地质比例。</small></div>',
       '  <div class="ug-legend" id="l1-legend"><span><i class="ug-dot" style="background:#d8a24a"></i>油（示意）</span><span><i class="ug-dot" style="background:#8fd3c6"></i>气（示意）</span><span><i class="ug-dot" style="background:#6f9fc4"></i>水（示意）</span></div>',
-      '  <div class="ug-readout" id="l1-readout">状态：总览剖面 · 流体静止</div>',
+      '  <div class="ug-readout" id="l1-readout" hidden>状态：总览剖面 · 流体静止</div>',
       '</div>',
       '<div class="ug-controls">',
-      '  <button type="button" class="ug-btn" id="l1-up">沿井筒上行 ↑</button>',
+      '  <button type="button" class="ug-btn" id="l1-up" hidden>沿井筒上行 ↑</button>',
       '  <button type="button" class="ug-btn" id="l1-pore">孔隙放大（示意）</button>',
       '  <button type="button" class="ug-btn" id="l1-well">井筒整体</button>',
       '  <button type="button" class="ug-btn" id="l1-perf">射孔井段</button>',
-      '  <button type="button" class="ug-btn" id="l1-play" aria-pressed="false">播放流动</button>',
+      '  <button type="button" class="ug-btn" id="l1-play" aria-pressed="false" hidden>播放流动</button>',
       '  <button type="button" class="ug-btn" id="l1-cut">显示完整地层</button>',
       '  <button type="button" class="ug-btn" id="l1-reset">重置观察</button>',
       '  <div class="ug-scale">地层/井筒 Hero<br>OBJ + Blender 源文件</div>',
       '</div>',
-      '<div class="lvl__act" id="l1-act">',
+      '<div class="lvl__act" id="l1-act" hidden>',
       '  <p>油不在“油湖”里，它赋存在<b>岩石孔隙</b>中。拖动“压力差示意”，观察示意流体向井筒方向移动。</p>',
       '  <p style="color:#9a948a;font-size:12px;margin:4px 0 8px">教学示意：滑块不代表真实井底压力、注入量、产量或采收率。</p>',
       '  <div class="lvl__row"><input type="range" min="0" max="100" value="0" id="l1-press" aria-label="压力差示意（教学控制量）"><b id="l1-pct">0%</b></div>',
@@ -504,15 +505,36 @@
   }
 
   function buildWellFlow() {
+    /* 抽取演示：储层两侧的油滴汇入射孔段，再沿井筒上行（V3 动画的可见版本）。 */
     const curve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(0, -6.0, 0),
       new THREE.Vector3(0.05, -4.2, 0.02),
       new THREE.Vector3(0.03, -2.0, 0),
       new THREE.Vector3(0, 0.8, 0)
     ]);
-    wellFlow = buildFlow(curve, 14, 0xd8a24a, 0.18, 0.06);
+    wellFlow = buildFlow(curve, 26, 0xffb347, 0.26, 0.07);
     wellFlow.name = 'wellbore_flow_particles';
     G.add(wellFlow);
+    const c1 = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-2.8, -5.7, 0.8),
+      new THREE.Vector3(-1.4, -5.35, 0.35),
+      new THREE.Vector3(0, -5.2, 0)
+    ]);
+    const c2 = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(2.6, -5.5, -0.8),
+      new THREE.Vector3(1.2, -5.25, -0.3),
+      new THREE.Vector3(0, -5.2, 0)
+    ]);
+    convFlows = [buildFlow(c1, 9, 0xf7b24a, 0.16, 0.055), buildFlow(c2, 9, 0xf7b24a, 0.16, 0.055)];
+    convFlows.forEach(function (f, i) { f.name = 'reservoir_inflow_' + i; G.add(f); });
+    extractionRing = new THREE.Mesh(
+      new THREE.TorusGeometry(0.62, 0.035, 8, 36),
+      new THREE.MeshBasicMaterial({ color: 0xffc56a, transparent: true, opacity: 0.55, depthWrite: false })
+    );
+    extractionRing.rotation.x = Math.PI / 2;
+    extractionRing.position.set(0, -5.2, 0);
+    extractionRing.name = 'extraction_pulse';
+    G.add(extractionRing);
   }
 
   function build() {
@@ -943,6 +965,17 @@
     lastT = now;
     if (!paused) {
       if (wellFlow) wellFlow.userData.update(dt);
+      convFlows.forEach(function (f) { f.userData.update(dt); });
+      if (extractionRing) {
+        var pulse = 1 + 0.18 * Math.sin(now * 0.004);
+        extractionRing.scale.setScalar(pulse);
+        extractionRing.material.opacity = 0.32 + 0.22 * (0.5 + 0.5 * Math.sin(now * 0.004));
+      }
+      if (!extractionMarked && extractionAt && now - extractionAt > 2600) {
+        extractionMarked = true;
+        if (stage.setInteraction) stage.setInteraction('trace_up_wellbore', 'wellhead', '抽取动画');
+        lastInteraction = { actionId: 'trace_up_wellbore', value: 'wellhead', unit: '抽取动画' };
+      }
       if (surfaceFlow && surfaceFlow.visible) surfaceFlow.userData.update(dt);
       if (poreMode) {
         poreDrops.forEach(function (d) {
@@ -967,6 +1000,8 @@
     pressure = 0;
     completed = false;
     paused = false;
+    extractionAt = performance.now();
+    extractionMarked = false;
     viewMode = 'block';
     const press = ui.querySelector('#l1-press');
     if (press) press.value = 0;
@@ -1017,7 +1052,6 @@
       setInfo('地下地质剖面', '四层岩性、储层透镜和井筒都在这一个空间里。点击剖面岩层，或使用左侧按钮逐层查看。',
         '教学示意：不是真实油藏数据，也不是真实地质比例。');
     });
-    setTimeout(function () { if (stage.isLevel()) { const act = ui.querySelector('#l1-act'); if (act) act.hidden = false; } }, 1500);
     lastInteraction = null;
   }
 
@@ -1035,6 +1069,8 @@
     if (window.PETRO_DEVICE_STATE) window.PETRO_DEVICE_STATE.select(null);
     if (stage.setContextObject) stage.setContextObject(null, null);
     running = false;
+    extractionMarked = false;
+    extractionAt = 0;
     stage.back();
     const seg = document.querySelector('#stages [data-stage="0"]');
     if (seg) seg.classList.add('done-level');
@@ -1054,6 +1090,7 @@
       get poreMode() { return poreMode; },
       get pressure() { return pressure; },
       get paused() { return paused; },
+      get extraction() { return { wellFlow: !!wellFlow, inflows: convFlows.length, pulse: !!extractionRing, marked: extractionMarked }; },
       get lastInteraction() { return lastInteraction; },
       get objectId() { return window.__sceneContext && window.__sceneContext.selectedObjectId; },
       get selected() { return selectedPart || selectedLayer || null; },

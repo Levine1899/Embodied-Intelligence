@@ -4,7 +4,7 @@
 
 - 日期：2026-11-23
 - 阶段：08_AI_CONTEXT
-- 状态建议：**REVISE（仅剩继承 P0-SEC-01；P1 已修复；入口合并后复测 41/0；用户签收待完成）**
+- 状态建议：**REVISE（仅剩继承 P0-SEC-01；P1 已修复；入口合并与 l1 清理后复测 44/0；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`6047a59`（阶段 07 文档完成后的 main）
 - 结束 Commit（真实 SHA）：`1ab9c31`（模式入口合并；部署后置文档提交）
@@ -57,7 +57,7 @@
 | API Key 不在前端 | **通过** | 前端无 key；只使用 `/api/*`；服务端 env |
 | `docs/API.md` 更新 | **通过** | 新增 Dify 两端点；兼容段保留 |
 | `docs/ai-scene-context.md` | **通过** | 上下文形状、ID 表、样例、白名单、失败码 |
-| 真实浏览器验证 | **通过** | `phase08-verify.cjs` 41/0 |
+| 真实浏览器验证 | **通过** | `phase08-verify.cjs` 44/0 |
 | V23 线上静态检查 | **通过** | scene-context/ai-actions/AI 面板/动作入口加载，无 boot error |
 | 截图证据 | **通过** | 4 张 1440×900（context/AI/no-proxy/write handoff） |
 
@@ -291,3 +291,12 @@ phase08-02b-action-suggestion.png
 - 截图：`phase08-00-merged-ui.png`；页面高度从约 1009px 降至约 954px（1440×900 下模式行消失）。
 - 线上 V24 复测：`modebar display=none`，`#tour-cta 48×31`，点击后 journey active，无 boot error。
 - 此改动不改变阶段 08 的 P0-SEC-01 状态，仍为 REVISE/待签收。
+
+
+## 16. 地下开采清理与抽取动画（2026-11-24 用户追加）
+
+- 移除用户标注的界面：左栏教学长文/状态/压力滑条（`l1-info`、`l1-readout`、`l1-act`），右侧“沿井筒上行/暂停流动”，底部操作条（`.foot`、`#live`）。保留地层/井筒 chip、观察和返回控制。
+- 恢复 V3 式抽取动画：26 个井筒上升粒子、两组储层汇入流、射孔段脉动环；进入 l1 约 2.6s 后自动写入 `trace_up_wellbore`（抽取动画），M1 不再依赖“沿井筒上行”按钮。
+- M1 文案改为“点击储层 + 观察抽取动画”；旧按钮保留为 hidden 程序化兼容钩子，测试改用 `__l1.traceUp()`/自动动画。
+- 验证：`phase08-verify` **44/0**（新增 3 条 l1 隐藏项/动画/粒子位移断言）；截图 `phase08-00b-l1-extraction.png`。
+- 阶段 08 仍因 P0-SEC-01 为 **REVISE / 待用户签收**，未进入 09。

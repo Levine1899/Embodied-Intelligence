@@ -188,8 +188,8 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 </div>
 </aside>
 </div>
-<div class="foot"><button type="button" id="about-open" class="about-open">关于本页</button><div class="progress"><span id="progress-text">五关进度 0 / 5</span><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div><span>可自由选择环节，也可以沿流程逐段探索。</span><a class="kblink" href="kb.html">石油知识库 →</a> <button type="button" id="export">导出探索记录</button></div>
-<p class="live" id="live" role="status" aria-live="polite"></p>
+<div class="foot" hidden aria-hidden="true"><button type="button" id="about-open" class="about-open">关于本页</button><div class="progress"><span id="progress-text">五关进度 0 / 5</span><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div><span>可自由选择环节，也可以沿流程逐段探索。</span><a class="kblink" href="kb.html">石油知识库 →</a> <button type="button" id="export">导出探索记录</button></div>
+<p class="live" id="live" role="status" aria-live="polite" hidden></p>
 
 </main>
 <dialog id="about"><header><h2>关于本页</h2><button type="button" id="about-close" aria-label="关闭">关闭</button></header><div class="about-body"><p>问答：演示知识包（20 条），拒答为真实逻辑。</p><p>文案生成：真实模型（DeepSeek），未经人工审校。</p><p>三维：原理级示意，非真实工艺比例；交互数值均为示意值。</p></div></dialog>
@@ -388,7 +388,7 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 .tower-link,.chapter-link{font-size:12px}
 </style>
 <script src="levels/entry.js?v=v41"></script>
-<script src="levels/l1.js?v=v57"></script>
+<script src="levels/l1.js?v=v58"></script>
 <script src="levels/l2.js?v=v58"></script>
 <script src="levels/l3.js?v=v51"></script>
 <script src="levels/l4.js?v=v58"></script>
@@ -396,7 +396,7 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 <script src="ai-actions.js?v=1"></script>
 <script src="journey-store.js?v=2"></script>
 <script src="voice.js?v=2"></script>
-<script src="mission.js?v=7"></script>
+<script src="mission.js?v=8"></script>
 <script src="journey.js?v=4"></script>
 <style>
 .device-card{position:absolute;left:0;top:0;transform:translate(-50%,-100%);z-index:8;width:min(280px,calc(100% - 24px));border:1px solid #3d3a33;background:rgba(11,15,17,.96);padding:12px 14px;box-shadow:0 10px 28px rgba(0,0,0,.38)}

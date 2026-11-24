@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T23:53:53.719Z",
+  "generatedAt": "2026-11-24T00:41:21.452Z",
   "base": "http://127.0.0.1:8796",
   "passed": 76,
   "failed": 0,
@@ -476,13 +476,15 @@
               "visited": false
             }
           ],
-          "flags": {},
+          "flags": {
+            "up": true
+          },
           "knowledge": [],
           "hintsUsed": 0,
           "hintLevel": 0,
           "errors": [],
           "lastHint": "",
-          "startedAt": "2026-11-23T23:52:59.705Z",
+          "startedAt": "2026-11-24T00:40:26.045Z",
           "finishedAt": null
         },
         "level": "l1",
@@ -526,8 +528,8 @@
           }
         ],
         "flags": {
-          "reservoir": true,
-          "up": true
+          "up": true,
+          "reservoir": true
         },
         "knowledge": [
           "kb_formation"
@@ -536,7 +538,7 @@
         "hintLevel": 0,
         "errors": [],
         "lastHint": "",
-        "startedAt": "2026-11-23T23:52:59.705Z",
+        "startedAt": "2026-11-24T00:40:26.045Z",
         "finishedAt": null
       }
     },
@@ -578,8 +580,8 @@
             }
           ],
           "flags": {
-            "reservoir": true,
-            "up": true
+            "up": true,
+            "reservoir": true
           },
           "knowledge": [
             "kb_formation"
@@ -588,7 +590,7 @@
           "hintLevel": 0,
           "errors": [],
           "lastHint": "",
-          "startedAt": "2026-11-23T23:52:59.705Z",
+          "startedAt": "2026-11-24T00:40:26.045Z",
           "finishedAt": null
         },
         "level": "l2"
@@ -637,8 +639,8 @@
             }
           ],
           "flags": {
-            "reservoir": true,
             "up": true,
+            "reservoir": true,
             "started": true
           },
           "knowledge": [
@@ -648,12 +650,12 @@
           "hintLevel": 1,
           "errors": [
             {
-              "at": "2026-11-23T23:53:12.183Z",
+              "at": "2026-11-24T00:40:39.944Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ],
           "lastHint": "",
-          "startedAt": "2026-11-23T23:52:59.705Z",
+          "startedAt": "2026-11-24T00:40:26.045Z",
           "finishedAt": null
         },
         "feedback": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。",
@@ -720,8 +722,8 @@
             }
           ],
           "flags": {
-            "reservoir": true,
             "up": true,
+            "reservoir": true,
             "started": true
           },
           "knowledge": [
@@ -732,15 +734,15 @@
           "hintLevel": 0,
           "errors": [],
           "lastHint": "",
-          "startedAt": "2026-11-23T23:52:59.705Z",
+          "startedAt": "2026-11-24T00:40:26.045Z",
           "finishedAt": null,
           "errorHistory": [
             {
-              "at": "2026-11-23T23:53:12.183Z",
+              "at": "2026-11-24T00:40:39.944Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             },
             {
-              "at": "2026-11-23T23:53:15.573Z",
+              "at": "2026-11-24T00:40:43.351Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ]
@@ -789,8 +791,8 @@
           }
         ],
         "flags": {
-          "reservoir": true,
           "up": true,
+          "reservoir": true,
           "started": true
         },
         "knowledge": [
@@ -801,15 +803,15 @@
         "hintLevel": 0,
         "errors": [],
         "lastHint": "",
-        "startedAt": "2026-11-23T23:52:59.705Z",
+        "startedAt": "2026-11-24T00:40:26.045Z",
         "finishedAt": null,
         "errorHistory": [
           {
-            "at": "2026-11-23T23:53:12.183Z",
+            "at": "2026-11-24T00:40:39.944Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           },
           {
-            "at": "2026-11-23T23:53:15.573Z",
+            "at": "2026-11-24T00:40:43.351Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           }
         ]
@@ -853,8 +855,8 @@
             }
           ],
           "flags": {
-            "reservoir": true,
             "up": true,
+            "reservoir": true,
             "started": true
           },
           "knowledge": [
@@ -865,15 +867,15 @@
           "hintLevel": 0,
           "errors": [],
           "lastHint": "",
-          "startedAt": "2026-11-23T23:52:59.705Z",
+          "startedAt": "2026-11-24T00:40:26.045Z",
           "finishedAt": null,
           "errorHistory": [
             {
-              "at": "2026-11-23T23:53:12.183Z",
+              "at": "2026-11-24T00:40:39.944Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             },
             {
-              "at": "2026-11-23T23:53:15.573Z",
+              "at": "2026-11-24T00:40:43.351Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ]
@@ -919,8 +921,8 @@
             }
           ],
           "flags": {
-            "reservoir": true,
             "up": true,
+            "reservoir": true,
             "started": true,
             "level": 0,
             "pump": true
@@ -933,15 +935,15 @@
           "hintLevel": 0,
           "errors": [],
           "lastHint": "",
-          "startedAt": "2026-11-23T23:52:59.705Z",
+          "startedAt": "2026-11-24T00:40:26.045Z",
           "finishedAt": null,
           "errorHistory": [
             {
-              "at": "2026-11-23T23:53:12.183Z",
+              "at": "2026-11-24T00:40:39.944Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             },
             {
-              "at": "2026-11-23T23:53:15.573Z",
+              "at": "2026-11-24T00:40:43.351Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ]
@@ -986,8 +988,8 @@
           }
         ],
         "flags": {
-          "reservoir": true,
           "up": true,
+          "reservoir": true,
           "started": true,
           "level": 75,
           "pump": true
@@ -1001,15 +1003,15 @@
         "hintLevel": 0,
         "errors": [],
         "lastHint": "",
-        "startedAt": "2026-11-23T23:52:59.705Z",
+        "startedAt": "2026-11-24T00:40:26.045Z",
         "finishedAt": null,
         "errorHistory": [
           {
-            "at": "2026-11-23T23:53:12.183Z",
+            "at": "2026-11-24T00:40:39.944Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           },
           {
-            "at": "2026-11-23T23:53:15.573Z",
+            "at": "2026-11-24T00:40:43.351Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           }
         ]
@@ -1053,8 +1055,8 @@
             }
           ],
           "flags": {
-            "reservoir": true,
             "up": true,
+            "reservoir": true,
             "started": true,
             "level": 75,
             "pump": true
@@ -1068,15 +1070,15 @@
           "hintLevel": 0,
           "errors": [],
           "lastHint": "",
-          "startedAt": "2026-11-23T23:52:59.705Z",
+          "startedAt": "2026-11-24T00:40:26.045Z",
           "finishedAt": null,
           "errorHistory": [
             {
-              "at": "2026-11-23T23:53:12.183Z",
+              "at": "2026-11-24T00:40:39.944Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             },
             {
-              "at": "2026-11-23T23:53:15.573Z",
+              "at": "2026-11-24T00:40:43.351Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ]
@@ -1121,8 +1123,8 @@
           }
         ],
         "flags": {
-          "reservoir": true,
           "up": true,
+          "reservoir": true,
           "started": true,
           "level": 75,
           "pump": true,
@@ -1139,15 +1141,15 @@
         "hintLevel": 0,
         "errors": [],
         "lastHint": "",
-        "startedAt": "2026-11-23T23:52:59.705Z",
+        "startedAt": "2026-11-24T00:40:26.045Z",
         "finishedAt": null,
         "errorHistory": [
           {
-            "at": "2026-11-23T23:53:12.183Z",
+            "at": "2026-11-24T00:40:39.944Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           },
           {
-            "at": "2026-11-23T23:53:15.573Z",
+            "at": "2026-11-24T00:40:43.351Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           }
         ]
@@ -1191,8 +1193,8 @@
             }
           ],
           "flags": {
-            "reservoir": true,
             "up": true,
+            "reservoir": true,
             "started": true,
             "level": 75,
             "pump": true,
@@ -1210,15 +1212,15 @@
           "hintLevel": 0,
           "errors": [],
           "lastHint": "",
-          "startedAt": "2026-11-23T23:52:59.705Z",
+          "startedAt": "2026-11-24T00:40:26.045Z",
           "finishedAt": null,
           "errorHistory": [
             {
-              "at": "2026-11-23T23:53:12.183Z",
+              "at": "2026-11-24T00:40:39.944Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             },
             {
-              "at": "2026-11-23T23:53:15.573Z",
+              "at": "2026-11-24T00:40:43.351Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ]
@@ -1263,8 +1265,8 @@
           }
         ],
         "flags": {
-          "reservoir": true,
           "up": true,
+          "reservoir": true,
           "started": true,
           "level": 75,
           "pump": true,
@@ -1282,15 +1284,15 @@
         "hintLevel": 0,
         "errors": [],
         "lastHint": "M5 需要新增一个产品选择；取消选中不算完成任务。",
-        "startedAt": "2026-11-23T23:52:59.705Z",
+        "startedAt": "2026-11-24T00:40:26.045Z",
         "finishedAt": null,
         "errorHistory": [
           {
-            "at": "2026-11-23T23:53:12.183Z",
+            "at": "2026-11-24T00:40:39.944Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           },
           {
-            "at": "2026-11-23T23:53:15.573Z",
+            "at": "2026-11-24T00:40:43.351Z",
             "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
           }
         ]
@@ -1334,8 +1336,8 @@
             }
           ],
           "flags": {
-            "reservoir": true,
             "up": true,
+            "reservoir": true,
             "started": true,
             "level": 75,
             "pump": true,
@@ -1356,15 +1358,15 @@
           "hintLevel": 0,
           "errors": [],
           "lastHint": "",
-          "startedAt": "2026-11-23T23:52:59.705Z",
-          "finishedAt": "2026-11-23T23:53:42.550Z",
+          "startedAt": "2026-11-24T00:40:26.045Z",
+          "finishedAt": "2026-11-24T00:41:10.292Z",
           "errorHistory": [
             {
-              "at": "2026-11-23T23:53:12.183Z",
+              "at": "2026-11-24T00:40:39.944Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             },
             {
-              "at": "2026-11-23T23:53:15.573Z",
+              "at": "2026-11-24T00:40:43.351Z",
               "message": "去向不对：气不能进常压油罐，油不能进水处理。看出口标签，改选即可。"
             }
           ]
