@@ -75,10 +75,10 @@ function getJson(url) {
   // First level: annotations/footer removed; V3-style extraction animation is live.
   await ev(`window.__stage.selectStage(0,true);window.__stage.levelHook(0)();true`);
   await WAIT(500);
-  const l1 = await ev(`({task:(function(){var e=document.querySelector('#l1-task');return e?{hidden:e.hidden,button:!!e.querySelector('#l1-extract')}:null})(),extraction:window.__l1&&window.__l1.extraction,last:window.__l1&&window.__l1.lastInteraction,hidden:{info:document.querySelector('#l1-info').hidden,act:document.querySelector('#l1-act').hidden,readout:document.querySelector('#l1-readout').hidden,up:document.querySelector('#l1-up').hidden,play:document.querySelector('#l1-play').hidden,foot:document.querySelector('.foot').hidden}})`);
-  assert('l1 annotations and pause controls removed', l1.hidden.info && l1.hidden.act && l1.hidden.readout && l1.hidden.up && l1.hidden.play && l1.hidden.foot, l1);
-  assert('l1 task card and start action remain', l1.task && l1.task.hidden === false && l1.task.button === true, l1.task);
-  await ev(`document.querySelector('#l1-extract').click();true`);
+  const l1 = await ev(`({extraction:window.__l1&&window.__l1.extraction,last:window.__l1&&window.__l1.lastInteraction,hidden:{info:document.querySelector('#l1-info').hidden,act:document.querySelector('#l1-act').hidden,readout:document.querySelector('#l1-readout').hidden,up:document.querySelector('#l1-up').hidden,play:document.querySelector('#l1-play').hidden,foot:document.querySelector('.foot').hidden},slider:(function(){var e=document.querySelector('#l1-press');return e?{hidden:e.hidden,rect:e.getBoundingClientRect().toJSON()}:null})()})`);
+  assert('l1 annotations and pause controls removed', l1.hidden.info && l1.hidden.readout && l1.hidden.up && l1.hidden.play && l1.hidden.foot, l1);
+  assert('l1 original pressure slider is visible', l1.hidden.act === false && l1.slider && l1.slider.hidden === false && l1.slider.rect.width > 0, l1.slider);
+  await ev(`window.__l1.setPressure(60);true`);
   await WAIT(650);
   const l1Started = await ev(`window.__l1.extraction`);
   assert('l1 extraction animation is live', l1Started && l1Started.wellFlow && l1Started.inflows >= 2 && l1Started.pulse && l1Started.started && l1Started.marked, l1Started);

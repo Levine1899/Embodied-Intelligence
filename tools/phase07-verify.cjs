@@ -177,7 +177,7 @@ function getJson(url) {
   assert('mission M1 level active', m.level === 'l1' && m.state.status === 'active', m);
   await shot('phase07-10-mission-active.png');
   await ev(`window.__l1.selectReservoir()`);
-  await ev(`document.querySelector('#l1-extract').click()`);
+  await ev(`window.__l1.setPressure(60)`);
   await WAIT(800);
   m = await ev(`window.__mission.state`);
   assert('mission M1 complete by real operations', m.steps[0].done && m.step === 1, m);

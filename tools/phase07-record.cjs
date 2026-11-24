@@ -88,7 +88,7 @@ function getJson(url) {
     await sleep(4700);
 
     await ev(`window.__l1.selectReservoir()`);
-    await ev(`document.querySelector('#l1-extract').click()`);
+    await ev(`window.__l1.setPressure(60)`);
     await sleep(900);
 
     await pointer('#mission-enter');

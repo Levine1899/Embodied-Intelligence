@@ -7,11 +7,11 @@
 - 状态建议：**REVISE（仅剩继承 P0-SEC-01；P1 已修复；入口合并与 l1 清理后复测 45/0；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`6047a59`（阶段 07 文档完成后的 main）
-- 结束 Commit（真实 SHA）：`2460bb6`（l1 任务卡与抽取动画；部署后置文档提交）
+- 结束 Commit（真实 SHA）：`9f0a2d7`（l1 恢复原压力滑块；部署后置文档提交）
 - 分支：`main`
 - 工作区 `git status --short`：提交后为空；本报告为后置文档提交
-- 线上页面：`http://120.26.198.46:8020/v26/`（根入口跳转 V26；备份 `index.html.bak-20261124-085048`）
-- 发布包：`dist/scienceagent-web-2460bb6.tgz`，SHA-256 `4adac572d0eaddb8b55c06a43b0724f9225074f1152bdbad69328f7239eaecf3`
+- 线上页面：`http://120.26.198.46:8020/v27/`（根入口跳转 V27；备份 `index.html.bak-20261124-090000`）
+- 发布包：`dist/scienceagent-web-9f0a2d7.tgz`，SHA-256 `PENDING`
 - 线上 API：`http://120.26.198.46:8020/api/dify-chat`、`/api/dify-write`；兼容 `/api/ask`、`/api/gen`
 
 ## 1. 前置检查
@@ -289,14 +289,14 @@ phase08-02b-action-suggestion.png
 - 导览结束、任务退出、拖动接管仍回到自由探索；任务栏不再依赖模式卡。
 - 复测：`phase08-verify` **41 项断言 0 失败**；新增 `three mode cards removed from visible UI`、`single tour CTA replaces mode row`、`single CTA starts guided tour`、`tour exits back to free exploration`、`task rail opens without mode card`。
 - 截图：`phase08-00-merged-ui.png`；页面高度从约 1009px 降至约 954px（1440×900 下模式行消失）。
-- 线上 V26 复测：任务卡“开始抽取”可见可点；按钮写入 `trace_up_wellbore`，抽取动画 `wellFlow+2 inflows+pulse`；阶段 08 45/0、阶段 07 76/0。
+- 线上 V27 复测：原压力滑块可见、可点击；文字说明/操作引导已移除；拖动到 50% 以上写入 `trace_up_wellbore`，抽取动画 `wellFlow+2 inflows+pulse`；阶段 08 45/0、阶段 07 76/0。
 - 此改动不改变阶段 08 的 P0-SEC-01 状态，仍为 REVISE/待签收。
 
 
 ## 16. 地下开采清理与抽取动画（2026-11-24 用户追加）
 
 - 移除用户标注的界面：左栏教学长文/状态/压力滑条（`l1-info`、`l1-readout`、`l1-act`），右侧“沿井筒上行/暂停流动”，底部操作条（`.foot`、`#live`）。保留地层/井筒 chip、观察和返回控制。
-- 恢复 V3 式抽取动画：26 个井筒上升粒子、两组储层汇入流、射孔段脉动环；保留一个紧凑任务卡“开始抽取”按钮，点击后写入 `trace_up_wellbore`（抽取动画）。
-- M1 文案改为“点击储层 + 点击开始抽取”；旧“沿井筒上行”按钮保留为 hidden 程序化兼容钩子，任务卡提供可见操作。
-- 验证：`phase08-verify` **45/0**（新增 l1 隐藏项/任务卡/动画/粒子位移断言）；截图 `phase08-00b-l1-extraction.png`。
+- 恢复 V3 式抽取动画：26 个井筒上升粒子、两组储层汇入流、射孔段脉动环；恢复原压力滑块作为操作入口，不显示文字说明/操作引导；滑块 ≥50% 写入 `trace_up_wellbore`（抽取动画）。
+- M1 文案改为“点击储层 + 拖动压力滑块到 50% 以上”；旧“沿井筒上行”按钮保留为 hidden 程序化兼容钩子，可见操作是原压力滑块。
+- 验证：`phase08-verify` **45/0**（新增 l1 隐藏项/滑块/动画/粒子位移断言）；截图 `phase08-00b-l1-extraction.png`。
 - 阶段 08 仍因 P0-SEC-01 为 **REVISE / 待用户签收**，未进入 09。

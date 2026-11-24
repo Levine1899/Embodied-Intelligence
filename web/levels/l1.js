@@ -110,7 +110,6 @@
       '  <div class="ug-info" id="l1-info" hidden><b>先找到储层</b><p>点击剖面中的岩层、储层或井筒部件。标签和解释只在你选中时出现。</p><small>教学示意：不是真实油藏数据，也不是真实地质比例。</small></div>',
       '  <div class="ug-legend" id="l1-legend"><span><i class="ug-dot" style="background:#d8a24a"></i>油（示意）</span><span><i class="ug-dot" style="background:#8fd3c6"></i>气（示意）</span><span><i class="ug-dot" style="background:#6f9fc4"></i>水（示意）</span></div>',
       '  <div class="ug-readout" id="l1-readout" hidden>状态：总览剖面 · 流体静止</div>',
-      '  <div class="ug-task" id="l1-task"><b>任务 · 地下开采</b><p>先点击储层，再启动抽油，观察油滴从孔隙进入井筒并上升。</p><button type="button" id="l1-extract">开始抽取</button></div>',
       '</div>',
       '<div class="ug-controls">',
       '  <button type="button" class="ug-btn" id="l1-up" hidden>沿井筒上行 ↑</button>',
@@ -122,11 +121,8 @@
       '  <button type="button" class="ug-btn" id="l1-reset">重置观察</button>',
       '  <div class="ug-scale">地层/井筒 Hero<br>OBJ + Blender 源文件</div>',
       '</div>',
-      '<div class="lvl__act" id="l1-act" hidden>',
-      '  <p>油不在“油湖”里，它赋存在<b>岩石孔隙</b>中。拖动“压力差示意”，观察示意流体向井筒方向移动。</p>',
-      '  <p style="color:#9a948a;font-size:12px;margin:4px 0 8px">教学示意：滑块不代表真实井底压力、注入量、产量或采收率。</p>',
+      '<div class="lvl__act" id="l1-act">',
       '  <div class="lvl__row"><input type="range" min="0" max="100" value="0" id="l1-press" aria-label="压力差示意（教学控制量）"><b id="l1-pct">0%</b></div>',
-      '  <div class="lvl__out"><span id="l1-note">孔隙里的流体还没有明显运移</span></div>',
       '</div>',
       '<button type="button" class="lvl__back" id="l1-back">返回总览</button>'
     ].join('');
@@ -174,6 +170,7 @@
       pct.textContent = pressure + '%';
       if (stage.setInteraction) stage.setInteraction('adjust_pressure', pressure, '示意百分比');
       lastInteraction = { actionId: 'adjust_pressure', value: pressure, unit: '示意百分比' };
+      if (pressure >= 50) startExtraction();
       updatePressureUI();
     });
     back.onclick = exitLevel;
@@ -194,8 +191,6 @@
       setReadout();
     };
     ui.querySelector('#l1-reset').onclick = resetView;
-    var extractBtn = ui.querySelector('#l1-extract');
-    if (extractBtn) extractBtn.onclick = startExtraction;
 
     // raycast + free observation on the actual renderer.
     const canvas = stage.renderer.domElement;
@@ -1134,6 +1129,7 @@
       toggleLayer: toggleLayer,
       togglePart: togglePart,
       setPressure: function (v) {
+        var press = ui && ui.querySelector('#l1-press');
         if (!press) return;
         press.value = String(Math.max(0, Math.min(100, Number(v) || 0)));
         press.dispatchEvent(new Event('input', { bubbles: true }));
