@@ -8,6 +8,8 @@
 - `phase08-00d-l1-halfpipe.png`：井筒半剖后，管腔内液体柱与上升颗粒可见。
 - `phase08-l3-cut-default.png`：储运默认半剖（2% 液位，液面较低）。
 - `phase08-l3-cut-70.png`：液位 70% 时，两侧罐内液面清晰可见。
+- `phase08-l3-cut-45-final.png`：修复前景平台遮挡后，45% 液位也能看到罐内液面。
+- `phase08-l3-cut-70-final.png`：修复后的 70% 液位。
 - `phase08-l3-cut-public.png`：线上 V35 默认半剖，液位 70% 的最终效果。
 - `phase08-l3-default.png`：储运默认面板，设备选择与液位调节分开，无通用引导/教学免责声明。
 - `phase08-l3-clean.png`：展开“演示与结构”并启动泵送后的面板。

@@ -10,6 +10,7 @@
   let pumpFlow = null, pumpRunning = false, pumpPaused = false, cutMode = true, pumpMesh = null, selectedTankId = 'fixed_roof_tank';
   let routeInfo = null;
   const flows = [];
+  let occluderMeshes = [];
   const built = {};
 
   function makeFlowInGroup(curve, color, count, speed, size, opacity) {
@@ -53,7 +54,7 @@
     if (window.__lvlGroup) window.__lvlGroup(2, G);
 
     const mSteel = new THREE.MeshStandardMaterial({ color: 0x2c3b46, roughness: 0.5, metalness: 0.7 });
-    const mOil = new THREE.MeshStandardMaterial({ color: 0x2a1c08, emissive: 0xd8a24a, emissiveIntensity: 0.85, roughness: 0.4 });
+    const mOil = new THREE.MeshBasicMaterial({ color: 0xd9a14a, toneMapped: false });
     const mRoof = new THREE.MeshStandardMaterial({ color: 0x3a4a55, roughness: 0.45, metalness: 0.8 });
 
     function tank(x, z, floating) {
@@ -228,29 +229,18 @@
   }
 
   function applyTankCut(on) {
-    G.updateMatrixWorld(true);
     [built.fixed, built.float].forEach(function (t) {
-      if (!t || !t.bodyMat) return;
+      if (!t || !t.body) return;
+      /* 剖面模式直接隐藏罐壁，只留底座/顶盖/罐内液体；比材质裁剪更稳定，
+         任何液位下都能直接看到液面。 */
+      t.body.visible = !on;
       if (!t.bodyMat.userData.cutOrig) {
         t.bodyMat.userData.cutOrig = { transparent: t.bodyMat.transparent, opacity: t.bodyMat.opacity, side: t.bodyMat.side };
       }
-      if (on) {
-        const world = t.body.getWorldPosition(new THREE.Vector3());
-        t.cutPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), world.z);
-        t.bodyMat.clippingPlanes = [t.cutPlane];
-        t.bodyMat.clipShadows = true;
-        t.bodyMat.side = THREE.DoubleSide;
-        t.bodyMat.transparent = false;
-        t.bodyMat.opacity = 1;
-        t.bodyMat.depthWrite = true;
-      } else {
-        t.bodyMat.clippingPlanes = [];
-        t.bodyMat.clipShadows = false;
-        t.bodyMat.side = t.bodyMat.userData.cutOrig.side;
-        t.bodyMat.transparent = t.bodyMat.userData.cutOrig.transparent;
-        t.bodyMat.opacity = t.bodyMat.userData.cutOrig.opacity;
-        t.bodyMat.depthWrite = true;
-      }
+      t.bodyMat.clippingPlanes = [];
+      t.bodyMat.transparent = t.bodyMat.userData.cutOrig.transparent;
+      t.bodyMat.opacity = t.bodyMat.userData.cutOrig.opacity;
+      t.bodyMat.side = t.bodyMat.userData.cutOrig.side;
       t.bodyMat.needsUpdate = true;
     });
   }
@@ -378,6 +368,23 @@
     camera.updateProjectionMatrix();
   }
 
+  /* 储运罐区位于前景平台后方，平台会把液位下半段挡住。
+     进入本关时临时隐藏前景地形层，退出时恢复；这样低液位也能直接看到液面。 */
+  function setStorageOccluders(hide) {
+    if (!occluderMeshes.length) {
+      window.__stage.baseScene.traverse(function (o) {
+        if (!o.isMesh || !o.material || !o.material.color) return;
+        const c = o.material.color.getHexString();
+        if (c !== '4a4235' && c !== '6b5a3a' && c !== '1e1e18') return;
+        if (!o.geometry) return;
+        o.geometry.computeBoundingBox();
+        const b = o.geometry.boundingBox;
+        if ((b.max.x - b.min.x) > 10 && (b.max.z - b.min.z) > 10) occluderMeshes.push(o);
+      });
+    }
+    occluderMeshes.forEach(function (o) { o.visible = !hide; });
+  }
+
   function enter() {
     if (stage.isLevel()) return;
     if (!G) build();
@@ -392,6 +399,7 @@
     stage.use(baseScene, camera);
     if (stage.setOverviewVisible) stage.setOverviewVisible(false);
     G.visible = true;
+    setStorageOccluders(true);
     if (stage.deviceState) {
       stage.deviceState.set('fixed_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
       stage.deviceState.set('floating_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
@@ -419,6 +427,7 @@
     ui.classList.remove('on', 'done');
     document.body.classList.remove('in-level');
     G.visible = false;
+    setStorageOccluders(false);
     if (stage.setContextObject) stage.setContextObject(null, 'storage');
     if (stage.deviceState) stage.deviceState.select(null);
     fly(camera.position.clone(), new THREE.Vector3(anchor.x, 2.6, anchor.z),
