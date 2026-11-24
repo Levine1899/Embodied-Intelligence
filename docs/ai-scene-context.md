@@ -92,13 +92,7 @@
     "levelId": "l2",
     "zoneId": "gathering",
     "objectId": "three_phase_separator",
-    "objectName": "三相分离器",
     "knowledgeIds": ["kb_gather"],
-    "verifiedFacts": [
-      "井口产出物通常包含油、气、水，需要先进行分离处理。",
-      "三相分离器按相态和密度差异分离，不是过滤。"
-    ],
-    "contextLines": ["场景：石油产业链数字沙盘", "环节：地面处理", "关卡：l2", "当前设备：三相分离器（objectId=three_phase_separator）", "区域：gathering", "体验模式：free；设备数值均为教学示意，不是真实生产数据。"],
     "experienceMode": "free"
   },
   "recentActions": [
@@ -107,11 +101,12 @@
 }
 ```
 
-- `sceneContext.verifiedFacts` 只来自本地人工审核知识底稿，是唯一可作为事实的字段。
-- `recentActions` 只表示“用户刚才做了什么”，服务端用显式边界标明“不是客观事实”。
+- **服务端不信任客户端的 facts/contextLines/objectName。** 客户端只提交 `stageId/levelId/objectId/knowledgeIds`；服务端按 `SCENE_KNOWLEDGE` 权威底稿解析 facts，按 `SCENE_OBJECTS` 校验设备归属与名称，并强制使用关卡对应的 stage/zone。
+- `recentActions` 只表示“用户刚才做了什么”，服务端用显式边界标明“不是客观事实”，并丢弃 `levelId` 与当前关卡不一致的记录。
 - 服务端按白名单字段过滤，单字段和总上下文长度上限 1800 字符；在 Dify 请求的 `sys.query` 前注入受控场景块，再附用户问题。
 - 每次发送都会重新读取上下文；切换设备/关卡后下一条请求自动更新。
 - 退出关卡后 `SceneContext.exitLevel()` 清空 `levelId`、旧设备、deviceName 和 interaction，下一条请求不再携带旧设备。
+- 独立问答页 `ask.html` 不加载上下文脚本，页面明确提示“独立问答不带沙盘场景上下文”。
 
 ### 4.2 旧侧栏 / 独立问答页
 
