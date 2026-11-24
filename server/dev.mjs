@@ -1,7 +1,9 @@
 // 本地开发服务器：静态托管 web/，并把 /api/* 转发给同目录的 proxy（默认 127.0.0.1:8790）
 // 用法：npm run dev  →  http://127.0.0.1:5173
 import http from 'node:http';
+import { createReadStream } from 'node:fs';
 import { readFile, stat } from 'node:fs/promises';
+import { pipeline } from 'node:stream/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
@@ -23,6 +25,7 @@ const MIME = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.webp': 'image/webp',
+  '.mp4': 'video/mp4',
   '.ico': 'image/x-icon',
   '.txt': 'text/plain; charset=utf-8'
 };
@@ -33,6 +36,29 @@ function resolveFile(urlPath) {
   const abs = path.join(WEB, path.normalize(rel).replace(/^([/\\])+/, ''));
   if (!abs.startsWith(WEB)) return null;
   return abs;
+}
+
+function serveVideo(req, res, file, size) {
+  const range = /^bytes=(\d*)-(\d*)$/i.exec(req.headers.range || '');
+  const [, first = '', last = ''] = range || [];
+  const partial = Boolean(first || last);
+  const start = first ? Number(first) : Math.max(0, size - Number(last || size));
+  const end = first && last ? Math.min(Number(last), size - 1) : size - 1;
+  if (partial && (start >= size || end < start)) {
+    res.writeHead(416, { 'Content-Range': `bytes */${size}` });
+    return res.end();
+  }
+  const headers = {
+    'Content-Type': MIME['.mp4'],
+    'Content-Length': partial ? end - start + 1 : size,
+    'Accept-Ranges': 'bytes',
+    'Cache-Control': 'no-store'
+  };
+  if (partial) headers['Content-Range'] = `bytes ${start}-${end}/${size}`;
+  res.writeHead(partial ? 206 : 200, headers);
+  if (req.method === 'HEAD') return res.end();
+  const stream = createReadStream(file, partial ? { start, end } : undefined);
+  pipeline(stream, res).catch(() => res.destroy());
 }
 
 const server = http.createServer(async (req, res) => {
@@ -57,9 +83,11 @@ const server = http.createServer(async (req, res) => {
   try {
     const info = await stat(file);
     if (info.isDirectory()) { res.writeHead(302, { Location: req.url.replace(/\/?$/, '/') }); return res.end(); }
+    const extension = path.extname(file).toLowerCase();
+    if (extension === '.mp4') return serveVideo(req, res, file, info.size);
     const body = await readFile(file);
     res.writeHead(200, {
-      'Content-Type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream',
+      'Content-Type': MIME[extension] || 'application/octet-stream',
       'Cache-Control': 'no-store'
     });
     res.end(body);

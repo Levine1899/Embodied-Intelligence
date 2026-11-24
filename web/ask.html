@@ -146,6 +146,22 @@
   .ans__t table{width:100%;margin:1em 0;border-collapse:collapse;font-size:.875em}
   .ans__t th,.ans__t td{padding:.4em .6em;text-align:left;border-bottom:1px solid #3d3a33}
   .ans__t hr{margin:1.4em 0;border:0;border-top:1px solid #3d3a33}
+  .video-sources{margin-top:22px}
+  .video-sources h2{margin:0 0 8px;color:var(--muted);font-size:13px;font-weight:600}
+  .video-sources ul{display:grid;gap:8px;list-style:none;margin:0;padding:0}
+  .video-source{border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+  .video-source__heading{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:10px 12px;font-size:13px;overflow-wrap:anywhere}
+  summary.video-source__heading{list-style:none;cursor:pointer;border-radius:5px}
+  summary.video-source__heading::-webkit-details-marker{display:none}
+  summary.video-source__heading:hover{background:#1c211d}
+  summary.video-source__heading:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .video-source__time{color:var(--accent);font:12px/1.5 var(--font-mono);white-space:nowrap}
+  .video-source__title{flex:1 1 170px;color:#cfc8ba}
+  .video-source__title small{display:block;color:var(--muted);font-size:12px}
+  .video-source__action{color:var(--accent);font-size:12px;white-space:nowrap}
+  .video-source details[open] .video-source__play,.video-source details:not([open]) .video-source__close{display:none}
+  .video-source__player{display:block;width:100%;max-height:65vh;background:#090b0c}
+  .video-source__error:not(:empty){margin:6px 12px 10px;color:var(--muted);font-size:12px}
   .answer-actions{display:flex;align-items:center;gap:4px;margin-top:16px;color:#789099;font-size:12px}
   .loading{display:flex;align-items:center;gap:9px;color:#9aafb6;font-size:14px}
   .loading::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amber);animation:answer-pulse 1.2s ease-in-out infinite}
@@ -210,11 +226,12 @@
   .chips button,.new-chat,.ans{border-radius:2px}
   .is-empty nav a{border-radius:2px}
 </style>
+<link rel="stylesheet" href="assets/site/page-header.css">
 </head>
 <body class="is-empty">
-<header>
-  <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油">油见未来</a>
-  <nav>
+<header class="site-head">
+  <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><span>油见未来</span> <small>石油科学</small></a>
+  <nav class="site-nav" aria-label="主菜单">
 <a href="index.html">首页</a>
 <a href="ask.html" aria-current="page">智能问答</a>
 <a href="sandbox.html">沉浸式讲解</a>
@@ -250,7 +267,7 @@
       <span class="composer-note">石油科普问答</span>
       <button id="send" type="submit" aria-label="发送问题"><span class="send-label">发送</span><svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-7 7 7-7 7 7"/></svg></button>
     </form>
-    <p class="hintbox">内容仅供科普参考。 <a href="kb.html">查看石油知识库 ↗</a></p>
+    <p class="hintbox">内容仅供科普参考。</p>
   </div>
   <section class="explore" aria-labelledby="explore-title">
     <h2 id="explore-title">从现场开始探索</h2>
@@ -276,6 +293,9 @@
   let pending = null;
   let conversationId = '';
   let userId = crypto.randomUUID();
+  const videoFiles = new Map([
+    ['会说话的抽油机\n中油e学 (8).mp4', 'assets/videos/talking-pumpjack.mp4']
+  ]);
   const examples = [
     { question:'石油为什么是黑色的', keys:/黑色|颜色/, title:'石油为什么通常是黑色的？', intro:'石油并不都是黑色的。它的颜色可以从浅黄、棕褐到深黑，主要取决于其中不同成分的比例。', points:['原油由多种烃类和少量其他物质组成，成分不同，外观也会不同。','较重的组分以及胶质、沥青质含量较高时，原油往往颜色更深。','颜色较浅的原油通常含有较多轻质组分，但不能仅凭颜色判断品质。'], summary:'简单说，石油的颜色是多种成分共同作用的结果。' },
     { question:'为什么油藏在石头里', keys:/石头|岩石|油藏|岩心/, title:'油为什么能藏在石头里？', intro:'地下的石油通常不是聚集在巨大的空洞中，而是存在于储层岩石的微小孔隙里。', points:['砂岩等储层岩石内部有许多细小孔隙，像海绵一样可以容纳流体。','孔隙相互连通时，油和气能够在一定条件下流动。','上方的致密盖层可以阻挡油气继续向上运移，帮助形成油藏。'], summary:'理解油藏的关键，是岩石的孔隙、连通性和封闭条件。' },
@@ -324,6 +344,70 @@
     else if (text.endsWith('*') && !text.endsWith('**')) text = text.slice(0, -1);
     content.innerHTML = DOMPurify.sanitize(marked.parse(text));
     content.querySelectorAll('a[href]').forEach(link => { link.target = '_blank'; link.rel = 'noopener noreferrer'; });
+  }
+  function appendVideoSources(answer, resources) {
+    const section = node('section', 'video-sources');
+    const list = node('ul');
+    const seen = new Set();
+    for (const resource of resources) {
+      if (typeof resource?.content !== 'string') continue;
+      const [titleLine, fileLine, timeLine, topicLine] = resource.content.trimStart().split(/\r?\n/, 4);
+      const title = titleLine.match(/^视频[：:]\s*(\S.*)$/)?.[1].trim();
+      const file = fileLine?.match(/^原文件[：:]\s*(\S.*)$/)?.[1].trim();
+      const times = timeLine?.trim().match(/^时间[：:]\s*((?:\d{1,2}:)?[0-5]\d:[0-5]\d)\s*[–—-]\s*((?:\d{1,2}:)?[0-5]\d:[0-5]\d)$/);
+      if (!title || !file || !times) continue;
+      const [, from, to] = times;
+      const [start, end] = [from, to].map(time => time.split(':').reduce((seconds, part) => seconds * 60 + Number(part), 0));
+      const key = `${title}\n${file}`;
+      const segment = `${key}\n${start}\n${end}`;
+      if (end <= start || seen.has(segment)) continue;
+      seen.add(segment);
+
+      const url = videoFiles.get(key);
+      const topic = topicLine?.match(/^片段[：:]\s*(\S.*)$/)?.[1].trim();
+      const item = node('li', 'video-source');
+      const heading = node(url ? 'summary' : 'div', 'video-source__heading');
+      const label = node('span', 'video-source__title', `《${title}》`);
+      if (topic) label.append(node('small', '', topic));
+      heading.append(node('span', 'video-source__time', `${from}–${to}`), label);
+      if (url) {
+        heading.append(node('span', 'video-source__action video-source__play', '播放片段'), node('span', 'video-source__action video-source__close', '收起视频'));
+        const details = node('details');
+        const player = node('video', 'video-source__player');
+        player.controls = true;
+        player.playsInline = true;
+        player.preload = 'none';
+        player.setAttribute('aria-label', `《${title}》 ${from}–${to}`);
+        const status = node('p', 'video-source__error');
+        status.setAttribute('role', 'status');
+        player.addEventListener('error', () => { status.textContent = '视频加载失败，请收起后重新打开。'; });
+        player.addEventListener('play', () => {
+          output.querySelectorAll('.video-source__player').forEach(other => {
+            if (other !== player) other.pause();
+          });
+        });
+        player.addEventListener('loadedmetadata', () => { player.currentTime = start; });
+        heading.addEventListener('click', () => {
+          if (details.open) {
+            player.pause();
+            return;
+          }
+          status.textContent = '';
+          if (!player.hasAttribute('src') || player.error) player.src = `${url}#t=${start},${end}`;
+          if (player.readyState) player.currentTime = start;
+          player.play().catch(() => {});
+        });
+        details.append(heading, player, status);
+        item.append(details);
+      } else {
+        item.append(heading);
+      }
+      list.append(item);
+    }
+    if (list.childElementCount) {
+      section.append(node('h2', '', '视频出处'), list);
+      answer.append(section);
+    }
   }
   function createUserMessage(question, prompt, turn) {
     const wrapper = node('div', 'user-message');
@@ -427,6 +511,8 @@
       const decoder = new TextDecoder();
       let buffer = '';
       let completed = false;
+      let citations = [];
+      const retrievalResults = [];
       while (true) {
         const part = await reader.read();
         buffer += decoder.decode(part.value || new Uint8Array(), { stream:!part.done });
@@ -455,12 +541,21 @@
               if (followScroll) window.scrollTo({ top:document.documentElement.scrollHeight });
             }
           }
-          if (message.event === 'message_end') completed = true;
+          if (message.event === 'node_finished' && message.data?.node_type === 'knowledge-retrieval') {
+            const results = message.data.outputs?.result;
+            if (Array.isArray(results)) retrievalResults.push(...results);
+          }
+          if (message.event === 'message_end') {
+            const sources = message.metadata?.retriever_resources;
+            if (Array.isArray(sources)) citations = sources;
+            completed = true;
+          }
         }
         if (part.done) break;
       }
       if (!completed) throw new Error('回答中断，请重试');
       if (!text) throw new Error('没有收到回答，请重试');
+      appendVideoSources(answer, citations.length ? citations : retrievalResults);
         const actions = node('div', 'answer-actions');
         actions.setAttribute('role', 'group');
         actions.setAttribute('aria-label', '回答操作');

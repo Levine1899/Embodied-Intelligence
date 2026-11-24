@@ -1,0 +1,68 @@
+/* 与沉浸式讲解页面保持一致的主导航 */
+body header.site-head,
+body.is-empty header.site-head {
+  height: 72px;
+  min-height: 0;
+  padding: 0 38px;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 35px;
+  border-bottom: 1px solid #242a2d;
+  background: transparent;
+  color: #e8e1d4;
+  font: 15px/1.7 "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+}
+header.site-head .wrap { display: contents; }
+body header.site-head .brand,
+body.is-empty header.site-head .brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: inherit;
+  font: 400 22px/1.7 var(--font-display);
+  letter-spacing: .1em;
+  text-decoration: none;
+}
+header.site-head .brand img { width: 29px; height: 29px; object-fit: contain; display: block; flex: none; }
+header.site-head .brand small { font-size: 12px; color: #9a948a; font-weight: 400; letter-spacing: 1px; margin-left: 5px; }
+body header.site-head .site-nav,
+body.is-empty header.site-head .site-nav {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: auto;
+  margin: 0;
+  gap: 29px;
+  flex-wrap: nowrap;
+  overflow: visible;
+}
+body header.site-head .site-nav a,
+body.is-empty header.site-head .site-nav a {
+  position: relative;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 2px;
+  color: #9a948a;
+  background: transparent;
+  font-size: 13px;
+  letter-spacing: .02em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+body header.site-head .site-nav a:hover { color: #e8e1d4; }
+body header.site-head .site-nav a[aria-current] { color: #d8a24a; background: rgba(240, 162, 46, .09); }
+header.site-head .site-nav a[aria-current]::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: -1px; height: 2px; background: #d8a24a; }
+header.site-head a:focus-visible { outline: 2px solid #d8a24a; outline-offset: 4px; }
+@media (max-width: 1100px) {
+  body header.site-head, body.is-empty header.site-head { padding: 0 23px; gap: 22px; }
+  header.site-head .brand small { display: none; }
+}
+@media (max-width: 800px) {
+  body header.site-head .site-nav, body.is-empty header.site-head .site-nav { gap: 18px; }
+}
+@media (max-width: 500px) {
+  body header.site-head, body.is-empty header.site-head { height: auto; padding: 16px; flex-wrap: wrap; gap: 14px; }
+  body header.site-head .brand, body.is-empty header.site-head .brand { font-size: 20px; }
+  body header.site-head .site-nav, body.is-empty header.site-head .site-nav { flex-basis: 100%; gap: 22px; }
+}
