@@ -68,3 +68,5 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase08-verify.cjs
 - `float-chat-final.png`：生产 V53 上连续两轮 Dify 对话，`conversation_id` 保持。
 
 - `sidebar-reading-only.png`：资料卡隐藏，侧栏保留延伸阅读。
+
+- `sidebar-only-reading.png`：V55 侧栏只保留延伸阅读。
