@@ -306,8 +306,8 @@ phase08-02b-action-suggestion.png
 
 - **朗读作用**：使用浏览器 `speechSynthesis` 朗读当前章节的 `#chapter + #explanation`；不是预录音频，不请求服务端。
 - **为什么点击无效**：`voice.js` 只创建按钮，没有把当前讲解写入 `currentText`；`speak()` 拿到空文本后静默返回。已增加 `pageText()` 回退，并在 `updateTask()` 同步 `Voice.setText(chapter + explanation)`。
-- **重复入口**：顶部 `#audio-toggle`（声音关/音量）是环境音唯一入口；“更多→声音”是重复入口，已从 DOM 移除。
+- **重复入口**：顶部 `#audio-toggle`（声音关/音量）是环境音唯一入口；“更多→声音”是重复入口，已从 DOM 移除；侧栏“朗读讲解”也已合并到顶部朗读。
 - `#voice-stop` 初始禁用，播放后才可用。
 - 验证：阶段 08 **48/0**（新增朗读文本非空、重复声音入口移除、停止按钮初始禁用）；阶段 07 回归 76/0。
 - 注意：无语音包的浏览器仍可能没有声音；此时顶部朗读会保持可见但无音频，需要系统中文语音。
-- 线上 V28 复测：`Voice.state().text` 非空，`#voice-stop` 初始禁用，`#more-btn/#sound` 不存在，顶部 `#audio-toggle` 为唯一声音入口。
+- 线上 V29 复测：`Voice.state().text` 非空，`#voice-stop` 初始禁用，`#more-btn/#sound/#speak` 不存在，顶部 `#audio-toggle` 与顶部朗读为唯一入口。

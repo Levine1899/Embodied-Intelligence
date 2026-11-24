@@ -1394,7 +1394,8 @@
   document.getElementById('read-more').addEventListener('click', function () { openDetails(false); });
   document.getElementById('photo').addEventListener('click', function () { openDetails(true); });
   document.getElementById('close-dialog').addEventListener('click', function () { dialog.close(); });
-  document.getElementById('speak').addEventListener('click', function () {
+  const speakBtn = document.getElementById('speak');
+  if (speakBtn) speakBtn.addEventListener('click', function () {
     if (!window.speechSynthesis) {
       live.textContent = '当前环境无法朗读，可查看屏幕上的完整讲解。';
       return;
