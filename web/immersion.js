@@ -650,7 +650,7 @@
     const pump = new THREE.Group();
     pump.userData.objectId = 'pumpjack';
     pump.userData.skipMerge = true;
-    pump.position.set(-4.6, 0.16, 3.2);
+    pump.position.set(3.0, 0.16, 0.8);
     drill.add(pump);
     box(pump, 1.6, 0.25, 1.1, concrete, 0, 0.12, 0);
     rod(pump, [-1.4, 0.2, 0], [-1.4, 2.5, 0], 0.09, steel);
@@ -859,20 +859,30 @@
     const pipeGroup = new THREE.Group();
     pipeGroup.name = 'processLines';
     sceneRoot.add(pipeGroup);
+    /* 管线端口直接落在设备上，而不是区域边界。
+       端口坐标相对各自区域中心；这样井口→分离器、分离器→储罐、
+       储罐泵→加热炉、炼化管廊→产品端都能真正接上。 */
+    const ROUTE_PORTS = [
+      { start: [-0.6, 0.9, -2.2], end: [-1.6, 2.45, 0] },    // 井口 → 三相分离器入口（插入罐体 0.5）
+      { start: [2.1, 2.45, 0], end: [-4.2, 3.2, -1.6] },      // 分离器出口 → 固定顶罐侧面
+      { start: [-3.6, 1.0, 2.6], end: [-5.9, 2.2, 3.6] },     // 储运泵 → 加热炉侧面
+      { start: [4.4, 3.15, 2.8], end: [-3.4, 1.8, 2.2] }      // 炼化管廊 → 产品端
+    ];
     function routeEndpoints(i) {
       const a = REGIONS[i], b = REGIONS[i + 1];
+      const port = ROUTE_PORTS[i] || ROUTE_PORTS[ROUTE_PORTS.length - 1];
       const dx = b.x - a.x, dz = b.z - a.z;
       const len = Math.max(0.001, Math.sqrt(dx * dx + dz * dz));
       const ux = dx / len, uz = dz / len;
       const start = new THREE.Vector3(
-        a.x + ux * (a.w * 0.36),
-        a.y + 2.15,
-        a.z + uz * (a.d * 0.36)
+        a.x + port.start[0],
+        a.y + port.start[1],
+        a.z + port.start[2]
       );
       const end = new THREE.Vector3(
-        b.x - ux * (b.w * 0.36),
-        b.y + 2.15,
-        b.z - uz * (b.d * 0.36)
+        b.x + port.end[0],
+        b.y + port.end[1],
+        b.z + port.end[2]
       );
       return { a: a, b: b, start: start, end: end, ux: ux, uz: uz };
     }
@@ -887,6 +897,7 @@
       return road;
     }
     const routeIds = ['path_oil_gather', 'path_gather_store', 'path_store_refine', 'path_refine_city'];
+    const flangeMat = new THREE.MeshBasicMaterial({ color: 0xf0a22e, toneMapped: false });
     for (let i = 0; i < REGIONS.length - 1; i += 1) {
       const e = routeEndpoints(i);
       const midY = Math.max(e.start.y, e.end.y) + 1.2;
@@ -902,6 +913,12 @@
       const pipe = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.11, 8, false), amber.clone());
       pipe.userData.pathId = routeIds[i];
       pipeGroup.add(pipe);
+      /* 端口法兰：管线与设备相接处给一个可见接头，避免看起来悬空。 */
+      [e.start, e.end].forEach(function (p) {
+        const flange = new THREE.Mesh(new THREE.SphereGeometry(0.24, 12, 9), flangeMat);
+        flange.position.copy(p);
+        pipeGroup.add(flange);
+      });
       pipes.push({ curve: curve, object: pipe, pathId: routeIds[i] });
       /* 支架：从地面/台地到工艺管，强调高差 */
       for (let k = 1; k <= 6; k += 1) {
