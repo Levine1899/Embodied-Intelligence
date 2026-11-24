@@ -7,7 +7,7 @@
   const THREE = window.THREE;
 
   let G = null, camera = null, baseScene = null, anchor = null;
-  let pumpFlow = null, pumpRunning = false, pumpPaused = false, cutMode = true, pumpMesh = null, selectedTankId = 'fixed_roof_tank';
+  let pumpFlow = null, pumpRunning = false, pumpPaused = false, cutMode = true, pumpMesh = null, pumpRing = null, selectTag = null, selectedTankId = 'fixed_roof_tank';
   let routeInfo = null;
   const flows = [];
   let occluderMeshes = [];
@@ -96,10 +96,11 @@
         ]);
         ventFlow = makeFlowInGroup(curve, 0xd8e2e8, 10, 0.25, 0.07, 0.55);
       }
-      const selRing = new THREE.Mesh(new THREE.TorusGeometry(1.72, 0.035, 8, 40),
-        new THREE.MeshBasicMaterial({ color: 0xf0a22e, transparent: true, opacity: 0.9, depthWrite: false }));
+      const selRing = new THREE.Mesh(new THREE.TorusGeometry(1.78, 0.065, 8, 48),
+        new THREE.MeshBasicMaterial({ color: 0xf0a22e, transparent: true, opacity: 0.98, depthWrite: false, depthTest: false }));
       selRing.rotation.x = Math.PI / 2;
-      selRing.position.y = 0.08;
+      selRing.position.y = 0.24;
+      selRing.renderOrder = 7;
       selRing.visible = false;
       g.add(selRing);
       G.add(g);
@@ -120,6 +121,11 @@
     l2.scale.multiplyScalar(1.08);
     G.add(l2);
 
+    selectTag = window.__lvlLabel('已选', '#f0a22e');
+    selectTag.scale.multiplyScalar(0.62);
+    selectTag.visible = false;
+    G.add(selectTag);
+
     /* 地面 */
     const pad = new THREE.Mesh(new THREE.BoxGeometry(11, 0.12, 6.2), new THREE.MeshStandardMaterial({ color: 0x263239, roughness: 0.95 }));
     pad.position.y = 0.02;
@@ -139,6 +145,14 @@
     const wheel = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.035, 8, 18), new THREE.MeshStandardMaterial({ color: 0xd8a24a, roughness: 0.45 }));
     wheel.rotation.x = Math.PI / 2; wheel.position.set(-0.55, 1.18, 0); pumpMesh.add(wheel);
     const pumpLabel = window.__lvlLabel('转输泵组', '#d8a24a'); pumpLabel.position.set(3.9, 3.2, 1.8); pumpLabel.scale.multiplyScalar(1.0); G.add(pumpLabel);
+
+    pumpRing = new THREE.Mesh(new THREE.TorusGeometry(1.45, 0.065, 8, 48),
+      new THREE.MeshBasicMaterial({ color: 0xf0a22e, transparent: true, opacity: 0.98, depthWrite: false, depthTest: false }));
+    pumpRing.rotation.x = Math.PI / 2;
+    pumpRing.position.set(3.9, 0.18, 1.8);
+    pumpRing.renderOrder = 7;
+    pumpRing.visible = false;
+    G.add(pumpRing);
 
     /* 泵送路径：终点接到全局 path_store_refine 的 storage 出口。 */
     const globalRoute = stage.getRoute ? stage.getRoute('path_store_refine') : null;
@@ -292,6 +306,13 @@
     if (stage.deviceState) stage.deviceState.select(id);
     if (built.fixed && built.fixed.selRing) built.fixed.selRing.visible = id === 'fixed_roof_tank';
     if (built.float && built.float.selRing) built.float.selRing.visible = id === 'floating_roof_tank';
+    if (pumpRing) pumpRing.visible = id === 'transfer_pump';
+    if (selectTag) {
+      selectTag.visible = true;
+      if (id === 'fixed_roof_tank') selectTag.position.set(-2.0, 5.95, 0);
+      else if (id === 'floating_roof_tank') selectTag.position.set(2.0, 5.95, 0);
+      else selectTag.position.set(3.9, 3.95, 1.8);
+    }
     if (stage.setInteraction) stage.setInteraction('inspect_tank_structure', id, '罐型');
     const names = { fixed_roof_tank: '固定顶罐', floating_roof_tank: '外浮顶罐', transfer_pump: '转输泵组' };
     if (stateEl) stateEl.textContent = names[id] || '固定顶罐';
