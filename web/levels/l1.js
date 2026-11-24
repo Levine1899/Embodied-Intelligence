@@ -41,7 +41,7 @@
   let assetRoot = null, assetLoaded = false, assetFailed = false;
   let layerMeshes = {}, partMeshes = {}, reservoirLens = null, wellheadMeshes = [];
   let poreGroup = null, poreDrops = [], poreFlow = null;
-  let wellFlow = null, surfaceFlow = null, flowCurve = null;
+  let wellFlow = null, perfFlow = null, surfaceFlow = null, flowCurve = null;
   let wellFluid = null, wellCut = false;
   let convFlows = [], extractionRing = null, extractionAt = 0, extractionMarked = false, extractionStarted = false;
   let running = false, lastT = 0, flyHandle = null;
@@ -581,14 +581,26 @@
   function buildWellFlow() {
     /* 抽取演示：储层两侧的油滴汇入射孔段，再沿井筒上行（V3 动画的可见版本）。 */
     const curve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0, -6.0, 0),
+      new THREE.Vector3(0, -6.8, 0.08),
+      new THREE.Vector3(0.03, -5.6, 0.04),
       new THREE.Vector3(0.05, -4.2, 0.02),
       new THREE.Vector3(0.03, -2.0, 0),
-      new THREE.Vector3(0, 0.8, 0)
+      new THREE.Vector3(0, 0.9, 0)
     ]);
-    wellFlow = buildFlow(curve, 26, 0xffcf67, 0.26, 0.105);
+    wellFlow = buildFlow(curve, 34, 0xffcf67, 0.34, 0.105);
     wellFlow.name = 'wellbore_flow_particles';
+    wellFlow.children.forEach(function (m) { m.material.depthTest = false; m.renderOrder = 6; });
     G.add(wellFlow);
+    /* 射孔段专用上涌粒子：放在最前层渲染，避免被套管内壁/储层遮挡。 */
+    const perfCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, -6.7, 0.10),
+      new THREE.Vector3(0.04, -5.7, 0.05),
+      new THREE.Vector3(0, -4.65, 0.02)
+    ]);
+    perfFlow = buildFlow(perfCurve, 18, 0xffd77a, 0.46, 0.085);
+    perfFlow.name = 'perforation_upflow';
+    perfFlow.children.forEach(function (m) { m.material.depthTest = false; m.renderOrder = 8; });
+    G.add(perfFlow);
     const c1 = new THREE.CatmullRomCurve3([
       new THREE.Vector3(-2.8, -5.7, 0.8),
       new THREE.Vector3(-1.4, -5.35, 0.35),
@@ -599,8 +611,8 @@
       new THREE.Vector3(1.2, -5.25, -0.3),
       new THREE.Vector3(0, -5.2, 0)
     ]);
-    convFlows = [buildFlow(c1, 9, 0xf7b24a, 0.16, 0.055), buildFlow(c2, 9, 0xf7b24a, 0.16, 0.055)];
-    convFlows.forEach(function (f, i) { f.name = 'reservoir_inflow_' + i; G.add(f); });
+    convFlows = [buildFlow(c1, 11, 0xffb45c, 0.22, 0.065), buildFlow(c2, 11, 0xffb45c, 0.22, 0.065)];
+    convFlows.forEach(function (f, i) { f.name = 'reservoir_inflow_' + i; f.children.forEach(function (m) { m.material.depthTest = false; m.renderOrder = 7; }); G.add(f); });
     extractionRing = new THREE.Mesh(
       new THREE.TorusGeometry(0.62, 0.035, 8, 36),
       new THREE.MeshBasicMaterial({ color: 0xffc56a, transparent: true, opacity: 0.55, depthWrite: false })
@@ -716,6 +728,7 @@
     if (cutBtn) cutBtn.textContent = '显示完整地层';
     selectedLayer = null;
     selectedPart = null;
+    clearPartHighlight();
     clearLayerHighlight();
     viewMode = 'block';
     if (stage.setContextObject) stage.setContextObject(null, 'subsurface');
@@ -842,34 +855,114 @@
     }
   }
 
+  const layerStates = new Map();
+  const partStates = new Map();
+  let partHalos = [];
+
+  function saveMat(map, m) {
+    if (!m || !m.material || map.has(m.material)) return;
+    const mat = m.material;
+    map.set(mat, {
+      color: mat.color ? mat.color.getHex() : 0xffffff,
+      emissive: mat.emissive ? mat.emissive.getHex() : 0,
+      emissiveIntensity: mat.emissiveIntensity,
+      opacity: mat.opacity,
+      transparent: mat.transparent,
+      depthWrite: mat.depthWrite
+    });
+  }
+
+  function restoreMats(map) {
+    map.forEach(function (st, mat) {
+      if (mat.color) mat.color.setHex(st.color);
+      if (mat.emissive) mat.emissive.setHex(st.emissive);
+      mat.emissiveIntensity = st.emissiveIntensity;
+      mat.opacity = st.opacity;
+      mat.transparent = st.transparent;
+      mat.depthWrite = st.depthWrite;
+      mat.needsUpdate = true;
+    });
+    map.clear();
+  }
+
+  function clearPartHighlight() {
+    restoreMats(partStates);
+    partHalos.forEach(function (h) { if (h.parent) h.parent.remove(h); });
+    partHalos = [];
+  }
+
   function clearLayerHighlight() {
-    if (highlightedLayer && layerMeshes[highlightedLayer]) {
-      const m = layerMeshes[highlightedLayer];
-      if (m.material && m.material.emissive) {
-        m.material.emissive.setRGB(0, 0, 0);
-        m.material.emissiveIntensity = 0;
-      }
-    }
-    if (reservoirLens && reservoirLens.material && reservoirLens.material.emissive) {
-      reservoirLens.material.emissive.setRGB(0, 0, 0);
-      reservoirLens.material.emissiveIntensity = 0;
-    }
+    restoreMats(layerStates);
     highlightedLayer = null;
     if (assetLoaded) applyClip();
   }
 
   function highlightLayer(key) {
     clearLayerHighlight();
-    const m = layerMeshes[key];
-    if (m && m.material && m.material.emissive) {
-      m.material.emissive.setHex(0x6b3e12);
-      m.material.emissiveIntensity = 0.34;
-      highlightedLayer = key;
+    LAYERS.forEach(function (l) {
+      const m = layerMeshes[l.key];
+      if (!m || !m.material) return;
+      saveMat(layerStates, m);
+      const sel = l.key === key;
+      if (m.material.emissive) {
+        m.material.emissive.setHex(sel ? 0xff9f2e : 0x000000);
+        m.material.emissiveIntensity = sel ? 0.62 : 0;
+      }
+      if (m.material.color) {
+        if (sel) {
+          const c = new THREE.Color(m.material.color.getHex()).lerp(new THREE.Color(0xffc15a), 0.45);
+          m.material.color.copy(c);
+        }
+      }
+      m.material.transparent = true;
+      m.material.opacity = sel ? 0.62 : 0.28;
+      m.material.depthWrite = false;
+      m.material.needsUpdate = true;
+    });
+    if (reservoirLens && reservoirLens.material) {
+      saveMat(layerStates, reservoirLens);
+      const sel = key === 'reservoir';
+      if (reservoirLens.material.emissive) {
+        reservoirLens.material.emissive.setHex(sel ? 0xff9f2e : 0x000000);
+        reservoirLens.material.emissiveIntensity = sel ? 0.9 : 0;
+      }
+      reservoirLens.material.transparent = true;
+      reservoirLens.material.opacity = sel ? 0.72 : 0.24;
+      reservoirLens.material.needsUpdate = true;
     }
-    if (key === 'reservoir' && reservoirLens && reservoirLens.material && reservoirLens.material.emissive) {
-      reservoirLens.material.emissive.setHex(0x6b3e12);
-      reservoirLens.material.emissiveIntensity = 0.34;
-    }
+    highlightedLayer = key;
+  }
+
+  function highlightPart(key) {
+    clearPartHighlight();
+    PARTS.forEach(function (p) {
+      (partMeshes[p.key] || []).forEach(function (m) {
+        if (!m || !m.material) return;
+        saveMat(partStates, m);
+        const sel = p.key === key;
+        if (m.material.emissive) {
+          m.material.emissive.setHex(sel ? 0xff9f2e : 0x000000);
+          m.material.emissiveIntensity = sel ? 1.8 : 0;
+        }
+        if (sel && m.material.color) m.material.color.setHex(0xffb347);
+        m.material.transparent = !sel || m.material.transparent;
+        m.material.opacity = sel ? 1 : 0.16;
+        m.material.depthWrite = sel;
+        m.material.needsUpdate = true;
+        if (sel) {
+          const halo = new THREE.Mesh(m.geometry, new THREE.MeshBasicMaterial({
+            color: 0xffc15a, transparent: true, opacity: 0.38, depthTest: false, side: THREE.DoubleSide
+          }));
+          halo.name = 'well_part_halo_' + p.key;
+          halo.renderOrder = 9;
+          halo.position.copy(m.position);
+          halo.quaternion.copy(m.quaternion);
+          halo.scale.copy(m.scale).multiplyScalar(1.14);
+          if (m.parent) m.parent.add(halo);
+          partHalos.push(halo);
+        }
+      });
+    });
   }
 
   function selectLayer(key) {
@@ -878,6 +971,7 @@
     if (!layer) return;
     selectedLayer = key;
     selectedPart = null;
+    clearPartHighlight();
     highlightLayer(key);
     legend.classList.remove('on');
     setInfo(layer.name, layer.desc, '选中语义：' + layer.object + ' · 可继续逐层隐藏/显示。');
@@ -892,6 +986,7 @@
   function selectReservoir() {
     selectedLayer = 'reservoir';
     selectedPart = null;
+    clearPartHighlight();
     highlightLayer('reservoir');
     legend.classList.add('on');
     setInfo('储层 · 孔隙与流体', '储层岩石有孔隙/裂缝，油、气、水赋存其中。颜色只是教学编码；孔隙大小和连通性会影响流动，但不等于真实产能。',
@@ -910,6 +1005,7 @@
     selectedPart = key;
     selectedLayer = null;
     clearLayerHighlight();
+    highlightPart(key);
     legend.classList.remove('on');
     setInfo(p.name, p.desc, '井筒对象 ID：wellbore · 井段：' + p.object);
     if (stage.setContextObject) stage.setContextObject('wellbore', 'subsurface');
@@ -923,6 +1019,7 @@
   function selectWellhead(silent) {
     selectedLayer = null;
     selectedPart = 'wellhead';
+    clearPartHighlight();
     clearLayerHighlight();
     legend.classList.remove('on');
     setInfo('井口 / 采油树', '井口阀组控制流出与压力，把产出物导入集输管线。井口与地下井筒是同一口井的两个位置，不是两个设备。',
@@ -1086,6 +1183,10 @@
       wellFlow.visible = p > 0.001;
       wellFlow.userData.speed = 0.03 + p * 0.62;
     }
+    if (perfFlow) {
+      perfFlow.visible = p > 0.001;
+      perfFlow.userData.speed = 0.08 + p * 0.78;
+    }
     convFlows.forEach(function (f) {
       f.visible = p > 0.001;
       f.userData.speed = 0.02 + p * 0.32;
@@ -1167,6 +1268,7 @@
     if (!paused) {
       if (pressure > 0) {
         if (wellFlow) wellFlow.userData.update(dt);
+        if (perfFlow) perfFlow.userData.update(dt);
         if (poreMode && poreFlow) poreFlow.userData.update(dt);
         convFlows.forEach(function (f) { f.userData.update(dt); });
       }
@@ -1307,7 +1409,7 @@
       get poreMode() { return poreMode; }, get poreZoom() { return poreZoom; },
       get pressure() { return pressure; },
       get paused() { return paused; },
-      get extraction() { return { wellFlow: !!wellFlow && wellFlow.visible, inflows: convFlows.filter(function (f) { return f.visible; }).length, pulse: !!extractionRing && extractionRing.visible, started: extractionStarted, marked: extractionMarked, pressure: pressure, reservoirTotal: poreDrops.length, reservoirVisible: poreDrops.filter(function (d) { return d.visible; }).length, poreFlow: !!poreFlow && poreFlow.visible, wellCut: wellCut, wellFluid: !!wellFluid && wellFluid.visible }; },
+      get extraction() { return { wellFlow: !!wellFlow && wellFlow.visible, inflows: convFlows.filter(function (f) { return f.visible; }).length, pulse: !!extractionRing && extractionRing.visible, started: extractionStarted, marked: extractionMarked, pressure: pressure, reservoirTotal: poreDrops.length, reservoirVisible: poreDrops.filter(function (d) { return d.visible; }).length, poreFlow: !!poreFlow && poreFlow.visible, perfFlow: !!perfFlow && perfFlow.visible, wellCut: wellCut, wellFluid: !!wellFluid && wellFluid.visible }; },
       get lastInteraction() { return lastInteraction; },
       get objectId() { return window.__sceneContext && window.__sceneContext.selectedObjectId; },
       get selected() { return selectedPart || selectedLayer || null; },
