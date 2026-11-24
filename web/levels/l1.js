@@ -40,7 +40,7 @@
   let levelLights = [];
   let assetRoot = null, assetLoaded = false, assetFailed = false;
   let layerMeshes = {}, partMeshes = {}, reservoirLens = null, wellheadMeshes = [];
-  let poreGroup = null, poreDrops = [];
+  let poreGroup = null, poreDrops = [], poreFlow = null;
   let wellFlow = null, surfaceFlow = null, flowCurve = null;
   let convFlows = [], extractionRing = null, extractionAt = 0, extractionMarked = false, extractionStarted = false;
   let running = false, lastT = 0, flyHandle = null;
@@ -53,6 +53,7 @@
   let down = null, dragged = false;
   let orbit = { target: new THREE.Vector3(), yaw: 0.36, pitch: 0.22, dist: 25 };
   let ui = null, hint = null, info = null, panel = null, legend = null;
+  let autoPoreTimer = 0;
   let lastInteraction = null;
 
   function style() {
@@ -328,6 +329,7 @@
       G.add(geologyProxy);
       G.userData.geologyProxy = geologyProxy;
       assetLoaded = true;
+      if (stage.isLevel() && !poreMode) setTimeout(function () { if (stage.isLevel() && !poreMode) enterPore(); }, 400);
       bindAssetState();
       applyClip();
       addSurfacePipe();
@@ -488,6 +490,16 @@
         poreDrops.push(d);
       }
     });
+    const upCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, -2.65, 0),
+      new THREE.Vector3(0.02, -0.6, 0.02),
+      new THREE.Vector3(0, 1.4, 0),
+      new THREE.Vector3(0, 2.65, 0)
+    ]);
+    poreFlow = buildFlow(upCurve, 16, 0xffc45f, 0.24, 0.09);
+    poreFlow.name = 'pore_upflow';
+    poreFlow.children.forEach(function (m) { m.material.depthTest = false; m.renderOrder = 4; });
+    poreGroup.add(poreFlow);
     const shell = new THREE.Mesh(
       new THREE.SphereGeometry(3.1, 24, 16),
       new THREE.MeshBasicMaterial({ color: 0x8b6b3f, transparent: true, opacity: 0.08, side: THREE.DoubleSide, depthWrite: false })
@@ -851,6 +863,7 @@
     LAYERS.forEach(function (l) { if (layerMeshes[l.key]) layerMeshes[l.key].visible = false; });
     if (reservoirLens) reservoirLens.visible = false;
     poreGroup.visible = true;
+    applyExtractionProgress();
     selectedLayer = 'reservoir';
     selectedPart = null;
     legend.classList.add('on');
@@ -919,16 +932,37 @@
     setReadout();
   }
 
+  function applyExtractionProgress() {
+    const p = Math.max(0, Math.min(1, pressure / 100));
+    if (wellFlow) {
+      wellFlow.visible = p > 0.001;
+      wellFlow.userData.speed = 0.03 + p * 0.62;
+    }
+    convFlows.forEach(function (f) {
+      f.visible = p > 0.001;
+      f.userData.speed = 0.02 + p * 0.32;
+    });
+    if (extractionRing) extractionRing.visible = p > 0.001;
+    if (poreFlow) {
+      poreFlow.visible = p > 0.001;
+      poreFlow.userData.speed = 0.04 + p * 0.62;
+    }
+    if (surfaceFlow) surfaceFlow.userData.speed = 0.1 + p * 0.35;
+    /* 储层孔隙里的油/气/水颗粒随抽取进度减少；反向拖动会恢复。 */
+    const visible = Math.ceil(poreDrops.length * (1 - p));
+    poreDrops.forEach(function (d, i) { d.visible = i < visible; });
+  }
+
   function updatePressureUI() {
     if (!ui) return;
     const note = ui.querySelector('#l1-note');
-    if (!note) return;
-    if (pressure < 25) note.textContent = '孔隙里的流体还没有明显运移';
-    else if (pressure < 55) note.textContent = '示意流体开始向井筒方向移动';
-    else if (pressure < 85) note.textContent = '更多流体向井筒方向移动（教学示意）';
-    else note.textContent = '示意：压差推动流体向井筒流动；真实产能还受渗透性、流体性质、井底流压和开发方式影响';
-    if (wellFlow) wellFlow.userData.speed = 0.16 + pressure / 100 * 0.5;
-    if (surfaceFlow) surfaceFlow.userData.speed = 0.1 + pressure / 100 * 0.35;
+    if (note) {
+      if (pressure < 25) note.textContent = '孔隙里的流体还没有明显运移';
+      else if (pressure < 55) note.textContent = '示意流体开始向井筒方向移动';
+      else if (pressure < 85) note.textContent = '更多流体向井筒方向移动（教学示意）';
+      else note.textContent = '示意：压差推动流体向井筒流动；真实产能还受渗透性、流体性质、井底流压和开发方式影响';
+    }
+    applyExtractionProgress();
     setReadout();
   }
 
@@ -979,8 +1013,11 @@
     const dt = Math.min(0.05, (now - lastT) / 1000 || 0.016);
     lastT = now;
     if (!paused) {
-      if (wellFlow) wellFlow.userData.update(dt);
-      convFlows.forEach(function (f) { f.userData.update(dt); });
+      if (pressure > 0) {
+        if (wellFlow) wellFlow.userData.update(dt);
+        if (poreMode && poreFlow) poreFlow.userData.update(dt);
+        convFlows.forEach(function (f) { f.userData.update(dt); });
+      }
       if (extractionRing) {
         var pulse = 1 + 0.18 * Math.sin(now * 0.004);
         extractionRing.scale.setScalar(pulse);
@@ -999,6 +1036,14 @@
         });
       }
     }
+  }
+
+  function schedulePoreOnEntry() {
+    if (autoPoreTimer) clearTimeout(autoPoreTimer);
+    autoPoreTimer = setTimeout(function () {
+      autoPoreTimer = 0;
+      if (stage.isLevel() && assetLoaded && !poreMode) enterPore();
+    }, 1200);
   }
 
   function enterLevel() {
@@ -1069,10 +1114,13 @@
         '教学示意：不是真实油藏数据，也不是真实地质比例。');
     });
     lastInteraction = null;
+    schedulePoreOnEntry();
   }
 
   function exitLevel() {
     if (!G) return;
+    if (autoPoreTimer) { clearTimeout(autoPoreTimer); autoPoreTimer = 0; }
+    if (poreMode) exitPore();
     if (flyHandle) { cancelAnimationFrame(flyHandle); flyHandle = null; }
     ui.classList.remove('on', 'done');
     document.body.classList.remove('in-level');
@@ -1107,7 +1155,7 @@
       get poreMode() { return poreMode; },
       get pressure() { return pressure; },
       get paused() { return paused; },
-      get extraction() { return { wellFlow: !!wellFlow, inflows: convFlows.length, pulse: !!extractionRing, started: extractionStarted, marked: extractionMarked }; },
+      get extraction() { return { wellFlow: !!wellFlow && wellFlow.visible, inflows: convFlows.filter(function (f) { return f.visible; }).length, pulse: !!extractionRing && extractionRing.visible, started: extractionStarted, marked: extractionMarked, pressure: pressure, reservoirTotal: poreDrops.length, reservoirVisible: poreDrops.filter(function (d) { return d.visible; }).length, poreFlow: !!poreFlow && poreFlow.visible }; },
       get lastInteraction() { return lastInteraction; },
       get objectId() { return window.__sceneContext && window.__sceneContext.selectedObjectId; },
       get selected() { return selectedPart || selectedLayer || null; },

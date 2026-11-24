@@ -79,14 +79,23 @@ function getJson(url) {
 
   // First level: annotations/footer removed; V3-style extraction animation is live.
   await ev(`window.__stage.selectStage(0,true);window.__stage.levelHook(0)();true`);
-  await WAIT(500);
-  const l1 = await ev(`({extraction:window.__l1&&window.__l1.extraction,last:window.__l1&&window.__l1.lastInteraction,hidden:{info:document.querySelector('#l1-info').hidden,act:document.querySelector('#l1-act').hidden,readout:document.querySelector('#l1-readout').hidden,up:document.querySelector('#l1-up').hidden,play:document.querySelector('#l1-play').hidden,foot:document.querySelector('.foot').hidden},slider:(function(){var e=document.querySelector('#l1-press');return e?{hidden:e.hidden,rect:e.getBoundingClientRect().toJSON()}:null})()})`);
+  await WAIT(1600);
+  await WAIT(2200);
+  const l1Entry = await ev(`window.__l1 ? {pore:window.__l1.poreMode, asset:window.__l1.assetLoaded} : null`);
+  assert('l1 enters pore effect by default', l1Entry && l1Entry.pore === true, l1Entry);
+  await WAIT(250);
+  const l1Zero = await ev(`window.__l1.extraction`);
+  const l1 = await ev(`({extraction:window.__l1.extraction,last:window.__l1&&window.__l1.lastInteraction,hidden:{info:document.querySelector('#l1-info').hidden,act:document.querySelector('#l1-act').hidden,readout:document.querySelector('#l1-readout').hidden,up:document.querySelector('#l1-up').hidden,play:document.querySelector('#l1-play').hidden,foot:document.querySelector('.foot').hidden},slider:(function(){var e=document.querySelector('#l1-press');return e?{hidden:e.hidden,rect:e.getBoundingClientRect().toJSON()}:null})()})`);
   assert('l1 annotations and pause controls removed', l1.hidden.info && l1.hidden.readout && l1.hidden.up && l1.hidden.play && l1.hidden.foot, l1);
   assert('l1 original pressure slider is visible', l1.hidden.act === false && l1.slider && l1.slider.hidden === false && l1.slider.rect.width > 0, l1.slider);
+  assert('l1 reservoir starts full at 0%', l1Zero && l1Zero.reservoirTotal > 0 && l1Zero.reservoirVisible === l1Zero.reservoirTotal, l1Zero);
+  await shot('phase08-00a-l1-full.png');
   await ev(`window.__l1.setPressure(60);true`);
   await WAIT(650);
   const l1Started = await ev(`window.__l1.extraction`);
   assert('l1 extraction animation is live', l1Started && l1Started.wellFlow && l1Started.inflows >= 2 && l1Started.pulse && l1Started.started && l1Started.marked, l1Started);
+  assert('l1 reservoir particles decrease with slider', l1Started.reservoirVisible < l1Started.reservoirTotal && l1Started.reservoirVisible > 0, l1Started);
+  await shot('phase08-00c-l1-slider-mid.png');
   const flowA = await ev(`Array.from(window.__stage.baseScene.getObjectByName('wellbore_flow_particles').children).map(function(c){return c.position.y})`);
   await WAIT(500);
   const flowB = await ev(`Array.from(window.__stage.baseScene.getObjectByName('wellbore_flow_particles').children).map(function(c){return c.position.y})`);
