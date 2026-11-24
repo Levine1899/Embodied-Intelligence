@@ -359,8 +359,19 @@
     paint();
   }
 
+  let tourSceneRunState = null;
+
   function pauseScene() {
     var c = ctx();
+    tourSceneRunState = {
+      levelId: c.levelId || null,
+      l2Running: !!(global.__l2 && global.__l2.running),
+      l2Paused: !!(global.__l2 && global.__l2.paused),
+      l3Running: !!(global.__l3 && global.__l3.pumpRunning),
+      l3Paused: !!(global.__l3 && global.__l3.pumpPaused),
+      l4FlowOn: !!(global.__l4 && global.__l4.flowOn),
+      l4FlowPaused: !!(global.__l4 && global.__l4.flowPaused)
+    };
     try {
       if (c.levelId === 'l2' && global.__l2 && global.__l2.pauseSeparation) global.__l2.pauseSeparation();
       if (c.levelId === 'l3' && global.__l3 && global.__l3.pausePump) global.__l3.pausePump();
@@ -372,11 +383,13 @@
   }
 
   function resumeScene() {
-    var c = ctx();
+    var c = ctx(), was = tourSceneRunState;
+    tourSceneRunState = null;
+    if (!was || was.levelId !== (c.levelId || null)) return;
     try {
-      if (c.levelId === 'l2' && global.__l2 && !global.__l2.running && global.__l2.startSeparation) global.__l2.startSeparation();
-      if (c.levelId === 'l3' && global.__l3 && !global.__l3.pumpRunning && global.__l3.startPump) global.__l3.startPump();
-      if (c.levelId === 'l4' && global.__l4) {
+      if (c.levelId === 'l2' && was.l2Running && !was.l2Paused && global.__l2 && global.__l2.startSeparation) global.__l2.startSeparation();
+      if (c.levelId === 'l3' && was.l3Running && !was.l3Paused && global.__l3 && global.__l3.startPump) global.__l3.startPump();
+      if (c.levelId === 'l4' && was.l4FlowOn && !was.l4FlowPaused && global.__l4) {
         if (!global.__l4.flowOn && global.__l4.startFlow) global.__l4.startFlow();
         else if (global.__l4.flowPaused) {
           var b = document.getElementById('l4-flow');

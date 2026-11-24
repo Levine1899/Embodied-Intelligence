@@ -128,6 +128,38 @@
     }
   }
 
+
+  function scenePayload() {
+    var sc = window.SceneContext;
+    if (!sc || typeof sc.get !== 'function') return { sceneContext: null, recentActions: [] };
+    var c = sc.get() || {};
+    var facts = typeof sc.verifiedFacts === 'function' ? sc.verifiedFacts(c.knowledgeIds || []) : [];
+    var lines = typeof sc.buildForAI === 'function' ? sc.buildForAI() : [];
+    var contextLines = lines.filter(function (line) {
+      return line.indexOf('刚才的操作') !== 0 && line.indexOf('最近操作') !== 0;
+    }).slice(0, 10);
+    var recent = [];
+    if (c.interaction) recent.push({ action: c.interaction.action, value: c.interaction.value, unit: c.interaction.unit, result: c.interaction.result, levelId: c.levelId });
+    (c.history || []).slice(-5).forEach(function (h) {
+      recent.push({ action: h.action, value: h.value, unit: h.unit, result: h.result, levelId: h.levelId });
+    });
+    return {
+      sceneContext: {
+        sceneId: c.sceneId || '',
+        stageId: c.stageId == null ? '' : c.stageId,
+        levelId: c.levelId || '',
+        zoneId: c.zoneId || '',
+        objectId: c.selectedObjectId || '',
+        objectName: c.deviceName || '',
+        knowledgeIds: (c.knowledgeIds || []).slice(0, 12),
+        verifiedFacts: facts.slice(0, 6),
+        contextLines: contextLines,
+        experienceMode: c.experienceMode || ''
+      },
+      recentActions: recent.slice(-6)
+    };
+  }
+
   async function send(text) {
     var q = String(text || '').replace(/\s+/g, ' ').trim().slice(0, 300);
     if (!q || busy) return;
@@ -138,10 +170,17 @@
     var node = add('ai', '正在思考…', 'pending');
     current = { node: node, text: '' };
     try {
+      var scene = scenePayload();
       var response = await fetch('/api/dify-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q, conversation_id: conversationId || '', user: userId })
+        body: JSON.stringify({
+          question: q,
+          conversation_id: conversationId || '',
+          user: userId,
+          sceneContext: scene.sceneContext,
+          recentActions: scene.recentActions
+        })
       });
       if (!response.ok) {
         var err = await response.json().catch(function () { return {}; });

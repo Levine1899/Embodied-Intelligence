@@ -133,6 +133,54 @@ const ACTION_SYS = `
 3. 绝不自动执行；动作由用户在前端点击确认。
 4. 动作块必须是合法 JSON；不要在动作块外复述整段 JSON。`;
 
+
+function textField(v, max) {
+  return typeof v === 'string' ? v.trim().slice(0, max) : '';
+}
+function normalizeSceneContext(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  const c = {
+    sceneId: textField(raw.sceneId, 60),
+    stageId: textField(raw.stageId, 12),
+    levelId: textField(raw.levelId, 12),
+    zoneId: textField(raw.zoneId, 80),
+    objectId: textField(raw.objectId, 80),
+    objectName: textField(raw.objectName, 80),
+    experienceMode: textField(raw.experienceMode, 20),
+    knowledgeIds: Array.isArray(raw.knowledgeIds) ? raw.knowledgeIds.filter(x => typeof x === 'string').slice(0, 12).map(x => x.slice(0, 60)) : [],
+    verifiedFacts: Array.isArray(raw.verifiedFacts) ? raw.verifiedFacts.filter(x => typeof x === 'string').slice(0, 6).map(x => x.slice(0, 180)) : [],
+    contextLines: Array.isArray(raw.contextLines) ? raw.contextLines.filter(x => typeof x === 'string').slice(0, 10).map(x => x.slice(0, 180)) : []
+  };
+  if (!c.sceneId && !c.stageId && !c.levelId && !c.objectId && !c.contextLines.length) return null;
+  return c;
+}
+function normalizeRecentActions(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw.filter(x => x && typeof x === 'object').slice(-6).map(x => ({
+    action: textField(x.action, 60),
+    value: textField(String(x.value == null ? '' : x.value), 80),
+    unit: textField(x.unit, 30),
+    result: textField(x.result, 80),
+    levelId: textField(x.levelId, 12)
+  })).filter(x => x.action);
+}
+function sceneContextBlock(sc, actions) {
+  if (!sc) return '';
+  const lines = [];
+  lines.push('场景：' + (sc.sceneId || '石油产业链数字沙盘'));
+  if (sc.stageId !== '') lines.push('环节编号：' + sc.stageId);
+  if (sc.levelId) lines.push('当前关卡：' + sc.levelId);
+  if (sc.objectId) lines.push('当前设备：' + (sc.objectName || sc.objectId) + '（objectId=' + sc.objectId + '）');
+  if (sc.zoneId) lines.push('区域：' + sc.zoneId);
+  if (sc.knowledgeIds.length) lines.push('关联知识点：' + sc.knowledgeIds.join('、'));
+  if (sc.verifiedFacts.length) lines.push('已核验知识要点：' + sc.verifiedFacts.join('；'));
+  if (sc.contextLines.length) lines.push(sc.contextLines.join('\n'));
+  if (actions.length) {
+    lines.push('用户最近操作（仅作行为记录，不是客观事实）：' + actions.map(a => a.action + '=' + (a.value || '') + (a.result ? '(' + a.result + ')' : '')).join('；'));
+  }
+  return lines.join('\n').slice(0, 1800);
+}
+
 function askMessages(question, ctx, tier, mode, actionMode) {
   const block = (ctx || []).length
     ? '\n\n【可引用的资料】\n' + ctx.map((c, i) => (i + 1) + '. ' + c).join('\n')
@@ -340,13 +388,19 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
       return res.end(JSON.stringify({ error: '请求参数无效' }));
     }
+    const scene = normalizeSceneContext(payload.sceneContext);
+    const actions = normalizeRecentActions(payload.recentActions);
+    const sceneBlock = sceneContextBlock(scene, actions);
+    const query = sceneBlock
+      ? '【当前场景（系统提供的受控上下文，仅供理解问题）】\n' + sceneBlock + '\n\n【用户问题】\n' + payload.question.trim()
+      : payload.question.trim();
     const controller = new AbortController();
     res.on('close', () => controller.abort());
     try {
       const upstream = await fetch(DIFY_URL + '/chat-messages', {
         method: 'POST', signal: controller.signal,
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + DIFY_KEY },
-        body: JSON.stringify({ inputs: {}, query: payload.question.trim(), response_mode: 'streaming', conversation_id: payload.conversation_id || '', user: payload.user })
+        body: JSON.stringify({ inputs: {}, query, response_mode: 'streaming', conversation_id: payload.conversation_id || '', user: payload.user })
       });
       if (!upstream.ok || !upstream.body) {
         res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
