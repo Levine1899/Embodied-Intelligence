@@ -1,11 +1,13 @@
 # Phase 08 证据
 
-- `phase08-verify.json`：53 项断言，真实 Chrome CDP、1440×900、本地 `:8796`。
+- `phase08-verify.json`：57 项断言，真实 Chrome CDP、1440×900、本地 `:8796`。
 - `phase08-00-merged-ui.png`：三张模式卡合并后的单入口页面（无模式行）。
 - `phase08-00a-l1-full.png`：进入地下开采的地层剖面 + 孔隙叠加效果；孔隙球位于最底层基底内，滑块 0% 时底部颗粒满量。
 - `phase08-00b-l1-extraction.png`：地下开采清理后，移除标注/底栏并运行抽取动画的截图。
 - `phase08-00c-l1-slider-mid.png`：滑块 60% 时井筒上升流与底部颗粒减少。
 - `phase08-00d-l1-halfpipe.png`：井筒半剖后，管腔内液体柱与上升颗粒可见。
+- `phase08-l3-default.png`：储运默认面板，设备选择与液位调节分开，无通用引导/教学免责声明。
+- `phase08-l3-clean.png`：展开“演示与结构”并启动泵送后的面板。
 - `phase08-01-context-separator.png`：进入三相分离关卡后的上下文。
 - `phase08-02-ai-context.png`：设备卡“问 AI”打开侧栏后的上下文。
 - `phase08-02b-action-suggestion.png`：动作建议（模型动作块 → 用户点击执行）。

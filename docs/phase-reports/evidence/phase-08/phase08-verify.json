@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-24T01:51:03.618Z",
-  "passed": 53,
+  "generatedAt": "2026-11-24T02:03:26.824Z",
+  "passed": 57,
   "failed": 0,
   "results": [
     {
@@ -25,9 +25,9 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
-        "createdAt": "2026-11-24T01:50:42.015Z",
-        "updatedAt": "2026-11-24T01:50:42.015Z",
+        "sessionId": "ce618bd8-9c24-453d-a90a-6a265013605d",
+        "createdAt": "2026-11-24T02:03:01.344Z",
+        "updatedAt": "2026-11-24T02:03:01.344Z",
         "revision": 1,
         "stageId": "overview",
         "stageIndex": null,
@@ -310,15 +310,54 @@
       "ok": true,
       "detail": {
         "a": [
-          -2.9773549979022516,
-          -2.7204484066957746,
-          -2.459981869399689
+          -3.0210017609362896,
+          -2.7646843567141524,
+          -2.5048417852198033
         ],
         "b": [
-          -0.3337860643326135,
-          -0.004292192476102123,
-          0.32453411085112166
+          -0.3913081185312259,
+          -0.06185711009996438,
+          0.2671978855747673
         ]
+      }
+    },
+    {
+      "name": "l3 uses separated device/liquid steps",
+      "ok": true,
+      "detail": {
+        "text": "储运操作选设备，再调液位固定顶罐两个罐装同样的油。拖动液位，比较固定顶与外浮顶的油气空间。1选择设备点按钮，或点场景标签固定顶罐外浮顶罐转输泵组2调节液位拖动滑块2%油气空间 98%演示与结构结构罐体剖面泵送启动泵送暂停泵送重播路径路径：储罐 → 转输泵 → 炼化入口",
+        "demo": false,
+        "more": true,
+        "moreOpen": false,
+        "fixed": "true",
+        "state": "固定顶罐",
+        "steps": 2
+      }
+    },
+    {
+      "name": "l3 generic instruction removed",
+      "ok": true,
+      "detail": {
+        "text": "储运操作选设备，再调液位固定顶罐两个罐装同样的油。拖动液位，比较固定顶与外浮顶的油气空间。1选择设备点按钮，或点场景标签固定顶罐外浮顶罐转输泵组2调节液位拖动滑块2%油气空间 98%演示与结构结构罐体剖面泵送启动泵送暂停泵送重播路径路径：储罐 → 转输泵 → 炼化入口",
+        "demo": false,
+        "more": true,
+        "moreOpen": false,
+        "fixed": "true",
+        "state": "固定顶罐",
+        "steps": 2
+      }
+    },
+    {
+      "name": "l3 teaching disclaimers removed",
+      "ok": true,
+      "detail": "储运操作选设备，再调液位固定顶罐两个罐装同样的油。拖动液位，比较固定顶与外浮顶的油气空间。1选择设备点按钮，或点场景标签固定顶罐外浮顶罐转输泵组2调节液位拖动滑块2%油气空间 98%演示与结构结构罐体剖面泵送启动泵送暂停泵送重播路径路径：储罐 → 转输泵 → 炼化入口"
+    },
+    {
+      "name": "l3 pump operation works from details",
+      "ok": true,
+      "detail": {
+        "running": true,
+        "moreOpen": true
       }
     },
     {
@@ -328,10 +367,10 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
-        "createdAt": "2026-11-24T01:50:42.015Z",
-        "updatedAt": "2026-11-24T01:50:52.810Z",
-        "revision": 11,
+        "sessionId": "ce618bd8-9c24-453d-a90a-6a265013605d",
+        "createdAt": "2026-11-24T02:03:01.344Z",
+        "updatedAt": "2026-11-24T02:03:16.154Z",
+        "revision": 19,
         "stageId": "gather",
         "stageIndex": 1,
         "levelId": "l2",
@@ -354,7 +393,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.227Z"
           },
           {
             "action": "trace_up_wellbore",
@@ -365,7 +404,29 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.228Z"
+          },
+          {
+            "action": "inspect_tank_structure",
+            "actionId": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T02:03:12.136Z"
+          },
+          {
+            "action": "start_pump",
+            "actionId": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T02:03:13.744Z"
           }
         ],
         "ledger": [
@@ -378,7 +439,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.227Z"
           },
           {
             "type": "操作",
@@ -389,7 +450,29 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.228Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T02:03:12.136Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T02:03:13.744Z"
           }
         ],
         "source": "immersion",
@@ -406,10 +489,10 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
-        "createdAt": "2026-11-24T01:50:42.015Z",
-        "updatedAt": "2026-11-24T01:50:52.810Z",
-        "revision": 11,
+        "sessionId": "ce618bd8-9c24-453d-a90a-6a265013605d",
+        "createdAt": "2026-11-24T02:03:01.344Z",
+        "updatedAt": "2026-11-24T02:03:16.154Z",
+        "revision": 19,
         "stageId": "gather",
         "stageIndex": 1,
         "levelId": "l2",
@@ -432,7 +515,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.227Z"
           },
           {
             "action": "trace_up_wellbore",
@@ -443,7 +526,29 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.228Z"
+          },
+          {
+            "action": "inspect_tank_structure",
+            "actionId": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T02:03:12.136Z"
+          },
+          {
+            "action": "start_pump",
+            "actionId": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T02:03:13.744Z"
           }
         ],
         "ledger": [
@@ -456,7 +561,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.227Z"
           },
           {
             "type": "操作",
@@ -467,7 +572,29 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.228Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T02:03:12.136Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T02:03:13.744Z"
           }
         ],
         "source": "immersion",
@@ -627,10 +754,10 @@
           "version": 1,
           "sceneId": "oil_industry_journey",
           "registrySceneId": "petro-chain-v3",
-          "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
-          "createdAt": "2026-11-24T01:50:42.015Z",
-          "updatedAt": "2026-11-24T01:50:55.815Z",
-          "revision": 15,
+          "sessionId": "ce618bd8-9c24-453d-a90a-6a265013605d",
+          "createdAt": "2026-11-24T02:03:01.344Z",
+          "updatedAt": "2026-11-24T02:03:19.103Z",
+          "revision": 23,
           "stageId": "gather",
           "stageIndex": 1,
           "levelId": "l2",
@@ -648,7 +775,7 @@
             "value": "started",
             "unit": "示意",
             "result": null,
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           },
           "history": [
             {
@@ -660,7 +787,7 @@
               "stageId": "drill",
               "levelId": "l1",
               "zoneId": "subsurface",
-              "at": "2026-11-24T01:50:50.873Z"
+              "at": "2026-11-24T02:03:10.227Z"
             },
             {
               "action": "trace_up_wellbore",
@@ -671,7 +798,29 @@
               "stageId": "drill",
               "levelId": "l1",
               "zoneId": "subsurface",
-              "at": "2026-11-24T01:50:50.873Z"
+              "at": "2026-11-24T02:03:10.228Z"
+            },
+            {
+              "action": "inspect_tank_structure",
+              "actionId": "inspect_tank_structure",
+              "value": "fixed_roof_tank",
+              "unit": "罐型",
+              "result": null,
+              "stageId": "store",
+              "levelId": "l3",
+              "zoneId": "storage",
+              "at": "2026-11-24T02:03:12.136Z"
+            },
+            {
+              "action": "start_pump",
+              "actionId": "start_pump",
+              "value": "transfer_pump",
+              "unit": "运行",
+              "result": null,
+              "stageId": "store",
+              "levelId": "l3",
+              "zoneId": "storage",
+              "at": "2026-11-24T02:03:13.744Z"
             },
             {
               "action": "inspect_separator_structure",
@@ -682,7 +831,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "zoneId": "gathering",
-              "at": "2026-11-24T01:50:54.602Z"
+              "at": "2026-11-24T02:03:17.953Z"
             },
             {
               "action": "inspect_separator_structure",
@@ -693,7 +842,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "zoneId": "gathering",
-              "at": "2026-11-24T01:50:55.815Z"
+              "at": "2026-11-24T02:03:19.103Z"
             },
             {
               "action": "start_separation",
@@ -704,7 +853,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "zoneId": "gathering",
-              "at": "2026-11-24T01:50:55.815Z"
+              "at": "2026-11-24T02:03:19.103Z"
             }
           ],
           "ledger": [
@@ -717,7 +866,7 @@
               "stageId": "drill",
               "levelId": "l1",
               "objectId": null,
-              "at": "2026-11-24T01:50:50.873Z"
+              "at": "2026-11-24T02:03:10.227Z"
             },
             {
               "type": "操作",
@@ -728,7 +877,29 @@
               "stageId": "drill",
               "levelId": "l1",
               "objectId": null,
-              "at": "2026-11-24T01:50:50.873Z"
+              "at": "2026-11-24T02:03:10.228Z"
+            },
+            {
+              "type": "操作",
+              "action": "inspect_tank_structure",
+              "value": "fixed_roof_tank",
+              "unit": "罐型",
+              "result": null,
+              "stageId": "store",
+              "levelId": "l3",
+              "objectId": "fixed_roof_tank",
+              "at": "2026-11-24T02:03:12.136Z"
+            },
+            {
+              "type": "操作",
+              "action": "start_pump",
+              "value": "transfer_pump",
+              "unit": "运行",
+              "result": null,
+              "stageId": "store",
+              "levelId": "l3",
+              "objectId": "fixed_roof_tank",
+              "at": "2026-11-24T02:03:13.744Z"
             },
             {
               "type": "操作",
@@ -739,7 +910,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "objectId": "three_phase_separator",
-              "at": "2026-11-24T01:50:54.602Z"
+              "at": "2026-11-24T02:03:17.953Z"
             },
             {
               "type": "操作",
@@ -750,7 +921,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "objectId": "three_phase_separator",
-              "at": "2026-11-24T01:50:55.815Z"
+              "at": "2026-11-24T02:03:19.103Z"
             },
             {
               "type": "操作",
@@ -761,7 +932,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "objectId": "three_phase_separator",
-              "at": "2026-11-24T01:50:55.815Z"
+              "at": "2026-11-24T02:03:19.103Z"
             }
           ],
           "source": "interaction",
@@ -789,10 +960,10 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
-        "createdAt": "2026-11-24T01:50:42.015Z",
-        "updatedAt": "2026-11-24T01:50:55.818Z",
-        "revision": 16,
+        "sessionId": "ce618bd8-9c24-453d-a90a-6a265013605d",
+        "createdAt": "2026-11-24T02:03:01.344Z",
+        "updatedAt": "2026-11-24T02:03:19.105Z",
+        "revision": 24,
         "stageId": "store",
         "stageIndex": 2,
         "levelId": "l3",
@@ -815,7 +986,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.227Z"
           },
           {
             "action": "trace_up_wellbore",
@@ -826,7 +997,29 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.228Z"
+          },
+          {
+            "action": "inspect_tank_structure",
+            "actionId": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T02:03:12.136Z"
+          },
+          {
+            "action": "start_pump",
+            "actionId": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T02:03:13.744Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -837,7 +1030,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:50:54.602Z"
+            "at": "2026-11-24T02:03:17.953Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -848,7 +1041,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           },
           {
             "action": "start_separation",
@@ -859,7 +1052,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           }
         ],
         "ledger": [
@@ -872,7 +1065,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.227Z"
           },
           {
             "type": "操作",
@@ -883,7 +1076,29 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.228Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T02:03:12.136Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T02:03:13.744Z"
           },
           {
             "type": "操作",
@@ -894,7 +1109,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:50:54.602Z"
+            "at": "2026-11-24T02:03:17.953Z"
           },
           {
             "type": "操作",
@@ -905,7 +1120,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           },
           {
             "type": "操作",
@@ -916,7 +1131,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           }
         ],
         "source": "level",
@@ -942,10 +1157,10 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
-        "createdAt": "2026-11-24T01:50:42.015Z",
-        "updatedAt": "2026-11-24T01:50:55.849Z",
-        "revision": 18,
+        "sessionId": "ce618bd8-9c24-453d-a90a-6a265013605d",
+        "createdAt": "2026-11-24T02:03:01.344Z",
+        "updatedAt": "2026-11-24T02:03:19.106Z",
+        "revision": 26,
         "stageId": "store",
         "stageIndex": 2,
         "levelId": "l3",
@@ -968,7 +1183,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.227Z"
           },
           {
             "action": "trace_up_wellbore",
@@ -979,7 +1194,29 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.228Z"
+          },
+          {
+            "action": "inspect_tank_structure",
+            "actionId": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T02:03:12.136Z"
+          },
+          {
+            "action": "start_pump",
+            "actionId": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T02:03:13.744Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -990,7 +1227,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:50:54.602Z"
+            "at": "2026-11-24T02:03:17.953Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -1001,7 +1238,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           },
           {
             "action": "start_separation",
@@ -1012,7 +1249,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           }
         ],
         "ledger": [
@@ -1025,7 +1262,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.227Z"
           },
           {
             "type": "操作",
@@ -1036,7 +1273,29 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.228Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T02:03:12.136Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T02:03:13.744Z"
           },
           {
             "type": "操作",
@@ -1047,7 +1306,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:50:54.602Z"
+            "at": "2026-11-24T02:03:17.953Z"
           },
           {
             "type": "操作",
@@ -1058,7 +1317,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           },
           {
             "type": "操作",
@@ -1069,7 +1328,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           }
         ],
         "source": "level",
@@ -1151,10 +1410,10 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
-        "createdAt": "2026-11-24T01:50:42.015Z",
-        "updatedAt": "2026-11-24T01:50:56.519Z",
-        "revision": 21,
+        "sessionId": "ce618bd8-9c24-453d-a90a-6a265013605d",
+        "createdAt": "2026-11-24T02:03:01.344Z",
+        "updatedAt": "2026-11-24T02:03:19.774Z",
+        "revision": 29,
         "stageId": "gather",
         "stageIndex": 1,
         "levelId": "l2",
@@ -1177,7 +1436,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.227Z"
           },
           {
             "action": "trace_up_wellbore",
@@ -1188,7 +1447,29 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.228Z"
+          },
+          {
+            "action": "inspect_tank_structure",
+            "actionId": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T02:03:12.136Z"
+          },
+          {
+            "action": "start_pump",
+            "actionId": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T02:03:13.744Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -1199,7 +1480,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:50:54.602Z"
+            "at": "2026-11-24T02:03:17.953Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -1210,7 +1491,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           },
           {
             "action": "start_separation",
@@ -1221,7 +1502,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           }
         ],
         "ledger": [
@@ -1234,7 +1515,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.227Z"
           },
           {
             "type": "操作",
@@ -1245,7 +1526,29 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.228Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T02:03:12.136Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T02:03:13.744Z"
           },
           {
             "type": "操作",
@@ -1256,7 +1559,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:50:54.602Z"
+            "at": "2026-11-24T02:03:17.953Z"
           },
           {
             "type": "操作",
@@ -1267,7 +1570,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           },
           {
             "type": "操作",
@@ -1278,7 +1581,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           }
         ],
         "source": "clear-selection",
@@ -1295,10 +1598,10 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
-        "createdAt": "2026-11-24T01:50:42.015Z",
-        "updatedAt": "2026-11-24T01:50:56.926Z",
-        "revision": 24,
+        "sessionId": "ce618bd8-9c24-453d-a90a-6a265013605d",
+        "createdAt": "2026-11-24T02:03:01.344Z",
+        "updatedAt": "2026-11-24T02:03:20.182Z",
+        "revision": 32,
         "stageId": "gather",
         "stageIndex": 1,
         "levelId": null,
@@ -1321,7 +1624,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.227Z"
           },
           {
             "action": "trace_up_wellbore",
@@ -1332,7 +1635,29 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.228Z"
+          },
+          {
+            "action": "inspect_tank_structure",
+            "actionId": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T02:03:12.136Z"
+          },
+          {
+            "action": "start_pump",
+            "actionId": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "zoneId": "storage",
+            "at": "2026-11-24T02:03:13.744Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -1343,7 +1668,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:50:54.602Z"
+            "at": "2026-11-24T02:03:17.953Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -1354,7 +1679,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           },
           {
             "action": "start_separation",
@@ -1365,7 +1690,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           }
         ],
         "ledger": [
@@ -1378,7 +1703,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.227Z"
           },
           {
             "type": "操作",
@@ -1389,7 +1714,29 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:50:50.873Z"
+            "at": "2026-11-24T02:03:10.228Z"
+          },
+          {
+            "type": "操作",
+            "action": "inspect_tank_structure",
+            "value": "fixed_roof_tank",
+            "unit": "罐型",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T02:03:12.136Z"
+          },
+          {
+            "type": "操作",
+            "action": "start_pump",
+            "value": "transfer_pump",
+            "unit": "运行",
+            "result": null,
+            "stageId": "store",
+            "levelId": "l3",
+            "objectId": "fixed_roof_tank",
+            "at": "2026-11-24T02:03:13.744Z"
           },
           {
             "type": "操作",
@@ -1400,7 +1747,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:50:54.602Z"
+            "at": "2026-11-24T02:03:17.953Z"
           },
           {
             "type": "操作",
@@ -1411,7 +1758,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           },
           {
             "type": "操作",
@@ -1422,7 +1769,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:50:55.815Z"
+            "at": "2026-11-24T02:03:19.103Z"
           }
         ],
         "source": "exit-level",
@@ -1458,7 +1805,7 @@
       "detail": {
         "topic": "外浮顶储罐：它在这一环节做什么",
         "genre": "科普推文",
-        "facts": "外浮顶罐的浮盘随液位升降，可减少油气空间。\n浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。\n\n【场景记录 · 教学操作，不是已核验事实，不得当作事实】\n场景：石油产业链数字沙盘\n环节：储运\n关卡：l3\n当前设备：外浮顶储罐（objectId=floating_roof_tank）\n区域：storage\n关联知识点：kb_store（本地人工审核）\n刚才的操作：inspect_tank_structure=floating_roof_tank（示意，结果：correct）\n最近操作：inspect_tank_structure=floating_roof_tank(correct)\n体验模式：free；设备数值均为教学示意，不是真实生产数据。",
+        "facts": "外浮顶罐的浮盘随液位升降，可减少油气空间。\n浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。\n\n【场景记录 · 教学操作，不是已核验事实，不得当作事实】\n场景：石油产业链数字沙盘\n环节：储运\n关卡：l3\n当前设备：外浮顶储罐（objectId=floating_roof_tank）\n区域：storage\n关联知识点：kb_store（本地人工审核）\n刚才的操作：inspect_tank_structure=floating_roof_tank（示意，结果：correct）\n最近操作：inspect_tank_structure=fixed_roof_tank；start_pump=transfer_pump；inspect_tank_structure=floating_roof_tank(correct)\n体验模式：free；设备数值均为教学示意，不是真实生产数据。",
         "audience": "普通公众",
         "style": "严谨",
         "draft": "",
@@ -1468,7 +1815,7 @@
     {
       "name": "writing Dify request keeps facts separate",
       "ok": true,
-      "detail": "外浮顶罐的浮盘随液位升降，可减少油气空间。\n浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。\n\n【场景记录 · 教学操作，不是已核验事实，不得当作事实】\n场景：石油产业链数字沙盘\n环节：储运\n关卡：l3\n当前设备：外浮顶储罐（objectId=floating_roof_tank）\n区域：storage\n关联知识点：kb_store（本地人工审核）\n刚才的操作：inspect_tank_structure=floating_roof_tank（示意，结果：correct）\n最近操作：inspect_tank_structure=floating_roof_tank(correct)\n体验模式：free；设备数值均为教学示意，不是真实生产数据。"
+      "detail": "外浮顶罐的浮盘随液位升降，可减少油气空间。\n浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。\n\n【场景记录 · 教学操作，不是已核验事实，不得当作事实】\n场景：石油产业链数字沙盘\n环节：储运\n关卡：l3\n当前设备：外浮顶储罐（objectId=floating_roof_tank）\n区域：storage\n关联知识点：kb_store（本地人工审核）\n刚才的操作：inspect_tank_structure=floating_roof_tank（示意，结果：correct）\n最近操作：inspect_tank_structure=fixed_roof_tank；start_pump=transfer_pump；inspect_tank_structure=floating_roof_tank(correct)\n体验模式：free；设备数值均为教学示意，不是真实生产数据。"
     },
     {
       "name": "direct writing does not inherit scene",

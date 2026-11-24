@@ -106,6 +106,22 @@ function getJson(url) {
   await ev(`window.__l1.exit();true`);
   await WAIT(500);
 
+  // l3: storage panel follows the l2 pattern; no generic instruction, no disclaimers,
+  // equipment selection is separated from pump/structure operations.
+  await ev(`window.__stage.selectStage(2,true);window.__stage.levelHook(2)();true`);
+  await WAIT(1600);
+  const l3 = await ev(`({text:document.querySelector('#l3-act').innerText,demo:!!document.querySelector('#l3-act .lvl__demo'),more:!!document.querySelector('#l3-more'),moreOpen:document.querySelector('#l3-more')&&document.querySelector('#l3-more').open,fixed:(document.querySelector('#l3-fixed')||{}).getAttribute&&document.querySelector('#l3-fixed').getAttribute('aria-pressed'),state:document.querySelector('#l3-state')&&document.querySelector('#l3-state').textContent,steps:document.querySelectorAll('#l3-act .lvl2__step').length})`);
+  assert('l3 uses separated device/liquid steps', l3 && l3.steps === 2 && l3.state === '固定顶罐' && l3.fixed === 'true', l3);
+  assert('l3 generic instruction removed', l3 && l3.demo === false && !/按住液位条|往右拖/.test(l3.text), l3);
+  assert('l3 teaching disclaimers removed', l3 && !/教学示意|不代表实际排放|（示意）/.test(l3.text), l3 && l3.text);
+  await ev(`document.querySelector('#l3-more').open=true;document.querySelector('#l3-pumpstart').click();true`);
+  await WAIT(450);
+  const l3Pump = await ev(`({running:window.__l3&&window.__l3.pumpRunning,moreOpen:document.querySelector('#l3-more').open})`);
+  assert('l3 pump operation works from details', l3Pump && l3Pump.running === true && l3Pump.moreOpen === true, l3Pump);
+  await shot('phase08-l3-clean.png');
+  await ev(`window.__l3.exit();true`);
+  await WAIT(1800);
+
   await ev(`window.__stage.selectStage(1,true);window.__stage.levelHook(1)();true`);
   await WAIT(1200);
   let c = await ev(`window.SceneContext.get()`);

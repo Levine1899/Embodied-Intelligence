@@ -232,6 +232,7 @@ function getJson(url) {
   await WAIT(500);
   await ev(`window.__l3.setLevel(0);`);
   await WAIT(500);
+  await ev(`document.querySelector('#l3-more').open=true;true`);
   await pointer('#l3-pumpstart');
   await WAIT(900);
   m = await ev(`({state:window.__mission.state,level:window.__l3.level})`);

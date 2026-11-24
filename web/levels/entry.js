@@ -49,7 +49,7 @@
         let levelId = panel.dataset.levelId || '';
         if (!levelId && /^l\d-act$/.test(actId)) levelId = actId.slice(0, 2);
         if (levelId === 'l1') return; // 阶段 08：地下开采只保留滑块，不显示通用操作引导
-        if (levelId === 'l4' || levelId === 'l2') return; // l4 有自己的结构/进料/馏分说明；l2 有分步面板，避免通用引导条遮挡设备
+        if (levelId === 'l4' || levelId === 'l2' || levelId === 'l3') return; // l4/l2 有分步说明；l3 用设备-液位-泵送分区，避免通用引导条遮挡设备
         const ids = ['l1', 'l2', 'l3', 'l4', 'l5'];
         const idx = levelId ? ids.indexOf(levelId) : Array.prototype.indexOf.call(document.querySelectorAll('.lvl'), panel);
         if (idx < 0) return;

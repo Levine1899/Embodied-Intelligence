@@ -111,7 +111,8 @@ function getJson(url) {
     await pointer('#mission-enter');
     await sleep(4700);
     await ev(`window.__l3.selectTank('floating_roof_tank');window.__l3.setLevel(75);`);
-    await pointer('#l3-pumpstart');
+    await ev(`document.querySelector('#l3-more').open=true;true`);
+  await pointer('#l3-pumpstart');
     await sleep(2100);
 
     await pointer('#mission-enter');
