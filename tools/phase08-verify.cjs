@@ -81,8 +81,9 @@ function getJson(url) {
   await ev(`window.__stage.selectStage(0,true);window.__stage.levelHook(0)();true`);
   await WAIT(1600);
   await WAIT(2200);
-  const l1Entry = await ev(`window.__l1 ? {pore:window.__l1.poreMode, asset:window.__l1.assetLoaded, cross:window.__l1.crossSection} : null`);
+  const l1Entry = await ev(`window.__l1 ? {pore:window.__l1.poreMode, asset:window.__l1.assetLoaded, cross:window.__l1.crossSection, bounds:window.__l1.poreBounds} : null`);
   assert('l1 enters cross-section + pore overlay by default', l1Entry && l1Entry.pore === true && l1Entry.cross && l1Entry.cross.overburden && l1Entry.cross.reservoir && l1Entry.cross.poreGroup, l1Entry);
+  assert('l1 pore overlay stays inside bottom basement layer', l1Entry && l1Entry.bounds && l1Entry.bounds.maxY < -7.27 && l1Entry.bounds.minY > -12.28, l1Entry && l1Entry.bounds);
   await WAIT(250);
   const l1Zero = await ev(`window.__l1.extraction`);
   const l1 = await ev(`({extraction:window.__l1.extraction,last:window.__l1&&window.__l1.lastInteraction,hidden:{info:document.querySelector('#l1-info').hidden,act:document.querySelector('#l1-act').hidden,readout:document.querySelector('#l1-readout').hidden,up:document.querySelector('#l1-up').hidden,play:document.querySelector('#l1-play').hidden,foot:document.querySelector('.foot').hidden},slider:(function(){var e=document.querySelector('#l1-press');return e?{hidden:e.hidden,rect:e.getBoundingClientRect().toJSON()}:null})()})`);

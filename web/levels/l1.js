@@ -860,7 +860,9 @@
     poreMode = true;
     originalVisibility = Object.assign({}, layerVisibility);
     poreGroup.visible = true;
-    poreGroup.scale.setScalar(1.35);
+    /* 叠加态放到最底层（基底）内，避免孔隙球跨过储层/盖层。 */
+    poreGroup.position.y = -9.9;
+    poreGroup.scale.set(1.05, 0.74, 1.05);
     applyExtractionProgress();
     const btn = ui.querySelector('#l1-pore');
     if (btn) btn.textContent = '退出孔隙放大';
@@ -872,6 +874,7 @@
     if (!assetLoaded || !poreGroup) return;
     poreMode = true;
     clearLayerHighlight();
+    poreGroup.position.y = -5.8;
     poreGroup.scale.setScalar(1);
     originalVisibility = Object.assign({}, layerVisibility);
     LAYERS.forEach(function (l) { if (layerMeshes[l.key]) layerMeshes[l.key].visible = false; });
@@ -893,6 +896,7 @@
   function exitPore() {
     if (!poreMode) return;
     poreMode = false;
+    poreGroup.position.y = -5.8;
     poreGroup.scale.setScalar(1);
     poreGroup.visible = false;
     if (originalVisibility) {
@@ -1176,6 +1180,7 @@
       get selected() { return selectedPart || selectedLayer || null; },
       get clipped() { return clipped; },
       get crossSection() { return { pore: poreMode, overburden: !!(layerMeshes.overburden && layerMeshes.overburden.visible), caprock: !!(layerMeshes.caprock && layerMeshes.caprock.visible), reservoir: !!(layerMeshes.reservoir && layerMeshes.reservoir.visible), basement: !!(layerMeshes.basement && layerMeshes.basement.visible), poreGroup: !!(poreGroup && poreGroup.visible) }; },
+      get poreBounds() { if (!poreGroup) return null; const b = new THREE.Box3().setFromObject(poreGroup); return { minY: b.min.y, maxY: b.max.y }; },
       get viewMode() { return viewMode; },
       get layerState() { return Object.assign({}, layerVisibility); },
       get layerVisible() { var out = {}; Object.keys(layerMeshes).forEach(function (k) { out[k] = !!(layerMeshes[k] && layerMeshes[k].visible); }); return out; },
