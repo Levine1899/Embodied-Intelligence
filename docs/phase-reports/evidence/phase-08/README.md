@@ -51,3 +51,5 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase08-verify.cjs
 - `l1-pipe-final3.png`：地下开采集输管从井口连续引出。
 
 - `l1-pipe-v76.png`：地下开采集输管从井口连续到右侧出口。
+
+- `l1-pore-overlay-final.png`：退出放大后回到含小气泡的孔隙叠加。

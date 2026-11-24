@@ -47,7 +47,7 @@
   let running = false, lastT = 0, flyHandle = null;
   let pressure = 0, paused = false, completed = false, clipped = true;
   const clipPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0);
-  let selectedLayer = null, selectedPart = null, poreMode = false, highlightedLayer = null;
+  let selectedLayer = null, selectedPart = null, poreMode = false, poreZoom = false, highlightedLayer = null;
   let viewMode = 'block';
   let layerVisibility = { overburden: true, caprock: true, reservoir: true, basement: true };
   let originalVisibility = null;
@@ -191,9 +191,10 @@
       applyClip();
       e.currentTarget.textContent = clipped ? '显示完整地层' : '剖切地层';
     };
-    ui.querySelector('#l1-pore').onclick = function () { poreMode ? exitPore() : enterPore(); };
+    ui.querySelector('#l1-pore').onclick = function () { poreZoom ? exitPore() : enterPore(); };
     ui.querySelector('#l1-well').onclick = function () { focusWellbore('whole'); };
     ui.querySelector('#l1-perf').onclick = function () { focusWellbore('perforation'); };
+
     ui.querySelector('#l1-play').onclick = function (e) {
       paused = !paused;
       e.currentTarget.setAttribute('aria-pressed', String(paused));
@@ -894,7 +895,9 @@
 
   function focusWellbore(mode) {
     if (!assetLoaded) return;
-    if (poreMode) exitPore();
+    const target = mode === 'perforation' ? 'wellbore-local' : 'wellbore';
+    if (viewMode === target) { resetView(); hint.textContent = '总览剖面 · 已取消井筒选择'; return; }
+    if (poreMode) exitPore(true);
     if (!clipped) {
       clipped = true;
       applyClip();
@@ -925,14 +928,16 @@
     poreGroup.scale.set(1.05, 0.74, 1.05);
     applyExtractionProgress();
     const btn = ui.querySelector('#l1-pore');
-    if (btn) btn.textContent = '退出孔隙放大';
+    if (btn) btn.textContent = '孔隙放大（示意）';
+    poreZoom = false;
     setReadout();
   }
 
   function enterPore() {
-    if (poreMode) return;
+    if (poreZoom) return;
     if (!assetLoaded || !poreGroup) return;
     poreMode = true;
+    poreZoom = true;
     clearLayerHighlight();
     poreGroup.position.y = -5.8;
     poreGroup.scale.setScalar(1);
@@ -953,9 +958,30 @@
     setReadout();
   }
 
-  function exitPore() {
+  function exitPore(full) {
     if (!poreMode) return;
+    if (!full && poreZoom) {
+      /* 从放大退回默认的半透明孔隙叠加，小气泡仍留在基底里。 */
+      poreZoom = false;
+      if (originalVisibility) {
+        layerVisibility = Object.assign({}, originalVisibility);
+        applyLayerVisibility();
+        updateLayerChips();
+        originalVisibility = null;
+      }
+      poreGroup.position.y = -9.9;
+      poreGroup.scale.set(1.05, 0.74, 1.05);
+      poreGroup.visible = true;
+      applyExtractionProgress();
+      const btn = ui.querySelector('#l1-pore');
+      if (btn) btn.textContent = '孔隙放大（示意）';
+      topView();
+      setInfo('储层 · 孔隙与流体', '已退出孔隙放大，回到地层剖面；基底里的小气泡仍表示孔隙中的流体。');
+      setReadout();
+      return;
+    }
     poreMode = false;
+    poreZoom = false;
     poreGroup.position.y = -5.8;
     poreGroup.scale.setScalar(1);
     poreGroup.visible = false;
@@ -965,7 +991,8 @@
       updateLayerChips();
       originalVisibility = null;
     }
-    ui.querySelector('#l1-pore').textContent = '孔隙放大（示意）';
+    const btn = ui.querySelector('#l1-pore');
+    if (btn) btn.textContent = '孔隙放大（示意）';
     topView();
     setInfo('储层 · 孔隙与流体', '已退出局部放大。继续点击其他岩层或井筒部件，或沿井筒上行到地面。');
     setReadout();
@@ -973,7 +1000,7 @@
 
   function traceUp() {
     if (!assetLoaded) return;
-    if (poreMode) exitPore();
+    if (poreMode) exitPore(true);
     viewMode = 'surface';
     clearLayerHighlight();
     LAYERS.forEach(function (l) {
@@ -1203,7 +1230,7 @@
   function exitLevel() {
     if (!G) return;
     if (autoPoreTimer) { clearTimeout(autoPoreTimer); autoPoreTimer = 0; }
-    if (poreMode) exitPore();
+    if (poreMode) exitPore(true);
     if (flyHandle) { cancelAnimationFrame(flyHandle); flyHandle = null; }
     ui.classList.remove('on', 'done');
     document.body.classList.remove('in-level');
@@ -1235,7 +1262,7 @@
       get assetObject() { return ASSET_OBJECT; },
       get layers() { return Object.keys(layerMeshes); },
       get parts() { return Object.keys(partMeshes); },
-      get poreMode() { return poreMode; },
+      get poreMode() { return poreMode; }, get poreZoom() { return poreZoom; },
       get pressure() { return pressure; },
       get paused() { return paused; },
       get extraction() { return { wellFlow: !!wellFlow && wellFlow.visible, inflows: convFlows.filter(function (f) { return f.visible; }).length, pulse: !!extractionRing && extractionRing.visible, started: extractionStarted, marked: extractionMarked, pressure: pressure, reservoirTotal: poreDrops.length, reservoirVisible: poreDrops.filter(function (d) { return d.visible; }).length, poreFlow: !!poreFlow && poreFlow.visible, wellCut: wellCut, wellFluid: !!wellFluid && wellFluid.visible }; },
