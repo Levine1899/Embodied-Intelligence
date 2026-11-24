@@ -401,3 +401,5 @@ phase08-02b-action-suggestion.png
 - 关卡标签：Sprite `renderOrder=999`、关闭深度写入，避免被井架/管道等几何遮挡。
 
 - 产品去向：进入时隐藏 processLines 厂区管线，产品提亮；航空煤油使用箱体造型，避免落在地面暗部不可见。
+
+- 产品去向：进入时隐藏 `industry-sandbox` 整个厂区组，只留产品台，彻底消除管线/地面遮挡。
