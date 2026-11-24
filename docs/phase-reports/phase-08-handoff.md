@@ -7,11 +7,11 @@
 - 状态建议：**REVISE（仅剩继承 P0-SEC-01；P1 已修复；语音/音效修正后复测 48/0；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`6047a59`（阶段 07 文档完成后的 main）
-- 结束 Commit（真实 SHA）：`99e4446`（朗读/声音入口修正；部署后置文档提交）
+- 结束 Commit（真实 SHA）：`903ca43`（朗读/声音入口合并；部署后置文档提交）
 - 分支：`main`
 - 工作区 `git status --short`：提交后为空；本报告为后置文档提交
-- 线上页面：`http://120.26.198.46:8020/v28/`（根入口跳转 V28；备份 `index.html.bak-20261124-091022`）
-- 发布包：`dist/scienceagent-web-99e4446.tgz`，SHA-256 `57acab8da351c2d06fe90364e47f8851b49b05c9c74a2867febf4eafe597b5a6`
+- 线上页面：`http://120.26.198.46:8020/v29/`（根入口跳转 V29；备份 `index.html.bak-20261124-091245`）
+- 发布包：`dist/scienceagent-web-903ca43.tgz`，SHA-256 `95414a5a38139c9717b79b1f2913b3bcceba36f17d80494bae14c9b4d8f37ac1`
 - 线上 API：`http://120.26.198.46:8020/api/dify-chat`、`/api/dify-write`；兼容 `/api/ask`、`/api/gen`
 
 ## 1. 前置检查
