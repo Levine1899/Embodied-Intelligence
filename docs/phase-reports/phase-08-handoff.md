@@ -391,3 +391,5 @@ phase08-02b-action-suggestion.png
 - 密钥仅存 `server/.env` / 远程服务环境；前端只调用同源 `/api/tts`。
 
 - 语音音色：展厅接待女声 `x6_zhantingnvjiedai_pro`（可用 `XFYUN_VCN` 覆盖）。
+
+- 浮动 AI 对话已去掉「Dify · 连续对话」与「回答由 Dify 生成」提示。
