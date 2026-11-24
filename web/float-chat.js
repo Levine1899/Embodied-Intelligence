@@ -98,7 +98,16 @@
     logEl.querySelectorAll('.fc-msg').forEach(function (x) { x.remove(); });
     if (!messages.length) return;
     if (empty) { empty.remove(); empty = null; }
-    messages.forEach(function (m) { add(m.role, m.text); });
+    messages.forEach(function (m) { add(m.role, m.role === 'ai' ? (visible(m.text) || m.text) : m.text); });
+  }
+
+  function visible(t) {
+    return String(t || '')
+      .replace(/<think\b[^>]*>[\s\S]*?<\/think\s*>/gi, '')
+      .replace(/<think\b[^>]*>[\s\S]*$/i, '')
+      .replace(/<\/think\s*>/gi, '')
+      .replace(/<think\b[^>]*$/i, '')
+      .replace(/<\/?t(?:h(?:i(?:n(?:k)?)?)?)?$/i, '');
   }
 
   function setBusy(v) {
@@ -156,7 +165,7 @@
           if (msg.conversation_id) { conversationId = msg.conversation_id; save(); }
           if ((msg.event === 'message' || msg.event === 'agent_message') && typeof msg.answer === 'string') {
             answer += msg.answer;
-            node.textContent = answer;
+            node.textContent = visible(answer) || '正在思考…';
             node.classList.remove('pending');
             scroll();
           }
@@ -165,10 +174,11 @@
         if (part.done) break;
       }
       if (!done) throw new Error('回答中断，请重试');
-      if (!answer.trim()) throw new Error('没有收到回答');
-      node.textContent = answer;
+      var clean = visible(answer).trim();
+      if (!clean) throw new Error('没有收到回答');
+      node.textContent = clean;
       node.classList.remove('pending');
-      messages.push({ role: 'ai', text: answer });
+      messages.push({ role: 'ai', text: clean });
       save();
     } catch (e) {
       node.className = 'fc-msg err';
