@@ -40,10 +40,9 @@
   root.innerHTML = [
     '<button type="button" id="fc-fab" aria-haspopup="dialog" aria-expanded="false" aria-controls="fc-panel"><span class="dot"></span><b>AI 对话</b></button>',
     '<section id="fc-panel" role="dialog" aria-modal="false" aria-labelledby="fc-title" hidden>',
-    '  <header id="fc-head"><div><h2 id="fc-title">AI 对话</h2><small>Dify · 连续对话</small></div><button type="button" id="fc-close" aria-label="关闭对话">×</button></header>',
+    '  <header id="fc-head"><div><h2 id="fc-title">AI 对话</h2></div><button type="button" id="fc-close" aria-label="关闭对话">×</button></header>',
     '  <div id="fc-log" role="log" aria-live="polite"><div id="fc-empty">关于石油、地层、储运、炼化，或当前这一屏看到的东西，都可以直接问。<div id="fc-suggest"><button type="button" data-q="这一屏在讲什么？">这一屏在讲什么？</button><button type="button" data-q="油和气为什么会出现？">油和气为什么会出现？</button><button type="button" data-q="下一步可以看什么？">下一步可以看什么？</button></div></div></div>',
     '  <form id="fc-form"><textarea id="fc-input" maxlength="300" rows="1" placeholder="问点什么…（Enter 发送，Shift+Enter 换行）" aria-label="输入问题"></textarea><button type="submit" id="fc-send" aria-label="发送">↑</button></form>',
-    '  <div id="fc-hint">回答由 Dify 生成，可能不准确；重要结论请查资料核对。</div>',
     '</section>'
   ].join('');
   document.body.appendChild(root);
@@ -134,7 +133,7 @@
     messages.push({ role: 'user', text: q });
     add('user', q);
     var answer = '';
-    var node = add('ai', '正在连接 Dify…', 'pending');
+    var node = add('ai', '正在思考…', 'pending');
     current = { node: node, text: '' };
     try {
       var response = await fetch('/api/dify-chat', {
