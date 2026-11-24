@@ -22,6 +22,7 @@
   let enterTimer = null, exitTimer = null;
   const hiddenWorld = [];
   let hotspotGroup = null;
+  let pipeClip = null;
   const hotspotMeshes = [];
   let selectedHotspot = null;
 
@@ -76,6 +77,8 @@
     const nodes = stage.nodes || [];
     const p = nodes[3] || new THREE.Vector3(24, 0, -11);
     anchor = new THREE.Vector3(p.x, 0, p.z);
+    /* 管道随塔体一起在镜头这一侧切开，便于看到管内的流。 */
+    pipeClip = new THREE.Plane(new THREE.Vector3(0, 0, -1), anchor.z);
 
     G = new THREE.Group();
     G.position.copy(anchor);
@@ -430,6 +433,8 @@
       o.material.transparent = level > 0;
       o.material.opacity = level === 0 ? 1 : (level === 1 ? 0.68 : 0.42);
       o.material.depthWrite = level === 0;
+      o.material.clippingPlanes = level > 0 && pipeClip ? [pipeClip] : [];
+      o.material.clipIntersection = false;
       if (o.material.emissive && o.userData.pipeColor != null) {
         o.material.emissive.setHex(o.userData.pipeColor);
         o.material.emissiveIntensity = level === 0 ? 0 : 0.35;
@@ -633,6 +638,7 @@
     const startT = new THREE.Vector3(anchor.x, 4.0, anchor.z);
     camera.position.copy(startPos);
     camera.lookAt(startT);
+    if (stage.renderer) stage.renderer.localClippingEnabled = true;
     stage.use(baseScene, camera);
     if (stage.setOverviewVisible) stage.setOverviewVisible(false);
     isolateWorld();
@@ -666,6 +672,7 @@
   function exit() {
     if (!window.__l4active) return;
     window.__l4active = false;
+    if (stage.renderer) stage.renderer.localClippingEnabled = false;
     if (enterTimer) { clearTimeout(enterTimer); enterTimer = null; }
     if (exitTimer) { clearTimeout(exitTimer); exitTimer = null; }
     if (unit) unit.visible = false;

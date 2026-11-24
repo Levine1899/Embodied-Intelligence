@@ -39,3 +39,5 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase08-verify.cjs
 ```
 
 - `l4-final.png`：炼化默认半剖、管道分色、三步操作面板。
+
+- `l4-clipped.png`：炼化半剖与管道剖切。
