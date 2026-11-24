@@ -72,6 +72,7 @@
         padding:6px 9px;cursor:pointer;pointer-events:auto}
       .ug-chip:hover{border-color:#e3ad58;color:#f2cf91}
       .ug-chip.on{border-color:#e3ad58;color:#f0bd6e;background:#1b1509}
+      .ug-chip.active{border-color:#f0a22e;color:#1b1508;background:#f0a22e;font-weight:700;box-shadow:0 0 0 2px #f0a22e33}
       .ug-chip.off{opacity:.48;text-decoration:line-through}
       .ug-info{font-size:12.5px;line-height:1.7;color:#c7d3d8;border-top:1px solid #263a44;padding-top:9px;margin-top:3px}
       .ug-info b{color:#efc16e;font-size:13px}
@@ -134,8 +135,6 @@
       '  <button type="button" class="ug-btn" id="l1-perf">射孔井段</button>',
       '  <button type="button" class="ug-btn" id="l1-play" aria-pressed="false" hidden>播放流动</button>',
       '  <button type="button" class="ug-btn" id="l1-cut">显示完整地层</button>',
-      '  <button type="button" class="ug-btn" id="l1-reset">重置观察</button>',
-      '  <div class="ug-scale">地层/井筒 Hero<br>OBJ + Blender 源文件</div>',
       '</div>',
       '<button type="button" class="lvl__back" id="l1-back">返回总览</button>'
     ].join('');
@@ -159,8 +158,8 @@
       b.dataset.layer = layer.key;
       b.textContent = layer.name;
       b.setAttribute('aria-pressed', 'true');
-      b.title = '显示/隐藏' + layer.name;
-      b.onclick = function () { toggleLayer(layer.key); };
+      b.title = '选择并讲解' + layer.name;
+      b.onclick = function () { selectByChip(layer.key, false); };
       layers.appendChild(b);
     });
     PARTS.forEach(function (part) {
@@ -170,8 +169,8 @@
       b.dataset.part = part.key;
       b.textContent = part.name;
       b.setAttribute('aria-pressed', 'true');
-      b.title = '显示/隐藏' + part.name;
-      b.onclick = function () { togglePart(part.key); };
+      b.title = '选择并讲解' + part.name;
+      b.onclick = function () { selectByChip(part.key, true); };
       parts.appendChild(b);
     });
 
@@ -201,7 +200,6 @@
       e.currentTarget.textContent = paused ? '继续流动' : '暂停流动';
       setReadout();
     };
-    ui.querySelector('#l1-reset').onclick = resetView;
 
     // raycast + free observation on the actual renderer.
     const canvas = stage.renderer.domElement;
@@ -733,6 +731,7 @@
       const on = key !== 'reservoir' ? layerVisibility[key] : (layerMeshes.reservoir && layerMeshes.reservoir.visible);
       b.classList.toggle('on', on);
       b.classList.toggle('off', !on);
+      b.classList.toggle('active', selectedLayer === key || (key === 'reservoir' && selectedLayer === 'reservoir'));
       b.setAttribute('aria-pressed', String(on));
     });
   }
@@ -745,6 +744,7 @@
       const on = list.length ? list.every(function (m) { return m.visible; }) : false;
       b.classList.toggle('on', on);
       b.classList.toggle('off', !on);
+      b.classList.toggle('active', selectedPart === key);
       b.setAttribute('aria-pressed', String(on));
     });
   }
@@ -755,6 +755,38 @@
       if (m) m.visible = !!layerVisibility[l.key];
     });
     if (reservoirLens) reservoirLens.visible = !!layerVisibility.reservoir;
+  }
+
+  function speakSelection(text) {
+    if (!window.Voice) return;
+    try { window.Voice.setText(text); window.Voice.speak(text); } catch (e) {}
+  }
+
+  function selectByChip(key, isPart) {
+    if (isPart) {
+      const list = partMeshes[key] || [];
+      list.forEach(function (m) { m.visible = true; });
+      wellheadMeshes.forEach(function (m) { m.visible = true; });
+      selectPart(key);
+      const p = PARTS.filter(function (x) { return x.key === key; })[0];
+      if (p) speakSelection(p.name + '。' + p.desc);
+    } else {
+      layerVisibility[key] = true;
+      applyLayerVisibility();
+      if (key === 'reservoir') {
+        selectReservoir();
+        const r = LAYERS.filter(function (x) { return x.key === 'reservoir'; })[0];
+        if (r) speakSelection(r.name + '。' + r.desc);
+      } else {
+        selectLayer(key);
+        const layer = LAYERS.filter(function (x) { return x.key === key; })[0];
+        if (layer) speakSelection(layer.name + '。' + layer.desc);
+      }
+      legend.classList.toggle('on', key === 'reservoir');
+    }
+    if (info) info.hidden = false;
+    updateLayerChips();
+    updatePartChips();
   }
 
   function toggleLayer(key) {
@@ -852,6 +884,9 @@
     if (stage.setContextObject) stage.setContextObject('underground_geology', 'subsurface');
     if (stage.setInteraction) stage.setInteraction('inspect_layer', key, '教学图层');
     lastInteraction = { actionId: 'inspect_layer', value: key, unit: '教学图层' };
+    if (info) info.hidden = false;
+    updateLayerChips();
+    updatePartChips();
   }
 
   function selectReservoir() {
@@ -864,6 +899,9 @@
     if (stage.setContextObject) stage.setContextObject('reservoir', 'subsurface');
     if (stage.setInteraction) stage.setInteraction('inspect_reservoir', 'reservoir', '教学对象');
     lastInteraction = { actionId: 'inspect_reservoir', value: 'reservoir', unit: '教学对象' };
+    if (info) info.hidden = false;
+    updateLayerChips();
+    updatePartChips();
   }
 
   function selectPart(key) {
@@ -877,6 +915,9 @@
     if (stage.setContextObject) stage.setContextObject('wellbore', 'subsurface');
     if (stage.setInteraction) stage.setInteraction('inspect_wellbore_part', key, '教学部件');
     lastInteraction = { actionId: 'inspect_wellbore_part', value: key, unit: '教学部件' };
+    if (info) info.hidden = false;
+    updateLayerChips();
+    updatePartChips();
   }
 
   function selectWellhead(silent) {
@@ -890,6 +931,7 @@
     if (!silent) {
       if (stage.setInteraction) stage.setInteraction('inspect_wellhead', 'wellhead', '教学设备');
       lastInteraction = { actionId: 'inspect_wellhead', value: 'wellhead', unit: '教学设备' };
+    if (info) info.hidden = false;
     }
   }
 
