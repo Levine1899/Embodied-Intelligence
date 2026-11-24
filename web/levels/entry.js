@@ -230,7 +230,8 @@
     ctx.fillText(text, w / 2, h / 2 + 1);
     const tex = new THREE.CanvasTexture(cv);
     tex.anisotropy = 4;
-    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false, depthWrite: false }));
+    sp.renderOrder = 999;
     sp.scale.set((w / h) * 0.62, 0.62, 1);
     return sp;
   };
