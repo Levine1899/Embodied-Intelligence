@@ -5,12 +5,14 @@
 
   var style = document.createElement('style');
   style.textContent = [
-    '#fc-root{position:fixed;right:22px;bottom:22px;z-index:80;font:13px/1.55 "Microsoft YaHei UI","PingFang SC",sans-serif;color:#e8e1d4}',
-    '#fc-fab{display:flex;align-items:center;gap:9px;height:48px;padding:0 17px 0 13px;border:1px solid #c9944f;border-radius:999px;background:#1b160e;color:#f0d6a8;box-shadow:0 10px 30px #0009;cursor:pointer}',
-    '#fc-fab:hover{border-color:#f0b35c;background:#29200f}',
-    '#fc-fab .dot{width:8px;height:8px;border-radius:50%;background:#7fd6a8;box-shadow:0 0 0 4px #7fd6a822}',
-    '#fc-fab b{font-weight:600;letter-spacing:.04em}',
-    '#fc-panel{position:fixed;right:22px;bottom:82px;width:min(390px,calc(100vw - 28px));height:min(540px,calc(100vh - 110px));display:flex;flex-direction:column;background:#0d1418;border:1px solid #5e4c33;box-shadow:0 20px 60px #000c;overflow:hidden}',
+    '#fc-root{position:fixed;right:14px;bottom:10px;z-index:80;font:13px/1.55 "Microsoft YaHei UI","PingFang SC",sans-serif;color:#e8e1d4}',
+    '#fc-fab{display:flex;flex-direction:column;align-items:center;gap:0;height:auto;padding:0;border:0;background:none;color:#f0d6a8;cursor:pointer}',
+    '#fc-bubble{position:relative;margin-bottom:5px;padding:6px 12px;border:1px solid #d5a55d;border-radius:11px;background:#f3dfb9;color:#4a3418;font-size:12px;font-weight:700;letter-spacing:.03em;white-space:nowrap;box-shadow:0 6px 20px #0008}',
+    '#fc-bubble:after{content:"";position:absolute;left:50%;bottom:-5px;width:8px;height:8px;background:#f3dfb9;border-right:1px solid #d5a55d;border-bottom:1px solid #d5a55d;transform:translateX(-50%) rotate(45deg)}',
+    '#fc-oilbao{display:block;width:82px;height:82px;object-fit:contain;filter:drop-shadow(0 8px 16px #000c) drop-shadow(0 0 18px #f0b35c38);transition:transform .18s ease}',
+    '#fc-fab:hover #fc-oilbao{transform:translateY(-4px) scale(1.04)}',
+    '#fc-fab:focus-visible{outline:2px solid #f0b35c;outline-offset:5px;border-radius:14px}',
+    '#fc-panel{position:fixed;right:18px;bottom:136px;width:min(390px,calc(100vw - 28px));height:min(540px,calc(100vh - 110px));display:flex;flex-direction:column;background:#0d1418;border:1px solid #5e4c33;box-shadow:0 20px 60px #000c;overflow:hidden}',
     '#fc-panel[hidden]{display:none}',
     '#fc-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid #26343c;background:#111b20}',
     '#fc-head h2{margin:0;font-size:15px;font-weight:600;color:#f0d6a8;letter-spacing:.04em}',
@@ -31,16 +33,16 @@
     '#fc-send{width:48px;border:1px solid #c9944f;background:#2a2112;color:#f0d6a8;cursor:pointer;font-size:16px}',
     '#fc-send:disabled{opacity:.45;cursor:default}',
     '#fc-hint{padding:0 12px 8px;font-size:10.5px;color:#74878e;background:#111b20}',
-    '@media(max-width:520px){#fc-root{right:12px;bottom:12px}#fc-panel{right:8px;bottom:72px;height:min(68vh,520px)}#fc-fab{height:44px;padding:0 14px}}'
+    '@media(max-width:520px){#fc-root{right:8px;bottom:8px}#fc-panel{right:8px;bottom:120px;height:min(68vh,520px)}#fc-oilbao{width:72px;height:72px}#fc-bubble{font-size:11px;padding:5px 9px}}'
   ].join('');
   document.head.appendChild(style);
 
   var root = document.createElement('div');
   root.id = 'fc-root';
   root.innerHTML = [
-    '<button type="button" id="fc-fab" aria-haspopup="dialog" aria-expanded="false" aria-controls="fc-panel"><span class="dot"></span><b>AI 对话</b></button>',
+    '<button type="button" id="fc-fab" aria-haspopup="dialog" aria-expanded="false" aria-controls="fc-panel" aria-label="有问题问油宝"><span id="fc-bubble">有问题 问油宝</span><img id="fc-oilbao" src="assets/oilbao.png" alt="油宝数字人"></button>',
     '<section id="fc-panel" role="dialog" aria-modal="false" aria-labelledby="fc-title" hidden>',
-    '  <header id="fc-head"><div><h2 id="fc-title">AI 对话</h2></div><button type="button" id="fc-close" aria-label="关闭对话">×</button></header>',
+    '  <header id="fc-head"><div><h2 id="fc-title">问油宝</h2></div><button type="button" id="fc-close" aria-label="关闭对话">×</button></header>',
     '  <div id="fc-log" role="log" aria-live="polite"><div id="fc-empty">关于石油、地层、储运、炼化，或当前这一屏看到的东西，都可以直接问。<div id="fc-suggest"><button type="button" data-q="这一屏在讲什么？">这一屏在讲什么？</button><button type="button" data-q="油和气为什么会出现？">油和气为什么会出现？</button><button type="button" data-q="下一步可以看什么？">下一步可以看什么？</button></div></div></div>',
     '  <form id="fc-form"><textarea id="fc-input" maxlength="300" rows="1" placeholder="问点什么…（Enter 发送，Shift+Enter 换行）" aria-label="输入问题"></textarea><button type="submit" id="fc-send" aria-label="发送">↑</button></form>',
     '</section>'
