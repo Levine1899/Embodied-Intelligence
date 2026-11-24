@@ -7,11 +7,11 @@
 - 状态建议：**REVISE（仅剩继承 P0-SEC-01；P1 已修复；储运面板清理后复测 57/0；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`6047a59`（阶段 07 文档完成后的 main）
-- 结束 Commit（真实 SHA）：`b1c1c3d`（井筒半剖 + 管腔液体；部署后置文档提交）
+- 结束 Commit（真实 SHA）：`c8314f0`（储运面板清理；部署后置文档提交）
 - 分支：`main`
 - 工作区 `git status --short`：提交后为空；本报告为后置文档提交
-- 线上页面：`http://120.26.198.46:8020/v33/`（根入口跳转 V33；备份 `index.html.bak-20261124-095414`）
-- 发布包：`dist/scienceagent-web-b1c1c3d.tgz`，SHA-256 `ac1f77ef4c14dbcf8ecab33da341e9fe8eb70db6248d36e116af5062615e01b6`
+- 线上页面：`http://120.26.198.46:8020/v34/`（根入口跳转 V34；备份 `index.html.bak-20261124-100753`）
+- 发布包：`dist/scienceagent-web-c8314f0.tgz`，SHA-256 `416d1db8a733ce28b422e0b5be861ae1ae6a39d6f409a20a6d790f2dd05a4553`
 - 线上 API：`http://120.26.198.46:8020/api/dify-chat`、`/api/dify-write`；兼容 `/api/ask`、`/api/gen`
 
 ## 1. 前置检查
@@ -310,7 +310,7 @@ phase08-02b-action-suggestion.png
 - `#voice-stop` 初始禁用，播放后才可用。
 - 验证：阶段 08 **48/0**（新增朗读文本非空、重复声音入口移除、停止按钮初始禁用）；阶段 07 回归 76/0。
 - 注意：无语音包的浏览器仍可能没有声音；此时顶部朗读会保持可见但无音频，需要系统中文语音。
-- 线上 V33 复测：`crossSection` 四层与 `poreGroup` 同时可见；孔隙包围盒完全在基底；`wellCut=true`、`wellFluid=true`；拉至 60% 时底部颗粒 12/30、管腔液体柱和上升颗粒可见。
+- 线上 V34 复测：储运面板 `lvl2__step` 两步、`#l3-state=固定顶罐`、无 `.lvl__demo`、无“教学示意/（示意）”文本；展开“演示与结构”后泵送可用。
 
 
 ## 18. 剖面 + 孔隙叠加（用户 2026-11-24 修正）
