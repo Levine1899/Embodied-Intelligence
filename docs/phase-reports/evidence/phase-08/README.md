@@ -72,3 +72,5 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase08-verify.cjs
 - `sidebar-only-reading.png`：V55 侧栏只保留延伸阅读。
 
 - `scene-responsive.png`：宽屏/高分屏场景正常加载。
+
+- `scene-v56-prod.png`：生产 V56 首屏三维场景加载、宽屏铺满。
