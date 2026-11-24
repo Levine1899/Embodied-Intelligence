@@ -95,6 +95,7 @@ function getJson(url) {
   await WAIT(650);
   const l1Started = await ev(`window.__l1.extraction`);
   assert('l1 extraction animation is live', l1Started && l1Started.wellFlow && l1Started.inflows >= 2 && l1Started.pulse && l1Started.started && l1Started.marked, l1Started);
+  assert('l1 wellbore is half-cut with visible fluid', l1Started.wellCut && l1Started.wellFluid, l1Started);
   assert('l1 reservoir particles decrease with slider', l1Started.reservoirVisible < l1Started.reservoirTotal && l1Started.reservoirVisible > 0, l1Started);
   await shot('phase08-00c-l1-slider-mid.png');
   const flowA = await ev(`Array.from(window.__stage.baseScene.getObjectByName('wellbore_flow_particles').children).map(function(c){return c.position.y})`);

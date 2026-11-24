@@ -42,6 +42,7 @@
   let layerMeshes = {}, partMeshes = {}, reservoirLens = null, wellheadMeshes = [];
   let poreGroup = null, poreDrops = [], poreFlow = null;
   let wellFlow = null, surfaceFlow = null, flowCurve = null;
+  let wellFluid = null, wellCut = false;
   let convFlows = [], extractionRing = null, extractionAt = 0, extractionMarked = false, extractionStarted = false;
   let running = false, lastT = 0, flyHandle = null;
   let pressure = 0, paused = false, completed = false, clipped = true;
@@ -332,6 +333,7 @@
       if (stage.isLevel() && !poreMode) setTimeout(function () { if (stage.isLevel() && !poreMode) enterPoreOverlay(); }, 400);
       bindAssetState();
       applyClip();
+      prepareWellboreCutaway();
       addSurfacePipe();
       updateLayerChips();
       updatePartChips();
@@ -380,6 +382,54 @@
       partMeshes[key].forEach(function (m) { st.bind('wellbore', 'detail', m); });
     });
     wellheadMeshes.forEach(function (m) { st.bind('wellhead', 'detail', m); });
+  }
+
+  function prepareWellboreCutaway() {
+    if (wellCut || !G) return;
+    const targetNames = ['well_casing', 'well_cement', 'well_tubing', 'wellbore_overview'];
+    const cutPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), 8.0);
+    targetNames.forEach(function (name) {
+      const obj = G.getObjectByName(name);
+      if (!obj) return;
+      obj.traverse(function (m) {
+        if (!m.isMesh || !m.material) return;
+        m.material = m.material.clone();
+        m.material.clippingPlanes = [cutPlane];
+        m.material.clipShadows = true;
+        m.material.side = THREE.DoubleSide;
+        m.material.needsUpdate = true;
+      });
+    });
+    /* 半剖后能看到管腔内的液体柱；流动粒子叠在液体柱上。 */
+    const geo = new THREE.CylinderGeometry(0.11, 0.11, 7.9, 12, 1, true);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xff8a1e, transparent: true, opacity: 0.72, depthWrite: false, depthTest: false, side: THREE.DoubleSide, toneMapped: false });
+    wellFluid = new THREE.Mesh(geo, mat);
+    wellFluid.name = 'well_fluid_column';
+    const local = G.worldToLocal(new THREE.Vector3(-24, -2.9, 8));
+    wellFluid.position.copy(local);
+    wellFluid.renderOrder = 5;
+    wellFluid.visible = false;
+    G.add(wellFluid);
+    /* 切割边缘线，明确“半剖”的管壁厚度。 */
+    const rimMat = new THREE.MeshBasicMaterial({ color: 0xcfd8df, transparent: true, opacity: 0.95 });
+    const tubeRimMat = new THREE.MeshBasicMaterial({ color: 0xffcf67, transparent: true, opacity: 0.95 });
+    [[-24.30, rimMat], [-23.70, rimMat], [-24.13, tubeRimMat], [-23.87, tubeRimMat]].forEach(function (pair) {
+      const rim = new THREE.Mesh(new THREE.BoxGeometry(0.022, 8.55, 0.022), pair[1]);
+      const localRim = G.worldToLocal(new THREE.Vector3(pair[0], -3.0, 8.0));
+      rim.position.copy(localRim);
+      rim.renderOrder = 4;
+      G.add(rim);
+    });
+    if (wellFlow) {
+      wellFlow.children.forEach(function (m) {
+        m.material = m.material.clone();
+        m.material.depthTest = false;
+        m.material.opacity = 0.95;
+        m.material.toneMapped = false;
+        m.renderOrder = 6;
+      });
+    }
+    wellCut = true;
   }
 
   function addSurfacePipe() {
@@ -527,7 +577,7 @@
       new THREE.Vector3(0.03, -2.0, 0),
       new THREE.Vector3(0, 0.8, 0)
     ]);
-    wellFlow = buildFlow(curve, 26, 0xffb347, 0.26, 0.07);
+    wellFlow = buildFlow(curve, 26, 0xffcf67, 0.26, 0.105);
     wellFlow.name = 'wellbore_flow_particles';
     G.add(wellFlow);
     const c1 = new THREE.CatmullRomCurve3([
@@ -962,6 +1012,10 @@
       f.userData.speed = 0.02 + p * 0.32;
     });
     if (extractionRing) extractionRing.visible = p > 0.001;
+    if (wellFluid) {
+      wellFluid.visible = p > 0.001;
+      wellFluid.material.opacity = 0.12 + p * 0.3;
+    }
     if (poreFlow) {
       poreFlow.visible = p > 0.001;
       poreFlow.userData.speed = 0.04 + p * 0.62;
@@ -1174,7 +1228,7 @@
       get poreMode() { return poreMode; },
       get pressure() { return pressure; },
       get paused() { return paused; },
-      get extraction() { return { wellFlow: !!wellFlow && wellFlow.visible, inflows: convFlows.filter(function (f) { return f.visible; }).length, pulse: !!extractionRing && extractionRing.visible, started: extractionStarted, marked: extractionMarked, pressure: pressure, reservoirTotal: poreDrops.length, reservoirVisible: poreDrops.filter(function (d) { return d.visible; }).length, poreFlow: !!poreFlow && poreFlow.visible }; },
+      get extraction() { return { wellFlow: !!wellFlow && wellFlow.visible, inflows: convFlows.filter(function (f) { return f.visible; }).length, pulse: !!extractionRing && extractionRing.visible, started: extractionStarted, marked: extractionMarked, pressure: pressure, reservoirTotal: poreDrops.length, reservoirVisible: poreDrops.filter(function (d) { return d.visible; }).length, poreFlow: !!poreFlow && poreFlow.visible, wellCut: wellCut, wellFluid: !!wellFluid && wellFluid.visible }; },
       get lastInteraction() { return lastInteraction; },
       get objectId() { return window.__sceneContext && window.__sceneContext.selectedObjectId; },
       get selected() { return selectedPart || selectedLayer || null; },

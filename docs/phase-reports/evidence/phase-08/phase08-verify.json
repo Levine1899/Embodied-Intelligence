@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-24T01:41:15.068Z",
-  "passed": 52,
+  "generatedAt": "2026-11-24T01:51:03.618Z",
+  "passed": 53,
   "failed": 0,
   "results": [
     {
@@ -25,9 +25,9 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "3dac0f95-1f46-46bb-8f24-3284b914e2ff",
-        "createdAt": "2026-11-24T01:40:53.545Z",
-        "updatedAt": "2026-11-24T01:40:53.545Z",
+        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
+        "createdAt": "2026-11-24T01:50:42.015Z",
+        "updatedAt": "2026-11-24T01:50:42.015Z",
         "revision": 1,
         "stageId": "overview",
         "stageIndex": null,
@@ -192,7 +192,9 @@
           "pressure": 0,
           "reservoirTotal": 30,
           "reservoirVisible": 30,
-          "poreFlow": false
+          "poreFlow": false,
+          "wellCut": true,
+          "wellFluid": false
         },
         "last": null,
         "hidden": {
@@ -247,7 +249,9 @@
         "pressure": 0,
         "reservoirTotal": 30,
         "reservoirVisible": 30,
-        "poreFlow": false
+        "poreFlow": false,
+        "wellCut": true,
+        "wellFluid": false
       }
     },
     {
@@ -262,7 +266,26 @@
         "pressure": 60,
         "reservoirTotal": 30,
         "reservoirVisible": 12,
-        "poreFlow": true
+        "poreFlow": true,
+        "wellCut": true,
+        "wellFluid": true
+      }
+    },
+    {
+      "name": "l1 wellbore is half-cut with visible fluid",
+      "ok": true,
+      "detail": {
+        "wellFlow": true,
+        "inflows": 2,
+        "pulse": true,
+        "started": true,
+        "marked": true,
+        "pressure": 60,
+        "reservoirTotal": 30,
+        "reservoirVisible": 12,
+        "poreFlow": true,
+        "wellCut": true,
+        "wellFluid": true
       }
     },
     {
@@ -277,7 +300,9 @@
         "pressure": 60,
         "reservoirTotal": 30,
         "reservoirVisible": 12,
-        "poreFlow": true
+        "poreFlow": true,
+        "wellCut": true,
+        "wellFluid": true
       }
     },
     {
@@ -285,14 +310,14 @@
       "ok": true,
       "detail": {
         "a": [
-          -3.025450018865783,
-          -2.769192400934381,
-          -2.5094131645897115
+          -2.9773549979022516,
+          -2.7204484066957746,
+          -2.459981869399689
         ],
         "b": [
-          -0.4579888521285064,
-          -0.1286470059007546,
-          0.20061383226691165
+          -0.3337860643326135,
+          -0.004292192476102123,
+          0.32453411085112166
         ]
       }
     },
@@ -303,9 +328,9 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "3dac0f95-1f46-46bb-8f24-3284b914e2ff",
-        "createdAt": "2026-11-24T01:40:53.545Z",
-        "updatedAt": "2026-11-24T01:41:04.336Z",
+        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
+        "createdAt": "2026-11-24T01:50:42.015Z",
+        "updatedAt": "2026-11-24T01:50:52.810Z",
         "revision": 11,
         "stageId": "gather",
         "stageIndex": 1,
@@ -329,7 +354,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:41:02.404Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "action": "trace_up_wellbore",
@@ -340,7 +365,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:41:02.405Z"
+            "at": "2026-11-24T01:50:50.873Z"
           }
         ],
         "ledger": [
@@ -353,7 +378,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:41:02.404Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "type": "操作",
@@ -364,7 +389,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:41:02.405Z"
+            "at": "2026-11-24T01:50:50.873Z"
           }
         ],
         "source": "immersion",
@@ -381,9 +406,9 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "3dac0f95-1f46-46bb-8f24-3284b914e2ff",
-        "createdAt": "2026-11-24T01:40:53.545Z",
-        "updatedAt": "2026-11-24T01:41:04.336Z",
+        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
+        "createdAt": "2026-11-24T01:50:42.015Z",
+        "updatedAt": "2026-11-24T01:50:52.810Z",
         "revision": 11,
         "stageId": "gather",
         "stageIndex": 1,
@@ -407,7 +432,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:41:02.404Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "action": "trace_up_wellbore",
@@ -418,7 +443,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:41:02.405Z"
+            "at": "2026-11-24T01:50:50.873Z"
           }
         ],
         "ledger": [
@@ -431,7 +456,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:41:02.404Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "type": "操作",
@@ -442,7 +467,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:41:02.405Z"
+            "at": "2026-11-24T01:50:50.873Z"
           }
         ],
         "source": "immersion",
@@ -602,9 +627,9 @@
           "version": 1,
           "sceneId": "oil_industry_journey",
           "registrySceneId": "petro-chain-v3",
-          "sessionId": "3dac0f95-1f46-46bb-8f24-3284b914e2ff",
-          "createdAt": "2026-11-24T01:40:53.545Z",
-          "updatedAt": "2026-11-24T01:41:07.295Z",
+          "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
+          "createdAt": "2026-11-24T01:50:42.015Z",
+          "updatedAt": "2026-11-24T01:50:55.815Z",
           "revision": 15,
           "stageId": "gather",
           "stageIndex": 1,
@@ -623,7 +648,7 @@
             "value": "started",
             "unit": "示意",
             "result": null,
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           },
           "history": [
             {
@@ -635,7 +660,7 @@
               "stageId": "drill",
               "levelId": "l1",
               "zoneId": "subsurface",
-              "at": "2026-11-24T01:41:02.404Z"
+              "at": "2026-11-24T01:50:50.873Z"
             },
             {
               "action": "trace_up_wellbore",
@@ -646,7 +671,7 @@
               "stageId": "drill",
               "levelId": "l1",
               "zoneId": "subsurface",
-              "at": "2026-11-24T01:41:02.405Z"
+              "at": "2026-11-24T01:50:50.873Z"
             },
             {
               "action": "inspect_separator_structure",
@@ -657,7 +682,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "zoneId": "gathering",
-              "at": "2026-11-24T01:41:06.135Z"
+              "at": "2026-11-24T01:50:54.602Z"
             },
             {
               "action": "inspect_separator_structure",
@@ -668,7 +693,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "zoneId": "gathering",
-              "at": "2026-11-24T01:41:07.295Z"
+              "at": "2026-11-24T01:50:55.815Z"
             },
             {
               "action": "start_separation",
@@ -679,7 +704,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "zoneId": "gathering",
-              "at": "2026-11-24T01:41:07.295Z"
+              "at": "2026-11-24T01:50:55.815Z"
             }
           ],
           "ledger": [
@@ -692,7 +717,7 @@
               "stageId": "drill",
               "levelId": "l1",
               "objectId": null,
-              "at": "2026-11-24T01:41:02.404Z"
+              "at": "2026-11-24T01:50:50.873Z"
             },
             {
               "type": "操作",
@@ -703,7 +728,7 @@
               "stageId": "drill",
               "levelId": "l1",
               "objectId": null,
-              "at": "2026-11-24T01:41:02.405Z"
+              "at": "2026-11-24T01:50:50.873Z"
             },
             {
               "type": "操作",
@@ -714,7 +739,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "objectId": "three_phase_separator",
-              "at": "2026-11-24T01:41:06.135Z"
+              "at": "2026-11-24T01:50:54.602Z"
             },
             {
               "type": "操作",
@@ -725,7 +750,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "objectId": "three_phase_separator",
-              "at": "2026-11-24T01:41:07.295Z"
+              "at": "2026-11-24T01:50:55.815Z"
             },
             {
               "type": "操作",
@@ -736,7 +761,7 @@
               "stageId": "gather",
               "levelId": "l2",
               "objectId": "three_phase_separator",
-              "at": "2026-11-24T01:41:07.295Z"
+              "at": "2026-11-24T01:50:55.815Z"
             }
           ],
           "source": "interaction",
@@ -764,9 +789,9 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "3dac0f95-1f46-46bb-8f24-3284b914e2ff",
-        "createdAt": "2026-11-24T01:40:53.545Z",
-        "updatedAt": "2026-11-24T01:41:07.297Z",
+        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
+        "createdAt": "2026-11-24T01:50:42.015Z",
+        "updatedAt": "2026-11-24T01:50:55.818Z",
         "revision": 16,
         "stageId": "store",
         "stageIndex": 2,
@@ -790,7 +815,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:41:02.404Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "action": "trace_up_wellbore",
@@ -801,7 +826,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:41:02.405Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -812,7 +837,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:41:06.135Z"
+            "at": "2026-11-24T01:50:54.602Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -823,7 +848,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           },
           {
             "action": "start_separation",
@@ -834,7 +859,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           }
         ],
         "ledger": [
@@ -847,7 +872,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:41:02.404Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "type": "操作",
@@ -858,7 +883,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:41:02.405Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "type": "操作",
@@ -869,7 +894,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:41:06.135Z"
+            "at": "2026-11-24T01:50:54.602Z"
           },
           {
             "type": "操作",
@@ -880,7 +905,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           },
           {
             "type": "操作",
@@ -891,7 +916,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           }
         ],
         "source": "level",
@@ -917,9 +942,9 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "3dac0f95-1f46-46bb-8f24-3284b914e2ff",
-        "createdAt": "2026-11-24T01:40:53.545Z",
-        "updatedAt": "2026-11-24T01:41:07.298Z",
+        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
+        "createdAt": "2026-11-24T01:50:42.015Z",
+        "updatedAt": "2026-11-24T01:50:55.849Z",
         "revision": 18,
         "stageId": "store",
         "stageIndex": 2,
@@ -943,7 +968,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:41:02.404Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "action": "trace_up_wellbore",
@@ -954,7 +979,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:41:02.405Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -965,7 +990,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:41:06.135Z"
+            "at": "2026-11-24T01:50:54.602Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -976,7 +1001,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           },
           {
             "action": "start_separation",
@@ -987,7 +1012,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           }
         ],
         "ledger": [
@@ -1000,7 +1025,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:41:02.404Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "type": "操作",
@@ -1011,7 +1036,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:41:02.405Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "type": "操作",
@@ -1022,7 +1047,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:41:06.135Z"
+            "at": "2026-11-24T01:50:54.602Z"
           },
           {
             "type": "操作",
@@ -1033,7 +1058,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           },
           {
             "type": "操作",
@@ -1044,7 +1069,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           }
         ],
         "source": "level",
@@ -1126,9 +1151,9 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "3dac0f95-1f46-46bb-8f24-3284b914e2ff",
-        "createdAt": "2026-11-24T01:40:53.545Z",
-        "updatedAt": "2026-11-24T01:41:07.982Z",
+        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
+        "createdAt": "2026-11-24T01:50:42.015Z",
+        "updatedAt": "2026-11-24T01:50:56.519Z",
         "revision": 21,
         "stageId": "gather",
         "stageIndex": 1,
@@ -1152,7 +1177,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:41:02.404Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "action": "trace_up_wellbore",
@@ -1163,7 +1188,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:41:02.405Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -1174,7 +1199,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:41:06.135Z"
+            "at": "2026-11-24T01:50:54.602Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -1185,7 +1210,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           },
           {
             "action": "start_separation",
@@ -1196,7 +1221,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           }
         ],
         "ledger": [
@@ -1209,7 +1234,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:41:02.404Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "type": "操作",
@@ -1220,7 +1245,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:41:02.405Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "type": "操作",
@@ -1231,7 +1256,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:41:06.135Z"
+            "at": "2026-11-24T01:50:54.602Z"
           },
           {
             "type": "操作",
@@ -1242,7 +1267,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           },
           {
             "type": "操作",
@@ -1253,7 +1278,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           }
         ],
         "source": "clear-selection",
@@ -1270,9 +1295,9 @@
         "version": 1,
         "sceneId": "oil_industry_journey",
         "registrySceneId": "petro-chain-v3",
-        "sessionId": "3dac0f95-1f46-46bb-8f24-3284b914e2ff",
-        "createdAt": "2026-11-24T01:40:53.545Z",
-        "updatedAt": "2026-11-24T01:41:08.385Z",
+        "sessionId": "011e3249-7a0a-4c0f-8a86-f50796da3a70",
+        "createdAt": "2026-11-24T01:50:42.015Z",
+        "updatedAt": "2026-11-24T01:50:56.926Z",
         "revision": 24,
         "stageId": "gather",
         "stageIndex": 1,
@@ -1296,7 +1321,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:41:02.404Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "action": "trace_up_wellbore",
@@ -1307,7 +1332,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "zoneId": "subsurface",
-            "at": "2026-11-24T01:41:02.405Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -1318,7 +1343,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:41:06.135Z"
+            "at": "2026-11-24T01:50:54.602Z"
           },
           {
             "action": "inspect_separator_structure",
@@ -1329,7 +1354,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           },
           {
             "action": "start_separation",
@@ -1340,7 +1365,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "zoneId": "gathering",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           }
         ],
         "ledger": [
@@ -1353,7 +1378,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:41:02.404Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "type": "操作",
@@ -1364,7 +1389,7 @@
             "stageId": "drill",
             "levelId": "l1",
             "objectId": null,
-            "at": "2026-11-24T01:41:02.405Z"
+            "at": "2026-11-24T01:50:50.873Z"
           },
           {
             "type": "操作",
@@ -1375,7 +1400,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:41:06.135Z"
+            "at": "2026-11-24T01:50:54.602Z"
           },
           {
             "type": "操作",
@@ -1386,7 +1411,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           },
           {
             "type": "操作",
@@ -1397,7 +1422,7 @@
             "stageId": "gather",
             "levelId": "l2",
             "objectId": "three_phase_separator",
-            "at": "2026-11-24T01:41:07.295Z"
+            "at": "2026-11-24T01:50:55.815Z"
           }
         ],
         "source": "exit-level",
