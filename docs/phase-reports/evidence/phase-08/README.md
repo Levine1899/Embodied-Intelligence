@@ -64,3 +64,5 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase08-verify.cjs
 - `l3-clean-final.png`：储运关卡隐藏展台地台后的干净视野。
 
 - `float-chat.png`：右下角悬浮 AI 对话窗口；已验证 conversation_id 连续传递。
+
+- `float-chat-final.png`：生产 V53 上连续两轮 Dify 对话，`conversation_id` 保持。
