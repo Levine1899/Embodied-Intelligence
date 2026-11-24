@@ -7,11 +7,11 @@
 - 状态建议：**REVISE（仅剩继承 P0-SEC-01；P1 已修复；入口合并与 l1 清理后复测 45/0；用户签收待完成）**
 - 用户签收：**待用户签收**
 - 起始 Commit：`6047a59`（阶段 07 文档完成后的 main）
-- 结束 Commit（真实 SHA）：`9f0a2d7`（l1 恢复原压力滑块；部署后置文档提交）
+- 结束 Commit（真实 SHA）：`0bc97e5`（l1 恢复原压力滑块；部署后置文档提交）
 - 分支：`main`
 - 工作区 `git status --short`：提交后为空；本报告为后置文档提交
-- 线上页面：`http://120.26.198.46:8020/v27/`（根入口跳转 V27；备份 `index.html.bak-20261124-090000`）
-- 发布包：`dist/scienceagent-web-9f0a2d7.tgz`，SHA-256 `PENDING`
+- 线上页面：`http://120.26.198.46:8020/v27/`（根入口跳转 V27；备份 `index.html.bak-20261124-090103`）
+- 发布包：`dist/scienceagent-web-0bc97e5.tgz`，SHA-256 `e4ee308b0b25c336e9cb4e2a1f291dfbb28c40821a6cb83f12ad7c9fc6a5d33f`
 - 线上 API：`http://120.26.198.46:8020/api/dify-chat`、`/api/dify-write`；兼容 `/api/ask`、`/api/gen`
 
 ## 1. 前置检查
