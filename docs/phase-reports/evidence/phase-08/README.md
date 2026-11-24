@@ -80,3 +80,6 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase08-verify.cjs
 - TTS：`POST /api/tts` 返回 `audio/mpeg`（讯飞超拟人，服务端签名）；浏览器实测 200、14 KB，朗读/暂停状态正常。
 
 - `v61-oilbao.png` / `v61-oilbao-chat.png`：油宝数字人入口与对话面板。
+
+- `v62-l1-layer.png` / `v62-l1-casing.png`：地下开采地层与套管选中高亮（V62）。
+- `l1-flow-visible.png`：井筒与射孔段粒子动画（47% 压差）。
