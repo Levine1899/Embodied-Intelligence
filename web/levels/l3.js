@@ -171,9 +171,8 @@
         localEnd: localStart.toArray()
       };
     }
-    const routeEnd = routeInfo
-      ? new THREE.Vector3(routeInfo.localEnd[0], routeInfo.localEnd[1], routeInfo.localEnd[2])
-      : new THREE.Vector3(9.2, 1.2, 3.4);
+    /* 本关出口固定到罐区右侧，避免为了接总览路径而穿过两只罐体。 */
+    const routeEnd = new THREE.Vector3(9.4, 1.2, 3.4);
     const pumpCurve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(3.7, 1.15, 1.4),
       new THREE.Vector3(5.3, 1.0, 2.0),
