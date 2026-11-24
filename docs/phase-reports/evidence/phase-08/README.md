@@ -6,7 +6,7 @@
 - `phase08-00b-l1-extraction.png`：地下开采清理后，移除标注/底栏并运行抽取动画的截图。
 - `phase08-00c-l1-slider-mid.png`：滑块 60% 时井筒上升流与底部颗粒减少。
 - `phase08-00d-l1-halfpipe.png`：井筒半剖后，管腔内液体柱与上升颗粒可见。
-- `phase08-l3-cut-default.png`：储运默认半剖，进入即可看到罐内液体。
+- `phase08-l3-cut-default.png`：储运默认半剖（2% 液位，液面较低）。
 - `phase08-l3-cut-70.png`：液位 70% 时，两侧罐内液面清晰可见。
 - `phase08-l3-default.png`：储运默认面板，设备选择与液位调节分开，无通用引导/教学免责声明。
 - `phase08-l3-clean.png`：展开“演示与结构”并启动泵送后的面板。
