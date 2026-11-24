@@ -15,7 +15,7 @@
   const ITEMS = [
     { name: '汽油', oil: true, shape: 'box' },
     { name: '柴油', oil: true, shape: 'cyl' },
-    { name: '航空煤油', oil: true, shape: 'cone' },
+    { name: '航空煤油', oil: true, shape: 'box' },
     { name: '沥青', oil: true, shape: 'sphere' },
     { name: '塑料制品', oil: true, shape: 'box' },
     { name: '石蜡', oil: true, shape: 'cyl' },
@@ -36,7 +36,7 @@
     baseScene.add(G);
     if (window.__lvlGroup) window.__lvlGroup(4, G);
 
-    const mNeutral = new THREE.MeshStandardMaterial({ color: 0x3a3830, roughness: 0.55, metalness: 0.45 });
+    const mNeutral = new THREE.MeshStandardMaterial({ color: 0x57594d, emissive: 0x16130b, emissiveIntensity: 0.3, roughness: 0.55, metalness: 0.35 });
     const mPad = new THREE.MeshStandardMaterial({ color: 0x252420, roughness: 0.95 });
 
     const pad = new THREE.Mesh(new THREE.BoxGeometry(13, 0.14, 7.4), mPad);
@@ -64,7 +64,7 @@
 
       /* 选中时的环 */
       const ring = new THREE.Mesh(new THREE.TorusGeometry(0.78, 0.055, 8, 26),
-        new THREE.MeshStandardMaterial({ color: 0x1a1a16, emissive: 0xd8a24a, emissiveIntensity: 0, roughness: 0.5 }));
+        new THREE.MeshStandardMaterial({ color: 0x40382a, emissive: 0xd8a24a, emissiveIntensity: 0.16, roughness: 0.5 }));
       ring.rotation.x = Math.PI / 2;
       ring.position.y = 0.12;
       g.add(ring);
