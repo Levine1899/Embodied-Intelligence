@@ -172,7 +172,8 @@
         storageOutlet: globalRoute.start.toArray(),
         refineryFeed: globalRoute.end.toArray(),
         localStart: localStart.toArray(),
-        localEnd: localEnd.toArray()
+        localEnd: localEnd.toArray(),
+        startMode: 'local-pump-inlet'
       };
     }
     const pumpCurve = new THREE.CatmullRomCurve3([
@@ -183,8 +184,16 @@
     ]);
     const pipe = new THREE.Mesh(new THREE.TubeGeometry(pumpCurve, 40, 0.07, 8, false),
       new THREE.MeshStandardMaterial({ color: 0x8b6b3f, roughness: 0.5, metalness: 0.4 }));
-    pipe.name = 'store_transfer_pipe'; pipe.userData.pathId = 'path_store_refine'; pipe.userData.pathEnd = routeEnd.toArray(); G.add(pipe);
-    if (routeInfo) routeInfo.endError = pumpCurve.getPoint(1).distanceTo(routeEnd);
+    pipe.name = 'store_transfer_pipe'; pipe.userData.pathId = 'path_store_refine'; pipe.userData.pathEnd = routeEnd.toArray();
+    pipe.userData.pathEndWorld = routeEnd.clone().add(G.position).toArray(); G.add(pipe);
+    if (routeInfo) {
+      /* 终点误差必须在世界坐标里对全局 anchor 计算；曲线终点对 routeEnd 是自证。 */
+      routeInfo.curveStart = pumpCurve.getPoint(0).toArray();
+      routeInfo.curveStartWorld = new THREE.Vector3().fromArray(routeInfo.curveStart).add(G.position).toArray();
+      routeInfo.curveEndWorld = routeEnd.clone().add(G.position).toArray();
+      routeInfo.endError = new THREE.Vector3().fromArray(routeInfo.curveEndWorld).distanceTo(globalRoute.end);
+      routeInfo.startError = new THREE.Vector3().fromArray(routeInfo.curveStartWorld).distanceTo(globalRoute.start);
+    }
     const valve = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.035, 8, 18), new THREE.MeshStandardMaterial({ color: 0xd8a24a, roughness: 0.45 }));
     valve.rotation.x = Math.PI / 2; valve.position.set(5.2, 1.4, 1.9); G.add(valve);
     const valveLabel = window.__lvlLabel('出口阀', '#d8a24a'); valveLabel.position.set(5.2, 2.6, 1.9); valveLabel.scale.multiplyScalar(1.0); G.add(valveLabel);
@@ -289,7 +298,7 @@
     '<div class="lvl2__toolrow"><span class="lvl2__tool-label">结构</span><button type="button" class="lvl__btn" id="l3-cut" aria-pressed="false">罐体剖面</button></div>',
     '<div class="lvl2__toolrow"><span class="lvl2__tool-label">泵送</span><button type="button" class="lvl__btn" id="l3-pumpstart">启动泵送</button><button type="button" class="lvl__btn" id="l3-pumppause">暂停泵送</button><button type="button" class="lvl__btn" id="l3-pumpreplay">重播路径</button></div>',
     '</div></details>',
-    '<div class="lvl__out"><span id="l3-route">路径：储罐 → 转输泵 → 炼化入口</span></div>',
+    '<div class="lvl__out"><span id="l3-route">局部泵送：罐区泵出口 → 炼化入口（终点对齐全局）</span></div>',
     '</div>',
     '<button type="button" class="lvl__back" id="l3-back">返回总览</button>'
   ].join('');
@@ -535,7 +544,7 @@
 
   back.onclick = exit;
   window.__lvlEntry(2, '进入 03 储运', enter);
-  window.__l3 = { enter: enter, exit: exit, selectTank: selectTank, get routeInfo() { return routeInfo; }, get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; }, get cutMode() { return cutMode; }, get pumpRunning() { return pumpRunning; }, get pumpPaused() { return pumpPaused; }, get level() { return level; },
+  window.__l3 = { enter: enter, exit: exit, selectTank: selectTank, get routeInfo() { return routeInfo; }, get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; }, get cutMode() { return cutMode; }, get pumpRunning() { return pumpRunning; }, get pumpPaused() { return pumpPaused; }, get completed() { return completed; }, get level() { return level; },
     setLevel: function (pct) {
       if (!slider) return;
       slider.value = String(Math.max(0, Math.min(100, Number(pct) || 0)));

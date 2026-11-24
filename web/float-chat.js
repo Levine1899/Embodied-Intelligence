@@ -133,28 +133,27 @@
     var sc = window.SceneContext;
     if (!sc || typeof sc.get !== 'function') return { sceneContext: null, recentActions: [] };
     var c = sc.get() || {};
-    var facts = typeof sc.verifiedFacts === 'function' ? sc.verifiedFacts(c.knowledgeIds || []) : [];
-    var lines = typeof sc.buildForAI === 'function' ? sc.buildForAI() : [];
-    var contextLines = lines.filter(function (line) {
-      return line.indexOf('刚才的操作') !== 0 && line.indexOf('最近操作') !== 0;
-    }).slice(0, 10);
+    var level = c.levelId || null;
+    /* 只带当前关卡的操作；切换设备/关卡后不能把上一关的动作混进来。 */
     var recent = [];
-    if (c.interaction) recent.push({ action: c.interaction.action, value: c.interaction.value, unit: c.interaction.unit, result: c.interaction.result, levelId: c.levelId });
-    (c.history || []).slice(-5).forEach(function (h) {
-      recent.push({ action: h.action, value: h.value, unit: h.unit, result: h.result, levelId: h.levelId });
+    if (c.interaction && (!level || !c.interaction.levelId || c.interaction.levelId === level)) {
+      recent.push({ action: c.interaction.action, value: c.interaction.value, unit: c.interaction.unit, result: c.interaction.result, levelId: level || '' });
+    }
+    (c.history || []).filter(function (h) {
+      return !level || !h.levelId || h.levelId === level;
+    }).slice(-5).forEach(function (h) {
+      recent.push({ action: h.action, value: h.value, unit: h.unit, result: h.result, levelId: h.levelId || level || '' });
     });
     return {
       sceneContext: {
         sceneId: c.sceneId || '',
-        stageId: c.stageId == null ? '' : c.stageId,
+        stageId: c.stageId == null ? '' : String(c.stageId),
         levelId: c.levelId || '',
         zoneId: c.zoneId || '',
         objectId: c.selectedObjectId || '',
         objectName: c.deviceName || '',
-        knowledgeIds: (c.knowledgeIds || []).slice(0, 12),
-        verifiedFacts: facts.slice(0, 6),
-        contextLines: contextLines,
-        experienceMode: c.experienceMode || ''
+        knowledgeIds: (c.knowledgeIds || []).slice(0, 8),
+        experienceMode: c.experienceMode || 'free'
       },
       recentActions: recent.slice(-6)
     };

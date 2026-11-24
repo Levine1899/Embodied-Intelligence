@@ -137,47 +137,123 @@ const ACTION_SYS = `
 function textField(v, max) {
   return typeof v === 'string' ? v.trim().slice(0, max) : '';
 }
+/* 服务端权威底稿：与 web/scene-context.js 的人工审核 facts 保持一致。
+   客户端只能提交 knowledgeIds，不能提交 facts 文本。 */
+const SCENE_KNOWLEDGE = {
+  drill: {
+    kb_formation: [
+      '原油是多种碳氢化合物的混合物，不是单一物质。',
+      '石油通常存在于储层岩石的孔隙中，不是地下“油湖”。',
+      '圈闭需要储层、盖层和遮挡同时成立，油气才能聚集。'
+    ],
+    kb_drill: [
+      '井筒连接地下储层与地面；套管用于支撑井壁并隔离不同地层。',
+      '岩心是地下岩石的实物样品；测井是间接推断。'
+    ]
+  },
+  gather: { kb_gather: ['井口产出物通常包含油、气、水，需要先进行分离处理。', '三相分离器按相态和密度差异分离，不是过滤。'] },
+  store: { kb_store: ['外浮顶罐的浮盘随液位升降，可减少油气空间。', '浮顶能降低蒸发损耗，但不是零损耗，密封和维护仍会影响实际损耗。'] },
+  refine: { kb_refine: ['常压蒸馏按沸点范围把原油分成不同馏分。', '馏分不是成品油，后续还需要裂化、重整、加氢或调和。', '减压蒸馏降低压力，使重油在较低温度下继续分馏，减少高温裂解。'] },
+  use: { kb_use: ['石油可用于生产燃料、润滑油、沥青和部分合成材料。', '塑料不一定都来自石油，也可能来自天然气、煤基或生物基原料。'] }
+};
+const SCENE_LEVELS = {
+  l1: { stageId: 'drill', zoneId: 'subsurface' },
+  l2: { stageId: 'gather', zoneId: 'gathering' },
+  l3: { stageId: 'store', zoneId: 'storage' },
+  l4: { stageId: 'refine', zoneId: 'refining' },
+  l5: { stageId: 'use', zoneId: 'city' }
+};
+const SCENE_STAGES = { drill: 'subsurface', gather: 'gathering', store: 'storage', refine: 'refining', use: 'city' };
+
+const SCENE_OBJECTS = {
+  pumpjack: { name: '抽油机', stageId: 'drill', zoneId: 'oilfield' },
+  wellhead: { name: '井口 / 采油树', stageId: 'drill', zoneId: 'oilfield' },
+  underground_geology: { name: '地下地质剖面', stageId: 'drill', zoneId: 'subsurface' },
+  reservoir: { name: '储层', stageId: 'drill', zoneId: 'subsurface' },
+  wellbore: { name: '井筒 / 套管', stageId: 'drill', zoneId: 'subsurface' },
+  three_phase_separator: { name: '三相分离器', stageId: 'gather', zoneId: 'gathering' },
+  transfer_pump: { name: '转输泵组', stageId: 'store', zoneId: 'storage' },
+  fixed_roof_tank: { name: '固定顶储罐', stageId: 'store', zoneId: 'storage' },
+  floating_roof_tank: { name: '外浮顶储罐', stageId: 'store', zoneId: 'storage' },
+  atmospheric_tower: { name: '常压蒸馏塔', stageId: 'refine', zoneId: 'refining' },
+  vacuum_tower: { name: '减压蒸馏塔', stageId: 'refine', zoneId: 'refining' },
+  heater: { name: '加热炉', stageId: 'refine', zoneId: 'refining' },
+  fuel_dispenser: { name: '加油机', stageId: 'use', zoneId: 'city' },
+  plastic_bottle: { name: '塑料制品', stageId: 'use', zoneId: 'city' },
+  fiber_spool: { name: '合成纤维', stageId: 'use', zoneId: 'city' },
+  lubricant_can: { name: '润滑油', stageId: 'use', zoneId: 'city' },
+  asphalt_slab: { name: '沥青路面', stageId: 'use', zoneId: 'city' }
+};
+
+function singleLine(v, max) {
+  return textField(v, max).replace(/[\r\n\t]+/g, ' ').replace(/\s+/g, ' ');
+}
+function canonicalFacts(ids) {
+  var facts = [];
+  ids.forEach(function (id) {
+    Object.keys(SCENE_KNOWLEDGE).forEach(function (stage) {
+      (SCENE_KNOWLEDGE[stage][id] || []).forEach(function (f) { if (facts.indexOf(f) < 0) facts.push(f); });
+    });
+  });
+  return facts.slice(0, 8);
+}
 function normalizeSceneContext(raw) {
   if (!raw || typeof raw !== 'object') return null;
-  const c = {
-    sceneId: textField(raw.sceneId, 60),
-    stageId: textField(raw.stageId, 12),
-    levelId: textField(raw.levelId, 12),
-    zoneId: textField(raw.zoneId, 80),
-    objectId: textField(raw.objectId, 80),
-    objectName: textField(raw.objectName, 80),
-    experienceMode: textField(raw.experienceMode, 20),
-    knowledgeIds: Array.isArray(raw.knowledgeIds) ? raw.knowledgeIds.filter(x => typeof x === 'string').slice(0, 12).map(x => x.slice(0, 60)) : [],
-    verifiedFacts: Array.isArray(raw.verifiedFacts) ? raw.verifiedFacts.filter(x => typeof x === 'string').slice(0, 6).map(x => x.slice(0, 180)) : [],
-    contextLines: Array.isArray(raw.contextLines) ? raw.contextLines.filter(x => typeof x === 'string').slice(0, 10).map(x => x.slice(0, 180)) : []
+  const levelId = SCENE_LEVELS[raw.levelId] ? raw.levelId : '';
+  const rawStage = textField(raw.stageId, 16);
+  const stageId = levelId ? SCENE_LEVELS[levelId].stageId : (SCENE_STAGES[rawStage] ? rawStage : '');
+  if (!stageId) return null;
+  const rawObjectId = /^[a-z][a-z0-9_]{0,79}$/.test(raw.objectId || '') ? raw.objectId : '';
+  const objectInfo = rawObjectId ? SCENE_OBJECTS[rawObjectId] : null;
+  /* objectId 必须属于当前环节；不认识的 ID/名称不能进入上下文。 */
+  const objectId = objectInfo && objectInfo.stageId === stageId ? rawObjectId : '';
+  const objectName = objectId ? objectInfo.name : '';
+  const zoneId = objectId ? objectInfo.zoneId : (levelId ? SCENE_LEVELS[levelId].zoneId : SCENE_STAGES[stageId]);
+  const allowed = Object.keys(SCENE_KNOWLEDGE[stageId]);
+  let ids = Array.isArray(raw.knowledgeIds)
+    ? raw.knowledgeIds.filter(x => typeof x === 'string' && allowed.indexOf(x) >= 0)
+    : [];
+  ids = Array.from(new Set(ids)).slice(0, 8);
+  if (!ids.length) ids = [allowed[0]];
+  return {
+    sceneId: 'oil_industry_journey',
+    stageId: stageId,
+    levelId: levelId,
+    zoneId: zoneId,
+    objectId: objectId,
+    objectName: objectName,
+    knowledgeIds: ids,
+    facts: canonicalFacts(ids),
+    experienceMode: raw.experienceMode === 'guided' ? 'guided' : 'free'
   };
-  if (!c.sceneId && !c.stageId && !c.levelId && !c.objectId && !c.contextLines.length) return null;
-  return c;
 }
-function normalizeRecentActions(raw) {
+function normalizeRecentActions(raw, scene) {
   if (!Array.isArray(raw)) return [];
-  return raw.filter(x => x && typeof x === 'object').slice(-6).map(x => ({
-    action: textField(x.action, 60),
-    value: textField(String(x.value == null ? '' : x.value), 80),
-    unit: textField(x.unit, 30),
-    result: textField(x.result, 80),
+  return raw.filter(x => x && typeof x === 'object').filter(x => {
+    const lv = textField(x.levelId, 12);
+    return !lv || !scene.levelId || lv === scene.levelId;
+  }).slice(-6).map(x => ({
+    action: singleLine(x.action, 60),
+    value: singleLine(String(x.value == null ? '' : x.value), 80),
+    unit: singleLine(x.unit, 30),
+    result: singleLine(x.result, 80),
     levelId: textField(x.levelId, 12)
   })).filter(x => x.action);
 }
 function sceneContextBlock(sc, actions) {
   if (!sc) return '';
   const lines = [];
-  lines.push('场景：' + (sc.sceneId || '石油产业链数字沙盘'));
-  if (sc.stageId !== '') lines.push('环节编号：' + sc.stageId);
+  lines.push('场景：石油产业链数字沙盘');
+  lines.push('环节：' + sc.stageId);
   if (sc.levelId) lines.push('当前关卡：' + sc.levelId);
-  if (sc.objectId) lines.push('当前设备：' + (sc.objectName || sc.objectId) + '（objectId=' + sc.objectId + '）');
+  if (sc.objectId) lines.push('当前对象：' + (sc.objectName || sc.objectId) + '（objectId=' + sc.objectId + '）');
   if (sc.zoneId) lines.push('区域：' + sc.zoneId);
   if (sc.knowledgeIds.length) lines.push('关联知识点：' + sc.knowledgeIds.join('、'));
-  if (sc.verifiedFacts.length) lines.push('已核验知识要点：' + sc.verifiedFacts.join('；'));
-  if (sc.contextLines.length) lines.push(sc.contextLines.join('\n'));
+  if (sc.facts.length) lines.push('已核验知识要点（服务端底稿）：' + sc.facts.join('；'));
   if (actions.length) {
     lines.push('用户最近操作（仅作行为记录，不是客观事实）：' + actions.map(a => a.action + '=' + (a.value || '') + (a.result ? '(' + a.result + ')' : '')).join('；'));
   }
+  lines.push('说明：以上设备与数值是教学示意，不是真实生产数据。');
   return lines.join('\n').slice(0, 1800);
 }
 
@@ -389,7 +465,7 @@ const server = http.createServer(async (req, res) => {
       return res.end(JSON.stringify({ error: '请求参数无效' }));
     }
     const scene = normalizeSceneContext(payload.sceneContext);
-    const actions = normalizeRecentActions(payload.recentActions);
+    const actions = normalizeRecentActions(payload.recentActions, scene);
     const sceneBlock = sceneContextBlock(scene, actions);
     const query = sceneBlock
       ? '【当前场景（系统提供的受控上下文，仅供理解问题）】\n' + sceneBlock + '\n\n【用户问题】\n' + payload.question.trim()

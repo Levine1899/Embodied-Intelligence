@@ -367,8 +367,10 @@
       levelId: c.levelId || null,
       l2Running: !!(global.__l2 && global.__l2.running),
       l2Paused: !!(global.__l2 && global.__l2.paused),
+      l2Completed: !!(global.__l2 && global.__l2.completed),
       l3Running: !!(global.__l3 && global.__l3.pumpRunning),
       l3Paused: !!(global.__l3 && global.__l3.pumpPaused),
+      l3Completed: !!(global.__l3 && global.__l3.completed),
       l4FlowOn: !!(global.__l4 && global.__l4.flowOn),
       l4FlowPaused: !!(global.__l4 && global.__l4.flowPaused)
     };
@@ -387,8 +389,8 @@
     tourSceneRunState = null;
     if (!was || was.levelId !== (c.levelId || null)) return;
     try {
-      if (c.levelId === 'l2' && was.l2Running && !was.l2Paused && global.__l2 && global.__l2.startSeparation) global.__l2.startSeparation();
-      if (c.levelId === 'l3' && was.l3Running && !was.l3Paused && global.__l3 && global.__l3.startPump) global.__l3.startPump();
+      if (c.levelId === 'l2' && was.l2Running && !was.l2Paused && !was.l2Completed && global.__l2 && global.__l2.startSeparation) global.__l2.startSeparation();
+      if (c.levelId === 'l3' && was.l3Running && !was.l3Paused && !was.l3Completed && global.__l3 && global.__l3.startPump) global.__l3.startPump();
       if (c.levelId === 'l4' && was.l4FlowOn && !was.l4FlowPaused && global.__l4) {
         if (!global.__l4.flowOn && global.__l4.startFlow) global.__l4.startFlow();
         else if (global.__l4.flowPaused) {
