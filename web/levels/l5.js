@@ -112,12 +112,22 @@
 
   /* ---------- UI ---------- */
   const ui = document.createElement('div');
-  ui.className = 'lvl lvl--bottom';
+  ui.className = 'lvl';
   ui.innerHTML = [
     '<div class="lvl__bar"><span class="lvl__step">05 / 05</span><b>产品去向 · 挑出石油化工常见下游产品</b><span class="lvl__hint" id="l5-hint">镜头正在靠近产品台…</span></div>',
-    '<div class="lvl__act" id="l5-act" hidden>',
-    '<p>这些是同一批出厂的东西。<b>点出石油化工常见下游产品</b>；它们也可能存在其他原料路线。</p>',
-    '<div class="lvl__row"><b id="l5-count">已选 0</b><button type="button" class="lvl__chip on" id="l5-check">确认选择</button></div>',
+    '<div class="lvl__act lvl2" id="l5-act" hidden>',
+    '<div class="lvl2__head"><div><span class="lvl2__eyebrow">产品去向</span><b>挑出石油路线产品</b></div><span class="lvl2__state" id="l5-state">已选 0</span></div>',
+    '<p class="lvl2__lede">这些是同一批出厂的东西。选出常见的石油化工下游产品。</p>',
+    '<div class="lvl2__step">',
+    '<div class="lvl2__stephead"><span class="lvl2__num">1</span><b>选择产品</b><span class="lvl2__stepnote">点按钮，或点场景标签</span></div>',
+    '<div class="lvl__chips" id="l5-chips" role="group" aria-label="选择产品">',
+    ITEMS.map(function (it, i) { return '<button type="button" class="lvl__chip" data-item="' + i + '">' + it.name + '</button>'; }).join(''),
+    '</div>',
+    '</div>',
+    '<div class="lvl2__step">',
+    '<div class="lvl2__stephead"><span class="lvl2__num">2</span><b>确认选择</b><span class="lvl2__stepnote">多选判断</span></div>',
+    '<div class="lvl__row"><b id="l5-count">已选 0</b><button type="button" class="lvl__btn" id="l5-check">确认选择</button></div>',
+    '</div>',
     '<div class="lvl__out"><span id="l5-note">还没选</span></div>',
     '</div>',
     '<button type="button" class="lvl__back" id="l5-back">返回总览</button>'
@@ -129,6 +139,8 @@
   const countEl = ui.querySelector('#l5-count');
   const note = ui.querySelector('#l5-note');
   const checkBtn = ui.querySelector('#l5-check');
+  const stateEl = ui.querySelector('#l5-state');
+  const chips = Array.prototype.slice.call(ui.querySelectorAll('#l5-chips .lvl__chip'));
   const back = ui.querySelector('#l5-back');
 
   const picked = new Set();
@@ -136,6 +148,12 @@
 
   function refreshCount() {
     countEl.textContent = '已选 ' + picked.size;
+    if (stateEl) stateEl.textContent = completed ? '已完成' : '已选 ' + picked.size;
+    chips.forEach(function (b) {
+      const i = Number(b.getAttribute('data-item'));
+      b.classList.toggle('on', picked.has(i));
+      b.setAttribute('aria-pressed', picked.has(i) ? 'true' : 'false');
+    });
   }
 
   function toggle(i) {
@@ -156,6 +174,10 @@
     if (stage.setInteraction) stage.setInteraction('select_product', it.name, picked.size + ' 件');
     note.textContent = '已选 ' + picked.size + ' 件';
   }
+
+  chips.forEach(function (b) {
+    b.addEventListener('click', function () { toggle(Number(b.getAttribute('data-item'))); });
+  });
 
   checkBtn.addEventListener('click', function () {
     if (completed) return;
@@ -190,6 +212,7 @@
     back.classList.add('pulse');
     back.textContent = '完成，返回总览 →';
     checkBtn.disabled = true;
+    refreshCount();
     note.textContent = '六件常见石油路线产品；塑料等也可能来自天然气、煤基或生物基原料';
   }
 

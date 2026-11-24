@@ -62,6 +62,8 @@
     const s = document.createElement('style');
     s.id = 'ug-style';
     s.textContent = `
+      .ug-left.lvl2{width:min(392px,calc(100% - 28px));max-width:392px;max-height:calc(100% - 100px);top:58px;border-radius:10px;border-left:3px solid #f0a22e;padding:14px 15px 12px}
+      @media(max-width:900px){.ug-left.lvl2{width:min(360px,calc(100% - 28px))}}
       .ug-left{position:absolute;left:14px;top:58px;width:286px;max-height:calc(100% - 100px);overflow:auto;pointer-events:auto;
         background:linear-gradient(180deg,rgba(8,17,24,.95),rgba(8,17,24,.86));border:1px solid #2a3d47;padding:12px 13px;z-index:3}
       .ug-kicker{font:600 10.5px/1.2 ui-monospace,Consolas,monospace;letter-spacing:.13em;color:#8da2ad;text-transform:uppercase;margin-bottom:8px}
@@ -105,11 +107,23 @@
     ui.className = 'lvl';
     ui.innerHTML = [
       '<div class="lvl__bar"><span class="lvl__step">01 / 05</span><b>地下开采 · 地质剖面</b><span class="lvl__hint" id="l1-hint">镜头正在进入地下…</span></div>',
-      '<div class="ug-left" id="l1-panel">',
-      '  <div class="ug-kicker">地层 / 储层 / 井筒</div>',
+      '<div class="ug-left lvl2" id="l1-panel">',
+      '  <div class="lvl2__head"><div><span class="lvl2__eyebrow">地下开采</span><b>选层位，看井筒</b></div><span class="lvl2__state" id="l1-state">地质剖面</span></div>',
+      '  <p class="lvl2__lede">先看地层和储层，再沿井筒看流体怎样到地面。</p>',
+      '  <div class="lvl2__step">',
+      '  <div class="lvl2__stephead"><span class="lvl2__num">1</span><b>选择层位</b><span class="lvl2__stepnote">点按钮切换显示</span></div>',
       '  <div class="ug-chips" id="l1-layers" aria-label="地层显示切换"></div>',
+      '  </div>',
+      '  <div class="lvl2__step">',
+      '  <div class="lvl2__stephead"><span class="lvl2__num">2</span><b>查看井筒</b><span class="lvl2__stepnote">套管 / 水泥环 / 油管</span></div>',
       '  <div class="ug-chips" id="l1-parts" aria-label="井筒部件显示切换"></div>',
-      '  <div class="ug-info" id="l1-info" hidden><b>先找到储层</b><p>点击剖面中的岩层、储层或井筒部件。标签和解释只在你选中时出现。</p><small>教学示意：不是真实油藏数据，也不是真实地质比例。</small></div>',
+      '  </div>',
+      '  <div class="lvl2__step">',
+      '  <div class="lvl2__stephead"><span class="lvl2__num">3</span><b>调节压力</b><span class="lvl2__stepnote">拖动滑块</span></div>',
+      '  <div class="lvl__row"><input type="range" min="0" max="100" value="0" id="l1-press" aria-label="压力差示意（教学控制量）"><b id="l1-pct">0%</b></div>',
+      '  <div id="l1-act" aria-hidden="true"></div>',
+      '  </div>',
+      '  <div class="ug-info" id="l1-info" hidden><b>先找到储层</b><p>点击剖面中的岩层、储层或井筒部件。标签和解释只在你选中时出现。</p></div>',
       '  <div class="ug-legend" id="l1-legend"><span><i class="ug-dot" style="background:#d8a24a"></i>油（示意）</span><span><i class="ug-dot" style="background:#8fd3c6"></i>气（示意）</span><span><i class="ug-dot" style="background:#6f9fc4"></i>水（示意）</span></div>',
       '  <div class="ug-readout" id="l1-readout" hidden>状态：总览剖面 · 流体静止</div>',
       '</div>',
@@ -123,15 +137,9 @@
       '  <button type="button" class="ug-btn" id="l1-reset">重置观察</button>',
       '  <div class="ug-scale">地层/井筒 Hero<br>OBJ + Blender 源文件</div>',
       '</div>',
-      '<div class="lvl__act" id="l1-act">',
-      '  <div class="lvl__row"><input type="range" min="0" max="100" value="0" id="l1-press" aria-label="压力差示意（教学控制量）"><b id="l1-pct">0%</b></div>',
-      '</div>',
       '<button type="button" class="lvl__back" id="l1-back">返回总览</button>'
     ].join('');
     stage.viewport.appendChild(ui);
-    const actPanel = ui.querySelector('#l1-act');
-    const leftPanel = ui.querySelector('#l1-panel');
-    if (actPanel && leftPanel) leftPanel.appendChild(actPanel);
 
     hint = ui.querySelector('#l1-hint');
     info = ui.querySelector('#l1-info');
@@ -314,7 +322,7 @@
           node.userData.objectId = 'wellhead';
           if (name.indexOf('wellhead') === 0) wellheadMeshes.push(node);
         }
-        if (name === 'well_flowline') node.userData.ugFlowline = true;
+        if (name === 'well_flowline') { node.userData.ugFlowline = true; node.visible = false; }
       });
       // Cement is deliberately translucent so casing/cement relationship is visible.
       (partMeshes.cement || []).forEach(function (m) {
@@ -435,16 +443,17 @@
   function addSurfacePipe() {
     /* 地面集输管抬到地表以上，避免被台地/地层棱线截成两段。 */
     const pts = [
-      new THREE.Vector3(8.2, 1.05, -1.2),
-      new THREE.Vector3(11.5, 1.55, -2.8),
-      new THREE.Vector3(15.2, 1.9, -4.8),
-      new THREE.Vector3(18.0, 1.9, -6.0)
+      new THREE.Vector3(0.9, 1.35, 0.0),
+      new THREE.Vector3(6.0, 2.4, -1.0),
+      new THREE.Vector3(12.0, 3.2, -2.2),
+      new THREE.Vector3(18.0, 3.3, -3.2)
     ];
     const curve = new THREE.CatmullRomCurve3(pts);
     const pipe = new THREE.Mesh(
       new THREE.TubeGeometry(curve, 40, 0.075, 8, false),
-      new THREE.MeshStandardMaterial({ color: 0x7b8075, roughness: 0.55, metalness: 0.55 })
+      new THREE.MeshStandardMaterial({ color: 0x7b8075, roughness: 0.55, metalness: 0.55, depthTest: false, depthWrite: false })
     );
+    pipe.renderOrder = 6;
     pipe.name = 'surface_gathering_pipe';
     pipe.userData.ugSurfacePipe = true;
     G.add(pipe);

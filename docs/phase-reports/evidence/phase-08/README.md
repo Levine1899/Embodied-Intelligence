@@ -45,3 +45,7 @@ CDP_PORT=4344 BASE_URL=http://127.0.0.1:8796 node tools/phase08-verify.cjs
 - `l3-pipe-fixed.png`：转输泵出口在罐区右侧，管线不再穿过罐体。
 
 - `l1-pipe-fixed.png`：地下开采地面集输管完整跨过台地。
+
+- `l1-panel.png`：地下开采分步任务栏。
+- `l5-panel2.png`：产品去向分步任务栏。
+- `l1-pipe-final3.png`：地下开采集输管从井口连续引出。
