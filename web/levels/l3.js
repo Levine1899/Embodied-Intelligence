@@ -395,7 +395,8 @@
     if (stage.setInteraction) stage.setInteraction('change_liquid_level', Math.round(level * 100), '百分比');
     applyLevel();
     if (level >= 0.85 && !completed) {
-      if (observedTanks.fixed_roof_tank && observedTanks.floating_roof_tank) complete();
+      if (!pumpRunning) hint.textContent = '液位已达标；打开“演示与结构”，点“启动泵送”完成任务';
+      else if (observedTanks.fixed_roof_tank && observedTanks.floating_roof_tank) complete();
       else hint.textContent = '再切换另一个罐型，比较两者的油气空间';
     } else if (level < 0.85) hint.textContent = storageHint();
   });

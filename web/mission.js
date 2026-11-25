@@ -495,16 +495,38 @@
     if (global.JourneyStore) global.JourneyStore.recordMission(state);
   }
 
+  /* 储运关的液位/泵送由关卡的实际状态决定，而不是只信赖某一次事件的值。
+     这样拖液位、启动泵送、切换设备都会用同一份真实状态判定，避免“拖到 100%
+     不完成、点一下设备才完成”的事件顺序问题。 */
+  function syncStorageState() {
+    var step = current();
+    if (!state || !step || step.id !== 'M3' || !global.__l3) return;
+    state.flags.level = Math.round((Number(global.__l3.level) || 0) * 100);
+    state.flags.pump = !!global.__l3.pumpRunning;
+  }
+
   function observe(event) {
     if (!state) return;
     var ctx = event.detail;
     if (!ctx || !ctx.interaction) return;
+    syncStorageState();
     var it = ctx.interaction;
     checkStep(it.actionId || it.action, it.value, it.result);
   }
 
   document.addEventListener('scene-context', observe);
   document.addEventListener('journey-open-archive', function () { if (ui) ui.hidden = true; });
+
+  /* 储运滑块在部分事件链下只触发关卡内部状态，没有稳定的 scene-context
+     顺序；用轻量轮询兜底，确保液位和泵送都达标时立即完成 M3。 */
+  var storageWatch = setInterval(function () {
+    if (!state || state.status !== 'active') return;
+    var step = current();
+    if (!step || step.id !== 'M3') return;
+    syncStorageState();
+    if ((state.flags.level || 0) >= 70 && state.flags.pump) completeStep();
+  }, 250);
+  global.addEventListener('pagehide', function () { clearInterval(storageWatch); });
 
   global.__mission = {
     id: 'M-YJ-001',
