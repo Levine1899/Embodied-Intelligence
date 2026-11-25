@@ -15,6 +15,8 @@
     '/ask.html',
     '/write.html',
     '/kb.html',
+    '/videos.html',
+    '/video.html',
     '/_spike-separator.html'
   ];
 

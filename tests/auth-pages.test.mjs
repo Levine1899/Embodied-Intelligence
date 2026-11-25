@@ -200,7 +200,7 @@ test('next 参数：拒绝外部/协议相对/反斜杠/编码穿越，保留合
 
 test('未登录请求受保护 HTML 时，服务端 302 到登录页（不是 200）', async () => {
   const cases = ['/', '/index.html', '/sandbox.html', '/explore.html', '/chapter.html?id=drill',
-    '/tower.html', '/ask.html', '/write.html', '/kb.html', '/_spike-separator.html'];
+    '/tower.html', '/ask.html', '/write.html', '/kb.html', '/videos.html', '/video.html?id=x', '/_spike-separator.html'];
   for (const target of cases) {
     const response = await request(devBase, target);
     assert.equal(response.status, 302, target + ' 未登录必须是 302，实际 ' + response.status);
