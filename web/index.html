@@ -31,7 +31,6 @@ img{display:block;max-width:100%}
 .stage-ui{display:flex;align-items:center;gap:10px;justify-content:flex-end;margin-bottom:8px}
 .stage-btn{background:rgba(8,12,14,.5);border:1px solid rgba(232,225,212,.42);color:var(--text);font-family:inherit;font-size:var(--fs-12);padding:6px 10px;min-height:32px;cursor:pointer}
 .stage-btn:hover{border-color:var(--accent);color:var(--accent-2)}
-.hint{font-size:var(--fs-12);color:rgba(232,225,212,.62)}
 .side{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
 .cover::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(6,10,12,.7) 0%,rgba(6,10,12,.04) 28%,rgba(6,10,12,.06) 62%,rgba(6,10,12,.9) 100%)}
 .cover .top{position:relative;z-index:2;border-bottom:1px solid rgba(232,225,212,.14)}
@@ -40,7 +39,6 @@ img{display:block;max-width:100%}
 .brand img{width:30px;height:30px;object-fit:contain;display:block;flex:none}
 .brand b{font-family:var(--font-display);font-size:20px;letter-spacing:.1em}
 .brand span{font-size:var(--fs-12);letter-spacing:.2em;color:rgba(232,225,212,.58)}
-.issue{font-size:var(--fs-12);letter-spacing:.16em;color:rgba(232,225,212,.55);white-space:nowrap}
 .cover .bottom{position:relative;z-index:2;padding:0 0 var(--s-7)}
 .cover h1{margin:0 0 var(--s-3);font-family:var(--font-display);font-weight:400;font-size:80px;line-height:1.07;letter-spacing:.01em;text-shadow:0 2px 36px rgba(0,0,0,.4)}
 .cover h1 em{font-style:normal;color:var(--accent-2)}
@@ -50,25 +48,6 @@ img{display:block;max-width:100%}
 .btn:hover{border-color:var(--accent);color:var(--accent-2);background:rgba(8,12,14,.45)}
 .quiet{font-size:var(--fs-14);color:rgba(232,225,212,.72);border-bottom:1px solid rgba(232,225,212,.35);padding-bottom:2px;min-height:44px;display:inline-flex;align-items:center}
 .quiet:hover{color:var(--accent-2)}
-.cap{font-size:var(--fs-12);letter-spacing:.05em;color:rgba(232,225,212,.6);text-align:right;line-height:1.8}
-
-/* ---------- 三个入口 ---------- */
-.doors{border-bottom:1px solid var(--line)}
-.doors a{
-  display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-5);
-  padding:var(--s-4) 0;border-bottom:1px solid var(--line);
-}
-.doors a:last-child{border-bottom:0}
-.doors .t{font-family:var(--font-display);font-size:var(--fs-20);letter-spacing:.02em}
-.doors .d{font-size:var(--fs-12);color:var(--muted)}
-.doors a:hover .t{color:var(--accent)}
-.doors a:hover .d{color:var(--text-2)}
-
-/* ---------- 页脚 ---------- */
-footer{font-size:var(--fs-12);color:var(--faint)}
-footer .wrap{display:flex;justify-content:space-between;gap:var(--s-4);padding:var(--s-4) 0 var(--s-6);flex-wrap:wrap}
-footer a{color:var(--muted)}
-footer a:hover{color:var(--accent)}
 
 @media (max-width:1080px){
   .wrap{width:calc(100% - 48px)}
@@ -78,10 +57,9 @@ footer a:hover{color:var(--accent)}
   .wrap{width:calc(100% - 32px)}
   .cover{min-height:94vh}
   .cover .top .wrap{height:56px}
-  .brand span,.issue{display:none}
+  .brand span{display:none}
   .cover h1{font-size:44px}
   .cover .sub{font-size:var(--fs-14)}
-  .doors a{flex-direction:column;align-items:flex-start;gap:2px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -98,7 +76,6 @@ footer a:hover{color:var(--accent)}
   <div class="top">
     <div class="wrap">
       <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><b>油见未来</b><span>石油 · 科学 · 阅读</span></a>
-      <span class="issue">演示版 · 2026.11</span>
     </div>
   </div>
 
@@ -113,30 +90,15 @@ footer a:hover{color:var(--accent)}
         </span>
         <span class="side">
           <span class="stage-ui">
-            <span class="hint">拖动旋转</span>
             <button id="toggle" class="stage-btn" type="button" aria-pressed="true">暂停</button>
           </span>
-          <span class="cap">常减压蒸馏装置 · 半剖<br>教学示意模型</span>
         </span>
       </div>
     </div>
   </div>
 </section>
 
-<nav class="doors" id="doors" aria-label="入口">
-  <div class="wrap">
-    <a href="sandbox.html"><span class="t">三维演示</span><span class="d">地下开采 → 地面处理 → 储运 → 炼化 → 产品去向，可转可点</span></a>
-    <a href="explore.html"><span class="t">六章知识</span><span class="d">形成 → 开采 → 集输 → 储运 → 炼化 → 终端</span></a>
-    <a href="tower.html"><span class="t">塔剖面</span><span class="d">可切半剖 / 全剖，五个热点</span></a>
-  </div>
-</nav>
 
-<footer>
-  <div class="wrap">
-    <span>示意模型，非真实装置比例 · 讲解要点人工撰写 · <a href="kb.html">来源与边界</a></span>
-    <span>油见未来 · V3 重构</span>
-  </div>
-</footer>
 
 <script>
 (function () {
