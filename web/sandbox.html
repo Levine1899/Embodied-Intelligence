@@ -131,7 +131,7 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 
 </style>
 <link rel="stylesheet" href="assets/site/auth.css?v=4">
-<link rel="stylesheet" href="assets/site/chapter-tree.css?v=1">
+<link rel="stylesheet" href="assets/site/chapter-tree.css?v=2">
 <script src="assets/site/auth-guard.js?v=1"></script>
 </head>
 <body>
@@ -147,11 +147,11 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 
 </header>
 <main class="main">
-<div class="heading"><div><h1>原油，怎样<span>走出地下？</span></h1><p>沿着生产流程，观察设备、物料与加工过程。</p></div><label class="reading">理解深度<select id="depth"><option value="0">亲子与青少年</option><option value="1" selected>普通公众</option><option value="2">科技／石油爱好者</option><option value="3">专业人士</option></select></label></div>
 <div class="layout">
 <aside id="chapter-tree" class="ct" aria-label="章节导航"></aside>
 <section class="scene" aria-label="三维动态流程">
-<div class="scene-head"><p><strong>原油生产与加工</strong> · 产业链空间示意 / 非真实地理比例</p><div class="tools"><button type="button" id="tour-cta">开始导览</button><button type="button" id="play" aria-pressed="true">暂停流向</button><button type="button" id="device-list-btn" aria-expanded="false" aria-controls="device-list">设备</button></div></div>
+<div class="scene-title"><h1>原油，怎样<span>走出地下？</span></h1><p>沿着生产流程，观察设备、物料与加工过程。</p></div>
+<div class="scene-head"><p><strong>原油生产与加工</strong> · 产业链空间示意 / 非真实地理比例</p><div class="tools"><button type="button" id="tour-cta">开始导览</button><button type="button" id="play" aria-pressed="true">暂停流向</button><button type="button" id="device-list-btn" aria-expanded="false" aria-controls="device-list">设备</button></div><label class="reading">理解深度<select id="depth"><option value="0">亲子与青少年</option><option value="1" selected>普通公众</option><option value="2">科技／石油爱好者</option><option value="3">专业人士</option></select></label></div>
 <div class="viewport" id="viewport" role="group" aria-label="可旋转的原油开采、处理、储运、炼化和产品流程三维模型">
 <div class="view-hint"><b>拖动</b> 旋转 · <b>滚轮</b> 缩放 · 点击节点查看</div>
 <div class="device-list" id="device-list" hidden aria-label="设备列表">
@@ -511,9 +511,15 @@ body.journey-tour #tour-cta{display:none}
 
 /* ---- 布局 B 收尾 ---- */
 .viewport{height:clamp(480px,55vh,660px)}
-.heading{margin-bottom:10px}
-.heading h1{font-size:30px}
-.heading p{font-size:13px}
+/* 标题移入场景；工具栏右侧放理解深度 */
+.scene-title{padding:14px 17px 2px}
+.scene-title h1{margin:0;font-family:var(--font-display);font-weight:650;line-height:1.4;font-size:30px;letter-spacing:1px}
+.scene-title h1 span{color:var(--amber)}
+.scene-title p{margin:5px 0 0;font-size:13px;color:var(--muted)}
+.scene-head{flex-wrap:wrap;row-gap:8px}
+.scene-head .reading{margin-left:auto}
+.scene-head .reading select{padding:6px 24px 6px 10px;font-size:12px}
+@media(max-width:800px){.scene-title{padding:12px 14px 0}.scene-title h1{font-size:26px}.scene-head .reading{margin-left:0}}
 .scene-head{padding:8px 12px}
 .explanation{padding:8px 14px}
 .about-open{white-space:nowrap}

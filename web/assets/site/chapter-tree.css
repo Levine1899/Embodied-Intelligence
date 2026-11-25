@@ -10,19 +10,37 @@ body.ct-ready .ct { display: block; }
 /* ---------- 桌面列布局 ---------- */
 @media (min-width: 1200px) {
   body.ct-ready .layout {
-    grid-template-columns: clamp(300px, 25vw, 380px) minmax(0, 1fr) 320px;
+    grid-template-columns: clamp(300px, 25vw, 380px) minmax(0, 1fr) 46px;
     gap: 20px;
   }
+  body.ct-ready .layout.rail-open {
+    grid-template-columns: clamp(300px, 25vw, 380px) minmax(0, 1fr) 320px;
+  }
+  body.ct-ready .layout.side-hidden {
+    grid-template-columns: clamp(300px, 25vw, 380px) minmax(0, 1fr);
+  }
   body.ct-ready.ct-collapsed .layout {
+    grid-template-columns: 56px minmax(0, 1fr) 46px;
+  }
+  body.ct-ready.ct-collapsed .layout.rail-open {
     grid-template-columns: 56px minmax(0, 1fr) 320px;
+  }
+  body.ct-ready.ct-collapsed .layout.side-hidden {
+    grid-template-columns: 56px minmax(0, 1fr);
   }
 }
 
 @media (min-width: 1650px) {
   body.ct-ready .layout {
+    grid-template-columns: clamp(300px, 22vw, 380px) minmax(0, 1fr) 46px;
+  }
+  body.ct-ready .layout.rail-open {
     grid-template-columns: clamp(300px, 22vw, 380px) minmax(0, 1fr) 340px;
   }
   body.ct-ready.ct-collapsed .layout {
+    grid-template-columns: 56px minmax(0, 1fr) 46px;
+  }
+  body.ct-ready.ct-collapsed .layout.rail-open {
     grid-template-columns: 56px minmax(0, 1fr) 340px;
   }
 }
