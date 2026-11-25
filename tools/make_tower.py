@@ -281,11 +281,11 @@ SIDE = [
     ("Diesel", 15.8, "柴油"),
 ]
 for name, z, cn in SIDE:
-    cyl(f"Pipe_Side_{name}", 0.22, 6.6, (ATM_R + 3.3, 0, z), rot=(0, 1.5708, 0), seg=14, material=PIPE_COOL)
+    cyl(f"Pipe_Side_{name}", 0.22, 7.0, (ATM_R + 3.1, 0, z), rot=(0, 1.5708, 0), seg=14, material=PIPE_COOL)
     box(f"Box_{name}", (1.6, 1.6, 1.2), (ATM_R + 7.3, 0, z - 0.3), BOX)
 
 # 常压渣油：塔底 → 减压塔；底部产品箱只作为教学终点，不代表真实收率/储运设计。
-cyl("Pipe_Residue_Bottom", 0.26, 5.2, (ATM_R + 2.8, 0, 3.2), rot=(0, 1.5708, 0), seg=14, material=PIPE_HOT)
+cyl("Pipe_Residue_Bottom", 0.26, 7.0, (ATM_R + 3.1, 0, 3.2), rot=(0, 1.5708, 0), seg=14, material=PIPE_HOT)
 box("Box_Residue", (1.7, 1.7, 1.2), (ATM_R + 7.3, 0, 2.9), BOX)
 
 # 塔顶 → 冷凝器
