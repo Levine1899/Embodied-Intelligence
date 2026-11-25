@@ -14,6 +14,23 @@
   var narrationId = '';
   var narrationMeta = null;
   var boundButtons = [];
+  var prebuilt = new Map();
+  var prebuiltLoaded = false;
+  var PREBUILT_MANIFEST = 'assets/tts/manifest.json?v=20261125a';
+
+  function normalizeText(text) { return String(text || '').replace(/\s+/g, ' ').trim(); }
+
+  function loadPrebuilt() {
+    if (prebuiltLoaded) return;
+    fetch(PREBUILT_MANIFEST, { cache: 'force-cache' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (m) {
+      if (!m || !Array.isArray(m.items)) return;
+      m.items.forEach(function (item) {
+        if (item && item.text && item.file) prebuilt.set(normalizeText(item.text), item);
+      });
+      prebuiltLoaded = true;
+    }).catch(function () { /* 预生成不可用时继续走在线合成 */ });
+  }
+  loadPrebuilt();
 
   function label(btn, text) { if (btn) { btn.textContent = text; } }
 
@@ -139,6 +156,13 @@
     var cached = cache.get(currentText);
     if (cached) { loading = false; playBlob(cached, my); return true; }
 
+    var local = prebuilt.get(currentText);
+    if (local) {
+      loading = false;
+      playPrebuilt('assets/tts/' + local.file, my);
+      return true;
+    }
+
     abort = new AbortController();
     fetch('/api/tts', {
       method: 'POST',
@@ -164,6 +188,24 @@
       fail(err && err.message);
     });
     return true;
+  }
+
+  function playPrebuilt(url, my) {
+    clearAudio();
+    audioUrl = '';
+    audio = new Audio(url);
+    audio.preload = 'auto';
+    audio.onended = function () { playing = false; paused = false; sync(); };
+    audio.onerror = function () {
+      if (my !== token) return;
+      fail('本地讲解音频加载失败，请稍后重试。');
+    };
+    var p = audio.play();
+    if (p && p.catch) p.catch(function () {
+      if (my !== token) return;
+      fail('浏览器阻止了自动播放，请再点一次朗读。');
+    });
+    playing = true; paused = false; sync();
   }
 
   function playBlob(blob, my) {
