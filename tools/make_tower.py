@@ -89,6 +89,31 @@ def sphere(name, r, loc, scale_z=1.0, material=STEEL):
     return assign(o, material)
 
 
+def pipe_poly(name, pts, r=0.20, material=PIPE_COOL, seg=14):
+    """Axis-aligned teaching pipe with visible elbows; no floating endpoints."""
+    for i in range(len(pts) - 1):
+        a, b = Vector(pts[i]), Vector(pts[i + 1])
+        d = b - a
+        L = d.length
+        if L < 1e-6:
+            continue
+        mid = (a + b) / 2
+        if abs(d.x) >= abs(d.y) and abs(d.x) >= abs(d.z):
+            cyl(f"{name}_Seg{i}", r, L, tuple(mid), rot=(0, math.pi / 2, 0), seg=seg, material=material)
+        elif abs(d.y) >= abs(d.z):
+            cyl(f"{name}_Seg{i}", r, L, tuple(mid), rot=(math.pi / 2, 0, 0), seg=seg, material=material)
+        else:
+            cyl(f"{name}_Seg{i}", r, L, tuple(mid), seg=seg, material=material)
+    for i, pt in enumerate(pts):
+        sphere(f"{name}_Elbow{i}", r * 1.12, pt, material=material)
+
+
+def steel_post(name, x, y, z0, z1, size=0.18):
+    h = max(0.1, z1 - z0)
+    box(name, (size, size, h), (x, y, z0 + h / 2), STEEL_DARK)
+    box(name + "_Foot", (size * 2.4, size * 2.4, 0.18), (x, y, 0.09), CONCRETE)
+
+
 def empty(name, loc):
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=loc)
     o = bpy.context.object
@@ -273,25 +298,74 @@ cyl("Pipe_Feed_Horizontal", 0.38, 4.9, (HEAT_X + 2.45, 0, 13.0), rot=(0, 1.5708,
 cyl("Pipe_Bottom_To_Vacuum", 0.34, 5.6, (ATM_R + (VAC_X - VAC_R - ATM_R) / 2, 0, 3.2), rot=(0, 1.5708, 0), seg=18, material=PIPE_HOT)
 
 
-# ---------------------------------------------------------------- 侧线 + 馏分去向
-# 常压塔三种侧线馏分 + 塔顶油气；常压渣油单独从塔底引出，不能画成中部侧线。
+# ---------------------------------------------------------------- 侧线 + 侧线汽提/产品出路
+# 三路侧线分别进入三台小型汽提塔；塔底产品经管廊到界区法兰。
+# 坐标：常压塔 x=0，减压塔 x=7.6；汽提塔放在北侧（Blender +Y，网页 -Z）的空地。
 SIDE = [
-    ("Naphtha", 21.0, "石脑油"),
-    ("Kerosene", 18.4, "煤油"),
-    ("Diesel", 15.8, "柴油"),
+    ("Naphtha", 21.0, "石脑油", 3.4, 4.8),
+    ("Kerosene", 18.4, "煤油", 5.0, 5.9),
+    ("Diesel", 15.8, "柴油", 6.6, 7.0),
 ]
-for name, z, cn in SIDE:
-    cyl(f"Pipe_Side_{name}", 0.22, 6.6, (ATM_R + 3.3, 0, z), rot=(0, 1.5708, 0), seg=14, material=PIPE_COOL)
-    box(f"Box_{name}", (1.6, 1.6, 1.2), (ATM_R + 7.3, 0, z - 0.3), BOX)
+for name, z, cn, sx, sy in SIDE:
+    # 塔壁接管 + 法兰
+    cyl(f"Nozzle_Side_{name}", 0.22, 0.70, (ATM_R + 0.35, 0, z), rot=(0, math.pi / 2, 0), seg=16, material=STEEL_DARK)
+    cyl(f"Flange_Side_{name}", 0.34, 0.12, (ATM_R + 0.72, 0, z), rot=(0, math.pi / 2, 0), seg=16, material=STEEL_DARK)
+    # 塔壁 → 北侧管廊 → 汽提塔顶部
+    pipe_poly(f"Pipe_Side_{name}", [
+        (ATM_R + 0.35, 0, z),
+        (ATM_R + 0.35, sy, z),
+        (sx, sy, z),
+        (sx, sy, 9.0),
+    ], r=0.22, material=PIPE_COOL)
+    # 高架侧线支撑
+    steel_post(f"SideRack_Col_{name}_A", ATM_R + 0.75, sy, 0, z)
+    steel_post(f"SideRack_Col_{name}_B", (ATM_R + 0.75 + sx) / 2, sy, 0, z)
 
-# 常压渣油：塔底 → 减压塔；底部产品箱只作为教学终点，不代表真实收率/储运设计。
-cyl("Pipe_Residue_Bottom", 0.26, 5.2, (ATM_R + 2.8, 0, 3.2), rot=(0, 1.5708, 0), seg=14, material=PIPE_HOT)
-box("Box_Residue", (1.7, 1.7, 1.2), (ATM_R + 7.3, 0, 2.9), BOX)
+    # 小型侧线汽提塔：裙座 + 筒体 + 顶盖
+    box(f"Stripper_{name}_Foundation", (1.8, 1.8, 0.30), (sx, sy, 0.15), CONCRETE)
+    cyl(f"Stripper_{name}_Skirt", 0.66, 1.0, (sx, sy, 0.75), seg=24, material=STEEL_DARK)
+    cyl(f"Stripper_{name}_Shell", 0.55, 8.0, (sx, sy, 5.0), seg=28, material=STEEL)
+    sphere(f"Stripper_{name}_Dome", 0.55, (sx, sy, 9.0), scale_z=0.30, material=STEEL)
+
+    # 汽提塔底产品线 → 界区法兰（短管廊，全部落到支撑）
+    fy = sy
+    pipe_poly(f"Pipe_Rundown_{name}", [
+        (sx, fy, 1.0),
+        (8.3, fy, 1.0),
+    ], r=0.17, material=PIPE_HOT)
+    cyl(f"BatteryLimit_{name}", 0.30, 0.16, (8.4, fy, 1.0), rot=(0, math.pi / 2, 0), seg=18, material=STEEL_DARK)
+    box(f"BatteryLimit_{name}_Support", (0.30, 0.30, 1.0), (8.4, fy, 0.5), STEEL_DARK)
+    box(f"BatteryLimit_{name}_Foot", (0.9, 0.9, 0.16), (8.4, fy, 0.08), CONCRETE)
+    for j, px in enumerate((4.2, 6.2, 8.4)):
+        steel_post(f"RundownRack_{name}_{j}", px, fy, 0, 1.0, 0.14)
 
 # 塔顶 → 冷凝器
-cyl("Pipe_Top_Vapor", 0.4, 1.9, (ATM_R + 0.95, 0, 27.4), rot=(0, 1.5708, 0), seg=16, material=PIPE_COOL)
-cyl("Pipe_Top_Vertical", 0.4, 2.0, (ATM_R, 0, 27.0), seg=16, material=PIPE_COOL)
-box("Condenser", (2.4, 3.0, 1.8), (VAC_X - 0.6, 0, 28.3), STEEL)
+# 塔顶气相线：一根连续立管 + 弯头 + 水平管，直接接到冷凝器。
+# 不再保留两段互相错位的短管，避免任何视角下看起来断开。
+cyl("Pipe_Top_Vertical", 0.4, 2.85, (ATM_R, 0, 27.425), seg=16, material=PIPE_COOL)
+sphere("Pipe_Top_Elbow", 0.46, (ATM_R, 0, 28.85), material=PIPE_COOL)
+cyl("Pipe_Top_Condenser", 0.4, 3.6, ((ATM_R + 5.8) / 2, 0, 28.85), rot=(0, 1.5708, 0), seg=16, material=PIPE_COOL)
+# 卧式塔顶冷凝器 + 鞍座 + 独立钢框架（不再用悬空方块）
+cyl("Condenser_Shell", 0.85, 3.0, (7.0, 0, 28.4), rot=(0, math.pi / 2, 0), seg=28, material=STEEL)
+sphere("Condenser_Head_A", 0.86, (5.5, 0, 28.4), scale_z=0.18, material=STEEL_DARK)
+sphere("Condenser_Head_B", 0.86, (8.5, 0, 28.4), scale_z=0.18, material=STEEL_DARK)
+for i, x in enumerate((6.1, 7.9)):
+    box(f"Condenser_Saddle_{i}", (0.55, 1.5, 0.75), (x, 0, 27.7), STEEL_DARK)
+    box(f"Condenser_Beam_{i}", (0.22, 3.4, 0.20), (x, 1.7, 27.5), STEEL_DARK)
+for i, (x, y) in enumerate(((5.8, 3.4), (8.2, 3.4))):
+    steel_post(f"Condenser_Frame_{i}", x, y, 0, 27.5, 0.26)
+# 冷凝器框架的纵向主梁，把两根立柱和两根鞍座梁连成整体
+box("Condenser_Frame_LongBeam", (2.8, 0.22, 0.22), (7.0, 3.4, 27.5), STEEL_DARK)
+# 回流罐：冷凝器下方的小型卧式罐，放在同一框架上
+cyl("Reflux_Drum", 0.55, 1.8, (7.0, 0.2, 25.5), rot=(0, math.pi / 2, 0), seg=22, material=STEEL)
+sphere("Reflux_Drum_Head_A", 0.56, (6.1, 0.2, 25.5), scale_z=0.15, material=STEEL_DARK)
+sphere("Reflux_Drum_Head_B", 0.56, (7.9, 0.2, 25.5), scale_z=0.15, material=STEEL_DARK)
+box("Reflux_Drum_Beam", (2.8, 0.22, 0.22), (7.0, 3.4, 25.2), STEEL_DARK)
+box("Reflux_Drum_Cantilever_A", (0.20, 3.4, 0.20), (6.3, 1.7, 25.2), STEEL_DARK)
+box("Reflux_Drum_Cantilever_B", (0.20, 3.4, 0.20), (7.7, 1.7, 25.2), STEEL_DARK)
+box("Reflux_Drum_Saddle_A", (0.45, 1.2, 0.6), (6.3, 0.2, 24.9), STEEL_DARK)
+box("Reflux_Drum_Saddle_B", (0.45, 1.2, 0.6), (7.7, 0.2, 24.9), STEEL_DARK)
+pipe_poly("Pipe_Condenser_To_Drum", [(7.0, 0, 27.6), (7.0, 0, 26.1)], r=0.20, material=PIPE_COOL)
 
 # 泵
 cyl("Pump_1", 0.8, 1.6, (3.4, 2.6, 1.0), rot=(0.0, 0, 0), seg=20, material=STEEL_DARK)
@@ -385,7 +459,7 @@ ANCHORS = {
     "anchor_tower_feed": (-4.5, 0.0, 13.0),
     "anchor_tower_trays": (0.0, 0.0, 16.0),
     "anchor_tower_vacuum": (VAC_X, 0.0, 9.0),
-    "anchor_tower_products": (ATM_R + 7.3, 0.0, 17.0),
+    "anchor_tower_products": (8.4, 6.0, -5.9),
 }
 for k, v in ANCHORS.items():
     empty(k, v)
@@ -449,7 +523,7 @@ meta = {
             "hs_heater": "Heater",
             "hs_atm_tower": "Tower_Atmospheric_Shell",
             "hs_vacuum": "Tower_Vacuum_Shell",
-            "hs_products": "Box_",
+            "hs_products": "BatteryLimit_",
         },
     },
 }

@@ -343,7 +343,7 @@
     else if (id === 'fixed_roof_tank') hint.textContent = '固定顶罐 · 油气空间随液位变化';
     else hint.textContent = '外浮顶罐 · 浮盘随液面升降';
     syncStorageUi();
-    if (level >= 0.85 && !completed && observedTanks.fixed_roof_tank && observedTanks.floating_roof_tank) complete();
+    if (level >= 0.70 && !completed) complete();
   }
 
   function syncStorageUi() {
@@ -394,10 +394,8 @@
     level = +slider.value / 100;
     if (stage.setInteraction) stage.setInteraction('change_liquid_level', Math.round(level * 100), '百分比');
     applyLevel();
-    if (level >= 0.85 && !completed) {
-      if (observedTanks.fixed_roof_tank && observedTanks.floating_roof_tank) complete();
-      else hint.textContent = '再切换另一个罐型，比较两者的油气空间';
-    } else if (level < 0.85) hint.textContent = storageHint();
+    if (level >= 0.70 && !completed) complete();
+    else if (level < 0.70) hint.textContent = storageHint();
   });
 
   function complete() {
@@ -483,6 +481,15 @@
   function enter() {
     if (stage.isLevel()) return;
     if (!G) build();
+    /* 每次重新进入储运关都从默认液位/泵送状态开始；不能把上一次的 100% 带进来。 */
+    level = 0.02;
+    pumpRunning = false;
+    pumpPaused = false;
+    completed = false;
+    selectedTankId = 'fixed_roof_tank';
+    observedTanks = { fixed_roof_tank: false, floating_roof_tank: false };
+    if (pumpFlow) pumpFlow.speed = 0;
+    if (slider) slider.value = '2';
     ensureCamera();
     applyLevel();
 

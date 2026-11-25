@@ -24,9 +24,9 @@
       9.0
     ],
     "anchor_tower_products": [
-      9.5,
-      0.0,
-      17.0
+      8.4,
+      5.9,
+      1.0
     ]
   },
   "anchor_web_y_up": {
@@ -51,9 +51,9 @@
       -0.0
     ],
     "anchor_tower_products": [
-      9.5,
-      17.0,
-      -0.0
+      8.4,
+      6.0,
+      -5.9
     ]
   },
   "heater_bbox_obj_y_up": [
@@ -78,7 +78,7 @@
       "hs_heater": "Heater",
       "hs_atm_tower": "Tower_Atmospheric_Shell",
       "hs_vacuum": "Tower_Vacuum_Shell",
-      "hs_products": "Box_"
+      "hs_products": "BatteryLimit_"
     }
   }
 }

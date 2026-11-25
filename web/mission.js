@@ -40,11 +40,11 @@
       short: '储运 · 罐型与泵送',
       role: '分离后的油相需要暂时储存，再送去炼化。',
       clue: '外浮顶罐的浮盘贴着液面；固定顶罐的油气空间更大。',
-      goal: '在 03 储运里把液位调到 70% 以上，再启动泵送。',
+      goal: '在 03 储运里把液位调到 70% 以上，观察固定顶与外浮顶的油气空间差异。',
       hints: [
         '拖液位滑块，观察浮盘与油气空间。',
-        '液位超过 70% 后，打开“演示与结构”，点“启动泵送”。',
-        '两种罐型都可完成任务；这里比较的是油气空间，不是零排放。'
+        '液位超过 70% 即完成本段；两种罐型都可完成。',
+        '打开“演示与结构”里的“启动泵送”，可继续观察转输路径（可选）。'
       ],
       knowledge: 'kb_store',
       knowledgeLabel: '储运：浮顶减少油气空间，但不等于零损耗。'
@@ -372,8 +372,8 @@
     } else if (step.id === 'M3') {
       if (action === 'change_liquid_level') state.flags.level = Number(value) || 0;
       if (action === 'start_pump') state.flags.pump = true;
-      /* 必须用“启动泵时的当前液位”，不能用历史最高液位。 */
-      if ((state.flags.level || 0) >= 70 && state.flags.pump) completeStep();
+      /* 任务条件是液位达到 70%；泵送演示保留为可选延伸，不阻塞任务。 */
+      if ((state.flags.level || 0) >= 70) completeStep();
     } else if (step.id === 'M4') {
       if (action === 'inspect_tower_structure' && value === 'full') state.flags.full = true;
       if (action === 'select_fraction') state.flags.fraction = value;
@@ -454,6 +454,9 @@
     state = blank();
     try { localStorage.removeItem(KEY); } catch (err) {}
     save();
+    if (global.__stage && global.__stage.setNodeDone) {
+      for (var i = 0; i < STEP_DEFS.length; i++) global.__stage.setNodeDone(i, false);
+    }
     if (global.__stage && global.__stage.setMode) global.__stage.setMode('free');
     uiHidden = true;
     if (ui) ui.hidden = true;
@@ -495,16 +498,38 @@
     if (global.JourneyStore) global.JourneyStore.recordMission(state);
   }
 
+  /* 储运关的液位/泵送由关卡的实际状态决定，而不是只信赖某一次事件的值。
+     这样拖液位、启动泵送、切换设备都会用同一份真实状态判定，避免“拖到 100%
+     不完成、点一下设备才完成”的事件顺序问题。 */
+  function syncStorageState() {
+    var step = current();
+    if (!state || !step || step.id !== 'M3' || !global.__l3) return;
+    state.flags.level = Math.round((Number(global.__l3.level) || 0) * 100);
+    state.flags.pump = !!global.__l3.pumpRunning;
+  }
+
   function observe(event) {
     if (!state) return;
     var ctx = event.detail;
     if (!ctx || !ctx.interaction) return;
+    syncStorageState();
     var it = ctx.interaction;
     checkStep(it.actionId || it.action, it.value, it.result);
   }
 
   document.addEventListener('scene-context', observe);
   document.addEventListener('journey-open-archive', function () { if (ui) ui.hidden = true; });
+
+  /* 储运滑块在部分事件链下只触发关卡内部状态，没有稳定的 scene-context
+     顺序；用轻量轮询兜底，确保液位和泵送都达标时立即完成 M3。 */
+  var storageWatch = setInterval(function () {
+    if (!state || state.status !== 'active') return;
+    var step = current();
+    if (!step || step.id !== 'M3') return;
+    syncStorageState();
+    if ((state.flags.level || 0) >= 70) completeStep();
+  }, 250);
+  global.addEventListener('pagehide', function () { clearInterval(storageWatch); });
 
   global.__mission = {
     id: 'M-YJ-001',
