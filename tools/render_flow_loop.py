@@ -34,6 +34,20 @@ for n in ("Tower_Atmospheric_Shell", "Tower_Atmospheric_Dome",
     if o:
         o.hide_render = True
 
+
+def action_fcurves(action):
+    """Blender 5 的 Action 是 layered Action；旧版才直接有 fcurves。"""
+    if action is None:
+        return []
+    if hasattr(action, "fcurves"):
+        return list(action.fcurves)
+    out = []
+    for layer in action.layers:
+        for strip in layer.strips:
+            for bag in strip.channelbags:
+                out.extend(bag.fcurves)
+    return out
+
 FPS = 24
 FRAMES = 288
 scene.render.fps = FPS
@@ -104,7 +118,7 @@ def tray_film(name, x, z, r):
     for f, s in ((1, 1.0), (48, 0.965), (96, 1.0)):
         o.scale = (s, s, 1.0)
         o.keyframe_insert("scale", frame=f)
-    for fc in o.animation_data.action.fcurves:
+    for fc in action_fcurves(o.animation_data.action):
         m = fc.modifiers.new("CYCLES")
     return o
 
@@ -129,7 +143,7 @@ for z in (21.0, 18.4, 15.8, 13.2):
 
 # 相机：绕开口侧（-Y）左右摆动 + 轻微升降
 TARGET = Vector((1.0, 0.0, 12.5))
-RADIUS, HEIGHT = 70.0, 28.0
+RADIUS, HEIGHT = 76.0, 28.0
 BASE_A, SWAY = -math.pi / 2, 0.55
 bpy.ops.object.camera_add(location=(TARGET.x + RADIUS, 0, HEIGHT))
 cam = bpy.context.object
@@ -143,27 +157,29 @@ for f in range(1, FRAMES + 1):
     cam.rotation_euler = (TARGET - loc).to_track_quat("-Z", "Y").to_euler()
     cam.keyframe_insert("location", frame=f)
     cam.keyframe_insert("rotation_euler", frame=f)
-for fc in cam.animation_data.action.fcurves:
+for fc in action_fcurves(cam.animation_data.action):
     for kp in fc.keyframe_points:
         kp.interpolation = "BEZIER"
 
 # 流动粒子匀速
 for ob in bpy.data.objects:
     if ob.name.startswith(("Vapor", "Liquid", "Flow")) and ob.animation_data:
-        for fc in ob.animation_data.action.fcurves:
+        for fc in action_fcurves(ob.animation_data.action):
             for kp in fc.keyframe_points:
                 kp.interpolation = "LINEAR"
 
 r = scene.render
-r.image_settings.file_format = "FFMPEG"
-r.ffmpeg.format = "MPEG4"
-r.ffmpeg.codec = "H264"
-r.ffmpeg.constant_rate_factor = "HIGH"
-r.ffmpeg.ffmpeg_preset = "GOOD"
-r.ffmpeg.audio_codec = "NONE"
-r.filepath = os.path.join(OUT, "hero-loop")
+# Blender 5.3 的当前构建没有 FFMPEG 输出；先渲染 PNG，再由 ffmpeg 编码。
+frames_dir = os.path.join(OUT, "hero-frames")
+os.makedirs(frames_dir, exist_ok=True)
+for old in os.listdir(frames_dir):
+    if old.endswith(".png"):
+        os.remove(os.path.join(frames_dir, old))
+r.image_settings.file_format = "PNG"
+r.filepath = os.path.join(frames_dir, "hero-")
+r.use_file_extension = True
 
 bpy.ops.render.render(animation=True)
 
-produced = [f for f in os.listdir(OUT) if f.startswith("hero-loop")]
-print("[ok] flow loop:", produced, [os.path.getsize(os.path.join(OUT, f)) for f in produced])
+produced = sorted(f for f in os.listdir(frames_dir) if f.startswith("hero-") and f.endswith(".png"))
+print("[ok] frames:", len(produced), produced[:1], produced[-1:])

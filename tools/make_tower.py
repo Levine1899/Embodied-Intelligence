@@ -291,6 +291,10 @@ box("Box_Residue", (1.7, 1.7, 1.2), (ATM_R + 7.3, 0, 2.9), BOX)
 # 塔顶 → 冷凝器
 cyl("Pipe_Top_Vapor", 0.4, 1.9, (ATM_R + 0.95, 0, 27.4), rot=(0, 1.5708, 0), seg=16, material=PIPE_COOL)
 cyl("Pipe_Top_Vertical", 0.4, 2.0, (ATM_R, 0, 27.0), seg=16, material=PIPE_COOL)
+# 塔顶立管 + 水平短管：把塔顶气相线接到冷凝器，避免冷凝器悬空。
+cyl("Pipe_Top_Riser", 0.4, 1.45, (ATM_R + 1.9, 0, 28.125), seg=16, material=PIPE_COOL)
+sphere("Pipe_Top_Elbow", 0.46, (ATM_R + 1.9, 0, 28.85), material=PIPE_COOL)
+cyl("Pipe_Top_Condenser", 0.4, 1.7, (4.95, 0, 28.85), rot=(0, 1.5708, 0), seg=16, material=PIPE_COOL)
 box("Condenser", (2.4, 3.0, 1.8), (VAC_X - 0.6, 0, 28.3), STEEL)
 
 # 泵
