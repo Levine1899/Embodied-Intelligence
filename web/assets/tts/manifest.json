@@ -1,6 +1,6 @@
 {
-  "version": "tts-20261125T021352",
-  "generatedAt": "2026-11-25T02:13:52.438Z",
+  "version": "tts-20261125T023616",
+  "generatedAt": "2026-11-25T02:36:16.645Z",
   "voice": "x6_zhantingnvjiedai_pro",
   "count": 51,
   "items": [
@@ -525,10 +525,10 @@
       "id": "mission-3",
       "title": "任务第3步",
       "step": 3,
-      "text": "在 03 储运里把液位调到 70% 以上，再启动泵送。。线索：外浮顶罐的浮盘贴着液面；固定顶罐的油气空间更大。",
-      "hash": "2c902c99ac94c5971ad4a79fd62a84bfabe5ab72080e15e4e4fae130a38cc533",
-      "file": "tts/2c902c99ac94c5971ad4a79fd62a84bfabe5ab72080e15e4e4fae130a38cc533.mp3",
-      "bytes": 59760
+      "text": "在 03 储运里把液位调到 70% 以上，观察固定顶与外浮顶的油气空间差异。。线索：外浮顶罐的浮盘贴着液面；固定顶罐的油气空间更大。",
+      "hash": "0702b32dedbaa598ad70610733d310bf87e9ebb62ae9bd106d162ebb04ce019b",
+      "file": "tts/0702b32dedbaa598ad70610733d310bf87e9ebb62ae9bd106d162ebb04ce019b.mp3",
+      "bytes": 79200
     },
     {
       "kind": "mission",

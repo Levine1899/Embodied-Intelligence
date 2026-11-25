@@ -40,11 +40,11 @@
       short: '储运 · 罐型与泵送',
       role: '分离后的油相需要暂时储存，再送去炼化。',
       clue: '外浮顶罐的浮盘贴着液面；固定顶罐的油气空间更大。',
-      goal: '在 03 储运里把液位调到 70% 以上，再启动泵送。',
+      goal: '在 03 储运里把液位调到 70% 以上，观察固定顶与外浮顶的油气空间差异。',
       hints: [
         '拖液位滑块，观察浮盘与油气空间。',
-        '液位超过 70% 后，打开“演示与结构”，点“启动泵送”。',
-        '两种罐型都可完成任务；这里比较的是油气空间，不是零排放。'
+        '液位超过 70% 即完成本段；两种罐型都可完成。',
+        '打开“演示与结构”里的“启动泵送”，可继续观察转输路径（可选）。'
       ],
       knowledge: 'kb_store',
       knowledgeLabel: '储运：浮顶减少油气空间，但不等于零损耗。'
@@ -372,8 +372,8 @@
     } else if (step.id === 'M3') {
       if (action === 'change_liquid_level') state.flags.level = Number(value) || 0;
       if (action === 'start_pump') state.flags.pump = true;
-      /* 必须用“启动泵时的当前液位”，不能用历史最高液位。 */
-      if ((state.flags.level || 0) >= 70 && state.flags.pump) completeStep();
+      /* 任务条件是液位达到 70%；泵送演示保留为可选延伸，不阻塞任务。 */
+      if ((state.flags.level || 0) >= 70) completeStep();
     } else if (step.id === 'M4') {
       if (action === 'inspect_tower_structure' && value === 'full') state.flags.full = true;
       if (action === 'select_fraction') state.flags.fraction = value;
@@ -524,7 +524,7 @@
     var step = current();
     if (!step || step.id !== 'M3') return;
     syncStorageState();
-    if ((state.flags.level || 0) >= 70 && state.flags.pump) completeStep();
+    if ((state.flags.level || 0) >= 70) completeStep();
   }, 250);
   global.addEventListener('pagehide', function () { clearInterval(storageWatch); });
 
