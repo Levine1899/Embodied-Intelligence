@@ -484,6 +484,15 @@
   function enter() {
     if (stage.isLevel()) return;
     if (!G) build();
+    /* 每次重新进入储运关都从默认液位/泵送状态开始；不能把上一次的 100% 带进来。 */
+    level = 0.02;
+    pumpRunning = false;
+    pumpPaused = false;
+    completed = false;
+    selectedTankId = 'fixed_roof_tank';
+    observedTanks = { fixed_roof_tank: false, floating_roof_tank: false };
+    if (pumpFlow) pumpFlow.speed = 0;
+    if (slider) slider.value = '2';
     ensureCamera();
     applyLevel();
 

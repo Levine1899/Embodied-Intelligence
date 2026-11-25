@@ -454,6 +454,9 @@
     state = blank();
     try { localStorage.removeItem(KEY); } catch (err) {}
     save();
+    if (global.__stage && global.__stage.setNodeDone) {
+      for (var i = 0; i < STEP_DEFS.length; i++) global.__stage.setNodeDone(i, false);
+    }
     if (global.__stage && global.__stage.setMode) global.__stage.setMode('free');
     uiHidden = true;
     if (ui) ui.hidden = true;
