@@ -138,8 +138,8 @@ for i in range(9):
 path_flow("FlowFeed", [(-6.8, 0, 7.55), (-6.8, 0, 13.55), (-2.2, 0, 13.55)], 5, 96, LIQUID, 0.15)
 path_flow("FlowBottom", [(2.15, 0, 3.68), (5.00, 0, 3.68)], 5, 96, LIQUID, 0.15)
 path_flow("FlowTop", [(2.2, 0, 26.4), (2.2, 0, 28.85), (5.8, 0, 28.85)], 4, 96, VAPOR, 0.17)
-for z in (21.0, 18.4, 15.8, 13.2):
-    path_flow(f"FlowSide{int(z * 10)}", [(1.85, 0, z + 0.40), (8.80, 0, z + 0.40)], 3, 144, LIQUID, 0.13)
+for name, z, cn, sx, sy in SIDE:
+    path_flow(f"FlowSide{int(z * 10)}", [(2.2, 0, z), (2.2, sy, z), (sx, sy, z), (sx, sy, 9.0)], 3, 144, LIQUID, 0.13)
 
 # 相机：绕开口侧（-Y）左右摆动 + 轻微升降
 TARGET = Vector((1.0, 0.0, 12.5))
