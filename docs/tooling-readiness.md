@@ -1,6 +1,10 @@
 # Phase 01 · 工具准备度
 
-日期：2026-11-22
+> ⚠ **本文是 2026-11-22 的历史快照。** Blender 已于 2026-11-25 复测为 **5.3.0**（本文原记 4.5.16 LTS），
+> 且现有 GLB 产物的导出器版本不一致：`tower.glb` 由 Blender I/O `v5.3.43` 生成，`separator/underground/spike.glb` 由 `v4.5.51` 生成。
+> 最新权威数据见 [`docs/3d-model-optimization/reports/phase-00-baseline.md`](3d-model-optimization/reports/phase-00-baseline.md) §7.1。
+
+日期：2026-11-22（Blender 行于 2026-11-25 更正）
 原则：只盘点，**未安装任何软件、未改全局环境**；版本均在本机实测。
 
 | 工具 | 用途 | 实测 | 状态 | 本轮实际用途 |
@@ -9,7 +13,7 @@
 | Node.js | 代理、测试脚本、工具 | `v22.20.0` | **已安装且验证** | `node --check`、E2E/FPS 脚本、proxy 503 测试 |
 | npm | 包管理 | `10.9.3` | **已安装且验证** | 只读 `package.json`；未安装依赖 |
 | Python | 静态服务器、资产生成脚本 | `Python 3.12.7` | **已安装且验证** | `http.server 8789`、`py_compile` |
-| Blender | Hero Asset 制作、`.blend`、GLB/OBJ 导出 | `Blender 4.5.16 LTS`（build 2026-11-10） | **已安装且验证** | 仅版本核验；本轮未改资产 |
+| Blender | Hero Asset 制作、`.blend`、GLB/OBJ 导出 | **`Blender 5.3.0`**（build 2026-11-10，路径 `C:\Program Files\Blender Foundation\Blender 5.3\blender.exe`，不在 PATH） | **已安装且验证** | 仅版本核验；本轮未改资产 |
 | Google Chrome | 浏览器/WebGL/交互测试 | `157.0.8103.79` | **已安装且验证** | headed 五关 E2E、FPS、截图、错误收集 |
 | ego-browser（本会话） | 浏览器自动化替代 | 已运行，CDP 可用 | **已安装且验证** | 页面健康、截图、DOM/Canvas 检查 |
 | FFmpeg | 录屏/视频工具链 | `2025-10-27 git-68152978b5-full_build` | **已安装且验证** | 仅盘点，本轮未录制 |

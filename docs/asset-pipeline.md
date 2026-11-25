@@ -1,14 +1,21 @@
 # Asset pipeline · Phase 03
 
-日期：2026-11-22
+> ⚠ **本文是 2026-11-22 的历史快照，其中"当前状态"部分已被 2026-11-25 的实测推翻。**
+> 需知：① Blender 实为 **5.3.0**（本文记 4.x LTS 且"未定位"）；② `web/assets/models/` **从未建立**，
+> 实际并存 `web/assets/<asset>/`（tower/separator/underground）与 `web/assets/hero/<asset>/`（5 个 Hero）两套；
+> ③ `assets-source/blender/` 下已有 **3 个 `.blend`**；④ 仓库仍**无 GLTFLoader**，生产页只加载 OBJ。
+> 目录与命名的最终裁决见 [`docs/3d-model-optimization/decisions.md`](3d-model-optimization/decisions.md)。
+> 基线与实测数据见 [`docs/3d-model-optimization/reports/phase-00-baseline.md`](3d-model-optimization/reports/phase-00-baseline.md)。
+
+日期：2026-11-22（Blender 与目录现状于 2026-11-25 更正）
 适用：阶段 04–06 的 Hero、阶段 03 的环境/地形辅助资产。
 原则：**可编辑源 + 可复现导出 + 稳定语义 ID + 可核验网页加载**；不以三角面数代替质量。
 
 ## 1. Blender 版本与运行
 
-- 审计环境记录：Blender 已安装，但本次运行 `where blender` 未找到可执行文件；阶段 04 开始前必须确认实际版本/路径并登记。
-- 建议版本：Blender 4.x LTS；不要用未记录版本的导出器。
-- 命令行模板（路径按本机实际替换）：
+- **实测（2026-11-25）**：Blender **5.3.0**（build 2026-11-10），路径 `C:\Program Files\Blender Foundation\Blender 5.3\blender.exe`，**不在 PATH**。`--version` 可正常返回，headless 可用。
+- **版本锁定建议**：以 5.3.0 为唯一构建版本。现有产物的导出器版本**不一致**——`tower.glb` 为 Blender I/O `v5.3.43`，`separator/underground/spike.glb` 为 `v4.5.51`；`tools/blender/build_separator_hero.py` 的 docstring 仍硬编码 `D:\tools\blender-4.5.16-windows-x64\blender.exe`，与实机不符，须在 Phase 1 统一。
+- 命令行模板（路径按本机 5.3.0 实际替换）：
 
 ```bash
 blender -b assets-source/blender/<assetId>.blend \
@@ -95,8 +102,10 @@ docs/asset-gaps.md                        # 待建/精修/复用状态
 - 阶段 06：塔全剖无结构级差异 → 炼化体验不得 PASS。
 - 阶段 09：三类 Hero 的 `.blend`、`.glb`、语义节点、来源/许可、网页证据缺一不可。
 
-## 9. 当前状态
+## 9. 当前状态（2026-11-25 更正）
 
-- `assets-source/`、`web/assets/models/` 已建目录；尚无 Hero `.blend`/`.glb`。
-- 现有 OBJ 可继续作为 overview/占位；未按本流程核验，不得标“已通过”。
-- Blender 可执行文件本次未定位；阶段 04 前必须确认并记录版本。
+- `web/assets/models/` **从未建立**；实际并存两套：`web/assets/<asset>/`（tower / separator / underground）与 `web/assets/hero/<asset>/`（separator / pumpjack / wellhead / heater / floating_roof_tank）。目录唯一形态待 Phase 1 裁决。
+- Hero `.blend`/`.glb` **已存在**：`assets-source/blender/{tower,separator,underground}_hero.blend`；GLB 在 `web/assets/{tower,separator,underground}/`。但**生产页一律不加载 GLB**（无 GLTFLoader），只有 `_spike-separator.html` 经 `MiniGLB` 加载过 spike 版。
+- 现有 OBJ 可继续作为 overview/占位；未按本流程核验，不得标"已通过"。
+- Blender 已定位并验证为 5.3.0（见 §1）。
+- 已有 manifest 质量分化：phase-04/phase-05 的哈希与当前文件**全部匹配**；phase-06（tower）**全部失配**，不可作为基线。

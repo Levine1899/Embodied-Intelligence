@@ -1,0 +1,26 @@
+{
+  "valid.manifest.json": {
+    "expectedOutcome": "pass",
+    "why": "结构完整、引用闭合；GLB 无 extras 仅告警"
+  },
+  "fail-missing-nodeuid.manifest.json": {
+    "expectedOutcome": "fail",
+    "expectCode": "SCHEMA_REQUIRED",
+    "why": "nodes[1] 缺少 nodeUid"
+  },
+  "fail-duplicate-nodeuid.manifest.json": {
+    "expectedOutcome": "fail",
+    "expectCode": "DUP_NODEUID",
+    "why": "两个节点共用同一 nodeUid"
+  },
+  "fail-unknown-node.manifest.json": {
+    "expectedOutcome": "fail",
+    "expectCode": "NODE_NOT_IN_GLB",
+    "why": "Manifest 声明的节点在 GLB 中不存在"
+  },
+  "fail-missing-node-ref.manifest.json": {
+    "expectedOutcome": "fail",
+    "expectCode": "MISSING_NODE_REF",
+    "why": "representations 引用了不存在的 nodeUid"
+  }
+}

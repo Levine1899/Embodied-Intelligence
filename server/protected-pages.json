@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "note": "每一个 web/*.html 必须显式出现在 protected 或 public 中；未列出的 HTML 默认按受保护处理（fail closed）。运行时由 tests/auth-pages.test.mjs 校验一致性。",
+  "entryPage": "/index.html",
+  "loginPage": "/login.html",
+  "protected": [
+    "/index.html",
+    "/sandbox.html",
+    "/explore.html",
+    "/chapter.html",
+    "/tower.html",
+    "/ask.html",
+    "/write.html",
+    "/kb.html",
+    "/_spike-separator.html"
+  ],
+  "public": [
+    "/login.html",
+    "/auth-error.html"
+  ]
+}

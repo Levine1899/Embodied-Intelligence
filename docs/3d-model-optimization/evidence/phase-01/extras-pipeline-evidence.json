@@ -1,0 +1,306 @@
+{
+  "generatedAt": "2026-11-25T04:00:02.902Z",
+  "phase": "phase-01",
+  "purpose": "证明 Blender 自定义属性 → GLB extras → Manifest 的 nodeUid 通路可用、可复现，且三处一致",
+  "environment": {
+    "blender": "5.3.0",
+    "exporter": "Khronos glTF Blender I/O v5.3.43",
+    "os": "Windows 11 10.0.26200",
+    "node": "v22.20.0",
+    "isolation": "全部导出写入系统临时目录；未保存 .blend，未覆盖 web/assets"
+  },
+  "probeInvocation": "blender -b assets-source/blender/separator_hero.blend -P tools/blender/asset_identity_probe.py -- --asset-id separator_three_phase --object-id three_phase_separator",
+  "artifacts": {
+    "probeA.glb": {
+      "bytes": 403472,
+      "sha256": "e41799c4f8ed96ac1e81a88018106341c9e31298cddad0ab9e6bfedbdc99f8ef"
+    },
+    "probeB.glb": {
+      "bytes": 403472,
+      "sha256": "e41799c4f8ed96ac1e81a88018106341c9e31298cddad0ab9e6bfedbdc99f8ef"
+    },
+    "shipped separator.glb": {
+      "bytes": 391188,
+      "sha256": "741c0ee6a0ad9e630f264c66900d2c3d54ec055034addd0f44570301c595d18b"
+    }
+  },
+  "determinism": {
+    "identical": true,
+    "note": "同一 .blend 输入连续两次导出，字节级完全一致"
+  },
+  "extras": {
+    "nodes": 43,
+    "withPetro": 43,
+    "withoutPetro": 0,
+    "dottedDuplicateKeys": 0,
+    "flatLeftoverKeys": [
+      "semanticId",
+      "objectId"
+    ],
+    "verdict": "extras.petro 43/43 落地；.NNN 重复键为 0"
+  },
+  "nodeUidConsistency": {
+    "glbCount": 43,
+    "manifestCount": 43,
+    "mismatch": 0,
+    "uniqueInGlb": 43,
+    "verdict": "43/43 三处一致（Blender 自定义属性 / GLB extras / Manifest）"
+  },
+  "nodeTable": [
+    {
+      "nodeName": "separator_shell",
+      "semanticId": "separator_shell",
+      "instanceId": null,
+      "nodeUid": "11702bc6-a59e-5aa4-aa0e-766b6f4f5331"
+    },
+    {
+      "nodeName": "separator_head_left",
+      "semanticId": "separator_head_left",
+      "instanceId": null,
+      "nodeUid": "93d5b4eb-1036-5858-8f29-18f4be69ccf5"
+    },
+    {
+      "nodeName": "separator_head_right",
+      "semanticId": "separator_head_right",
+      "instanceId": null,
+      "nodeUid": "ac2f3e5d-22ff-5b87-be2c-7dffbb8158b0"
+    },
+    {
+      "nodeName": "separator_cut_shell",
+      "semanticId": "separator_cut_shell",
+      "instanceId": null,
+      "nodeUid": "36bb7c26-0dd0-5564-b5c4-c3d395d5125c"
+    },
+    {
+      "nodeName": "separator_cut_edge_top",
+      "semanticId": "separator_cut_edge_top",
+      "instanceId": null,
+      "nodeUid": "514d959c-be26-5a9b-92d4-bd3f80b766a2"
+    },
+    {
+      "nodeName": "separator_cut_edge_bottom",
+      "semanticId": "separator_cut_edge_bottom",
+      "instanceId": null,
+      "nodeUid": "7eae3095-cc04-5680-9266-a04d28e10dc5"
+    },
+    {
+      "nodeName": "separator_inlet",
+      "semanticId": "separator_inlet",
+      "instanceId": null,
+      "nodeUid": "d61ed57f-ef57-57cf-93ce-0864005816a1"
+    },
+    {
+      "nodeName": "separator_gas_outlet",
+      "semanticId": "separator_gas_outlet",
+      "instanceId": null,
+      "nodeUid": "45876519-bab0-5963-829c-40caf3a0377d"
+    },
+    {
+      "nodeName": "separator_oil_outlet",
+      "semanticId": "separator_oil_outlet",
+      "instanceId": null,
+      "nodeUid": "e978236a-de38-5f8f-a21e-d717f6134cec"
+    },
+    {
+      "nodeName": "separator_water_outlet",
+      "semanticId": "separator_water_outlet",
+      "instanceId": null,
+      "nodeUid": "dd2a19fb-60dd-58b6-b342-67235a1a65ea"
+    },
+    {
+      "nodeName": "separator_manway",
+      "semanticId": "separator_manway",
+      "instanceId": null,
+      "nodeUid": "659de60e-f8fb-5935-8799-f0b0b028d13b"
+    },
+    {
+      "nodeName": "separator_gauge",
+      "semanticId": "separator_gauge",
+      "instanceId": null,
+      "nodeUid": "2c93e40b-5a24-574a-a1e6-0719772b7dd1"
+    },
+    {
+      "nodeName": "separator_valve_wheel",
+      "semanticId": "separator_valve_wheel",
+      "instanceId": null,
+      "nodeUid": "b9b7ab60-fe3c-5e0d-9a1f-2b67a353f993"
+    },
+    {
+      "nodeName": "separator_internal_water",
+      "semanticId": "separator_internal_water",
+      "instanceId": null,
+      "nodeUid": "1bea3521-dee6-5ffd-aad4-4715a4b8d357"
+    },
+    {
+      "nodeName": "separator_internal_oil",
+      "semanticId": "separator_internal_oil",
+      "instanceId": null,
+      "nodeUid": "cdc2aa83-d431-5ad8-a921-e16d92ffdced"
+    },
+    {
+      "nodeName": "separator_internal_gas",
+      "semanticId": "separator_internal_gas",
+      "instanceId": null,
+      "nodeUid": "2d7945d2-3b58-5e7b-8f3c-696a41a9bf70"
+    },
+    {
+      "nodeName": "separator_internal_weir",
+      "semanticId": "separator_internal_weir",
+      "instanceId": null,
+      "nodeUid": "1136b7ec-e9d8-5c41-b941-7860245f4c60"
+    },
+    {
+      "nodeName": "separator_internal_baffle",
+      "semanticId": "separator_internal_baffle",
+      "instanceId": null,
+      "nodeUid": "baab0cb9-d35a-5423-ad66-daf5ede563ba"
+    },
+    {
+      "nodeName": "separator_internal_inlet_distributor",
+      "semanticId": "separator_internal_inlet_distributor",
+      "instanceId": null,
+      "nodeUid": "5f9eecae-345d-5acc-ac08-0d5540a4977f"
+    },
+    {
+      "nodeName": "separator_internal_inlet_port_00",
+      "semanticId": "separator_internal_inlet_port",
+      "instanceId": "00",
+      "nodeUid": "3a44b4fc-7b40-55bc-a8ed-a7ce1275e395"
+    },
+    {
+      "nodeName": "separator_internal_inlet_port_01",
+      "semanticId": "separator_internal_inlet_port",
+      "instanceId": "01",
+      "nodeUid": "0f20a1ff-15da-56fd-be62-6aa7e3c7195b"
+    },
+    {
+      "nodeName": "separator_internal_inlet_port_02",
+      "semanticId": "separator_internal_inlet_port",
+      "instanceId": "02",
+      "nodeUid": "c723398b-d6df-5fd8-8672-1b195afc8f66"
+    },
+    {
+      "nodeName": "separator_internal_inlet_port_03",
+      "semanticId": "separator_internal_inlet_port",
+      "instanceId": "03",
+      "nodeUid": "8ff20117-515c-55df-a500-fe39715d1186"
+    },
+    {
+      "nodeName": "separator_internal_inlet_port_04",
+      "semanticId": "separator_internal_inlet_port",
+      "instanceId": "04",
+      "nodeUid": "2466987c-30fc-50e4-98c9-337ceca6ec33"
+    },
+    {
+      "nodeName": "separator_internal_mist_00",
+      "semanticId": "separator_internal_mist_extractor",
+      "instanceId": "00",
+      "nodeUid": "97d95d55-5ce7-5fd7-b621-f99da65d3293"
+    },
+    {
+      "nodeName": "separator_internal_mist_01",
+      "semanticId": "separator_internal_mist_extractor",
+      "instanceId": "01",
+      "nodeUid": "c509f91c-8c2b-5d27-8c9c-131b9498e3eb"
+    },
+    {
+      "nodeName": "separator_internal_mist_02",
+      "semanticId": "separator_internal_mist_extractor",
+      "instanceId": "02",
+      "nodeUid": "5a77eb7c-07b6-5fe4-9623-0f11d9bd1382"
+    },
+    {
+      "nodeName": "separator_internal_mist_03",
+      "semanticId": "separator_internal_mist_extractor",
+      "instanceId": "03",
+      "nodeUid": "68c9c7bb-eecf-55ad-9085-4b337cd21942"
+    },
+    {
+      "nodeName": "separator_internal_mist_04",
+      "semanticId": "separator_internal_mist_extractor",
+      "instanceId": "04",
+      "nodeUid": "29b498ba-9df7-5a6c-a9f1-b5d81672f0a3"
+    },
+    {
+      "nodeName": "separator_internal_mist_05",
+      "semanticId": "separator_internal_mist_extractor",
+      "instanceId": "05",
+      "nodeUid": "34080000-ac00-5e08-9b0d-b5cb6a5854d8"
+    },
+    {
+      "nodeName": "separator_internal_mist_06",
+      "semanticId": "separator_internal_mist_extractor",
+      "instanceId": "06",
+      "nodeUid": "ba6e1732-44ea-5400-aac0-ae1b798f99f9"
+    },
+    {
+      "nodeName": "separator_internal_vortex_breaker",
+      "semanticId": "separator_internal_vortex_breaker",
+      "instanceId": null,
+      "nodeUid": "b706a595-ebe4-5601-9db9-483dc7ffc6d0"
+    },
+    {
+      "nodeName": "separator_cutaway_rim",
+      "semanticId": "separator_cutaway_rim",
+      "instanceId": null,
+      "nodeUid": "e990b329-0d18-5f8b-b841-05f749dc8310"
+    }
+  ],
+  "supportTable": [
+    {
+      "nodeName": "separator_saddle_left",
+      "nodeUid": "e6a4d234-9a4e-58c4-97ec-47e76b8b048a",
+      "reason": "saddle：结构必需但不参与交互选择，登记以防被静默丢弃"
+    },
+    {
+      "nodeName": "separator_base_left",
+      "nodeUid": "07523fcb-3998-5a27-bb0b-661e80f15da9",
+      "reason": "foundation：结构必需但不参与交互选择，登记以防被静默丢弃"
+    },
+    {
+      "nodeName": "separator_saddle_right",
+      "nodeUid": "32f6e14c-0fab-5c46-b2a6-c3899ce226a1",
+      "reason": "saddle：结构必需但不参与交互选择，登记以防被静默丢弃"
+    },
+    {
+      "nodeName": "separator_base_right",
+      "nodeUid": "89c3cf39-a116-50ec-acdc-33e80e5c81c3",
+      "reason": "foundation：结构必需但不参与交互选择，登记以防被静默丢弃"
+    },
+    {
+      "nodeName": "separator_skid",
+      "nodeUid": "c72f6d79-a120-56bf-8db0-7e913d3d70a6",
+      "reason": "skid：结构必需但不参与交互选择，登记以防被静默丢弃"
+    },
+    {
+      "nodeName": "separator_inlet_flange",
+      "nodeUid": "1274b242-d22f-5c9c-a670-558a98ae6fa1",
+      "reason": "flange：结构必需但不参与交互选择，登记以防被静默丢弃"
+    },
+    {
+      "nodeName": "separator_gas_outlet_flange",
+      "nodeUid": "ebc1beb0-a07a-57fe-88ea-fbfa1cf22041",
+      "reason": "flange：结构必需但不参与交互选择，登记以防被静默丢弃"
+    },
+    {
+      "nodeName": "separator_oil_outlet_flange",
+      "nodeUid": "ebf93b53-6db0-5681-9a4a-ac8e05feb0fa",
+      "reason": "flange：结构必需但不参与交互选择，登记以防被静默丢弃"
+    },
+    {
+      "nodeName": "separator_water_outlet_flange",
+      "nodeUid": "fcef863b-d83e-5cf1-894b-63bb62e4caed",
+      "reason": "flange：结构必需但不参与交互选择，登记以防被静默丢弃"
+    },
+    {
+      "nodeName": "separator_manway_ring",
+      "nodeUid": "715d0341-3018-5c98-9c2a-a1e97690e616",
+      "reason": "manway_ring：结构必需但不参与交互选择，登记以防被静默丢弃"
+    }
+  ],
+  "knownLimitations": [
+    "shipped separator.glb 仍是 4.5.51 导出的旧产物，不含 extras.petro；本证据来自 5.3.0 临时构建，回写发布产物属 Phase 2。",
+    "探针设置 role=\"part\"，与 Manifest 的细分 role 不同，故探针 GLB 与未来正式构建的字节不会完全相同（nodeUid 不受影响）。",
+    "未验证 Blender 4.5.16 是否同样支持嵌套 extras；4.5.16 已不在本机。"
+  ]
+}

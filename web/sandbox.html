@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="data:,">
-<title>三维流程沙盘 · 油见未来</title>
+<title>三维流程沙盘 · 石油科普智能体</title>
 <link rel="stylesheet" href="assets/site/tokens.css">
 <style>
   .view-hint{font-size:12px}
@@ -130,10 +130,13 @@ body.journey-tour.journey-paused .lvl__back{display:inline-block!important}
 body.journey-tour.journey-paused .lvl-entries{display:none!important}
 
 </style>
+<link rel="stylesheet" href="assets/site/auth.css?v=4">
+<link rel="stylesheet" href="assets/site/chapter-tree.css?v=1">
+<script src="assets/site/auth-guard.js?v=1"></script>
 </head>
 <body>
 <header class="top">
-<a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><span>油见未来</span> <small>石油科学</small></a>
+<a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><span>石油科普智能体</span></a>
 <nav class="nav nav--main" aria-label="主菜单">
         <a href="index.html">首页</a>
 <a href="ask.html">智能问答</a>
@@ -146,6 +149,7 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 <main class="main">
 <div class="heading"><div><h1>原油，怎样<span>走出地下？</span></h1><p>沿着生产流程，观察设备、物料与加工过程。</p></div><label class="reading">理解深度<select id="depth"><option value="0">亲子与青少年</option><option value="1" selected>普通公众</option><option value="2">科技／石油爱好者</option><option value="3">专业人士</option></select></label></div>
 <div class="layout">
+<aside id="chapter-tree" class="ct" aria-label="章节导航"></aside>
 <section class="scene" aria-label="三维动态流程">
 <div class="scene-head"><p><strong>原油生产与加工</strong> · 产业链空间示意 / 非真实地理比例</p><div class="tools"><button type="button" id="tour-cta">开始导览</button><button type="button" id="play" aria-pressed="true">暂停流向</button><button type="button" id="device-list-btn" aria-expanded="false" aria-controls="device-list">设备</button></div></div>
 <div class="viewport" id="viewport" role="group" aria-label="可旋转的原油开采、处理、储运、炼化和产品流程三维模型">
@@ -411,7 +415,7 @@ body.journey-tour.journey-paused .lvl-entries{display:none!important}
 <script src="voice.js?v=9"></script>
 <script src="mission.js?v=14"></script>
 <script src="journey.js?v=7"></script>
-<script src="float-chat.js?v=6"></script>
+<script src="float-chat.js?v=7"></script>
 <style>
 .device-card{position:absolute;left:0;top:0;transform:translate(-50%,-100%);z-index:8;width:min(280px,calc(100% - 24px));border:1px solid #3d3a33;background:rgba(11,15,17,.96);padding:12px 14px;box-shadow:0 10px 28px rgba(0,0,0,.38)}
 .device-card[hidden]{display:none}
@@ -529,6 +533,42 @@ body.in-level .scene-head{display:flex!important;padding:6px 12px!important}
 .viewport{flex:1;height:auto;min-height:480px}
 @media(max-width:800px){.main{min-height:0}.layout{min-height:0}.viewport{min-height:360px;height:clamp(360px,56vh,480px)}}
 </style>
+<script src="immersion-chapters.js?v=1"></script>
+<script src="assets/site/immersion-chapter-tree.js?v=1"></script>
+<script>
+(function () {
+  var root = document.getElementById('chapter-tree');
+  var stages = document.getElementById('stages');
+  if (!root || !stages) return;
+  if (!window.createImmersionChapterTree || !window.IMMERSION_CHAPTER_TREE) return;
+
+  function currentIndex() {
+    var button = stages.querySelector('button[aria-current="step"]');
+    if (button) return Number(button.dataset.stage);
+    var ctx = window.__sceneContext;
+    return ctx && typeof ctx.stageIndex === 'number' ? ctx.stageIndex : null;
+  }
+  function currentStageId() {
+    var ctx = window.__sceneContext;
+    return ctx && typeof ctx.stageId === 'string' ? ctx.stageId : null;
+  }
+
+  var tree = window.createImmersionChapterTree({
+    root: root,
+    chapters: window.IMMERSION_CHAPTER_TREE.chapters,
+    getCurrentStageIndex: currentIndex,
+    getCurrentStageId: currentStageId,
+    storageKey: 'kepu.chapterTree.v1',
+    onSelectTask: function (task) {
+      var button = stages.querySelector('button[data-stage="' + task.stageIndex + '"]');
+      if (button) button.click();
+      else if (window.console) console.debug('[chapter-tree] 未找到对应 stage 按钮', task.stageIndex);
+    }
+  });
+  window.__chapterTree = tree;
+  tree.setCurrentStage(currentStageId(), currentIndex());
+})();
+</script>
 </body>
 </html>
 

@@ -10,6 +10,10 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { assertStartupConfig, describeConfig, BUSINESS_BODY_LIMIT, DATA_DIR } from './auth-config.mjs';
+import { acquireInstanceLock, releaseInstanceLock } from './auth-store.mjs';
+import { handleAuthRequest, requireBusinessAuth, sendJson, readBody } from './auth-http.mjs';
+
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 8790);
 
@@ -385,33 +389,36 @@ function synthesize(text) {
   });
 }
 
-const server = http.createServer(async (req, res) => {
-  const url = req.url.split('?')[0];
-
+/** 业务 API：鉴权在 handleBusiness 之前已经完成，这里只做参数解析与上游调用。 */
+async function handleBusiness(req, res, url) {
   if (url !== '/api/gen' && url !== '/api/ask' && url !== '/api/dify-chat' && url !== '/api/dify-write' && url !== '/api/tts') {
-    res.writeHead(404, { 'Content-Type': 'application/json' });
-    return res.end('{"error":"not found"}');
+    return sendJson(res, 404, { error: 'not found' });
   }
   if (req.method !== 'POST') {
-    res.writeHead(405, { 'Content-Type': 'application/json' });
-    return res.end('{"error":"post only"}');
+    return sendJson(res, 405, { error: 'post only' });
   }
   if (url !== '/api/dify-chat' && url !== '/api/dify-write' && url !== '/api/tts' && !KEY) {
-    res.writeHead(503, { 'Content-Type': 'application/json' });
-    return res.end('{"error":"no key"}');
+    return sendJson(res, 503, { error: 'no key' });
   }
 
-  let body = '';
-  let size = 0;
-  for await (const c of req) {
-    size += c.length;
-    if (size > 64 * 1024) { res.writeHead(413); return res.end(); }
-    body += c;
+  let body;
+  try {
+    body = await readBody(req, BUSINESS_BODY_LIMIT);
+  } catch (error) {
+    if (error.code === 'body_too_large') {
+      res.writeHead(413, { 'Content-Type': 'application/json; charset=utf-8' });
+      return res.end(JSON.stringify({ error: '请求体过大' }));
+    }
+    return;
   }
 
   let payload = {};
   try { payload = JSON.parse(body || '{}'); } catch {}
 
+  return dispatchBusiness(req, res, url, payload);
+}
+
+async function dispatchBusiness(req, res, url, payload) {
 
   if (url === '/api/tts') {
     const text = typeof payload.text === 'string' ? payload.text.replace(/\s+/g, ' ').trim() : '';
@@ -461,10 +468,12 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8' });
       return res.end(JSON.stringify({ error: '尚未配置 Dify API Key，请检查 server/.env' }));
     }
-    if (typeof payload.question !== 'string' || !payload.question.trim() || payload.question.length > 300 || typeof payload.user !== 'string' || !/^[a-zA-Z0-9-]{1,80}$/.test(payload.user) || (payload.conversation_id && !/^[a-f0-9-]{36}$/i.test(payload.conversation_id))) {
+    // user 字段不再信任客户端：Dify 的 user 一律使用 Session 解析出的稳定用户 ID
+    if (typeof payload.question !== 'string' || !payload.question.trim() || payload.question.length > 300 || (payload.conversation_id && !/^[a-f0-9-]{36}$/i.test(payload.conversation_id))) {
       res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
       return res.end(JSON.stringify({ error: '请求参数无效' }));
     }
+    const difyUserId = req.auth.user.id;
     const scene = normalizeSceneContext(payload.sceneContext);
     const actions = normalizeRecentActions(payload.recentActions, scene);
     const sceneBlock = sceneContextBlock(scene, actions);
@@ -477,7 +486,7 @@ const server = http.createServer(async (req, res) => {
       const upstream = await fetch(DIFY_URL + '/chat-messages', {
         method: 'POST', signal: controller.signal,
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + DIFY_KEY },
-        body: JSON.stringify({ inputs: {}, query, response_mode: 'streaming', conversation_id: payload.conversation_id || '', user: payload.user })
+        body: JSON.stringify({ inputs: {}, query, response_mode: 'streaming', conversation_id: payload.conversation_id || '', user: difyUserId })
       });
       if (!upstream.ok || !upstream.body) {
         res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -522,8 +531,62 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(502, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: String(e.message || e) }));
   }
+}
+
+const server = http.createServer(async (req, res) => {
+  let pathname = '';
+  try {
+    pathname = new URL(req.url || '/', 'http://127.0.0.1').pathname;
+  } catch {
+    return sendJson(res, 400, { error: 'bad request' });
+  }
+
+  try {
+    // 1. 认证端点优先处理：不依赖 DeepSeek / Dify / 讯飞 Key
+    if (await handleAuthRequest(req, res, pathname)) return;
+
+    // 2. 其余 /api/* 默认要求登录（未来新增路由自动落进受保护分支，不会静默公开）
+    if (pathname.startsWith('/api/')) {
+      const auth = await requireBusinessAuth(req, res, pathname);
+      if (!auth) return;
+      req.auth = auth;
+      return await handleBusiness(req, res, pathname);
+    }
+
+    return sendJson(res, 404, { error: 'not found' });
+  } catch (error) {
+    const summary = error && error.stack ? String(error.stack).split('\n')[0] : String(error);
+    console.error('[proxy] 未捕获异常：' + summary);
+    if (!res.headersSent) sendJson(res, 500, { error: 'internal error' });
+    else res.destroy();
+  }
 });
 
-server.listen(PORT, '127.0.0.1', () => {
-  console.log(`kepu-proxy on 127.0.0.1:${PORT}  key:${KEY ? 'loaded' : 'MISSING'}`);
+async function start() {
+  assertStartupConfig();
+  await acquireInstanceLock();
+  const cfg = describeConfig();
+  server.listen(PORT, '127.0.0.1', () => {
+    console.log(`kepu-proxy on 127.0.0.1:${PORT}  key:${KEY ? 'loaded' : 'MISSING'}`);
+    console.log('[auth] 用户数据目录: ' + DATA_DIR);
+    console.log('[auth] 允许 Origin: ' + cfg.origins.join(', '));
+    console.log('[auth] Secure Cookie: ' + (cfg.cookieSecure ? 'on' : 'off') + '  信任代理: ' + (cfg.trustProxy ? 'on' : 'off'));
+  });
+}
+
+let shuttingDown = false;
+function shutdown(signal, code = 0) {
+  if (shuttingDown) return;
+  shuttingDown = true;
+  console.log('[auth] 收到 ' + signal + '，关闭服务并释放运行锁');
+  server.close(() => {});
+  releaseInstanceLock().finally(() => process.exit(code));
+}
+
+process.on('SIGINT', () => shutdown('SIGINT'));
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+
+start().catch(error => {
+  console.error('[auth] 启动失败：' + (error && error.message ? error.message : error));
+  process.exit(1);
 });

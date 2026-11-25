@@ -1,0 +1,474 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://scienceagent.local/schemas/asset-manifest.schema.json",
+  "title": "Petro Asset Manifest",
+  "description": "石油科普智能体 3D 资产的发布索引（Manifest）。身份权威来源是 Blender 自定义属性与 GLB extras.petro；本文件是发布时的机器索引，不得手工维护与 extras 不一致的第二套身份。详细规则见 docs/model-contract.md。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "assetId",
+    "assetVersion",
+    "source",
+    "build",
+    "runtime",
+    "coordinateSystem",
+    "bounds",
+    "defaults",
+    "systems",
+    "objects",
+    "nodes",
+    "anchors",
+    "representations",
+    "structureModes",
+    "dynamicBindings",
+    "nonInteractiveSupport",
+    "processBasis",
+    "limitations",
+    "license"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0",
+      "description": "Manifest 结构版本。与 assetVersion 无关。"
+    },
+    "assetId": {
+      "$ref": "#/$defs/idLower",
+      "description": "可发布模型资产包 ID，全项目唯一。例：separator_three_phase"
+    },
+    "assetVersion": {
+      "$ref": "#/$defs/assetVersion"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "build": {
+      "$ref": "#/$defs/build"
+    },
+    "runtime": {
+      "$ref": "#/$defs/runtime"
+    },
+    "coordinateSystem": {
+      "$ref": "#/$defs/coordinateSystem"
+    },
+    "bounds": {
+      "$ref": "#/$defs/bounds"
+    },
+    "defaults": {
+      "$ref": "#/$defs/defaults"
+    },
+    "systems": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/system" }
+    },
+    "objects": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/object" }
+    },
+    "nodes": {
+      "type": "array",
+      "description": "可交互/可寻址节点的完整或显式清单。任何 GLB 中存在的节点必须出现在 nodes[] 或 nonInteractiveSupport[] 中，否则视为构建失败。",
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "anchors": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/anchor" }
+    },
+    "representations": {
+      "$ref": "#/$defs/representations"
+    },
+    "structureModes": {
+      "$ref": "#/$defs/structureModes"
+    },
+    "dynamicBindings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/dynamicBinding" }
+    },
+    "nonInteractiveSupport": {
+      "type": "array",
+      "description": "必须保留但不允许交互的支撑结构（平台、栏杆、基础等）。用于防止辅助网格静默丢失。",
+      "items": { "$ref": "#/$defs/supportEntry" }
+    },
+    "processBasis": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/processBasis" }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "description": "必须至少声明一条限制，防止把教学模型误当工程模型。",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "license": {
+      "$ref": "#/$defs/license"
+    }
+  },
+  "$defs": {
+    "idLower": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,63}$",
+      "description": "小写下划线 ID，2–64 字符，字母开头。"
+    },
+    "idRef": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,63}$"
+    },
+    "anchorId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,63}$"
+    },
+    "uuidV5": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "RFC 4122 UUID 版本 5（SHA-1 命名空间派生）。禁止随机 UUID、循环下标与创建顺序。"
+    },
+    "assetVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(\\+[a-z0-9][a-z0-9.]*)?$",
+      "description": "语义版本，可带 +<构建元数据>（如内容哈希前缀）。不得手工递增以掩盖内容变化。"
+    },
+    "coordinateSpaceId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,63}$"
+    },
+    "vec3": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "assetVersionSource": {
+      "const": "content-hash"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "path"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{7,40}$",
+          "description": "生成该资产的提交 SHA；未提交的工作区构建必须写 dirty-<短哈希>。"
+        },
+        "path": { "type": "string", "minLength": 1 },
+        "dirty": { "type": "boolean" }
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceFile", "generator", "blenderVersion", "exporterVersion", "exportOptionsHash", "invocation"],
+      "properties": {
+        "sourceFile": { "type": "string", "minLength": 1 },
+        "generator": { "type": "string", "minLength": 1 },
+        "blenderVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "description": "实测值，不得写文档里的期望值。"
+        },
+        "exporterVersion": {
+          "type": "string",
+          "minLength": 1,
+          "description": "glTF 导出器标识，如 Khronos glTF Blender I/O v5.3.43（取自 GLB asset.generator）。"
+        },
+        "exportOptionsHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{16,64}$"
+        },
+        "invocation": {
+          "type": "string",
+          "minLength": 1,
+          "description": "可复现的完整命令（含 -- 之后的参数）。"
+        },
+        "exportExtras": {
+          "type": "boolean",
+          "description": "是否开启 export_extras；为 false 时 extras 通路不成立。"
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "uri", "sha256", "bytes", "extrasStatus"],
+      "properties": {
+        "format": { "const": "glb" },
+        "uri": {
+          "type": "string",
+          "minLength": 1,
+          "description": "相对站点根的路径；首轮允许无内容哈希，但不得使用手工 ?v= 参数。"
+        },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "extrasStatus": {
+          "enum": ["verified", "pending_rebuild", "absent"],
+          "description": "verified：已核对 GLB 内 extras.petro 与 nodes[] 一一对应；pending_rebuild：机制已验证但产物尚未重建；absent：GLB 无 extras。非 verified 时校验器只告警。"
+        },
+        "fallback": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["format", "uri"],
+          "properties": {
+            "format": { "enum": ["obj"] },
+            "uri": { "type": "string", "minLength": 1 },
+            "mtlUri": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "coordinateSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit", "handedness", "upAxis", "spaceId", "sourceSpaceNote"],
+      "properties": {
+        "unit": { "enum": ["meter"] },
+        "handedness": { "enum": ["right"] },
+        "upAxis": { "enum": ["+Y", "+Z"] },
+        "spaceId": { "$ref": "#/$defs/coordinateSpaceId" },
+        "sourceSpaceNote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "必须说明源空间与轴变换，例如 'Blender Z-up -> glTF Y-up via export_yup=True'。禁止无上下文裸 XYZ。"
+        }
+      }
+    },
+    "bounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coordinateSpaceId", "unit", "min", "max"],
+      "properties": {
+        "coordinateSpaceId": { "$ref": "#/$defs/coordinateSpaceId" },
+        "unit": { "enum": ["meter"] },
+        "min": { "$ref": "#/$defs/vec3" },
+        "max": { "$ref": "#/$defs/vec3" }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["detailLevel", "structureMode", "animationMode"],
+      "description": "detailLevel 与 structureMode 必须是两个独立字段，不得合并为一个 level 数字。",
+      "properties": {
+        "detailLevel": { "enum": ["overview", "detail", "closeup"] },
+        "structureMode": { "enum": ["external", "half", "full", "ghost"] },
+        "animationMode": { "enum": ["idle", "running", "paused"] }
+      }
+    },
+    "system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["systemId", "displayName", "objectIds"],
+      "properties": {
+        "systemId": { "$ref": "#/$defs/idRef" },
+        "displayName": { "type": "string", "minLength": 1 },
+        "objectIds": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/idRef" }
+        }
+      }
+    },
+    "object": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["objectId", "systemId", "displayName", "nodeUids"],
+      "properties": {
+        "objectId": { "$ref": "#/$defs/idRef" },
+        "systemId": { "$ref": "#/$defs/idRef" },
+        "displayName": { "type": "string", "minLength": 1 },
+        "nodeUids": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/uuidV5" }
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeUid", "nodeName", "objectId", "role", "interactive"],
+      "properties": {
+        "nodeUid": { "$ref": "#/$defs/uuidV5" },
+        "nodeName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "仅用于显示与调试。禁止作为唯一 key；重名不构成冲突，nodeUid 才是主键。"
+        },
+        "objectId": { "$ref": "#/$defs/idRef" },
+        "semanticId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{1,63}$",
+          "description": "部件类型；同一类型的多个实例共用同一 semanticId，因此不得用作唯一键。"
+        },
+        "instanceId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,31}$",
+          "description": "多实例部件的实例标识；单实例可省略。必须是已持久化的编写值，不得由循环序号派生。"
+        },
+        "role": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{1,47}$",
+          "description": "结构角色，如 shell / head / nozzle / internal_baffle / cut_shell / support。"
+        },
+        "interactive": { "type": "boolean" },
+        "representations": {
+          "type": "array",
+          "items": { "enum": ["overview", "detail", "closeup"] }
+        }
+      }
+    },
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchorId", "ownerObjectId", "coordinateSpaceId", "position", "kind"],
+      "properties": {
+        "anchorId": { "$ref": "#/$defs/anchorId" },
+        "ownerObjectId": { "$ref": "#/$defs/idRef" },
+        "coordinateSpaceId": { "$ref": "#/$defs/coordinateSpaceId" },
+        "position": { "$ref": "#/$defs/vec3" },
+        "direction": { "$ref": "#/$defs/vec3" },
+        "kind": {
+          "enum": ["process_nozzle", "spatial", "camera_target", "teaching_marker"]
+        },
+        "nodeUid": {
+          "$ref": "#/$defs/uuidV5",
+          "description": "若锚点在 GLB 中具有节点，必须填写并可被校验。"
+        }
+      }
+    },
+    "representations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overview", "detail", "closeup"],
+      "properties": {
+        "overview": { "type": "array", "items": { "$ref": "#/$defs/uuidV5" } },
+        "detail": { "type": "array", "items": { "$ref": "#/$defs/uuidV5" } },
+        "closeup": { "type": "array", "items": { "$ref": "#/$defs/uuidV5" } }
+      }
+    },
+    "modeRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["show", "hide", "ghost"],
+      "properties": {
+        "show": { "type": "array", "items": { "$ref": "#/$defs/uuidV5" } },
+        "hide": { "type": "array", "items": { "$ref": "#/$defs/uuidV5" } },
+        "ghost": { "type": "array", "items": { "$ref": "#/$defs/uuidV5" } }
+      }
+    },
+    "structureModes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["external", "half", "full", "ghost"],
+      "description": "四种结构状态各自的显隐/透明规则。与 detailLevel 正交。full 若资产不支持，可将三个数组留空并在 limitations 说明。",
+      "properties": {
+        "external": { "$ref": "#/$defs/modeRule" },
+        "half": { "$ref": "#/$defs/modeRule" },
+        "full": { "$ref": "#/$defs/modeRule" },
+        "ghost": { "$ref": "#/$defs/modeRule" }
+      }
+    },
+    "dynamicBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bindingId", "kind", "targetNodeUid", "parameter"],
+      "properties": {
+        "bindingId": { "$ref": "#/$defs/idRef" },
+        "kind": {
+          "enum": ["liquid_level", "floating_deck", "valve_wheel", "particle_flow", "rotation"]
+        },
+        "targetNodeUid": { "$ref": "#/$defs/uuidV5" },
+        "parameter": {
+          "type": "string",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9_.]{0,63}$",
+          "description": "被驱动的运行时参数名，如 level / deckY / openAngle。"
+        },
+        "unit": { "type": "string", "minLength": 1 },
+        "range": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "supportEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeUid", "nodeName", "reason"],
+      "properties": {
+        "nodeUid": { "$ref": "#/$defs/uuidV5" },
+        "nodeName": { "type": "string", "minLength": 1 },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "例如 platform / railing / foundation / ladder；必填以防止静默丢弃辅助网格。"
+        }
+      }
+    },
+    "processBasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "basisId",
+        "version",
+        "reviewStatus",
+        "sourceTitle",
+        "sourceOrg",
+        "scope",
+        "limitations"
+      ],
+      "properties": {
+        "basisId": { "$ref": "#/$defs/idRef" },
+        "version": { "type": "string", "minLength": 1 },
+        "reviewStatus": {
+          "enum": ["draft", "reviewed", "approved", "rejected"],
+          "description": "只有 approved 允许作为正式流程内容发布；draft/reviewed 前端必须标注待审核。"
+        },
+        "sourceTitle": { "type": "string", "minLength": 1 },
+        "sourceOrg": { "type": "string", "minLength": 1 },
+        "sourceUrlOrDoc": { "type": "string", "minLength": 1 },
+        "sourceSection": { "type": "string" },
+        "scope": { "type": "string", "minLength": 1 },
+        "reviewedBy": { "type": "string" },
+        "reviewedAt": { "type": "string", "format": "date" },
+        "limitations": { "type": "array", "items": { "type": "string" } }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "reviewStatus": { "enum": ["reviewed", "approved"] } }, "required": ["reviewStatus"] },
+          "then": { "required": ["reviewedBy", "reviewedAt"] }
+        }
+      ]
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spdx", "holder", "terms"],
+      "properties": {
+        "spdx": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SPDX 标识或 LicenseRef-*；内部资产用 LicenseRef-Proprietary。"
+        },
+        "holder": { "type": "string", "minLength": 1 },
+        "terms": { "type": "string", "minLength": 1 },
+        "thirdParty": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "license", "usage"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "license": { "type": "string", "minLength": 1 },
+              "usage": { "type": "string", "minLength": 1 },
+              "sourceUrl": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -10,3 +10,10 @@ web/assets/videos/posters/
 dist/
 
 server/.env
+
+# 认证运行时数据：账户 JSON、审计日志、跨进程锁（绝对不要提交）
+server/data/
+server/data/**/*.lock
+
+# codegraph 本地索引与临时截图
+.codegraph/

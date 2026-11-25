@@ -459,7 +459,11 @@ ANCHORS = {
     "anchor_tower_feed": (-4.5, 0.0, 13.0),
     "anchor_tower_trays": (0.0, 0.0, 16.0),
     "anchor_tower_vacuum": (VAC_X, 0.0, 9.0),
-    "anchor_tower_products": (8.4, 6.0, -5.9),
+    # 产品/界区锚点，Blender 源坐标（Z-up）。网页值由下方 [x, z, -y] 派生为 (8.4, 1.0, -5.9)。
+    # 依据：OBJ 中 BatteryLimit_* 9 个对象的实际包围盒为 x∈[7.95, 8.85]、y∈[0, 1.30]、z∈[-7.45, -4.35]，
+    # 中心 (8.4, 0.65, -5.9)；锚点取 (8.4, 1.0, -5.9) 落在界区法兰高度上。
+    # 历史问题：该值曾被写成 (8.4, 6.0, -5.9)，使网页锚点抬高约 5 m，重跑后更会变成 (8.4, -5.9, -6.0) 落到地面以下。
+    "anchor_tower_products": (8.4, 5.9, 1.0),
 }
 for k, v in ANCHORS.items():
     empty(k, v)
@@ -517,7 +521,7 @@ meta = {
     "heater_bbox_obj_y_up": heater_o,
     "groups": {
         "cutaway_hide": ["Tower_Atmospheric_Shell", "Tower_Atmospheric_Dome"],
-        "cutaway_show_only": ["Tray_", "VacTray_"],
+        "cutaway_show_only": ["Trays_A", "Trays_V"],
         "hotspots": {
             "hs_crude_feed": "Pipe_Feed_Horizontal",
             "hs_heater": "Heater",

@@ -52,7 +52,7 @@
     ],
     "anchor_tower_products": [
       8.4,
-      6.0,
+      1.0,
       -5.9
     ]
   },
@@ -70,8 +70,8 @@
       "Tower_Atmospheric_Dome"
     ],
     "cutaway_show_only": [
-      "Tray_",
-      "VacTray_"
+      "Trays_A",
+      "Trays_V"
     ],
     "hotspots": {
       "hs_crude_feed": "Pipe_Feed_Horizontal",

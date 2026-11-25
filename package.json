@@ -2,20 +2,34 @@
   "name": "scienceagent",
   "version": "3.4.0",
   "private": true,
-  "description": "油见未来 · 科普智能体（3D 流程沙盘 + 随身问答 + 可信文案生成）",
+  "description": "石油科普智能体（3D 流程沙盘 + 随身问答 + 可信文案生成）",
   "type": "module",
   "engines": {
-    "node": ">=18"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "dev": "node server/dev.mjs",
     "api": "node server/proxy.mjs",
-    "start": "node server/proxy.mjs"
+    "start": "node server/proxy.mjs",
+    "test": "node --test --test-concurrency=1 \"tests/*.test.mjs\"",
+    "test:auth": "node --test --test-concurrency=1 \"tests/auth-crypto.test.mjs\" \"tests/auth-store.test.mjs\" \"tests/auth-session.test.mjs\" \"tests/auth-cli.test.mjs\" \"tests/auth-api.test.mjs\" \"tests/auth-pages.test.mjs\"",
+    "auth:perf": "node tests/auth-perf.mjs",
+    "validate:assets": "node tools/validate_assets.mjs",
+    "validate:assets:strict": "node tools/validate_assets.mjs --strict",
+    "validate:assets:fixtures": "node tools/validate_assets.mjs --fixtures",
+    "manifest:pilot": "node tools/gen_pilot_separator_manifest.mjs"
   },
   "keywords": [
     "science-communication",
     "rag",
     "threejs"
   ],
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1"
+  },
+  "dependencies": {
+    "proper-lockfile": "4.1.2"
+  }
 }

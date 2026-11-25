@@ -199,7 +199,7 @@
       ask: '减压塔为什么要抽真空'
     },
     {
-      id: 'hs_products', name: '馏分去向', pos: new THREE.Vector3(8.4, 6.0, -5.9), match: /^BatteryLimit_/,
+      id: 'hs_products', name: '馏分去向', pos: new THREE.Vector3(8.4, 1.0, -5.9), match: /^BatteryLimit_/,
       title: '馏分去向：塔里出来的不是成品油',
       lede: '侧线抽出的是沸点范围不同的馏分，还要经过精制、调和、裂解、重整等后续加工，才成为汽油、柴油、航煤、润滑油或化工原料。',
       bullets: ['石脑油 → 乙烯/重整原料；煤油 → 航煤；柴油 → 车用柴油', '同一馏分在不同炼厂去向不同，取决于配置与需求', '把"馏分"直接说成"成品油"是常见错误'],

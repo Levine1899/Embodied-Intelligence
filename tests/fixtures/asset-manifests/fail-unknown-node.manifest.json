@@ -1,0 +1,172 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "mini_fixture",
+  "assetVersion": "1.0.0",
+  "source": {
+    "repository": "fixture",
+    "commit": "5519ef74",
+    "path": "tests/fixtures/asset-manifests/mini.glb",
+    "dirty": false
+  },
+  "build": {
+    "sourceFile": "tests/fixtures/asset-manifests/mini.glb",
+    "generator": "tests/fixtures (handcrafted)",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "handcrafted-glb",
+    "exportOptionsHash": "0123456789abcdef",
+    "invocation": "node tools/validate_assets.mjs --fixtures",
+    "exportExtras": false
+  },
+  "runtime": {
+    "format": "glb",
+    "uri": "tests/fixtures/asset-manifests/mini.glb",
+    "sha256": "149cfae79923ace5e852aa81698bb3e3b6acbc6acc1839c064b645abadb2f11b",
+    "bytes": 248,
+    "extrasStatus": "pending_rebuild"
+  },
+  "coordinateSystem": {
+    "unit": "meter",
+    "handedness": "right",
+    "upAxis": "+Y",
+    "spaceId": "mini_asset_local",
+    "sourceSpaceNote": "handcrafted：无轴变换，坐标即 assetLocal"
+  },
+  "bounds": {
+    "coordinateSpaceId": "mini_asset_local",
+    "unit": "meter",
+    "min": [
+      -1,
+      0,
+      -1
+    ],
+    "max": [
+      1,
+      1,
+      1
+    ]
+  },
+  "defaults": {
+    "detailLevel": "detail",
+    "structureMode": "external",
+    "animationMode": "idle"
+  },
+  "systems": [
+    {
+      "systemId": "mini_system",
+      "displayName": "fixture 系统",
+      "objectIds": [
+        "mini_object"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "objectId": "mini_object",
+      "systemId": "mini_system",
+      "displayName": "fixture 对象",
+      "nodeUids": [
+        "363b0e9e-df44-5846-8f77-0f115d365a8c",
+        "89787fdd-c92d-5a23-b97f-d04c44c6590f"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeUid": "363b0e9e-df44-5846-8f77-0f115d365a8c",
+      "nodeName": "mini_shell",
+      "objectId": "mini_object",
+      "semanticId": "mini_shell",
+      "role": "shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "89787fdd-c92d-5a23-b97f-d04c44c6590f",
+      "nodeName": "mini_ghost",
+      "objectId": "mini_object",
+      "semanticId": "mini_inlet",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    }
+  ],
+  "anchors": [
+    {
+      "anchorId": "mini_inlet_anchor",
+      "ownerObjectId": "mini_object",
+      "coordinateSpaceId": "mini_asset_local",
+      "position": [
+        1,
+        0.5,
+        0
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "kind": "process_nozzle",
+      "nodeUid": "89787fdd-c92d-5a23-b97f-d04c44c6590f"
+    }
+  ],
+  "representations": {
+    "overview": [
+      "363b0e9e-df44-5846-8f77-0f115d365a8c"
+    ],
+    "detail": [
+      "363b0e9e-df44-5846-8f77-0f115d365a8c",
+      "89787fdd-c92d-5a23-b97f-d04c44c6590f"
+    ],
+    "closeup": []
+  },
+  "structureModes": {
+    "external": {
+      "show": [
+        "363b0e9e-df44-5846-8f77-0f115d365a8c"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "half": {
+      "show": [],
+      "hide": [
+        "363b0e9e-df44-5846-8f77-0f115d365a8c"
+      ],
+      "ghost": []
+    },
+    "full": {
+      "show": [],
+      "hide": [],
+      "ghost": []
+    },
+    "ghost": {
+      "show": [],
+      "hide": [],
+      "ghost": [
+        "363b0e9e-df44-5846-8f77-0f115d365a8c"
+      ]
+    }
+  },
+  "dynamicBindings": [],
+  "nonInteractiveSupport": [
+    {
+      "nodeUid": "dc3e37c9-75c1-509b-b2fe-580c183a3c14",
+      "nodeName": "mini_stand",
+      "reason": "foundation：fixture 支撑件"
+    }
+  ],
+  "processBasis": [],
+  "limitations": [
+    "fixture 仅用于校验器自测，不是真实资产。"
+  ],
+  "license": {
+    "spdx": "LicenseRef-Proprietary",
+    "holder": "fixture",
+    "terms": "test only",
+    "thirdParty": []
+  }
+}

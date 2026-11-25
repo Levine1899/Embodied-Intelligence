@@ -1,8 +1,44 @@
 # 接口契约
 
-当前有四个端点，都在 `server/proxy.mjs`：Dify 问答/写作（现用）与兼容的 `/api/ask`、`/api/gen`。**API Key 不出服务器**。
+端点都在 `server/proxy.mjs`：认证（`/api/auth/*`）、Dify 问答/写作（现用）与兼容的 `/api/ask`、`/api/gen`。**API Key 不出服务器**。
 
 > 2026-11-23 起，独立问答页使用 `/api/dify-chat`，写作页使用 `/api/dify-write`；原有的 `/api/ask`、`/api/gen` 继续保留，供沙盘侧栏与旧客户端使用。
+>
+> 2026-11-25 起，除显式公开的认证端点外，**所有 `/api/*` 都要求有效 Session**（Cookie `yj_session`）。
+> 未登录返回 `401 {"authenticated":false,"error":"unauthorized"}`，且不会调用任何上游、不消耗模型配额。
+> 状态改变请求（POST/PUT/PATCH/DELETE）还必须带 allowlist 内的 `Origin`。
+> 详见 [`docs/auth-deployment.md`](auth-deployment.md)。
+
+## 认证接口
+
+| 方法 | 路径 | 认证 | 说明 |
+|---|---|---|---|
+| GET | `/api/auth/status` | 否 | `{ "initialized": true }`；不返回用户清单 |
+| POST | `/api/auth/login` | 否 | `{username,password}` → 成功后 `Set-Cookie: yj_session=...` |
+| GET | `/api/auth/me` | 是 | 当前用户安全公开字段 |
+| POST | `/api/auth/logout` | 幂等 | 销毁 Session 并清 Cookie |
+| GET | `/api/auth/verify` | 是 | 仅 204/401，供 dev 服务器与 Nginx `auth_request` 使用 |
+
+登录成功：
+
+```json
+{
+  "authenticated": true,
+  "user": { "id": "UUID", "username": "admin", "displayName": "系统管理员", "role": "admin" }
+}
+```
+
+失败统一为（不区分用户名不存在 / 密码错误 / 账号禁用）：
+
+```json
+{ "error": "用户名或密码错误" }
+```
+
+其他错误：`401 unauthorized`、`403 origin_not_allowed`、`405 method_not_allowed`、
+`413 请求体过大`、`415 unsupported_media_type`、`429 尝试次数过多，请稍后再试`（带 `Retry-After`）、
+`503 auth_not_initialized` / `auth_store_unavailable` / `auth_busy`。
+
+所有认证响应带 `Cache-Control: no-store`。`/api/auth/verify` 不返回任何用户信息。
 
 ## POST /api/ask
 
@@ -99,9 +135,10 @@
 
 - `question`：1–300 字。
 - `conversation_id`：可空；有值时必须为 UUID，保持 Dify 多轮。
-- `user`：1–80 位字母、数字或短横线。
+- `user`：**服务端不再信任客户端值**。请求里可继续携带（兼容旧客户端），但会被忽略；
+  Dify 收到的是当前 Session 对应用户的稳定 ID（`user.id`）。
 - 响应为 `text/event-stream`，透传 Dify 的 `workflow_started` / `message` / `message_end` 等事件；前端不要把它当 JSON。
-- 错误：400 参数无效，503 未配置 Key，502 上游失败。
+- 错误：400 参数无效，401 未登录，503 未配置 Key，502 上游失败。
 
 ## POST /api/dify-write（当前写作页）
 

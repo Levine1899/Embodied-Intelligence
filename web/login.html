@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>登录 · 石油科普智能体</title>
+<link rel="stylesheet" href="assets/site/tokens.css">
+<link rel="stylesheet" href="assets/site/auth.css?v=4">
+</head>
+<body class="login-page">
+
+<main class="login-shell">
+  <section class="login-visual" aria-label="石油科普智能体">
+    <img class="login-visual__img" src="assets/tower/hero-poster.jpg" alt="常减压蒸馏装置半剖渲染，可见塔板与汽液">
+    <div class="login-visual__scrim" aria-hidden="true"></div>
+    <div class="login-visual__grid" aria-hidden="true"></div>
+  </section>
+
+  <section class="login-panel">
+    <div class="login-card">
+      <p class="login-brand login-brand--card"><img src="assets/science-logo.png" alt=""><span>石油科普智能体</span></p>
+      <h2>欢迎登录</h2>
+      <p class="login-lead">登录后进入石油科普智能体</p>
+
+      <div id="status-notice" class="notice" hidden></div>
+
+      <form id="login-form" class="login-form" method="post" action="/api/auth/login" novalidate>
+        <div class="field">
+          <label for="username">用户名</label>
+          <input id="username" name="username" type="text" autocomplete="username"
+                 autocapitalize="off" spellcheck="false" maxlength="32" required
+                 placeholder="请输入用户名">
+        </div>
+
+        <div class="field">
+          <label for="password">密码</label>
+          <div class="password-wrap">
+            <input id="password" name="password" type="password" autocomplete="current-password"
+                   maxlength="128" required placeholder="请输入密码">
+            <button type="button" id="toggle-password" class="toggle-password"
+                    aria-pressed="false" aria-label="显示密码">
+              <span class="toggle-text">显示</span>
+            </button>
+          </div>
+        </div>
+
+        <p id="error" class="form-error" role="alert" hidden></p>
+
+        <button type="submit" id="submit" class="login-submit">登录系统</button>
+
+        <p class="login-hint login-hint--quiet">账号或密码有问题？请联系系统管理员。</p>
+      </form>
+
+      <p class="login-hint" id="init-hint" hidden>系统尚未初始化管理员账号，请联系部署管理员完成初始化。</p>
+      <p class="login-admin-cmd" id="admin-cmd" hidden>部署管理员可运行 <code>node server/auth-cli.mjs init-admin</code></p>
+    </div>
+  </section>
+</main>
+
+<script src="assets/site/auth-next.js?v=1"></script>
+<script src="assets/site/auth.js?v=1"></script>
+</body>
+</html>

@@ -58,6 +58,21 @@
   var sendBtn = root.querySelector('#fc-send');
   var empty = root.querySelector('#fc-empty');
 
+  // 首页等没有三维场景上下文的页面：换成不依赖“当前这一屏”的通用问题
+  if (!(window.SceneContext && typeof window.SceneContext.get === 'function')) {
+    var suggest = document.getElementById('fc-suggest');
+    if (suggest) {
+      suggest.textContent = '';
+      ['石油是怎么形成的？', '汽油和柴油有什么区别？', '炼油厂里发生了什么？'].forEach(function (q) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('data-q', q);
+        b.textContent = q;
+        suggest.appendChild(b);
+      });
+    }
+  }
+
   function makeId() {
     try { return 'guest-' + crypto.randomUUID(); } catch (e) {}
     return 'guest-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);

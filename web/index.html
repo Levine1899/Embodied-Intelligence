@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>油见未来 · 石油科普智能体</title>
+<title>石油科普智能体</title>
 <link rel="stylesheet" href="assets/site/tokens.css">
 <style>
 *{box-sizing:border-box}
@@ -61,8 +61,13 @@ img{display:block;max-width:100%}
   .cover h1{font-size:44px}
   .cover .sub{font-size:var(--fs-14)}
 }
+/* 油宝 AI 问答浮窗（float-chat.js）：给右下角浮窗让出页脚控件空间，避免遮挡“暂停” */
+@media (max-width:1460px){.cover .foot{padding-right:126px}}
+@media (max-width:640px){.cover .foot{padding-right:0}.cover .bottom{padding-bottom:calc(var(--s-7) + 112px)}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+<link rel="stylesheet" href="assets/site/auth.css?v=4">
+<script src="assets/site/auth-guard.js?v=1"></script>
 </head>
 <body>
 
@@ -75,7 +80,7 @@ img{display:block;max-width:100%}
   </div>
   <div class="top">
     <div class="wrap">
-      <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><b>油见未来</b><span>石油 · 科学 · 阅读</span></a>
+      <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><b>石油科普智能体</b><span>石油 · 科学 · 阅读</span></a>
     </div>
   </div>
 
@@ -149,5 +154,7 @@ img{display:block;max-width:100%}
   stage.addEventListener('pointerenter', function () { if (!dragging) v.pause(); });
   stage.addEventListener('pointerleave', function () { if (!dragging) play(); });
 })();
-</script></body>
+</script>
+<script src="float-chat.js?v=7"></script>
+</body>
 </html>

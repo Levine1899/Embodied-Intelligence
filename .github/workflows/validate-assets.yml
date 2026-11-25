@@ -1,0 +1,57 @@
+name: validate-assets
+
+# 资产契约门禁：Manifest Schema、nodeUid 唯一性、ID 引用完整性、GLB 一致性。
+# 只在资产/契约相关文件变化时触发，避免无关提交被阻塞。
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'schemas/**'
+      - 'tools/validate_assets.mjs'
+      - 'tools/gen_pilot_separator_manifest.mjs'
+      - 'tools/blender/**'
+      - 'web/assets/**/*.manifest.json'
+      - 'web/assets/**/*.glb'
+      - 'tests/fixtures/asset-manifests/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/validate-assets.yml'
+  pull_request:
+    paths:
+      - 'schemas/**'
+      - 'tools/validate_assets.mjs'
+      - 'web/assets/**/*.manifest.json'
+      - 'web/assets/**/*.glb'
+      - 'tests/fixtures/asset-manifests/**'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: 安装依赖（仅 devDependencies：ajv / ajv-formats）
+        run: npm ci
+
+      - name: 校验器自测（应按期望通过/失败）
+        run: npm run validate:assets:fixtures
+
+      - name: 校验真实 Manifest（Schema + 引用 + GLB 一致性）
+        run: npm run validate:assets
+
+      # strict 模式在 Phase 2 把 extras.petro 回写发布产物后应启用。
+      # 当前会因 extrasStatus=pending_rebuild 而失败，故保持注释，避免误报红。
+      # - name: 严格模式（要求 extras.petro 已回写）
+      #   run: npm run validate:assets:strict

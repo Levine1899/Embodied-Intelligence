@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>章节 · 油见未来</title>
+<title>章节 · 石油科普智能体</title>
 <link rel="stylesheet" href="assets/site/tokens.css">
 <style>
 *{box-sizing:border-box}
@@ -101,12 +101,14 @@ footer a:hover{color:var(--accent)}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+<link rel="stylesheet" href="assets/site/auth.css?v=4">
+<script src="assets/site/auth-guard.js?v=1"></script>
 </head>
 <body>
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><b>油见未来</b><span>石油 · 科学 · 阅读</span></a>
+    <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><b>石油科普智能体</b><span>石油 · 科学 · 阅读</span></a>
     <nav class="main" aria-label="主菜单">
       <a href="index.html">首页</a>
 <a href="ask.html">智能问答</a>
@@ -165,7 +167,7 @@ footer a:hover{color:var(--accent)}
 
 <footer>
   <div class="wrap">
-    <span>油见未来 · 六章节旅程 · 要点人工撰写，来源见右侧</span>
+    <span>石油科普智能体 · 六章节旅程 · 要点人工撰写，来源见右侧</span>
     <span><a href="kb.html">石油知识库</a> · <a href="explore.html">返回探索大厅</a></span>
   </div>
 </footer>
@@ -337,7 +339,7 @@ footer a:hover{color:var(--accent)}
 
   var svgOf = { timeline: svgTimeline, section: svgSection, flow: svgFlow, tank: svgTank, process: svgProcess, branch: svgBranch };
 
-  document.title = ch.title + ' · 油见未来';
+  document.title = ch.title + ' · 石油科普智能体';
   document.getElementById('crumb').textContent = '第 ' + ch.n + ' 章';
   document.getElementById('no').textContent = String(ch.n).padStart(2, '0');
   document.getElementById('title').textContent = ch.title;

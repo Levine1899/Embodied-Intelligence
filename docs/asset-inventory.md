@@ -1,6 +1,13 @@
 # Phase 01 · 三维与媒体资产清单
 
-统计时间：2026-11-22
+> ⚠ **本文是 2026-11-22 的历史快照，数字已过期。**
+> 2026-11-25 重新实测（以 `5519ef74` 为基线）：`web/assets/` 为 **117 个文件 / 40.55 MB**（本文记 49 个 / 19.16 MB）；
+> `tower.obj` 为 **3,747.5 KB / 25,831 面 / 253 个命名对象**（本文记 1040.7 KB / 20,670 面 / 54 个）；
+> 且 `assets-source/blender/tower_hero.blend` 现在**存在**。
+> 最新权威数据见 [`docs/3d-model-optimization/reports/phase-00-baseline.md`](3d-model-optimization/reports/phase-00-baseline.md) §3.2。
+> 本文保留为阶段快照，下表塔相关行已就地更正并标注"实测 11-25"。
+
+统计时间：2026-11-22（塔相关数字于 2026-11-25 更正）
 范围：`web/assets/` 全部 49 个文件，共 19.16 MB；另记录 `tools/` 中的资产生成脚本。
 判断口径：文件名/大小 + OBJ 对象名与面数 + 实际页面加载引用 + 浏览器实跑截图；**不以三角面数单独判断质量**。
 
@@ -8,10 +15,10 @@
 
 | 资产 | 路径 | 大小 | 格式 | 实际加载 | 用途 | 质量/状态 |
 |---|---|---|---|---|---|---|
-| 常减压塔 | `web/assets/tower/tower.obj` | 1040.7 KB | OBJ | 是：`tower.html`、沙盘炼化区 | 常压塔/减压塔/加热炉/塔板/侧线/半剖壳 | 20,670 面，54 个命名对象；外观/半剖可用；全剖内部差异弱；无 `.blend` |
-| 塔材质 | `web/assets/tower/tower.mtl` | 1.5 KB | MTL | 是 | 8 个基础材质 | 纯色，无贴图/UV |
-| 塔元数据 | `web/assets/tower/tower.meta.json` | 1.4 KB | JSON | 是 | 锚点、对象组、热点匹配 | 可用；语义锚点存在 |
-| 塔 GLB | `web/assets/tower/tower.glb` | 1213.6 KB | GLB | 否 | 备用 | 未接入；仓库无 GLTFLoader，不能直接作为运行时备选 |
+| 常减压塔 | `web/assets/tower/tower.obj` | **3,747.5 KB**（实测 11-25） | OBJ | 是：`tower.html`、沙盘炼化区 | 常压塔/减压塔/加热炉/塔板/侧线/半剖壳 | **25,831 面，253 个命名对象**（实测 11-25）；外观/半剖可用；全剖内部差异弱；`.blend` 见 `assets-source/blender/tower_hero.blend` |
+| 塔材质 | `web/assets/tower/tower.mtl` | **1.8 KB**（实测 11-25） | MTL | 是 | 8 个基础材质 | 纯色，无贴图/UV |
+| 塔元数据 | `web/assets/tower/tower.meta.json` | **1.5 KB**（实测 11-25） | JSON | 是 | 锚点、对象组、热点匹配 | 可用；语义锚点存在；`anchor_tower_products` 已于 11-25 更正为 `[8.4, 1.0, -5.9]` |
+| 塔 GLB | `web/assets/tower/tower.glb` | **3,753.4 KB**（实测 11-25） | GLB | 否 | 备用 | 未接入；仓库无 GLTFLoader，不能直接作为运行时备选；258 节点 **0 个 extras** |
 | 三相分离器 | `web/assets/hero/separator/separator.obj` | 452.4 KB | OBJ | 是：沙盘地面处理 | Hero 分离器 | 8,236 面，5 个按材质合并对象，无部件语义节点；无内部剖切 |
 | 抽油机 | `web/assets/hero/pumpjack/pumpjack.obj` | 65.5 KB | OBJ | 是：沙盘地下开采 | Hero 抽油机，static/beam/crank 三组动画 | 1,208 面；语义分组最好；细节偏中景 |
 | 井口 | `web/assets/hero/wellhead/wellhead.obj` | 201.3 KB | OBJ | 是：沙盘地下开采 | Hero 井口 | 3,948 面，4 个材质桶；无部件语义 |
@@ -33,7 +40,7 @@
 | 井口 | 采油树/阀组/翼阀可辨 | 4 材质，无贴图 | 材质桶，无部件节点 | 不适用 | 无 | **需精修** |
 | 外浮顶罐 | 罐壁/浮盘/边缘密封/导向杆可辨 | 4 材质，无贴图 | 材质桶；浮盘交互在 l3 程序化对象里 | 不适用 | 无 | **需精修** |
 | 加热炉 | 炉体/烟囱/燃烧器可辨，细节少 | 4 材质，无贴图 | 材质桶 | 不适用 | 无 | **需精修** |
-| 常减压塔 | 双塔/塔板/侧线/平台/半剖壳可辨 | 8 材质，无贴图 | 54 个命名对象，最好；但无稳定 objectId 注册表 | 半剖有塔板；全剖只多粒子，内部差异弱 | 无 | **需精修（全剖需重做）** |
+| 常减压塔 | 双塔/塔板/侧线/平台/半剖壳可辨 | 8 材质，无贴图 | **253 个命名对象**（实测 11-25；本文原记 54）；最好；但无稳定 objectId 注册表 | 半剖有塔板；全剖只多粒子，内部差异弱 | 无 | **需精修（全剖需重做）** |
 | 地下地质/井筒 | 当前是程序化地层台阶 + 井筒/井口，没有独立 Hero | 程序化材质 | 无独立资产节点 | 无井下内部空间 | 无 | **必须新建（阶段 04）** |
 
 ### 资产分级
@@ -77,7 +84,7 @@
 
 ## 5. 未使用/备用资产
 
-- `web/assets/tower/tower.glb`（1.2 MB）：未加载；当前 three 包没有 GLTFLoader。
+- `web/assets/tower/tower.glb`（**3.75 MB**，实测 11-25；本文原记 1.2 MB）：未加载；当前 three 包没有 GLTFLoader。
 - `web/assets/spike/*`（约 3 MB）：仅 `_spike-separator.html` 技术页，非正式入口。
 - `web/assets/tower/render-overview.png`、`render-cutaway.png`（4.6 MB）：文档/备用。
 - `web/assets/hero/*/preview.png`（5 × 0.3 MB）：文档预览，非网页。
