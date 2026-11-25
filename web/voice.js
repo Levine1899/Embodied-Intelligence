@@ -159,7 +159,7 @@
     var local = prebuilt.get(currentText);
     if (local) {
       loading = false;
-      playPrebuilt('assets/tts/' + local.file, my);
+      playPrebuilt('assets/' + local.file, my);
       return true;
     }
 
