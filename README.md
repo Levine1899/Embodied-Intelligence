@@ -19,9 +19,10 @@
 | 塔剖面 | `web/tower.html` | 常减压塔三档剖切（外观 / 半剖 / 全剖）、五个热点 |
 | 问答 | `web/ask.html` | 空态 + 对话态；依赖 `/api/ask` 代理 |
 | 写作 | `web/write.html` | 三种体裁；依赖 `/api/gen` 代理（视觉待统一） |
+| 科普视频 | `web/videos.html`、`web/video.html` | 按分类分页浏览视频，点击进入独立播放页 |
 | 知识库 | `web/kb.html` | 15 条公开科普来源的检索视图 |
 
-一级导航：**首页 / 探索 / 问答 / 写作**。
+一级导航包含首页、智能问答、沉浸式讲解、科普文案和科普视频。
 
 ### 三维两层的分工
 
@@ -60,6 +61,12 @@ DEEPSEEK_API_KEY=sk-... node server/proxy.mjs   # 默认 127.0.0.1:8790
 再把 `/api/ask`、`/api/gen` 反代到该端口。无代理时问答显示空态、写作无法生成，属预期。
 
 接口约定见 [docs/API.md](docs/API.md)，塔场景参数见 [docs/scene-distillation-tower.md](docs/scene-distillation-tower.md)。
+
+### 科普视频资源
+
+分类和视频条目存放在 `web/video-catalog.json`。每条视频的 `id` 对应 Dify 文档 ID，科普视频页和智能问答共用 `web/assets/videos/<id>.mp4`，封面位于 `web/assets/videos/posters/<id>.webp`。
+
+部署时单独同步项目里的 `web/assets/videos/` 到生产站点的 `assets/videos/`。静态服务器需要为 MP4 提供 `video/mp4` 和 HTTP Range 支持，播放器才可以拖动进度。
 
 ---
 

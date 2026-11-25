@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>视频播放 · 油见未来</title>
+  <link rel="stylesheet" href="assets/site/tokens.css">
+  <link rel="stylesheet" href="assets/site/page-header.css">
+  <link rel="stylesheet" href="assets/site/video-library.css">
+  <script type="module" src="video-player.js"></script>
+</head>
+<body>
+  <header class="site-head">
+    <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><span>油见未来</span> <small>石油科学</small></a>
+    <nav class="site-nav" aria-label="主导航">
+      <a href="index.html">首页</a>
+      <a href="ask.html">智能问答</a>
+      <a href="sandbox.html">沉浸式讲解</a>
+      <a href="write.html">科普文案</a>
+      <a href="videos.html" aria-current="true">科普视频</a>
+    </nav>
+  </header>
+
+  <main class="video-library">
+    <div class="video-watch-heading">
+      <h1>科普视频</h1>
+      <a id="back-to-list" class="video-back" href="videos.html"><span aria-hidden="true">←</span> 返回视频列表</a>
+    </div>
+    <p id="catalog-status" class="video-notice" role="status">正在加载视频</p>
+    <noscript><p>请启用 JavaScript 后播放视频。</p></noscript>
+
+    <section id="watch-content" aria-label="视频播放" hidden>
+      <div class="video-categories" id="watch-categories" role="group" aria-label="视频分类"></div>
+      <div class="video-layout">
+        <section class="video-feature" aria-labelledby="video-title">
+          <div class="video-frame" id="video-frame">
+            <video id="video-player" controls playsinline preload="none" aria-labelledby="video-title"></video>
+            <button class="video-start" id="video-start" type="button" aria-label="播放视频">
+              <span class="play-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="video-caption">
+            <div class="video-meta"><span id="video-category"></span><time id="video-duration"></time></div>
+            <h2 id="video-title" aria-live="polite"></h2>
+            <p id="video-error" class="video-notice" role="status" hidden></p>
+          </div>
+        </section>
+
+        <section class="video-queue" aria-labelledby="queue-title">
+          <div class="queue-heading">
+            <h2 id="queue-title"></h2>
+            <span id="queue-count"></span>
+          </div>
+          <ul class="queue-items" id="queue-items"></ul>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

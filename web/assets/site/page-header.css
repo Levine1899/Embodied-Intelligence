@@ -61,8 +61,10 @@ header.site-head a:focus-visible { outline: 2px solid #d8a24a; outline-offset: 4
 @media (max-width: 800px) {
   body header.site-head .site-nav, body.is-empty header.site-head .site-nav { gap: 18px; }
 }
-@media (max-width: 500px) {
-  body header.site-head, body.is-empty header.site-head { height: auto; padding: 16px; flex-wrap: wrap; gap: 14px; }
+@media (max-width: 700px) {
+  body header.site-head, body.is-empty header.site-head { height: auto; padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
   body header.site-head .brand, body.is-empty header.site-head .brand { font-size: 20px; }
-  body header.site-head .site-nav, body.is-empty header.site-head .site-nav { flex-basis: 100%; gap: 22px; }
+  body header.site-head .site-nav, body.is-empty header.site-head .site-nav { flex-basis: 100%; height: auto; flex-wrap: wrap; gap: 4px; }
+  body header.site-head .site-nav a, body.is-empty header.site-head .site-nav a { padding: 8px 7px; font-size: 12px; }
+  header.site-head .site-nav a[aria-current]::after { left: 7px; right: 7px; }
 }

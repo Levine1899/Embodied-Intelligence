@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>科普视频 · 油见未来</title>
+  <link rel="stylesheet" href="assets/site/tokens.css">
+  <link rel="stylesheet" href="assets/site/page-header.css">
+  <link rel="stylesheet" href="assets/site/video-library.css">
+  <script type="module" src="video-library.js"></script>
+</head>
+<body>
+  <header class="site-head">
+    <a class="brand" href="index.html"><img src="assets/science-logo.png" alt="中国石油"><span>油见未来</span> <small>石油科学</small></a>
+    <nav class="site-nav" aria-label="主导航">
+      <a href="index.html">首页</a>
+      <a href="ask.html">智能问答</a>
+      <a href="sandbox.html">沉浸式讲解</a>
+      <a href="write.html">科普文案</a>
+      <a href="videos.html" aria-current="page">科普视频</a>
+    </nav>
+  </header>
+
+  <main class="video-library">
+    <h1>科普视频</h1>
+    <p id="catalog-status" class="video-notice" role="status">正在加载视频目录</p>
+    <noscript><p>请启用 JavaScript 后查看科普视频。</p></noscript>
+
+    <section id="library-content" aria-label="视频库" hidden>
+      <nav class="video-categories" id="categories" aria-label="视频分类"></nav>
+      <ul class="video-grid" id="video-grid" aria-label="视频列表"></ul>
+      <nav class="video-pagination" id="pagination" aria-label="视频分页" hidden></nav>
+    </section>
+  </main>
+</body>
+</html>

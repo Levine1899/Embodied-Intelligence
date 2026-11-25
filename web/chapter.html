@@ -90,9 +90,9 @@ footer a:hover{color:var(--accent)}
 }
 @media (max-width:640px){
   .wrap{width:calc(100% - 32px)}
-  .top .wrap{height:56px}
+  .top .wrap{height:auto;min-height:56px;padding-block:10px;flex-wrap:wrap;gap:8px}
   .brand span,.issue{display:none}
-  nav.main{gap:var(--s-4)}
+  nav.main{flex-basis:100%;flex-wrap:wrap;gap:8px 12px}
   .ch-head h1{font-size:34px}
   .ch-head .no{font-size:34px}
   .ch-head .q{font-size:var(--fs-16)}
@@ -112,6 +112,7 @@ footer a:hover{color:var(--accent)}
 <a href="ask.html">智能问答</a>
 <a href="sandbox.html">沉浸式讲解</a>
 <a href="write.html">科普文案</a>
+<a href="videos.html">科普视频</a>
     </nav>
     <span class="issue">六章</span>
   </div>

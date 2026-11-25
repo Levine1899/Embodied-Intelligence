@@ -4,6 +4,8 @@ node_modules/
 .DS_Store
 Thumbs.db
 web/_*.png
+web/assets/videos/*.mp4
+web/assets/videos/posters/
 
 dist/
 
