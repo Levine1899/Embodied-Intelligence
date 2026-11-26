@@ -21,8 +21,7 @@ button{font:inherit}
 
 /* ---------- 封面：纯视觉设备 + 右侧系统菜单 ---------- */
 .cover{position:relative;min-height:100vh;overflow:hidden;isolation:isolate}
-.stage{position:absolute;inset:0;z-index:0;cursor:grab;touch-action:none;overflow:hidden}
-.stage:active{cursor:grabbing}
+.stage{position:absolute;inset:0;z-index:0;overflow:hidden}
 .stage video,.stage .poster{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:center 46%;transform:translateX(-9%)}
 .stage .poster{z-index:0}
 .stage video{z-index:1;filter:saturate(.94) brightness(.96)}
@@ -47,28 +46,18 @@ button{font:inherit}
 
 /* ---------- 右侧系统菜单 ---------- */
 .rail-wrap{position:absolute;z-index:12;top:143px;left:66.7vw;right:auto;bottom:198px;width:250px;display:flex;flex-direction:column;align-items:stretch}
-.rail-eyebrow{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:0 0 18px;padding-left:19px;font-size:11px;letter-spacing:.2em;color:rgba(232,225,212,.46)}
-.rail-eyebrow span{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:rgba(232,225,212,.32)}
-.rail{position:relative;display:flex;flex-direction:column;padding-left:19px;border-left:1px solid rgba(232,225,212,.18)}
+.rail-eyebrow{margin:0 0 18px;padding-left:19px;font-size:11px;letter-spacing:.2em;color:rgba(232,225,212,.46)}
+.rail{position:relative;display:flex;flex:1;min-height:0;flex-direction:column;padding-left:19px;border-left:1px solid rgba(232,225,212,.18)}
 .rail::before{content:"";position:absolute;left:-1px;top:0;width:1px;height:38px;background:linear-gradient(180deg,var(--accent),rgba(216,162,74,0))}
-.rail__item{position:relative;display:flex;align-items:baseline;gap:12px;min-height:58px;padding:16px 0 15px;border-bottom:1px solid rgba(232,225,212,.11);color:rgba(232,225,212,.76);transition:color .18s,transform .18s}
+.rail__item{position:relative;display:flex;align-items:center;gap:12px;flex:1 1 0;min-height:0;padding:0;border-bottom:1px solid rgba(232,225,212,.11);color:rgba(232,225,212,.76);transition:color .18s,transform .18s}
 .rail__item:last-of-type{border-bottom:0}
 .rail__item:hover{color:var(--accent-2);transform:translateX(2px)}
 .rail__item.is-active{color:var(--accent-2)}
-.rail__item.is-active::before{content:"";position:absolute;left:-22px;top:23px;width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(216,162,74,.65)}
+.rail__item.is-active::before{content:"";position:absolute;left:-22px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(216,162,74,.65)}
 .rail__num{font-family:var(--font-mono);font-size:14px;letter-spacing:.06em;color:rgba(232,225,212,.38)}
 .rail__item.is-active .rail__num{color:var(--accent)}
 .rail__label{font-size:21px;letter-spacing:.06em;line-height:1.25;white-space:nowrap}
 .rail__item.is-active .rail__label{font-weight:500}
-.rail__hint{margin-top:auto;padding:22px 0 0 19px;border-left:1px solid rgba(232,225,212,.18)}
-.rail__pause{display:inline-flex;align-items:center;gap:9px;min-height:44px;border:0;background:none;padding:0;color:rgba(232,225,212,.55);font-size:12px;letter-spacing:.12em;cursor:pointer;transition:color .18s}
-.rail__pause:hover{color:var(--accent-2)}
-.rail__pause i{position:relative;display:inline-block;width:12px;height:12px;flex:none}
-.rail__pause[aria-pressed="true"] i::before,
-.rail__pause[aria-pressed="true"] i::after{content:"";position:absolute;top:1px;width:3px;height:10px;background:currentColor}
-.rail__pause[aria-pressed="true"] i::before{left:1px}
-.rail__pause[aria-pressed="true"] i::after{right:1px}
-.rail__pause[aria-pressed="false"] i::before{content:"";position:absolute;left:2px;top:1px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid currentColor}
 
 /* ---------- 响应式 ---------- */
 @media (max-width:1200px){
@@ -85,12 +74,9 @@ button{font:inherit}
   .rail-wrap{left:auto;right:14px;top:150px;bottom:150px;width:42px}
   .rail-eyebrow,.rail__num{display:none}
   .rail{padding-left:0;border-left:0;align-items:flex-end;gap:4px}
-  .rail__item{min-height:46px;border:0;padding:10px 0;justify-content:flex-end}
+  .rail__item{flex:1 1 0;min-height:0;border:0;padding:0;justify-content:flex-end}
   .rail__label{writing-mode:vertical-rl;letter-spacing:.12em;font-size:13px;color:rgba(232,225,212,.64)}
   .rail__item.is-active::before{display:none}
-  .rail__hint{padding:14px 0 0;border-left:0;margin-top:auto}
-  .rail__pause{width:42px;justify-content:center;color:rgba(232,225,212,.62)}
-  .rail__pause span{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -100,9 +86,9 @@ button{font:inherit}
 <body>
 
 <section class="cover" aria-label="首页封面">
-  <div class="stage" id="stage" role="img" aria-label="常减压蒸馏装置三维模型，绕塔缓慢旋转；可拖动查看">
+  <div class="stage" id="stage" role="img" aria-label="常减压蒸馏装置三维模型，绕塔缓慢旋转">
     <img class="poster" src="assets/tower/hero-poster.jpg" alt="">
-    <video id="loop" muted loop playsinline preload="auto" poster="assets/tower/hero-poster.jpg">
+    <video id="loop" autoplay muted loop playsinline preload="auto" poster="assets/tower/hero-poster.jpg">
       <source src="assets/tower/hero-loop.mp4?v=1" type="video/mp4">
     </video>
   </div>
@@ -117,18 +103,13 @@ button{font:inherit}
   </header>
 
   <nav class="rail-wrap" aria-label="站点导航">
-    <p class="rail-eyebrow">站点导航 <span>MENU</span></p>
+    <p class="rail-eyebrow">站点导航</p>
     <div class="rail">
       <a class="rail__item is-active" href="index.html" aria-current="page"><span class="rail__num">01</span><span class="rail__label">首页</span></a>
       <a class="rail__item" href="ask.html"><span class="rail__num">02</span><span class="rail__label">智能问答</span></a>
       <a class="rail__item" href="sandbox.html"><span class="rail__num">03</span><span class="rail__label">沉浸式讲解</span></a>
       <a class="rail__item" href="write.html"><span class="rail__num">04</span><span class="rail__label">科普文案</span></a>
       <a class="rail__item" href="videos.html"><span class="rail__num">05</span><span class="rail__label">科普视频</span></a>
-    </div>
-    <div class="rail__hint">
-      <button id="toggle" class="rail__pause" type="button" aria-pressed="true" aria-label="暂停演示">
-        <i aria-hidden="true"></i><span data-toggle-label>暂停演示</span>
-      </button>
     </div>
   </nav>
 </section>
@@ -137,55 +118,16 @@ button{font:inherit}
 (function () {
   var v = document.getElementById('loop');
   var stage = document.getElementById('stage');
-  var btn = document.getElementById('toggle');
-  if (!v || !stage || !btn) return;
+  if (!v || !stage) return;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var dragging = false, sx = 0, st = 0, timer = null;
-
-  function label(text) {
-    var el = btn.querySelector('[data-toggle-label]');
-    if (el) el.textContent = text; else btn.textContent = text;
-    btn.setAttribute('aria-label', text);
-  }
-  function play() {
-    if (reduce) return;
-    v.play().catch(function () {});
-    label('暂停演示');
-    btn.setAttribute('aria-pressed', 'true');
-  }
-  function pause() {
-    v.pause();
-    label('播放演示');
-    btn.setAttribute('aria-pressed', 'false');
-  }
-
   v.addEventListener('error', function () { stage.classList.add('no-video'); });
-  btn.addEventListener('click', function () { v.paused ? play() : pause(); });
-
-  if (!reduce) play(); else pause();
-
-  stage.addEventListener('pointerdown', function (e) {
-    dragging = true; sx = e.clientX; st = v.currentTime || 0; pause();
-    try { stage.setPointerCapture(e.pointerId); } catch (err) {}
-  });
-  stage.addEventListener('pointermove', function (e) {
-    if (!dragging) return;
-    var r = stage.getBoundingClientRect();
-    var dur = v.duration || 6;
-    var t = (st - (e.clientX - sx) / r.width * dur) % dur;
-    if (t < 0) t += dur;
-    v.currentTime = t;
-  });
-  function endDrag() {
-    if (!dragging) return;
-    dragging = false;
-    clearTimeout(timer);
-    timer = setTimeout(function () { if (!dragging) play(); }, 1200);
+  if (reduce) {
+    v.autoplay = false;
+    v.pause();
+    v.addEventListener('loadeddata', function () { v.pause(); }, { once: true });
+  } else {
+    v.play().catch(function () {});
   }
-  stage.addEventListener('pointerup', endDrag);
-  stage.addEventListener('pointercancel', endDrag);
-  stage.addEventListener('pointerenter', function () { if (!dragging) v.pause(); });
-  stage.addEventListener('pointerleave', function () { if (!dragging) play(); });
 })();
 </script>
 <script src="float-chat.js?v=8"></script>
