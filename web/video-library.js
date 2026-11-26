@@ -1,4 +1,4 @@
-import { createCategoryControl, createVideoCover, listingUrl, loadVideoGroups, readListing, watchUrl } from './video-catalog.js';
+import { createCategoryControl, createVideoCover, listingUrl, loadVideoGroups, readListing, watchUrl } from './video-catalog.js?v=1';
 
 const status = document.getElementById('catalog-status');
 const content = document.getElementById('library-content');
