@@ -324,8 +324,12 @@
 }
 
 /* ---------- auth guard：认证完成前的待定态 / 服务不可用 ---------- */
-html.auth-pending body { opacity: 0 !important; }
+html.auth-pending:not([data-auth-shell]) body { opacity: 0 !important; }
 html.auth-blocked body { overflow: hidden; }
+[data-auth-shell]:not(.auth-pending) [data-auth-loading],
+[data-auth-shell]:is(.auth-pending, .auth-blocked) :is([data-auth-content], [data-auth-user], #fc-root) {
+  display: none !important;
+}
 .auth-guard-overlay {
   position: fixed;
   inset: 0;

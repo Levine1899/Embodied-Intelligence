@@ -7,13 +7,21 @@
   if (/\/login\.html?$/i.test(window.location.pathname)) return;
 
   var root = document.documentElement;
+  var hasShell = root.hasAttribute('data-auth-shell');
+  var authTimeout = 10000;
   var finished = false;
+  var verificationId = 0;
+  var domReady = document.readyState === 'loading' ? new Promise(function (resolve) {
+    document.addEventListener('DOMContentLoaded', resolve, { once: true });
+  }) : Promise.resolve();
 
   root.classList.add('auth-pending');
-  var hideStyle = document.createElement('style');
-  hideStyle.setAttribute('data-auth-guard', '');
-  hideStyle.textContent = 'html.auth-pending body{opacity:0!important}';
-  (document.head || root).appendChild(hideStyle);
+  if (!hasShell) {
+    var hideStyle = document.createElement('style');
+    hideStyle.setAttribute('data-auth-guard', '');
+    hideStyle.textContent = 'html.auth-pending body{opacity:0!important}';
+    (document.head || root).appendChild(hideStyle);
+  }
 
   function loginUrl() {
     return '/login.html?next=' + encodeURIComponent(window.location.pathname + window.location.search);
@@ -30,16 +38,22 @@
   }
 
   function requestMe() {
+    var controller = hasShell ? new AbortController() : null;
+    var timer = controller ? setTimeout(function () { controller.abort(); }, authTimeout) : undefined;
     return fetch('/api/auth/me', {
       credentials: 'same-origin',
       cache: 'no-store',
-      headers: { Accept: 'application/json' }
+      headers: { Accept: 'application/json' },
+      signal: controller ? controller.signal : undefined
     }).then(function (response) {
       return response.json().catch(function () { return {}; }).then(function (body) {
+        if (controller && controller.signal.aborted) return { status: 0, body: {} };
         return { status: response.status, body: body };
       });
     }).catch(function () {
       return { status: 0, body: {} };
+    }).finally(function () {
+      clearTimeout(timer);
     });
   }
 
@@ -75,7 +89,7 @@
     retry.addEventListener('click', function () {
       retry.disabled = true;
       retry.textContent = '检查中…';
-      verify({ retryMode: true });
+      verify();
     });
 
     overlay.appendChild(dialog);
@@ -147,8 +161,12 @@
   }
 
   /* ---------- 校验 ---------- */
-  function verify(options) {
-    return requestMe().then(function (result) {
+  function verify() {
+    var id = ++verificationId;
+    var request = hasShell ? requestMe() : domReady.then(requestMe);
+    return Promise.all([request, domReady]).then(function (results) {
+      if (id !== verificationId) return;
+      var result = results[0];
       if (result.status === 200 && result.body && result.body.authenticated && result.body.user) {
         onVerified(result.body.user);
         return;
@@ -162,24 +180,30 @@
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { verify(); }, { once: true });
-  } else {
-    verify();
-  }
+  verify();
 
   // 兜底：认证服务无响应时不要让页面永远空白（内容仍由服务端授权交付）
-  setTimeout(function () {
-    if (finished) return;
-    if (!document.body) return;
-    showUnavailable(0);
-  }, 10000);
+  if (!hasShell) {
+    setTimeout(function () {
+      if (finished || !document.body) return;
+      showUnavailable(0);
+    }, authTimeout);
+  }
+
+  if (hasShell) {
+    window.addEventListener('pagehide', function (event) {
+      if (!event.persisted) return;
+      verificationId += 1;
+      root.classList.add('auth-pending');
+    });
+  }
 
   // BFCache 恢复（浏览器后退）必须重新校验：退出/被禁用后不能靠缓存继续看
   window.addEventListener('pageshow', function (event) {
     if (!event.persisted) return;
     root.classList.add('auth-pending');
     finished = false;
+    if (hasShell) clearUnavailable();
     verify();
   });
 

@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="auth-pending" data-auth-shell>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>石油科普智能体</title>
+  <script src="assets/site/auth-guard.js?v=2"></script>
   <link rel="stylesheet" href="assets/site/tokens.css">
   <link rel="stylesheet" href="assets/site/page-header.css">
   <link rel="stylesheet" href="assets/site/video-library.css">
-  <link rel="stylesheet" href="assets/site/auth.css?v=4">
-  <script src="assets/site/auth-guard.js?v=1"></script>
+  <link rel="stylesheet" href="assets/site/auth.css?v=5">
   <script type="module" src="video-library.js"></script>
 </head>
 <body>
@@ -25,10 +25,11 @@
 
   <main class="video-library">
     <h1>科普视频</h1>
-    <p id="catalog-status" class="video-notice" role="status">正在加载视频目录</p>
+    <p class="video-notice" role="status" data-auth-loading>正在验证登录状态…</p>
+    <p id="catalog-status" class="video-notice" role="status" data-auth-content>正在加载视频目录</p>
     <noscript><p>请启用 JavaScript 后查看科普视频。</p></noscript>
 
-    <section id="library-content" aria-label="视频库" hidden>
+    <section id="library-content" aria-label="视频库" data-auth-content hidden>
       <nav class="video-categories" id="categories" aria-label="视频分类"></nav>
       <ul class="video-grid" id="video-grid" aria-label="视频列表"></ul>
       <nav class="video-pagination" id="pagination" aria-label="视频分页" hidden></nav>

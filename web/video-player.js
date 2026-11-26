@@ -14,8 +14,32 @@ const title = document.getElementById('video-title');
 const category = document.getElementById('video-category');
 const duration = document.getElementById('video-duration');
 const notice = document.getElementById('video-error');
+const slowBufferingDelay = 8000;
 
 let selectedVideo;
+let bufferingTimer;
+let resumeTime = 0;
+
+function clearPlaybackNotice() {
+  clearTimeout(bufferingTimer);
+  bufferingTimer = undefined;
+  notice.hidden = true;
+}
+
+function hidePlayButton() {
+  if (document.activeElement === start) player.focus({ preventScroll: true });
+  start.hidden = true;
+}
+
+function showBuffering() {
+  if (!selectedVideo || player.paused || bufferingTimer !== undefined) return;
+  hidePlayButton();
+  notice.textContent = '正在缓冲视频…';
+  notice.hidden = false;
+  bufferingTimer = setTimeout(() => {
+    notice.textContent = '视频缓冲较慢，可以继续等待或切换到其他视频。';
+  }, slowBufferingDelay);
+}
 
 function selectVideo(video) {
   if (selectedVideo === video) return;
@@ -25,7 +49,7 @@ function selectVideo(video) {
   category.textContent = video.category;
   duration.textContent = durationLabel(video.duration);
   duration.dateTime = `PT${video.duration}S`;
-  notice.hidden = true;
+  clearPlaybackNotice();
   start.hidden = false;
   start.setAttribute('aria-label', `播放${video.title}`);
   player.poster = posterUrl(video);
@@ -36,6 +60,7 @@ function selectVideo(video) {
 }
 
 function showPlaybackError() {
+  clearPlaybackNotice();
   start.hidden = false;
   start.setAttribute('aria-label', `重试播放${selectedVideo.title}`);
   notice.textContent = '视频暂时无法播放，请重试或选择其他视频。';
@@ -44,22 +69,49 @@ function showPlaybackError() {
 
 function playSelected() {
   const video = selectedVideo;
-  notice.hidden = true;
-  if (player.error) player.load();
+  if (player.error) {
+    clearPlaybackNotice();
+    player.load();
+  }
   player.play().catch(error => {
-    if (video !== selectedVideo || ['AbortError', 'NotAllowedError'].includes(error.name)) return;
+    if (video !== selectedVideo || !player.hasAttribute('src') || ['AbortError', 'NotAllowedError'].includes(error.name)) return;
     showPlaybackError();
   });
 }
 
 start.addEventListener('click', playSelected);
+player.addEventListener('waiting', showBuffering);
+player.addEventListener('pause', () => {
+  if (bufferingTimer !== undefined) clearPlaybackNotice();
+});
 player.addEventListener('playing', () => {
-  if (document.activeElement === start) player.focus({ preventScroll: true });
-  start.hidden = true;
-  notice.hidden = true;
+  hidePlayButton();
+  clearPlaybackNotice();
 });
 player.addEventListener('error', () => {
-  if (player.error && selectedVideo) showPlaybackError();
+  if (player.error && selectedVideo && player.hasAttribute('src')) showPlaybackError();
+});
+
+function releaseVideo() {
+  if (!player.hasAttribute('src')) return;
+  resumeTime = player.currentTime;
+  player.pause();
+  player.removeAttribute('src');
+  player.load();
+  clearPlaybackNotice();
+}
+
+back.addEventListener('click', event => {
+  if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+  releaseVideo();
+});
+window.addEventListener('pagehide', releaseVideo);
+window.addEventListener('pageshow', event => {
+  if (!event.persisted || !selectedVideo || player.hasAttribute('src')) return;
+  player.src = `assets/videos/${selectedVideo.id}.mp4`;
+  player.currentTime = resumeTime;
+  start.hidden = false;
+  start.setAttribute('aria-label', `播放${selectedVideo.title}`);
 });
 
 function queueItem(video, listing, collection) {
