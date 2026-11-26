@@ -46,7 +46,7 @@ button{font:inherit}
 .top .auth-user{padding-top:1px}
 
 /* ---------- 右侧系统菜单 ---------- */
-.rail-wrap{position:absolute;z-index:12;top:142px;right:120px;bottom:170px;width:176px;display:flex;flex-direction:column;align-items:stretch}
+.rail-wrap{position:absolute;z-index:12;top:143px;left:66.7vw;right:auto;bottom:198px;width:250px;display:flex;flex-direction:column;align-items:stretch}
 .rail-eyebrow{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:0 0 18px;padding-left:19px;font-size:11px;letter-spacing:.2em;color:rgba(232,225,212,.46)}
 .rail-eyebrow span{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:rgba(232,225,212,.32)}
 .rail{position:relative;display:flex;flex-direction:column;padding-left:19px;border-left:1px solid rgba(232,225,212,.18)}
@@ -73,7 +73,7 @@ button{font:inherit}
 /* ---------- 响应式 ---------- */
 @media (max-width:1200px){
   .top{padding:24px 36px}
-  .rail-wrap{right:34px;top:132px;width:176px}
+  .rail-wrap{left:auto;right:34px;top:132px;bottom:170px;width:176px}
 }
 @media (max-width:760px){
   .cover{min-height:100vh}
@@ -82,7 +82,7 @@ button{font:inherit}
   .brand b{font-size:17px}
   .brand small{display:none}
   .top .auth-user{margin-left:auto}
-  .rail-wrap{right:14px;top:150px;bottom:150px;width:42px}
+  .rail-wrap{left:auto;right:14px;top:150px;bottom:150px;width:42px}
   .rail-eyebrow,.rail__num{display:none}
   .rail{padding-left:0;border-left:0;align-items:flex-end;gap:4px}
   .rail__item{min-height:46px;border:0;padding:10px 0;justify-content:flex-end}
