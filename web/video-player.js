@@ -1,4 +1,5 @@
 import { createCategoryControl, createVideoCover, durationLabel, listingUrl, loadVideoGroups, posterUrl, readListing, watchUrl } from './video-catalog.js';
+import { videoUrl } from './assets/site/video-source.js?v=1';
 
 const status = document.getElementById('catalog-status');
 const content = document.getElementById('watch-content');
@@ -53,7 +54,7 @@ function selectVideo(video) {
   start.hidden = false;
   start.setAttribute('aria-label', `播放${video.title}`);
   player.poster = posterUrl(video);
-  player.src = `assets/videos/${video.id}.mp4`;
+  player.src = videoUrl(video.id);
 
   queue.querySelector('[aria-current]')?.removeAttribute('aria-current');
   queue.querySelector(`[data-video-id="${video.id}"]`)?.setAttribute('aria-current', 'true');
@@ -108,7 +109,7 @@ back.addEventListener('click', event => {
 window.addEventListener('pagehide', releaseVideo);
 window.addEventListener('pageshow', event => {
   if (!event.persisted || !selectedVideo || player.hasAttribute('src')) return;
-  player.src = `assets/videos/${selectedVideo.id}.mp4`;
+  player.src = videoUrl(selectedVideo.id);
   player.currentTime = resumeTime;
   start.hidden = false;
   start.setAttribute('aria-label', `播放${selectedVideo.title}`);

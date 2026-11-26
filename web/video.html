@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="assets/site/video-library.css">
   <link rel="stylesheet" href="assets/site/auth.css?v=4">
   <script src="assets/site/auth-guard.js?v=1"></script>
-  <script type="module" src="video-player.js?v=2"></script>
+  <script type="module" src="video-player.js?v=3"></script>
 </head>
 <body>
   <header class="site-head">
@@ -36,7 +36,7 @@
       <div class="video-layout">
         <section class="video-feature" aria-labelledby="video-title">
           <div class="video-frame" id="video-frame">
-            <video id="video-player" controls playsinline preload="none" aria-labelledby="video-title"></video>
+            <video id="video-player" controls playsinline preload="none" crossorigin="anonymous" aria-labelledby="video-title"></video>
             <button class="video-start" id="video-start" type="button" aria-label="播放视频">
               <span class="play-icon" aria-hidden="true"></span>
             </button>

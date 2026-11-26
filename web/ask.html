@@ -284,7 +284,9 @@
 
 <script src="assets/vendor/marked.umd.js"></script>
 <script src="assets/vendor/purify.min.js"></script>
-<script>
+<script type="module">
+import { videoUrl } from './assets/site/video-source.js?v=1';
+
 (function () {
   const $ = selector => document.querySelector(selector);
   const questionInput = $('#q');
@@ -371,6 +373,7 @@
     player.controls = true;
     player.playsInline = true;
     player.preload = 'none';
+    player.crossOrigin = 'anonymous';
     player.setAttribute('aria-label', label);
     const status = node('p', 'video-source__error');
     status.setAttribute('role', 'status');
@@ -425,7 +428,7 @@
       item.append(heading);
       list.append(item);
       if (!documentId) continue;
-      const url = `assets/videos/${documentId}.mp4`;
+      const url = videoUrl(documentId);
       if (!availability.has(url)) {
         const check = fetch(url, { method:'HEAD', redirect:'error' })
           .then(response => response.ok && response.headers.get('Content-Type')?.split(';')[0].toLowerCase() === 'video/mp4')
