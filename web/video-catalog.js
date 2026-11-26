@@ -1,9 +1,13 @@
 const pageSize = 12;
 
-function listingRank(video) {
+function displayRank(video) {
   // 用 UUID 的随机部分打散时长接近的视频，翻页和刷新时顺序仍然一致。
   const shuffle = (Number.parseInt(video.id.slice(0, 8), 16) || 0) / 0x100000000;
   return video.duration * (1 + 0.5 * shuffle);
+}
+
+export function orderVideosForDisplay(videos) {
+  return [...videos].sort((left, right) => displayRank(left) - displayRank(right));
 }
 
 export async function loadVideoGroups() {
@@ -22,7 +26,7 @@ export function readListing(groups, params) {
   const pageCount = Math.max(1, Math.ceil(videos.length / pageSize));
   const requested = Number(params.get('page'));
   const page = Number.isSafeInteger(requested) && requested > 0 ? Math.min(requested, pageCount) : 1;
-  const orderedVideos = [...videos].sort((left, right) => listingRank(left) - listingRank(right));
+  const orderedVideos = orderVideosForDisplay(videos);
   return {
     category: group?.name ?? '',
     page,

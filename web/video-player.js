@@ -1,5 +1,5 @@
-import { createCategoryControl, createVideoCover, durationLabel, listingUrl, loadVideoGroups, posterUrl, readListing, watchUrl } from './video-catalog.js';
-import { videoUrl } from './assets/site/video-source.js?v=1';
+import { createCategoryControl, createVideoCover, durationLabel, listingUrl, loadVideoGroups, orderVideosForDisplay, posterUrl, readListing, watchUrl } from './video-catalog.js?v=2';
+import { videoUrl } from './assets/site/video-source.js?v=2';
 
 const status = document.getElementById('catalog-status');
 const content = document.getElementById('watch-content');
@@ -149,10 +149,11 @@ function queueItem(video, listing, collection) {
 }
 
 function renderQueue(group, listing) {
-  if (!group.videos.includes(selectedVideo)) selectVideo(group.videos[0]);
+  const videos = orderVideosForDisplay(group.videos);
+  if (!videos.includes(selectedVideo)) selectVideo(videos[0]);
   queueTitle.textContent = group.name;
   queueCount.textContent = `${group.videos.length} 部`;
-  queue.replaceChildren(...group.videos.map(video => queueItem(video, listing, group.key)));
+  queue.replaceChildren(...videos.map(video => queueItem(video, listing, group.key)));
   queue.scrollTop = 0;
   const current = queue.querySelector('[aria-current]');
   queue.scrollTop = current.getBoundingClientRect().top - queue.getBoundingClientRect().top;
