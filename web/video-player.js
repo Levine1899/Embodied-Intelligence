@@ -20,7 +20,7 @@ let selectedVideo;
 function selectVideo(video) {
   if (selectedVideo === video) return;
   selectedVideo = video;
-  document.title = `${video.title} · 科普视频 · 油见未来`;
+  document.title = '石油科普智能体';
   title.textContent = video.title;
   category.textContent = video.category;
   duration.textContent = durationLabel(video.duration);

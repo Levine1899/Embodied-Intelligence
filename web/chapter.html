@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>章节 · 石油科普智能体</title>
+<title>石油科普智能体</title>
 <link rel="stylesheet" href="assets/site/tokens.css">
 <style>
 *{box-sizing:border-box}
@@ -339,7 +339,7 @@ footer a:hover{color:var(--accent)}
 
   var svgOf = { timeline: svgTimeline, section: svgSection, flow: svgFlow, tank: svgTank, process: svgProcess, branch: svgBranch };
 
-  document.title = ch.title + ' · 石油科普智能体';
+  document.title = '石油科普智能体';
   document.getElementById('crumb').textContent = '第 ' + ch.n + ' 章';
   document.getElementById('no').textContent = String(ch.n).padStart(2, '0');
   document.getElementById('title').textContent = ch.title;
@@ -391,5 +391,6 @@ footer a:hover{color:var(--accent)}
   nx.href = 'chapter.html?id=' + next.id; nx.textContent = '下一章：' + next.short + ' →';
 })();
 </script>
+<script src="float-chat.js?v=7"></script>
 </body>
 </html>
