@@ -138,7 +138,7 @@
     panel.hidden = !yes;
     fab.setAttribute('aria-expanded', String(yes));
     if (yes) {
-      paint();
+      if (!busy) paint();
       setTimeout(function () { input.focus({ preventScroll: true }); }, 30);
     }
   }
@@ -230,11 +230,14 @@
       if (!done) throw new Error('回答中断，请重试');
       var clean = visible(answer).trim();
       if (!clean) throw new Error('没有收到回答');
+      /* 若等待期间用户重开过面板，paint 可能已把占位节点移除；补回再落最终答案。 */
+      if (!node.isConnected) logEl.appendChild(node);
       node.textContent = clean;
       node.classList.remove('pending');
       messages.push({ role: 'ai', text: clean });
       save();
     } catch (e) {
+      if (!node.isConnected) logEl.appendChild(node);
       node.className = 'fc-msg err';
       node.textContent = e && e.message ? e.message : '连接失败，请稍后再试。';
       messages.push({ role: 'ai', text: node.textContent });
@@ -271,7 +274,6 @@
     var b = e.target.closest('#fc-suggest button');
     if (!b) return;
     send(b.getAttribute('data-q'));
-    toggle(true);
   });
 
   window.__floatChat = {
