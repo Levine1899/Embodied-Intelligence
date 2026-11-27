@@ -122,6 +122,14 @@ const center = (a, b) => r3((a + b) / 2);
 const buf = await readFile(GLB);
 const { json, bytes, sha256 } = readGlb(buf);
 
+/* extras 是否已闭环，必须以产物为准而不是写死。
+ * 之前这里恒为 pending_rebuild，导致校验器跳过逐节点对账（EXTRAS_ABSENT 只在
+ * "完全没有 extras"时触发），于是"GLB 有 extras 但 Manifest 说没有"这种不一致
+ * 谁都不会发现。 */
+const gltfNodes = json.nodes || [];
+const extrasNodes = gltfNodes.filter((n) => n.extras && n.extras.petro && n.extras.petro.nodeUid);
+const extrasComplete = gltfNodes.length > 0 && extrasNodes.length === gltfNodes.length;
+
 const nodes = json.nodes || [];
 const posAccessor = (n) => json.accessors[json.meshes[n.mesh].primitives[0].attributes.POSITION];
 
@@ -155,6 +163,9 @@ for (const n of nodes) {
       nodeUid,
       nodeName: n.name,
       objectId: OBJECT_ID,
+      /* Phase 6：节点必须声明 systemId，否则前端 systemId 索引恒为空
+       *（systems[] 有 1 个 system，但节点不带归属就索引不到）。 */
+      systemId: SYSTEM_ID,
       semanticId,
       ...(instanceId ? { instanceId } : {}),
       role,
@@ -250,7 +261,7 @@ const manifest = {
     uri: 'assets/separator/separator.glb',
     sha256,
     bytes,
-    extrasStatus: 'pending_rebuild',
+    extrasStatus: extrasComplete ? 'verified' : 'pending_rebuild',
     fallback: {
       format: 'obj',
       uri: 'assets/separator/separator.obj',
@@ -405,7 +416,9 @@ const manifest = {
     '教学示意结构，不用于工程设计、设备选型、机械强度或 CFD 仿真。',
     '内部挡板/堰板/除雾器数量与位置为示意值，未按工程图纸校核。',
     'processBasis 为空：本资产尚未登记任何工艺依据，任何物流连接必须标记为 draft 后方可开发预览。',
-    '现有 GLB 未携带 extras.petro，nodeUid 与 glTF 节点的映射已在临时构建中验证但尚未回写到发布产物（extrasStatus=pending_rebuild）。',
+    extrasComplete
+      ? `GLB 的 ${gltfNodes.length} 个节点全部携带 extras.petro，extrasStatus=verified；nodeUid 与 glTF 节点的映射已在产物中闭环。`
+      : `现有 GLB 未完整携带 extras.petro（${extrasNodes.length}/${gltfNodes.length}），extrasStatus=pending_rebuild。`,
     'build.blenderVersion=4.5.16 系由导出器标识 v4.5.51 与 docs/tooling-readiness.md 的旧记录推断，未在本机实测（本机仅安装 5.3.0）。',
     'structureModes.full 的 show/hide/ghost 三个数组为空：本资产只有完整壳（separator_shell）与沿 z=0 切开的真半剖壳（separator_cut_shell），不存在完整全剖表示，因此不提供 full 模式。Phase 4 只实现 external/half/ghost 三态。',
   ],

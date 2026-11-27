@@ -1,0 +1,10 @@
+{
+  "three": "0.180.0",
+  "revision": "180",
+  "bundle": "web/assets/three.bundle.js",
+  "bytes": 746085,
+  "sha256": "5c7bb6397c3451fd8aebfeb7a08bf2ecdb311211571b73491e8efac00a5c6a9c",
+  "builtAt": "2026-11-27T04:49:35.167Z",
+  "buildMs": 222,
+  "source": "web/assets/three-entry.js"
+}

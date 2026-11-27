@@ -10,6 +10,8 @@
   "scripts": {
     "api": "node server/proxy.mjs",
     "auth:perf": "node tests/auth-perf.mjs",
+    "build": "node scripts/build-three.mjs",
+    "build:three": "node scripts/build-three.mjs",
     "dev": "node server/dev.mjs",
     "manifest:pilot": "node tools/gen_pilot_separator_manifest.mjs",
     "manifest:tower": "node tools/gen_tower_manifest.mjs",
@@ -18,6 +20,7 @@
     "test": "node --test --test-concurrency=1 \"tests/*.test.mjs\"",
     "test:auth": "node --test --test-concurrency=1 \"tests/auth-crypto.test.mjs\" \"tests/auth-store.test.mjs\" \"tests/auth-session.test.mjs\" \"tests/auth-cli.test.mjs\" \"tests/auth-api.test.mjs\" \"tests/auth-pages.test.mjs\"",
     "test:e2e": "node tools/e2e/run-levels.mjs",
+    "test:e2e:glb": "node tools/e2e/run-phase6.mjs",
     "test:smoke": "node tools/e2e/run-smoke.mjs",
     "test:unit": "node --test --test-concurrency=1 \"tests/*.test.mjs\"",
     "validate:assets": "node tools/validate_assets.mjs && node tools/validate_connections.mjs",
@@ -38,7 +41,9 @@
   "devDependencies": {
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
-    "playwright-core": "^1.65.1"
+    "esbuild": "0.28.2",
+    "playwright-core": "^1.65.1",
+    "three": "0.180.0"
   },
   "dependencies": {
     "proper-lockfile": "4.1.2"

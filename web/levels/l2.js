@@ -18,6 +18,11 @@
   /* 结构模式的唯一权威：separator.manifest.json 的 structureModes（按 nodeUid）。 */
   let separatorManifest = null;
   let meshByUid = new Map();
+  /* Phase 6：资产句柄与回退标记。GLB 为首选；OBJ 仅在 GLB 失败时兜底，
+   * 且必须在 UI 上明示"备用示意模型"，不能冒充真实 Hero。 */
+  let l2AssetHandle = null;
+  let usingFallback = false;
+  let fallbackReason = null;
   let uidOfMesh = new WeakMap();
   const phaseFlows = [];
   const flows = [];
@@ -377,18 +382,74 @@
     phaseT = 0;
   }
 
+  /* 释放当前 Hero 资产。退出关卡时调用，保证重复进出不会累积
+   * geometry/material/texture（Phase 6 验收项）。 */
+  function disposeHero() {
+    if (l2AssetHandle && typeof l2AssetHandle.dispose === 'function') {
+      try { l2AssetHandle.dispose(); } catch (e) { console.warn('[L2] dispose 失败', e); }
+    }
+    l2AssetHandle = null;
+    usingFallback = false;
+    fallbackReason = null;
+    assetRoot = null;
+    assetLoaded = false;
+    meshByUid = new Map();
+    uidOfMesh = new WeakMap();
+    internalMeshes = [];
+    externalShell = [];
+    cutShell = [];
+    internalLabels = [];
+    shellMats = [];
+    cutRim = null;
+  }
+
+  /* 迁移期双通道：优先 GLB（经 ModelLoader，带 hash/extras 对账），
+   * 失败才回退 ObjLite + OBJ，并把 usedFallback 冒到 UI。 */
   function loadHero() {
-    if (!window.ObjLite) { assetFailed = true; return; }
-    /* Phase 4：Manifest 与 OBJ 一起加载。结构模式的 show/hide/ghost 由
-     * separator.manifest.json 的 structureModes 驱动，不再按对象名前缀分类。 */
-    Promise.all([
-      window.ObjLite.load('assets/separator/separator.obj?v=08', 'assets/separator/separator.mtl?v=08'),
-      fetch('assets/separator/separator.manifest.json')
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .catch(function () { return null; }),
-    ]).then(function (res) {
-      var root = res[0];
-      separatorManifest = res[1];
+    if (!window.ModelLoader && !window.ObjLite) { assetFailed = true; return; }
+    if (assetLoaded || assetRoot) return;
+
+    var loaderPromise;
+    if (window.ModelLoader) {
+      loaderPromise = window.ModelLoader.load({
+        glbUrl: 'assets/separator/separator.glb',
+        manifestUrl: 'assets/separator/separator.manifest.json',
+        onProgress: function (pr) {
+          if (hint && pr.phase === 'download' && pr.ratio != null) {
+            hint.textContent = '分离器 GLB 下载 ' + Math.round(pr.ratio * 100) + '%';
+          }
+        },
+      }).then(function (handle) {
+        l2AssetHandle = handle;
+        return { root: handle.root, manifest: handle.manifest, usedFallback: false };
+      }).catch(function (err) {
+        console.warn('[L2] GLB 加载失败，回退 OBJ：' + (err && err.message));
+        fallbackReason = (err && err.message) || 'GLB 加载失败';
+        return window.ModelLoader.loadObjFallback(
+          'assets/separator/separator.obj?v=08',
+          'assets/separator/separator.mtl?v=08',
+          fallbackReason,
+        ).then(function (fb) {
+          l2AssetHandle = fb;
+          return fetch('assets/separator/separator.manifest.json')
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .catch(function () { return null; })
+            .then(function (m) { return { root: fb.root, manifest: m, usedFallback: true }; });
+        });
+      });
+    } else {
+      loaderPromise = Promise.all([
+        window.ObjLite.load('assets/separator/separator.obj?v=08', 'assets/separator/separator.mtl?v=08'),
+        fetch('assets/separator/separator.manifest.json')
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .catch(function () { return null; }),
+      ]).then(function (res) { return { root: res[0], manifest: res[1], usedFallback: true }; });
+    }
+
+    loaderPromise.then(function (res) {
+      var root = res.root;
+      separatorManifest = res.manifest;
+      usingFallback = !!res.usedFallback;
       var nameToNode = {};
       if (separatorManifest && separatorManifest.nodes) {
         separatorManifest.nodes.forEach(function (n) { if (n.nodeName) nameToNode[n.nodeName] = n; });
@@ -420,6 +481,13 @@
         o.userData.nodeUid = rec.nodeUid;
         o.userData.semanticId = rec.semanticId;
         o.userData.role = rec.role;
+        /* GLB 里多个网格可能共享同一个材质实例。结构模式是逐网格改材质的
+         * （ghost / reset），共享实例会互相覆盖 —— 实测 ghost 下完整体被后面的
+         * reset 冲回不透明。这里显式克隆，让每个网格拥有自己的材质（所有权明确），
+         * dispose 时也不会重复释放。 */
+        if (o.material) {
+          o.material = Array.isArray(o.material) ? o.material.map(function (mm) { return mm.clone(); }) : o.material.clone();
+        }
         meshByUid.set(rec.nodeUid, o);
         uidOfMesh.set(o, rec.nodeUid);
         if (rec.role === 'cut_shell' || rec.role === 'cut_edge') cutShell.push(o);
@@ -437,7 +505,16 @@
         var sb = ui.querySelectorAll('[data-structure]');
         for (var si = 0; si < sb.length; si++) sb[si].disabled = false;
       }
-      if (ui) hint.textContent = '三相分离器 Hero · 外观 / 半剖 / 透视';
+      if (assetBadge) {
+        assetBadge.hidden = !usingFallback;
+        assetBadge.textContent = usingFallback ? '⚠ 备用示意模型（GLB 加载失败）' : '';
+        assetBadge.title = fallbackReason || '';
+      }
+      if (ui) {
+        hint.textContent = usingFallback
+          ? '⚠ 使用备用示意模型（GLB 加载失败）· 外观 / 半剖 / 透视'
+          : '三相分离器 Hero（GLB）· 外观 / 半剖 / 透视';
+      }
     }).catch(function () {
       assetFailed = true;
       if (ui) hint.textContent = '分离器 Hero 未加载，保留教学备用剖面';
@@ -559,6 +636,7 @@
     '<div class="lvl__btns lvl2__choices" role="group" aria-label="选择去向"><button type="button" class="lvl__btn" data-target="gas" aria-pressed="false" disabled>气回收/处理</button><button type="button" class="lvl__btn" data-target="oil" aria-pressed="false" disabled>油储罐</button><button type="button" class="lvl__btn" data-target="water" aria-pressed="false" disabled>采出水处理</button></div>',
     '</div>',
     '<details class="lvl2__more"><summary>演示与结构</summary><div class="lvl2__tools">',
+    '<div class="lvl2__toolrow"><span class="lvl2__tool-label">资产</span><span id="l2-asset-badge" class="lvl2__badge" hidden></span></div>',
     '<div class="lvl2__toolrow"><span class="lvl2__tool-label">结构</span><div class="lvl__btns" role="group" aria-label="结构显示模式"><button type="button" class="lvl__btn" data-structure="external" aria-pressed="true" disabled>外观</button><button type="button" class="lvl__btn" data-structure="half" aria-pressed="false" disabled>半剖</button><button type="button" class="lvl__btn" data-structure="ghost" aria-pressed="false" disabled>透视</button></div></div>',
     '<div class="lvl2__toolrow"><span class="lvl2__tool-label">演示</span><button type="button" class="lvl__btn" id="l2-play">启动分离</button><button type="button" class="lvl__btn" id="l2-step">单步</button><button type="button" class="lvl__btn" id="l2-replay">重播</button></div>',
     '</div></details>',
@@ -569,6 +647,7 @@
   stage.viewport.appendChild(ui);
 
   const hint = ui.querySelector('#l2-hint');
+  const assetBadge = ui.querySelector('#l2-asset-badge');
   const act = ui.querySelector('#l2-act');
   const note = ui.querySelector('#l2-note');
   const back = ui.querySelector('#l2-back');
@@ -714,6 +793,9 @@
     ensureCamera();
     /* 重新进入一律从 external 起步：清掉上次退出前可能残留的半剖/透视状态。
      * （enter 被 isLevel() 守卫挡住时不会走到这里，见 Phase 2 §9.4） */
+    /* Phase 6：exit 会 dispose 资产，重进必须重新加载，
+     * 否则会出现"进关卡但模型不见了"的静默失败。 */
+    if (!assetLoaded && !assetRoot) loadHero();
     if (assetLoaded) setStructureMode('external', false);
 
     const startPos = stage.camera.position.clone();
@@ -769,6 +851,7 @@
     /* 退出前把结构状态复位到 external，并恢复 overview 模型，
      * 避免下次进入时继承残留的透明/隐藏状态。 */
     if (assetLoaded) setStructureMode('external', false);
+    disposeHero();
     G.visible = false;
     overviewSeparator.forEach(function (rec) { rec.parent.add(rec.object); rec.object.visible = true; });
     overviewSeparator = [];
@@ -839,6 +922,11 @@
     startSeparation: startSeparation, pauseSeparation: pauseSeparation,
     stepSeparation: stepSeparation, replaySeparation: replaySeparation,
     get assetLoaded() { return assetLoaded; },
+    get usingFallback() { return usingFallback; },
+    get fallbackReason() { return fallbackReason; },
+    get assetStats() { return l2AssetHandle && l2AssetHandle.stats ? l2AssetHandle.stats : null; },
+    get assetHandle() { return l2AssetHandle; },
+    disposeHero: disposeHero,
     get assetFailed() { return assetFailed; },
     get running() { return runningSep; },
     get paused() { return pausedSep; },
