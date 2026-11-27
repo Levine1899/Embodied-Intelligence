@@ -74,10 +74,17 @@ handedness        = right
 
 ## 5. 校验与失败条件
 
+两种模式，**退出码语义不同**：
+
 ```bash
-npm run validate:connections           # 常规
-npm run validate:connections:strict    # 会对 draft/pendingBasis 额外打印发布门禁状态
+npm run validate:connections           # 开发门禁：结构/引用/几何/依据字段合法性；非 approved 仅告警，exit 0
+npm run validate:connections:strict    # 发布门禁：任何非 approved 或 pendingBasis 连接都 exit 1
 ```
+
+- **默认模式**用于日常提交：只保证"数据本身没错"，允许 draft 连接存在。
+- **strict 模式**用于真正要发布时：`[BLOCKED]` + 逐条列出未获依据的连接，exit 1。
+- `PETRO_CONNECTIONS_PATH=<file>` 可指向临时副本，用于在不动仓库数据的前提下验证门禁（例如确认 approved 时能通过）。
+- CI 里 strict 放在独立的 `publish-gate` job，只在手动触发或打 tag 时运行——**push 不等于发布**，让日常 CI 常年变红等于取消门禁。
 
 任一条即失败（退出码 1）：
 

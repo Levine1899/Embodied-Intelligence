@@ -306,7 +306,7 @@ npm test                            # 87/87
 | 11 | displayOffset 显式且不改变拓扑 | ✅ | Schema 字段；当前为 `[0,0,0]` |
 | 12 | 单一来源实测（改 waypoint → 双侧同步） | ✅ | §6，含端点不漂移证明 |
 | 13 | 恢复正式 waypoint 并重建校验 | ✅ | 包围盒回到 29.298；双门禁绿 |
-| 14 | 发布门禁与错误处理 | ✅ | 15 类失败条件；draft 阻发布并告警 |
+| 14 | 发布门禁与错误处理 | ✅ | 15 类失败条件；`--strict` 对非 approved **exit 1**（见 §11） |
 | 15 | 截图/网格对比 | ⚠️ **部分** | 有改动态截图；仅一张，且操作卡遮挡部分画面；以数值证据为主 |
 
 ---
@@ -324,7 +324,7 @@ Blender 实体管线（包围盒随 waypoint 变化）→ GLB `extras.petro.conn
 ### 10.2 生产工艺连接门禁：**BLOCKED**
 
 - 仓库**不存在**任何 `approved` 级工艺依据（B5 未解除）。
-- 唯一连接 `conn_atm_overhead_to_condenser` 为 `draft` + `pendingBasis: true`，UI 标注"待工艺审核 · 教学示意"，`validate:connections` 明确告警其**不得进入正式发布清单**。
+- 唯一连接 `conn_atm_overhead_to_condenser` 为 `draft` + `pendingBasis: true`，UI 标注"待工艺审核 · 教学示意"，`validate:connections` 告警、`validate:connections:strict` **exit 1** 阻断其进入正式发布清单（见 §11）。
 - 因此：**不得宣称工艺已验收**。本阶段交付的是"连接数据的机制与门禁"，不是"经审核的炼油工艺"。
 
 解除条件：领域专家提供可核对的工艺资料（含版本、适用范围、审核人、审核日期），填入 `basis` 并把 `reviewStatus` 改为 `approved`、`pendingBasis: false`，再跑 `validate:connections:strict`。
@@ -348,3 +348,40 @@ Blender 实体管线（包围盒随 waypoint 变化）→ GLB `extras.petro.conn
 | 批量补齐各环节物流 | 未做 | 本阶段明确禁止 |
 | L3 业务规则 | 未动 | 70% 阈值 4 处耦合点未触碰 |
 | 工艺 approved 依据 | **BLOCKED** | B5 |
+
+---
+
+## 11. 复核后修正：门禁此前只是标签（2026-11-27）
+
+自查发现一个**交付漏洞**，已修：
+
+`validate:connections --strict` 原先对 draft/pendingBasis 只 `console.log` 一句"BLOCKED"，然后 `process.exit(0)`。也就是说本报告 §7/§10 声称的"阻断正式发布"**没有任何机器强制**，只写在文档和一条 warn 里。
+
+### 11.1 修正后行为（已实测）
+
+| 场景 | 命令 | 退出码 |
+|---|---|---|
+| 默认（当前 draft 连接） | `validate:connections` | **0**（仅告警 `[note]`） |
+| 发布门禁（当前 draft 连接） | `validate:connections:strict` | **1**，打印 `[BLOCKED]` 并逐条列出未获依据的连接 |
+| 发布门禁 + 已 approved 副本 | `PETRO_CONNECTIONS_PATH=<tmp> --strict` | **0** ✅ |
+
+第三行是关键：证明门禁**可以通过**，不是被硬编码成永远失败。
+
+### 11.2 顺带做的两件事
+
+- 新增 `PETRO_CONNECTIONS_PATH` 环境变量，使"approved 时应当通过"可在临时副本上验证，**不必改动仓库里的正式数据**。
+- 删除 `tools/validate_connections.mjs` 里我自己留下的死代码 `for (const e of []) void e;`。
+
+### 11.3 CI 落点
+
+strict 放在独立的 `publish-gate` job，触发条件为 `workflow_dispatch` 或 `refs/tags/*`：
+
+- 日常 `push` 只跑默认模式（开发门禁，绿）；
+- 真正发布时跑 strict，硬失败。
+
+理由：push 不等于发布。若把 strict 并进每次 push 的 job，当前 draft 状态会让 CI 常年红——红色一旦成为常态就没人看了，等于取消门禁。若你希望"push 即红"，把该 job 的 `if` 去掉即可。
+
+### 11.4 仍未解决
+
+- `tower.html` 未接入该连接（§9 验收 10）。
+- 截图/录屏交付仍不完整（§9 验收 15）。

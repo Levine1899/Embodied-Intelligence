@@ -11,14 +11,21 @@
 //   8. 依据门禁：approved/reviewed 必须有 reviewedBy+reviewedAt；rejected 禁止渲染；pendingBasis 阻断正式发布
 //   9. GLB 反查：geometryRefs 命中的节点必须带 extras.petro.connectionId，且该 connection 至少要有一段实体几何
 //
-// 用法：node tools/validate_connections.mjs [--strict]
+// 两种模式：
+//   默认      开发门禁：结构/引用/几何/依据字段合法性；允许非 approved 连接（仅告警）。
+//   --strict  发布门禁：在默认之上，**任何非 approved 或 pendingBasis 的连接都使校验失败（退出码 1）**。
+//             用于「准备正式发布」时，而不是每次提交时——push 不等于发布。
 
 import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const CONN_PATH = path.join(ROOT, 'web/data/process-connections.json');
+/* 允许指向别的连接文件，便于在临时副本上验证「approved 时应当通过」，
+ * 而不必改动仓库里的正式数据。 */
+const CONN_PATH = process.env.PETRO_CONNECTIONS_PATH
+  ? path.resolve(process.env.PETRO_CONNECTIONS_PATH)
+  : path.join(ROOT, 'web/data/process-connections.json');
 const SCHEMA_PATH = path.join(ROOT, 'schemas/process-connections.schema.json');
 const MANIFEST_PATH = path.join(ROOT, 'web/assets/tower/tower.manifest.json');
 const GLB_PATH = path.join(ROOT, 'web/assets/tower/tower.glb');
@@ -27,6 +34,8 @@ const STRICT = process.argv.includes('--strict');
 const TOLERANCE = 1e-6;          // 端点重合判定
 const errors = [];
 const warnings = [];
+/* 收集"未获 approved 依据"的连接；strict 模式下这些必须让校验失败。 */
+const blockedForPublish = [];
 
 function fail(code, message) { errors.push({ code, message }); }
 function warn(code, message) { warnings.push({ code, message }); }
@@ -177,6 +186,13 @@ async function main() {
     if (b.reviewStatus === 'approved' && b.pendingBasis) {
       fail('BASIS_CONTRADICTION', `${where}: approved 却标记 pendingBasis=true`);
     }
+    if (b.reviewStatus !== 'approved' || b.pendingBasis) {
+      blockedForPublish.push({
+        connectionId: c.connectionId,
+        reviewStatus: b.reviewStatus,
+        pendingBasis: !!b.pendingBasis,
+      });
+    }
     if (b.reviewStatus === 'draft' || b.pendingBasis) {
       warn('BASIS_DRAFT', `${where}: reviewStatus=${b.reviewStatus}，pendingBasis=${!!b.pendingBasis} —— 仅开发态展示，不得进入正式发布清单`);
     }
@@ -228,9 +244,21 @@ function report() {
     for (const e of errors) console.error(`  ✗ ${e.code}: ${e.message}`);
     process.exit(1);
   }
-  for (const e of []) void e;
-  if (STRICT && warnings.some((w) => w.code === 'BASIS_DRAFT')) {
-    console.log('\n[严格模式] 存在 draft/pendingBasis 连接，正式发布门禁：BLOCKED');
+
+  /* 发布门禁：strict 下非 approved 连接必须让校验失败。
+   * 之前这里只打印一句 "BLOCKED" 却仍 exit 0，等于门禁只是标签。 */
+  if (STRICT && blockedForPublish.length) {
+    console.error(`\n[BLOCKED] 生产工艺连接门禁未通过：${blockedForPublish.length} 条连接没有 approved 依据`);
+    for (const b of blockedForPublish) {
+      console.error(`  ✗ ${b.connectionId}: reviewStatus=${b.reviewStatus}, pendingBasis=${b.pendingBasis}`);
+    }
+    console.error('  这些连接允许开发态展示，但不得进入正式发布清单。');
+    console.error('  解除方式：补齐 basis 并把 reviewStatus 改为 approved、pendingBasis 改为 false。');
+    process.exit(1);
+  }
+
+  if (blockedForPublish.length) {
+    console.log(`\n[note] ${blockedForPublish.length} 条连接未获 approved 依据，仅开发态可用；发布前请跑 validate:connections:strict`);
   }
   console.log('\n✓ 连接校验通过');
   process.exit(0);
