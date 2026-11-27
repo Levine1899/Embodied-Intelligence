@@ -10,8 +10,15 @@
   let overviewSeparator = [];
   let sepTimers = [];
   let assetRoot = null, assetLoaded = false, assetFailed = false;
-  let procShell = null, structMode = false, runningSep = false, pausedSep = false;
+  /* Phase 4：显式三态。资产只有"完整壳"与"真实半剖壳"两种几何，
+   * 没有完整全剖表示，因此不提供 full 模式（不虚构）。 */
+  const STRUCTURE_MODES = ['external', 'half', 'ghost'];
+  let procShell = null, structureMode = 'external', runningSep = false, pausedSep = false;
   let shellMats = [], externalShell = [], cutShell = [], internalMeshes = [], internalLabels = [], cutRim = null, phaseT = 0;
+  /* 结构模式的唯一权威：separator.manifest.json 的 structureModes（按 nodeUid）。 */
+  let separatorManifest = null;
+  let meshByUid = new Map();
+  let uidOfMesh = new WeakMap();
   const phaseFlows = [];
   const flows = [];
 
@@ -190,42 +197,106 @@
     if (!stage.deviceState) return;
     var animation = runningSep ? 'running' : (pausedSep ? 'paused' : 'idle');
     stage.deviceState.set('three_phase_separator', {
-      structure: structMode ? 'half' : 'external',
+      structure: structureMode,
       animation: animation
     }, 'level');
   }
 
-  function applyStructure(show, record) {
-    hideOverviewSeparator();
-    structMode = !!show;
-    externalShell.forEach(function (m) {
-      m.visible = true;
-      if (m.material) {
-        m.material.transparent = structMode;
-        m.material.opacity = structMode ? 0.10 : 1;
-        m.material.depthWrite = !structMode;
-        m.material.side = THREE.DoubleSide;
-        m.material.needsUpdate = true;
-      }
-    });
-    /* Use a ghost shell in the web view: it keeps the vessel silhouette without
-       hiding the cutaway internals. The exported half shell remains in the .blend. */
-    cutShell.forEach(function (m) { m.visible = false; });
-    internalMeshes.forEach(function (m) { m.visible = structMode; });
-    internalLabels.forEach(function (l) { l.visible = structMode; });
-    if (cutRim) cutRim.visible = structMode;
-    phaseFlows.forEach(function (f) { f.tube.visible = structMode; f.group.visible = structMode && (runningSep || pausedSep); });
-    var b = ui && ui.querySelector('#l2-structure');
-    if (b) {
-      b.textContent = structMode ? '恢复外壳' : '打开内部结构';
-      b.setAttribute('aria-pressed', String(structMode));
+  function internalsVisible() {
+    return structureMode === 'half' || structureMode === 'ghost';
+  }
+
+  function structureSpec(mode) {
+    if (!separatorManifest || !separatorManifest.structureModes) return null;
+    return separatorManifest.structureModes[mode] || null;
+  }
+
+  function resetMeshMaterial(m) {
+    if (!m || !m.material) return;
+    m.material.transparent = false;
+    m.material.opacity = 1;
+    m.material.depthWrite = true;
+    m.material.side = THREE.FrontSide;
+    m.material.needsUpdate = true;
+    m.renderOrder = 0;
+  }
+
+  function makeGhost(m) {
+    if (!m || !m.material) return;
+    m.material.transparent = true;
+    m.material.opacity = 0.16;
+    m.material.depthWrite = false;
+    m.material.side = THREE.DoubleSide;
+    m.material.needsUpdate = true;
+    m.renderOrder = 2;
+  }
+
+  /* setStructureMode：结构模式的唯一入口。
+   * 显隐与材质全部由 separator.manifest.json 的 structureModes（按 nodeUid）决定，
+   * 不再「把完整壳调透明冒充半剖」，也不再靠对象名前缀分类。 */
+  function setStructureMode(mode, record) {
+    if (mode === 'full') {
+      /* 资产只有完整壳 + 单侧真半剖壳，Manifest 的 structureModes.full 三数组为空，
+       * 没有可展示的完整全剖表示，所以不虚构此模式。 */
+      console.warn('[L2] 本资产没有完整全剖表示，不支持 full 模式（见 manifest limitations）');
+      mode = structureMode === 'half' || structureMode === 'ghost' ? structureMode : 'external';
+      return mode;
     }
+    if (STRUCTURE_MODES.indexOf(mode) < 0) {
+      console.warn('[L2] 不支持的 structureMode：' + mode + '，回退 external');
+      mode = 'external';
+    }
+    hideOverviewSeparator();
+    structureMode = mode;
+
+    var spec = structureSpec(mode);
+    var showSet = new Set(spec ? (spec.show || []) : []);
+    var hideSet = new Set(spec ? (spec.hide || []) : []);
+    var ghostSet = new Set(spec ? (spec.ghost || []) : []);
+
+    if (!spec) {
+      /* Manifest 缺失：只能保证 external 的正确性，其余模式不可信，显式告警。 */
+      console.warn('[L2] structureModes 不可用：结构模式降级为 external 语义');
+      meshByUid.forEach(function (m) { m.visible = true; resetMeshMaterial(m); });
+    } else {
+      meshByUid.forEach(function (m, uid) {
+        if (ghostSet.has(uid)) { m.visible = true; makeGhost(m); return; }
+        if (hideSet.has(uid)) { m.visible = false; return; }
+        if (showSet.has(uid)) { m.visible = true; resetMeshMaterial(m); return; }
+        /* 未被任何 mode 提及（基座/法兰/鞍座/仪表等）——始终可见、不透明 */
+        m.visible = true;
+        resetMeshMaterial(m);
+      });
+      /* 内部气层保留既有半透明，不被上面的 reset 覆盖 */
+      internalMeshes.forEach(function (m) {
+        if (m.userData.semanticId === 'separator_internal_gas' && m.material) {
+          m.material.transparent = true;
+          m.material.opacity = 0.42;
+          m.material.depthWrite = false;
+          m.material.needsUpdate = true;
+        }
+      });
+      if (cutRim) cutRim.renderOrder = 1;
+    }
+
+    var internalsOn = internalsVisible();
+    internalLabels.forEach(function (l) { l.visible = internalsOn; });
+    phaseFlows.forEach(function (f) {
+      f.tube.visible = internalsOn;
+      f.group.visible = internalsOn && (runningSep || pausedSep);
+    });
+
     syncUi();
     syncSeparatorState();
     if (record !== false && stage.setInteraction) {
-      stage.setInteraction('inspect_separator_structure', structMode ? 'half' : 'external', '示意');
+      stage.setInteraction('inspect_separator_structure', mode, '示意');
     }
-    if (hint) hint.textContent = structMode ? '内部结构 · 油/水/气按密度与相态差异分离' : '外壳 · 点击出口观察去向';
+    if (hint) {
+      hint.textContent = mode === 'half' ? '真实半剖 · 壳体已切开，可见切面与内部结构'
+        : mode === 'ghost' ? '透视外壳 · 内部油/水/气分层可见'
+        : '外壳 · 点击出口观察去向';
+    }
+    return mode;
   }
 
   function hideOverviewSeparator() {
@@ -247,10 +318,13 @@
       playBtn.textContent = runningSep ? '暂停分离' : (pausedSep ? '继续分离' : '启动分离');
       playBtn.setAttribute('aria-pressed', String(runningSep));
     }
-    var b = ui && ui.querySelector('#l2-structure');
-    if (b) {
-      b.textContent = structMode ? '恢复外壳' : '打开内部结构';
-      b.setAttribute('aria-pressed', String(structMode));
+    var btns = ui && ui.querySelectorAll('[data-structure]');
+    if (btns) {
+      for (var i = 0; i < btns.length; i++) {
+        var on = btns[i].getAttribute('data-structure') === structureMode;
+        btns[i].setAttribute('aria-pressed', String(on));
+        btns[i].classList.toggle('is-on', on);
+      }
     }
   }
 
@@ -305,7 +379,22 @@
 
   function loadHero() {
     if (!window.ObjLite) { assetFailed = true; return; }
-    window.ObjLite.load('assets/separator/separator.obj?v=08', 'assets/separator/separator.mtl?v=08').then(function (root) {
+    /* Phase 4：Manifest 与 OBJ 一起加载。结构模式的 show/hide/ghost 由
+     * separator.manifest.json 的 structureModes 驱动，不再按对象名前缀分类。 */
+    Promise.all([
+      window.ObjLite.load('assets/separator/separator.obj?v=08', 'assets/separator/separator.mtl?v=08'),
+      fetch('assets/separator/separator.manifest.json')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .catch(function () { return null; }),
+    ]).then(function (res) {
+      var root = res[0];
+      separatorManifest = res[1];
+      var nameToNode = {};
+      if (separatorManifest && separatorManifest.nodes) {
+        separatorManifest.nodes.forEach(function (n) { if (n.nodeName) nameToNode[n.nodeName] = n; });
+      } else {
+        console.warn('[L2] separator.manifest.json 不可用：结构模式将退化为不可靠的默认行为');
+      }
       assetLoaded = true;
       assetRoot = root;
       root.name = 'separator_hero';
@@ -320,42 +409,35 @@
       internalLabels = [];
       shellMats = [];
       cutRim = null;
+      meshByUid = new Map();
+      uidOfMesh = new WeakMap();
       root.traverse(function (o) {
         if (!o.isMesh) return;
-        var n = (o.name || '').toLowerCase();
         o.userData.objectId = 'three_phase_separator';
-        if (n.indexOf('separator_internal') === 0) {
-          internalMeshes.push(o);
-          o.visible = false;
-        }
-        if (n === 'separator_shell' || n.indexOf('separator_head') === 0) {
-          externalShell.push(o);
-          shellMats.push(o.material);
-        }
-        if (n.indexOf('separator_cut_') === 0) {
-          cutShell.push(o);
-          o.visible = false;
-          if (o.material) {
-            o.material.side = THREE.DoubleSide;
-            o.material.transparent = true;
-            o.material.opacity = 0.26;
-            o.material.depthWrite = false;
-          }
-        }
-        if (n === 'separator_cutaway_rim') cutRim = o;
-        if (n === 'separator_internal_gas' && o.material) {
-          o.material.transparent = true;
-          o.material.opacity = 0.42;
-          o.material.depthWrite = false;
-        }
+        var rec = nameToNode[o.name || ''];
+        if (!rec) return;
+        /* 身份来自 Manifest，不来自名字匹配 */
+        o.userData.nodeUid = rec.nodeUid;
+        o.userData.semanticId = rec.semanticId;
+        o.userData.role = rec.role;
+        meshByUid.set(rec.nodeUid, o);
+        uidOfMesh.set(o, rec.nodeUid);
+        if (rec.role === 'cut_shell' || rec.role === 'cut_edge') cutShell.push(o);
+        if (rec.role === 'cut_rim') cutRim = o;
+        if (rec.role === 'shell' || rec.role === 'head') { externalShell.push(o); shellMats.push(o.material); }
+        /* 内部件按 Manifest 的 role 分类（internal_fluid / internal_weir / …），
+         * 不再对 semanticId 做名称前缀匹配。 */
+        if (String(rec.role || '').indexOf('internal_') === 0) internalMeshes.push(o);
       });
       bindAssetState();
       buildPhasePaths();
       buildInternalLabels();
-      applyStructure(false, false);
-      var b = ui && ui.querySelector('#l2-structure');
-      if (b) b.disabled = false;
-      if (ui) hint.textContent = '三相分离器 Hero · 可打开内部结构';
+      setStructureMode('external', false);
+      if (ui) {
+        var sb = ui.querySelectorAll('[data-structure]');
+        for (var si = 0; si < sb.length; si++) sb[si].disabled = false;
+      }
+      if (ui) hint.textContent = '三相分离器 Hero · 外观 / 半剖 / 透视';
     }).catch(function () {
       assetFailed = true;
       if (ui) hint.textContent = '分离器 Hero 未加载，保留教学备用剖面';
@@ -364,7 +446,7 @@
 
   function startSeparation() {
     if (!assetLoaded) return;
-    if (!structMode) applyStructure(true);
+    if (structureMode === 'external') setStructureMode('half');
     runningSep = true;
     pausedSep = false;
     if (phaseT >= 1) phaseT = 0;
@@ -385,7 +467,7 @@
 
   function stepSeparation() {
     if (!assetLoaded) return;
-    if (!structMode) applyStructure(true, false);
+    if (structureMode === 'external') setStructureMode('half', false);
     runningSep = false;
     pausedSep = true;
     phaseT = Math.min(1, phaseT + 0.12);
@@ -453,10 +535,10 @@
       f.items.forEach(function (dot) {
         var t = (phaseT + dot.userData.base) % 1;
         dot.position.copy(f.curve.getPoint(t));
-        dot.visible = structMode && (runningSep || pausedSep);
+        dot.visible = internalsVisible() && (runningSep || pausedSep);
       });
-      f.tube.visible = structMode;
-      f.group.visible = structMode && (runningSep || pausedSep);
+      f.tube.visible = internalsVisible();
+      f.group.visible = internalsVisible() && (runningSep || pausedSep);
     });
   }
 
@@ -477,7 +559,7 @@
     '<div class="lvl__btns lvl2__choices" role="group" aria-label="选择去向"><button type="button" class="lvl__btn" data-target="gas" aria-pressed="false" disabled>气回收/处理</button><button type="button" class="lvl__btn" data-target="oil" aria-pressed="false" disabled>油储罐</button><button type="button" class="lvl__btn" data-target="water" aria-pressed="false" disabled>采出水处理</button></div>',
     '</div>',
     '<details class="lvl2__more"><summary>演示与结构</summary><div class="lvl2__tools">',
-    '<div class="lvl2__toolrow"><span class="lvl2__tool-label">结构</span><button type="button" class="lvl__btn" id="l2-structure" aria-pressed="false" disabled>打开内部结构</button></div>',
+    '<div class="lvl2__toolrow"><span class="lvl2__tool-label">结构</span><div class="lvl__btns" role="group" aria-label="结构显示模式"><button type="button" class="lvl__btn" data-structure="external" aria-pressed="true" disabled>外观</button><button type="button" class="lvl__btn" data-structure="half" aria-pressed="false" disabled>半剖</button><button type="button" class="lvl__btn" data-structure="ghost" aria-pressed="false" disabled>透视</button></div></div>',
     '<div class="lvl2__toolrow"><span class="lvl2__tool-label">演示</span><button type="button" class="lvl__btn" id="l2-play">启动分离</button><button type="button" class="lvl__btn" id="l2-step">单步</button><button type="button" class="lvl__btn" id="l2-replay">重播</button></div>',
     '</div></details>',
     '<p class="lvl__dragtip">拖动画面空白处可旋转视角</p>',
@@ -490,7 +572,7 @@
   const act = ui.querySelector('#l2-act');
   const note = ui.querySelector('#l2-note');
   const back = ui.querySelector('#l2-back');
-  const structureBtn = ui.querySelector('#l2-structure');
+  const structureBtns = Array.prototype.slice.call(ui.querySelectorAll('[data-structure]'));
   const playBtn = ui.querySelector('#l2-play');
   const stepBtn = ui.querySelector('#l2-step');
   const replayBtn = ui.querySelector('#l2-replay');
@@ -498,7 +580,7 @@
   const targetBtns = Array.prototype.slice.call(ui.querySelectorAll('[data-target]'));
   outletBtns.forEach(function (b) { b.addEventListener('click', function () { pickOutlet(b.getAttribute('data-outlet')); }); });
   targetBtns.forEach(function (b) { b.addEventListener('click', function () { assignTank(b.getAttribute('data-target')); }); });
-  structureBtn.addEventListener('click', function () { applyStructure(!structMode); });
+  structureBtns.forEach(function (b) { b.addEventListener('click', function () { setStructureMode(b.getAttribute('data-structure')); }); });
   playBtn.addEventListener('click', function () { if (runningSep) pauseSeparation(); else startSeparation(); });
   stepBtn.addEventListener('click', stepSeparation);
   replayBtn.addEventListener('click', replaySeparation);
@@ -630,6 +712,9 @@
     if (stage.isLevel()) return;
     if (!built) built = build();
     ensureCamera();
+    /* 重新进入一律从 external 起步：清掉上次退出前可能残留的半剖/透视状态。
+     * （enter 被 isLevel() 守卫挡住时不会走到这里，见 Phase 2 §9.4） */
+    if (assetLoaded) setStructureMode('external', false);
 
     const startPos = stage.camera.position.clone();
     const startT = new THREE.Vector3(anchor.x, 1.2, anchor.z);
@@ -681,6 +766,9 @@
     window.__l2active = false;
     sepTimers.forEach(clearTimeout);
     sepTimers = [];
+    /* 退出前把结构状态复位到 external，并恢复 overview 模型，
+     * 避免下次进入时继承残留的透明/隐藏状态。 */
+    if (assetLoaded) setStructureMode('external', false);
     G.visible = false;
     overviewSeparator.forEach(function (rec) { rec.parent.add(rec.object); rec.object.visible = true; });
     overviewSeparator = [];
@@ -698,7 +786,67 @@
 
   back.onclick = exit;
   window.__lvlEntry(1, '进入 02 地面处理', enter);
-  window.__l2 = { enter: enter, exit: exit, pickOutlet: pickOutlet, assignTank: assignTank, screenPoint: screenPoint, get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; }, applyStructure: applyStructure, startSeparation: startSeparation, pauseSeparation: pauseSeparation, stepSeparation: stepSeparation, replaySeparation: replaySeparation, get assetLoaded() { return assetLoaded; }, get assetFailed() { return assetFailed; }, get structMode() { return structMode; }, get running() { return runningSep; }, get paused() { return pausedSep; }, get phaseT() { return phaseT; }, get completed() { return completed; }, get solved() { return Object.assign({}, solved); }, get phaseDots() { return phaseFlows.reduce(function (n, f) { return n + f.items.filter(function (d) { return d.visible; }).length; }, 0); } };
+  /* 调试断言：返回当前 structureMode 下每个节点的期望/实际，供 E2E 使用。 */
+  function structureProbe() {
+    var out = { mode: structureMode, manifest: !!separatorManifest, violations: [], nodes: [] };
+    var spec = structureSpec(structureMode);
+    if (!spec) { out.violations.push('structureModes 缺失'); return out; }
+    var showSet = new Set(spec.show || []);
+    var hideSet = new Set(spec.hide || []);
+    var ghostSet = new Set(spec.ghost || []);
+    var nameByUid = {};
+    if (separatorManifest && separatorManifest.nodes) {
+      separatorManifest.nodes.forEach(function (n) { nameByUid[n.nodeUid] = n.nodeName; });
+    }
+    meshByUid.forEach(function (m, uid) {
+      var expectVisible = !hideSet.has(uid);
+      var row = {
+        name: nameByUid[uid] || uid.slice(0, 8),
+        semanticId: m.userData.semanticId || '',
+        role: m.userData.role || '',
+        visible: !!m.visible,
+        expectVisible: expectVisible,
+        opacity: m.material ? +Number(m.material.opacity).toFixed(3) : null,
+        transparent: m.material ? !!m.material.transparent : null,
+        depthWrite: m.material ? !!m.material.depthWrite : null,
+      };
+      out.nodes.push(row);
+      if (row.visible !== expectVisible) {
+        out.violations.push('VISIBILITY ' + row.name + ' 期望 ' + expectVisible + ' 实为 ' + row.visible);
+      }
+      if (ghostSet.has(uid)) {
+        if (!row.transparent || row.opacity > 0.5 || row.depthWrite) {
+          out.violations.push('GHOST_MATERIAL ' + row.name);
+        }
+      } else if (expectVisible && row.role !== 'internal_fluid') {
+        if (row.transparent || row.opacity < 0.99 || !row.depthWrite) {
+          out.violations.push('OPAQUE ' + row.name + ' transparent=' + row.transparent + ' opacity=' + row.opacity + ' depthWrite=' + row.depthWrite);
+        }
+      }
+    });
+    out.counts = { total: out.nodes.length, violations: out.violations.length };
+    out.ok = out.violations.length === 0;
+    return out;
+  }
+
+  window.__l2 = {
+    enter: enter, exit: exit, pickOutlet: pickOutlet, assignTank: assignTank, screenPoint: screenPoint,
+    get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; },
+    setStructureMode: setStructureMode,
+    structureProbe: structureProbe,
+    get structureMode() { return structureMode; },
+    get structureModes() { return STRUCTURE_MODES.slice(); },
+    startSeparation: startSeparation, pauseSeparation: pauseSeparation,
+    stepSeparation: stepSeparation, replaySeparation: replaySeparation,
+    get assetLoaded() { return assetLoaded; },
+    get assetFailed() { return assetFailed; },
+    get running() { return runningSep; },
+    get paused() { return pausedSep; },
+    get phaseT() { return phaseT; },
+    get completed() { return completed; },
+    get solved() { return Object.assign({}, solved); },
+    get phaseDots() { return phaseFlows.reduce(function (n, f) { return n + f.items.filter(function (d) { return d.visible; }).length; }, 0); }
+  };
 })();
 
 

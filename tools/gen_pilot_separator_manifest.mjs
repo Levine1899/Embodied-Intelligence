@@ -407,6 +407,7 @@ const manifest = {
     'processBasis 为空：本资产尚未登记任何工艺依据，任何物流连接必须标记为 draft 后方可开发预览。',
     '现有 GLB 未携带 extras.petro，nodeUid 与 glTF 节点的映射已在临时构建中验证但尚未回写到发布产物（extrasStatus=pending_rebuild）。',
     'build.blenderVersion=4.5.16 系由导出器标识 v4.5.51 与 docs/tooling-readiness.md 的旧记录推断，未在本机实测（本机仅安装 5.3.0）。',
+    'structureModes.full 的 show/hide/ghost 三个数组为空：本资产只有完整壳（separator_shell）与沿 z=0 切开的真半剖壳（separator_cut_shell），不存在完整全剖表示，因此不提供 full 模式。Phase 4 只实现 external/half/ghost 三态。',
   ],
   license: {
     spdx: 'LicenseRef-Proprietary',

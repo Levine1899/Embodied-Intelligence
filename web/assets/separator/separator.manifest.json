@@ -10,19 +10,19 @@
   },
   "build": {
     "sourceFile": "assets-source/blender/separator_hero.blend",
-    "generator": "tools/blender/asset_identity_probe.py",
-    "blenderVersion": "5.3.0",
-    "exporterVersion": "Khronos glTF Blender I/O v5.3.43",
+    "generator": "tools/blender/build_separator_hero.py",
+    "blenderVersion": "4.5.16",
+    "exporterVersion": "Khronos glTF Blender I/O v4.5.51",
     "exportOptionsHash": "e41799c4f8ed96ac",
-    "invocation": "PETRO_OUT=<tmp>/separator.glb blender -b assets-source/blender/separator_hero.blend -P tools/blender/asset_identity_probe.py -- --asset-id separator_three_phase --object-id three_phase_separator   # 只读打开 .blend，内存中写 petro 自定义属性后导出；不保存 .blend、不改 OBJ/MTL",
-    "exportExtras": true
+    "invocation": "blender -b -P tools/blender/build_separator_hero.py   # 该脚本无 CLI 参数，路径全部硬编码；现有产物即由此命令生成",
+    "exportExtras": false
   },
   "runtime": {
     "format": "glb",
     "uri": "assets/separator/separator.glb",
     "sha256": "e41799c4f8ed96ac1e81a88018106341c9e31298cddad0ab9e6bfedbdc99f8ef",
     "bytes": 403472,
-    "extrasStatus": "verified",
+    "extrasStatus": "pending_rebuild",
     "fallback": {
       "format": "obj",
       "uri": "assets/separator/separator.obj",
@@ -70,24 +70,17 @@
       "systemId": "three_phase_separation",
       "displayName": "三相分离器",
       "nodeUids": [
-        "11702bc6-a59e-5aa4-aa0e-766b6f4f5331",
+        "7eae3095-cc04-5680-9266-a04d28e10dc5",
+        "514d959c-be26-5a9b-92d4-bd3f80b766a2",
+        "36bb7c26-0dd0-5564-b5c4-c3d395d5125c",
+        "e990b329-0d18-5f8b-b841-05f749dc8310",
+        "45876519-bab0-5963-829c-40caf3a0377d",
+        "2c93e40b-5a24-574a-a1e6-0719772b7dd1",
         "93d5b4eb-1036-5858-8f29-18f4be69ccf5",
         "ac2f3e5d-22ff-5b87-be2c-7dffbb8158b0",
-        "36bb7c26-0dd0-5564-b5c4-c3d395d5125c",
-        "514d959c-be26-5a9b-92d4-bd3f80b766a2",
-        "7eae3095-cc04-5680-9266-a04d28e10dc5",
         "d61ed57f-ef57-57cf-93ce-0864005816a1",
-        "45876519-bab0-5963-829c-40caf3a0377d",
-        "e978236a-de38-5f8f-a21e-d717f6134cec",
-        "dd2a19fb-60dd-58b6-b342-67235a1a65ea",
-        "659de60e-f8fb-5935-8799-f0b0b028d13b",
-        "2c93e40b-5a24-574a-a1e6-0719772b7dd1",
-        "b9b7ab60-fe3c-5e0d-9a1f-2b67a353f993",
-        "1bea3521-dee6-5ffd-aad4-4715a4b8d357",
-        "cdc2aa83-d431-5ad8-a921-e16d92ffdced",
-        "2d7945d2-3b58-5e7b-8f3c-696a41a9bf70",
-        "1136b7ec-e9d8-5c41-b941-7860245f4c60",
         "baab0cb9-d35a-5423-ad66-daf5ede563ba",
+        "2d7945d2-3b58-5e7b-8f3c-696a41a9bf70",
         "5f9eecae-345d-5acc-ac08-0d5540a4977f",
         "3a44b4fc-7b40-55bc-a8ed-a7ce1275e395",
         "0f20a1ff-15da-56fd-be62-6aa7e3c7195b",
@@ -101,18 +94,80 @@
         "29b498ba-9df7-5a6c-a9f1-b5d81672f0a3",
         "34080000-ac00-5e08-9b0d-b5cb6a5854d8",
         "ba6e1732-44ea-5400-aac0-ae1b798f99f9",
+        "cdc2aa83-d431-5ad8-a921-e16d92ffdced",
         "b706a595-ebe4-5601-9db9-483dc7ffc6d0",
-        "e990b329-0d18-5f8b-b841-05f749dc8310"
+        "1bea3521-dee6-5ffd-aad4-4715a4b8d357",
+        "1136b7ec-e9d8-5c41-b941-7860245f4c60",
+        "659de60e-f8fb-5935-8799-f0b0b028d13b",
+        "e978236a-de38-5f8f-a21e-d717f6134cec",
+        "11702bc6-a59e-5aa4-aa0e-766b6f4f5331",
+        "b9b7ab60-fe3c-5e0d-9a1f-2b67a353f993",
+        "dd2a19fb-60dd-58b6-b342-67235a1a65ea"
       ]
     }
   ],
   "nodes": [
     {
-      "nodeUid": "11702bc6-a59e-5aa4-aa0e-766b6f4f5331",
-      "nodeName": "separator_shell",
+      "nodeUid": "7eae3095-cc04-5680-9266-a04d28e10dc5",
+      "nodeName": "separator_cut_edge_bottom",
       "objectId": "three_phase_separator",
-      "semanticId": "separator_shell",
-      "role": "shell",
+      "semanticId": "separator_cut_edge_bottom",
+      "role": "cut_edge",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "514d959c-be26-5a9b-92d4-bd3f80b766a2",
+      "nodeName": "separator_cut_edge_top",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_cut_edge_top",
+      "role": "cut_edge",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "36bb7c26-0dd0-5564-b5c4-c3d395d5125c",
+      "nodeName": "separator_cut_shell",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_cut_shell",
+      "role": "cut_shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e990b329-0d18-5f8b-b841-05f749dc8310",
+      "nodeName": "separator_cutaway_rim",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_cutaway_rim",
+      "role": "cut_rim",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "45876519-bab0-5963-829c-40caf3a0377d",
+      "nodeName": "separator_gas_outlet",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_gas_outlet",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "2c93e40b-5a24-574a-a1e6-0719772b7dd1",
+      "nodeName": "separator_gauge",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_gauge",
+      "role": "gauge",
       "interactive": true,
       "representations": [
         "detail"
@@ -141,39 +196,6 @@
       ]
     },
     {
-      "nodeUid": "36bb7c26-0dd0-5564-b5c4-c3d395d5125c",
-      "nodeName": "separator_cut_shell",
-      "objectId": "three_phase_separator",
-      "semanticId": "separator_cut_shell",
-      "role": "cut_shell",
-      "interactive": true,
-      "representations": [
-        "detail"
-      ]
-    },
-    {
-      "nodeUid": "514d959c-be26-5a9b-92d4-bd3f80b766a2",
-      "nodeName": "separator_cut_edge_top",
-      "objectId": "three_phase_separator",
-      "semanticId": "separator_cut_edge_top",
-      "role": "cut_edge",
-      "interactive": true,
-      "representations": [
-        "detail"
-      ]
-    },
-    {
-      "nodeUid": "7eae3095-cc04-5680-9266-a04d28e10dc5",
-      "nodeName": "separator_cut_edge_bottom",
-      "objectId": "three_phase_separator",
-      "semanticId": "separator_cut_edge_bottom",
-      "role": "cut_edge",
-      "interactive": true,
-      "representations": [
-        "detail"
-      ]
-    },
-    {
       "nodeUid": "d61ed57f-ef57-57cf-93ce-0864005816a1",
       "nodeName": "separator_inlet",
       "objectId": "three_phase_separator",
@@ -185,88 +207,11 @@
       ]
     },
     {
-      "nodeUid": "45876519-bab0-5963-829c-40caf3a0377d",
-      "nodeName": "separator_gas_outlet",
+      "nodeUid": "baab0cb9-d35a-5423-ad66-daf5ede563ba",
+      "nodeName": "separator_internal_baffle",
       "objectId": "three_phase_separator",
-      "semanticId": "separator_gas_outlet",
-      "role": "nozzle",
-      "interactive": true,
-      "representations": [
-        "detail"
-      ]
-    },
-    {
-      "nodeUid": "e978236a-de38-5f8f-a21e-d717f6134cec",
-      "nodeName": "separator_oil_outlet",
-      "objectId": "three_phase_separator",
-      "semanticId": "separator_oil_outlet",
-      "role": "nozzle",
-      "interactive": true,
-      "representations": [
-        "detail"
-      ]
-    },
-    {
-      "nodeUid": "dd2a19fb-60dd-58b6-b342-67235a1a65ea",
-      "nodeName": "separator_water_outlet",
-      "objectId": "three_phase_separator",
-      "semanticId": "separator_water_outlet",
-      "role": "nozzle",
-      "interactive": true,
-      "representations": [
-        "detail"
-      ]
-    },
-    {
-      "nodeUid": "659de60e-f8fb-5935-8799-f0b0b028d13b",
-      "nodeName": "separator_manway",
-      "objectId": "three_phase_separator",
-      "semanticId": "separator_manway",
-      "role": "manway",
-      "interactive": true,
-      "representations": [
-        "detail"
-      ]
-    },
-    {
-      "nodeUid": "2c93e40b-5a24-574a-a1e6-0719772b7dd1",
-      "nodeName": "separator_gauge",
-      "objectId": "three_phase_separator",
-      "semanticId": "separator_gauge",
-      "role": "gauge",
-      "interactive": true,
-      "representations": [
-        "detail"
-      ]
-    },
-    {
-      "nodeUid": "b9b7ab60-fe3c-5e0d-9a1f-2b67a353f993",
-      "nodeName": "separator_valve_wheel",
-      "objectId": "three_phase_separator",
-      "semanticId": "separator_valve_wheel",
-      "role": "valve_wheel",
-      "interactive": true,
-      "representations": [
-        "detail"
-      ]
-    },
-    {
-      "nodeUid": "1bea3521-dee6-5ffd-aad4-4715a4b8d357",
-      "nodeName": "separator_internal_water",
-      "objectId": "three_phase_separator",
-      "semanticId": "separator_internal_water",
-      "role": "internal_fluid",
-      "interactive": true,
-      "representations": [
-        "detail"
-      ]
-    },
-    {
-      "nodeUid": "cdc2aa83-d431-5ad8-a921-e16d92ffdced",
-      "nodeName": "separator_internal_oil",
-      "objectId": "three_phase_separator",
-      "semanticId": "separator_internal_oil",
-      "role": "internal_fluid",
+      "semanticId": "separator_internal_baffle",
+      "role": "internal_baffle",
       "interactive": true,
       "representations": [
         "detail"
@@ -278,28 +223,6 @@
       "objectId": "three_phase_separator",
       "semanticId": "separator_internal_gas",
       "role": "internal_fluid",
-      "interactive": true,
-      "representations": [
-        "detail"
-      ]
-    },
-    {
-      "nodeUid": "1136b7ec-e9d8-5c41-b941-7860245f4c60",
-      "nodeName": "separator_internal_weir",
-      "objectId": "three_phase_separator",
-      "semanticId": "separator_internal_weir",
-      "role": "internal_weir",
-      "interactive": true,
-      "representations": [
-        "detail"
-      ]
-    },
-    {
-      "nodeUid": "baab0cb9-d35a-5423-ad66-daf5ede563ba",
-      "nodeName": "separator_internal_baffle",
-      "objectId": "three_phase_separator",
-      "semanticId": "separator_internal_baffle",
-      "role": "internal_baffle",
       "interactive": true,
       "representations": [
         "detail"
@@ -461,6 +384,17 @@
       ]
     },
     {
+      "nodeUid": "cdc2aa83-d431-5ad8-a921-e16d92ffdced",
+      "nodeName": "separator_internal_oil",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_internal_oil",
+      "role": "internal_fluid",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
       "nodeUid": "b706a595-ebe4-5601-9db9-483dc7ffc6d0",
       "nodeName": "separator_internal_vortex_breaker",
       "objectId": "three_phase_separator",
@@ -472,11 +406,77 @@
       ]
     },
     {
-      "nodeUid": "e990b329-0d18-5f8b-b841-05f749dc8310",
-      "nodeName": "separator_cutaway_rim",
+      "nodeUid": "1bea3521-dee6-5ffd-aad4-4715a4b8d357",
+      "nodeName": "separator_internal_water",
       "objectId": "three_phase_separator",
-      "semanticId": "separator_cutaway_rim",
-      "role": "cut_rim",
+      "semanticId": "separator_internal_water",
+      "role": "internal_fluid",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "1136b7ec-e9d8-5c41-b941-7860245f4c60",
+      "nodeName": "separator_internal_weir",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_internal_weir",
+      "role": "internal_weir",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "659de60e-f8fb-5935-8799-f0b0b028d13b",
+      "nodeName": "separator_manway",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_manway",
+      "role": "manway",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e978236a-de38-5f8f-a21e-d717f6134cec",
+      "nodeName": "separator_oil_outlet",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_oil_outlet",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "11702bc6-a59e-5aa4-aa0e-766b6f4f5331",
+      "nodeName": "separator_shell",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_shell",
+      "role": "shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b9b7ab60-fe3c-5e0d-9a1f-2b67a353f993",
+      "nodeName": "separator_valve_wheel",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_valve_wheel",
+      "role": "valve_wheel",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "dd2a19fb-60dd-58b6-b342-67235a1a65ea",
+      "nodeName": "separator_water_outlet",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_water_outlet",
+      "role": "nozzle",
       "interactive": true,
       "representations": [
         "detail"
@@ -575,24 +575,17 @@
       "dd2a19fb-60dd-58b6-b342-67235a1a65ea"
     ],
     "detail": [
-      "11702bc6-a59e-5aa4-aa0e-766b6f4f5331",
+      "7eae3095-cc04-5680-9266-a04d28e10dc5",
+      "514d959c-be26-5a9b-92d4-bd3f80b766a2",
+      "36bb7c26-0dd0-5564-b5c4-c3d395d5125c",
+      "e990b329-0d18-5f8b-b841-05f749dc8310",
+      "45876519-bab0-5963-829c-40caf3a0377d",
+      "2c93e40b-5a24-574a-a1e6-0719772b7dd1",
       "93d5b4eb-1036-5858-8f29-18f4be69ccf5",
       "ac2f3e5d-22ff-5b87-be2c-7dffbb8158b0",
-      "36bb7c26-0dd0-5564-b5c4-c3d395d5125c",
-      "514d959c-be26-5a9b-92d4-bd3f80b766a2",
-      "7eae3095-cc04-5680-9266-a04d28e10dc5",
       "d61ed57f-ef57-57cf-93ce-0864005816a1",
-      "45876519-bab0-5963-829c-40caf3a0377d",
-      "e978236a-de38-5f8f-a21e-d717f6134cec",
-      "dd2a19fb-60dd-58b6-b342-67235a1a65ea",
-      "659de60e-f8fb-5935-8799-f0b0b028d13b",
-      "2c93e40b-5a24-574a-a1e6-0719772b7dd1",
-      "b9b7ab60-fe3c-5e0d-9a1f-2b67a353f993",
-      "1bea3521-dee6-5ffd-aad4-4715a4b8d357",
-      "cdc2aa83-d431-5ad8-a921-e16d92ffdced",
-      "2d7945d2-3b58-5e7b-8f3c-696a41a9bf70",
-      "1136b7ec-e9d8-5c41-b941-7860245f4c60",
       "baab0cb9-d35a-5423-ad66-daf5ede563ba",
+      "2d7945d2-3b58-5e7b-8f3c-696a41a9bf70",
       "5f9eecae-345d-5acc-ac08-0d5540a4977f",
       "3a44b4fc-7b40-55bc-a8ed-a7ce1275e395",
       "0f20a1ff-15da-56fd-be62-6aa7e3c7195b",
@@ -606,8 +599,15 @@
       "29b498ba-9df7-5a6c-a9f1-b5d81672f0a3",
       "34080000-ac00-5e08-9b0d-b5cb6a5854d8",
       "ba6e1732-44ea-5400-aac0-ae1b798f99f9",
+      "cdc2aa83-d431-5ad8-a921-e16d92ffdced",
       "b706a595-ebe4-5601-9db9-483dc7ffc6d0",
-      "e990b329-0d18-5f8b-b841-05f749dc8310"
+      "1bea3521-dee6-5ffd-aad4-4715a4b8d357",
+      "1136b7ec-e9d8-5c41-b941-7860245f4c60",
+      "659de60e-f8fb-5935-8799-f0b0b028d13b",
+      "e978236a-de38-5f8f-a21e-d717f6134cec",
+      "11702bc6-a59e-5aa4-aa0e-766b6f4f5331",
+      "b9b7ab60-fe3c-5e0d-9a1f-2b67a353f993",
+      "dd2a19fb-60dd-58b6-b342-67235a1a65ea"
     ],
     "closeup": [
       "1bea3521-dee6-5ffd-aad4-4715a4b8d357",
@@ -727,19 +727,9 @@
   ],
   "nonInteractiveSupport": [
     {
-      "nodeUid": "e6a4d234-9a4e-58c4-97ec-47e76b8b048a",
-      "nodeName": "separator_saddle_left",
-      "reason": "saddle：结构必需但不参与交互选择，登记以防被静默丢弃"
-    },
-    {
       "nodeUid": "07523fcb-3998-5a27-bb0b-661e80f15da9",
       "nodeName": "separator_base_left",
       "reason": "foundation：结构必需但不参与交互选择，登记以防被静默丢弃"
-    },
-    {
-      "nodeUid": "32f6e14c-0fab-5c46-b2a6-c3899ce226a1",
-      "nodeName": "separator_saddle_right",
-      "reason": "saddle：结构必需但不参与交互选择，登记以防被静默丢弃"
     },
     {
       "nodeUid": "89c3cf39-a116-50ec-acdc-33e80e5c81c3",
@@ -747,9 +737,9 @@
       "reason": "foundation：结构必需但不参与交互选择，登记以防被静默丢弃"
     },
     {
-      "nodeUid": "c72f6d79-a120-56bf-8db0-7e913d3d70a6",
-      "nodeName": "separator_skid",
-      "reason": "skid：结构必需但不参与交互选择，登记以防被静默丢弃"
+      "nodeUid": "ebc1beb0-a07a-57fe-88ea-fbfa1cf22041",
+      "nodeName": "separator_gas_outlet_flange",
+      "reason": "flange：结构必需但不参与交互选择，登记以防被静默丢弃"
     },
     {
       "nodeUid": "1274b242-d22f-5c9c-a670-558a98ae6fa1",
@@ -757,9 +747,9 @@
       "reason": "flange：结构必需但不参与交互选择，登记以防被静默丢弃"
     },
     {
-      "nodeUid": "ebc1beb0-a07a-57fe-88ea-fbfa1cf22041",
-      "nodeName": "separator_gas_outlet_flange",
-      "reason": "flange：结构必需但不参与交互选择，登记以防被静默丢弃"
+      "nodeUid": "715d0341-3018-5c98-9c2a-a1e97690e616",
+      "nodeName": "separator_manway_ring",
+      "reason": "manway_ring：结构必需但不参与交互选择，登记以防被静默丢弃"
     },
     {
       "nodeUid": "ebf93b53-6db0-5681-9a4a-ac8e05feb0fa",
@@ -767,14 +757,24 @@
       "reason": "flange：结构必需但不参与交互选择，登记以防被静默丢弃"
     },
     {
+      "nodeUid": "e6a4d234-9a4e-58c4-97ec-47e76b8b048a",
+      "nodeName": "separator_saddle_left",
+      "reason": "saddle：结构必需但不参与交互选择，登记以防被静默丢弃"
+    },
+    {
+      "nodeUid": "32f6e14c-0fab-5c46-b2a6-c3899ce226a1",
+      "nodeName": "separator_saddle_right",
+      "reason": "saddle：结构必需但不参与交互选择，登记以防被静默丢弃"
+    },
+    {
+      "nodeUid": "c72f6d79-a120-56bf-8db0-7e913d3d70a6",
+      "nodeName": "separator_skid",
+      "reason": "skid：结构必需但不参与交互选择，登记以防被静默丢弃"
+    },
+    {
       "nodeUid": "fcef863b-d83e-5cf1-894b-63bb62e4caed",
       "nodeName": "separator_water_outlet_flange",
       "reason": "flange：结构必需但不参与交互选择，登记以防被静默丢弃"
-    },
-    {
-      "nodeUid": "715d0341-3018-5c98-9c2a-a1e97690e616",
-      "nodeName": "separator_manway_ring",
-      "reason": "manway_ring：结构必需但不参与交互选择，登记以防被静默丢弃"
     }
   ],
   "processBasis": [],
@@ -783,7 +783,8 @@
     "内部挡板/堰板/除雾器数量与位置为示意值，未按工程图纸校核。",
     "processBasis 为空：本资产尚未登记任何工艺依据，任何物流连接必须标记为 draft 后方可开发预览。",
     "现有 GLB 未携带 extras.petro，nodeUid 与 glTF 节点的映射已在临时构建中验证但尚未回写到发布产物（extrasStatus=pending_rebuild）。",
-    "build.blenderVersion=4.5.16 系由导出器标识 v4.5.51 与 docs/tooling-readiness.md 的旧记录推断，未在本机实测（本机仅安装 5.3.0）。"
+    "build.blenderVersion=4.5.16 系由导出器标识 v4.5.51 与 docs/tooling-readiness.md 的旧记录推断，未在本机实测（本机仅安装 5.3.0）。",
+    "structureModes.full 的 show/hide/ghost 三个数组为空：本资产只有完整壳（separator_shell）与沿 z=0 切开的真半剖壳（separator_cut_shell），不存在完整全剖表示，因此不提供 full 模式。Phase 4 只实现 external/half/ghost 三态。"
   ],
   "license": {
     "spdx": "LicenseRef-Proprietary",
