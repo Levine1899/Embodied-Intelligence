@@ -4,7 +4,7 @@
   "assetVersion": "2.0.0+phase9",
   "source": {
     "repository": "gitee.com/LYU_PRO/scienceagent",
-    "commit": "96f49cf8705d0206b7c147ce1250e2527251bab2",
+    "commit": "ce0402a590781971ccde17e855de05be6d612ddb",
     "path": "assets-source/blender/underground_wellhead.blend",
     "dirty": false
   },
@@ -13,15 +13,15 @@
     "generator": "tools/blender/build_underground_v2.py",
     "blenderVersion": "5.3.0",
     "exporterVersion": "Khronos glTF Blender I/O",
-    "exportOptionsHash": "5aa31049e57bf3cf",
+    "exportOptionsHash": "664ab7307f512794",
     "invocation": "blender -b -P tools/blender/build_underground_v2.py",
     "exportExtras": true
   },
   "runtime": {
     "format": "glb",
     "uri": "assets/underground/underground_wellhead/underground_wellhead.glb",
-    "sha256": "5aa31049e57bf3cf4f8cfe70c470d92c3c938ae32c3ad4052d881c68e1113919",
-    "bytes": 32236,
+    "sha256": "664ab7307f512794564acf0eb1af7a3cb253771d2e9a3454f361d8408d149318",
+    "bytes": 32224,
     "extrasStatus": "verified"
   },
   "coordinateSystem": {
@@ -36,7 +36,7 @@
     "unit": "meter",
     "min": [
       -1,
-      0.04,
+      0.02,
       -1
     ],
     "max": [

@@ -114,6 +114,7 @@ def box(A, O, name, size, loc, m, role="part", rot=(0, 0, 0)):
 
 def cyl(A, O, name, r, h, loc, m, role="part", axis="z", rot=None, verts=20):
     if rot is None:
+        # 作者空间：x 右、y 上、z 纵深。axis='y' 竖直，'x' 横向，'z' 前后。
         rot = (0, math.pi / 2, 0) if axis == "x" else (math.pi / 2, 0, 0) if axis == "y" else (0, 0, 0)
     bpy.ops.mesh.primitive_cylinder_add(vertices=verts, radius=r, depth=h, location=loc, rotation=rot)
     ob = bpy.context.object
@@ -153,11 +154,14 @@ def roughen(ob, half_z, cuts=5, amp=0.045):
     bpy.ops.mesh.select_all(action="SELECT")
     bpy.ops.mesh.subdivide(number_cuts=cuts)
     bpy.ops.object.mode_set(mode="OBJECT")
+    # 只抖动剖切面的 x/z：若连 y 一起抖，包围盒会被撑大 0.01~0.03，
+    # 看起来就像"层间重叠"，把真实的零重叠掩盖掉。
+    # 作者坐标里 y 是高度：抖动只能动 x/z 两个水平轴，否则层高被撑大 ~0.02，
+    # 又会被读成"层间重叠"。
     for v in ob.data.vertices:
         if v.co.z > half_z - 0.02:
-            v.co.z += (_r.random() - 0.5) * amp
-            v.co.y += (_r.random() - 0.5) * amp
-            v.co.x += (_r.random() - 0.5) * amp * 0.5
+            v.co.x += (_r.random() - 0.5) * amp * 1.2
+            v.co.z += (_r.random() - 0.5) * amp * 0.5
     return ob
 
 
@@ -189,9 +193,28 @@ def join_as(A, O, name, parts, m, role):
     return ob
 
 
+def orient_z_up():
+    """把"按 Y 向上书写"的场景旋正到 Blender 的 Z-up。
+
+    本脚本所有坐标都按 Y 当高度书写（更贴近 glTF 阅读习惯），
+    但 Blender 建模空间是 Z-up。若不旋正，export_yup 会把高度搬到 Z，
+    导出的 GLB 就是"地层前后堆叠"而不是上下堆叠——这一版之前就是这么错的。
+    """
+    import math, mathutils
+    rot = mathutils.Matrix.Rotation(math.radians(90), 4, "X")
+    for o in [x for x in bpy.context.scene.objects if x.type == "MESH"]:
+        # 用矩阵左乘：cyl_between 设的是四元数，改 rotation_euler 对它无效。
+        o.matrix_world = rot @ o.matrix_world
+        bpy.ops.object.select_all(action="DESELECT")
+        o.select_set(True)
+        bpy.context.view_layer.objects.active = o
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
+
+
 def export(A, notes, anchor=None):
     d = os.path.join(GLB_ROOT, A)
     os.makedirs(d, exist_ok=True)
+    orient_z_up()
     meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
     tris = sum(sum(max(0, len(p.vertices) - 2) for p in o.data.polygons) for o in meshes)
     verts = sum(len(o.data.vertices) for o in meshes)
@@ -207,14 +230,38 @@ def export(A, notes, anchor=None):
     os.makedirs(BLEND_ROOT, exist_ok=True)
     blend = os.path.join(BLEND_ROOT, "%s.blend" % A)
     bpy.ops.wm.save_as_mainfile(filepath=blend)
+    # 逐节点世界包围盒：几何事实由构建者发布，测试直接消费，
+    # 不要让测试去猜 GLB 的矩阵/实例结构（上一版就是这么读错的）。
+    per_node = {}
+    for o in meshes:
+        vs = [o.matrix_world @ v.co for v in o.data.vertices]
+        if not vs:
+            continue
+        # Blender 是 Z-up，glTF 是 Y-up：发布前统一换算 (x, z, -y)，
+        # 否则测试/Manifest 拿到的是另一套坐标系（会被读成"竖直圆柱只有直径高"）。
+        def yup(p):
+            return [p[0], p[2], -p[1]]
+        mn = [min(v[i] for v in vs) for i in range(3)]
+        mx = [max(v[i] for v in vs) for i in range(3)]
+        lo, hi = yup(mn), yup(mx)
+        per_node[o.name] = {
+            "min": [round(min(lo[i], hi[i]), 4) for i in range(3)],
+            "max": [round(max(lo[i], hi[i]), 4) for i in range(3)],
+        }
+
     stats = {
         "asset": A,
+        "nodes": per_node,
         "source": "tools/blender/build_underground_v2.py",
         "blender": bpy.app.version_string,
         "meshes": len(meshes),
         "triangles": tris,
         "vertices": verts,
-        "bounds": {"min": [round(v, 3) for v in mins], "max": [round(v, 3) for v in maxs]},
+        "bounds": {
+            "min": [round(min(mins[0], maxs[0]), 3), round(mins[2], 3), round(-maxs[1], 3)],
+            "max": [round(max(mins[0], maxs[0]), 3), round(maxs[2], 3), round(-mins[1], 3)],
+        },
+        "coordinateSpace": "glTF Y-up（已从 Blender Z-up 换算）",
         "notes": notes,
         "files": {"glb_bytes": os.path.getsize(glb), "blend_bytes": os.path.getsize(blend)},
     }
@@ -259,9 +306,9 @@ def build_wellbore():
 
     top, bot = 1.30, -7.30
     # 套管（外）→ 水泥环（更外）→ 油管（更内）：半径严格嵌套
-    cyl(A, "wellbore", "well_casing", 0.30, top - bot, (0, (top + bot) / 2, 0), steel, "casing", verts=24)
-    cyl(A, "wellbore", "well_cement", 0.52, top - bot, (0, (top + bot) / 2, 0), cement, "cement", verts=24)
-    cyl(A, "wellbore", "well_tubing", 0.13, (top - bot) - 0.4, (0, (top + bot) / 2 + 0.2, 0), steel, "tubing", verts=18)
+    cyl(A, "wellbore", "well_casing", 0.30, top - bot, (0, (top + bot) / 2, 0), steel, "casing", axis="y", verts=24)
+    cyl(A, "wellbore", "well_cement", 0.52, top - bot, (0, (top + bot) / 2, 0), cement, "cement", axis="y", verts=24)
+    cyl(A, "wellbore", "well_tubing", 0.13, (top - bot) - 0.4, (0, (top + bot) / 2 + 0.2, 0), steel, "tubing", axis="y", verts=18)
 
     # 射孔：3 段高度 × 4 个方位，从套管内壁斜插到地层内（r 0.26 → 1.15）
     idx = 0
@@ -289,7 +336,7 @@ def build_wellhead():
 
     box(A, "wellhead", "surface_pad", (2.0, 0.12, 2.0), (0, 0.10, 0), padm, "pad")
     box(A, "wellhead", "wellhead_tree", (0.56, 0.55, 0.56), (0, 0.72, 0), steel, "tree")
-    cyl(A, "wellhead", "wellhead_flange_lower", 0.30, 0.10, (0, 0.50, 0), steel, "flange", verts=18)
+    cyl(A, "wellhead", "wellhead_flange_lower", 0.30, 0.10, (0, 0.50, 0), steel, "flange", axis="y", verts=18)
     # 主阀（带手轮）
     box(A, "wellhead", "wellhead_master_valve", (0.62, 0.22, 0.34), (0, 1.06, 0), paint, "valve")
     bpy.ops.mesh.primitive_torus_add(major_radius=0.17, minor_radius=0.032, major_segments=18,
@@ -305,7 +352,7 @@ def build_wellhead():
     cyl(A, "wellhead", "wellhead_outlet", 0.115, 0.85, (1.12, 0.86, 0), steel, "outlet", axis="x", verts=16)
     # 出油管线：水平段 + 弯头向下
     cyl(A, "wellhead", "wellhead_flowline_run", 0.105, 1.5, (2.28, 0.86, 0), steel, "flowline", axis="x", verts=14)
-    cyl(A, "wellhead", "wellhead_flowline_riser", 0.105, 0.86, (3.03, 0.45, 0), steel, "flowline", verts=14)
+    cyl(A, "wellhead", "wellhead_flowline_riser", 0.105, 0.86, (3.03, 0.45, 0), steel, "flowline", axis="y", verts=14)
 
     export(A, ["井口树/主阀/翼阀/法兰×2/出口/出油管线各自独立语义节点",
                "主阀带手轮，翼阀水平布置——两者形状可区分，不是同一块盒子"])
