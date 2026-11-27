@@ -1,0 +1,100 @@
+{
+  "asset": "storage_floating_roof_tank",
+  "objectId": "floating_roof_tank",
+  "source": "tools/blender/build_storage_heroes.py",
+  "blender": "5.3.0",
+  "triangles": 9956,
+  "vertices": 5016,
+  "meshes": 26,
+  "anchors": [
+    {
+      "anchorId": "anchor_floating_inlet",
+      "semanticId": "nozzle_inlet",
+      "role": "inlet",
+      "position": [
+        -3.6500000000000004,
+        0,
+        0.95
+      ]
+    },
+    {
+      "anchorId": "anchor_floating_outlet",
+      "semanticId": "nozzle_outlet",
+      "role": "outlet",
+      "position": [
+        3.6500000000000004,
+        0,
+        0.95
+      ]
+    },
+    {
+      "anchorId": "anchor_floating_deck",
+      "semanticId": "deck",
+      "role": "deck",
+      "position": [
+        0,
+        0,
+        2.45
+      ]
+    },
+    {
+      "anchorId": "anchor_floating_seal",
+      "semanticId": "rim_seal",
+      "role": "rim_seal",
+      "position": [
+        3.14,
+        0,
+        2.45
+      ]
+    },
+    {
+      "anchorId": "anchor_floating_liquid",
+      "semanticId": "bottom_plate",
+      "role": "liquid_reference",
+      "position": [
+        0,
+        0,
+        0.3
+      ]
+    }
+  ],
+  "structure": {
+    "showExternal": [
+      "shell"
+    ],
+    "showCut": [
+      "shell_cut",
+      "cut_edge_left",
+      "cut_edge_right"
+    ],
+    "always": [
+      "foundation_ring",
+      "bottom_plate",
+      "stiffener_ring_1",
+      "stiffener_ring_2",
+      "stiffener_ring_3",
+      "wind_girder",
+      "guide_pole_1",
+      "guide_pole_2",
+      "guide_pole_3",
+      "nozzle_inlet",
+      "nozzle_inlet_flange",
+      "nozzle_outlet",
+      "nozzle_outlet_flange",
+      "nozzle_drain"
+    ]
+  },
+  "dimensions": {
+    "shellRadius": 3.2,
+    "shellHeight": 6.0,
+    "baseZ": 0.3,
+    "deckRadius": 3.06,
+    "deckZRest": 2.45
+  },
+  "units": "meters; Blender Z-up -> glTF Y-up",
+  "files": {
+    "glb_bytes": 246800,
+    "blend_bytes": 147467
+  },
+  "note": "Teaching-grade Hero；几何由脚本真实生成，允许二次修改后重跑。"
+}

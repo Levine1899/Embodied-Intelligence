@@ -1,24 +1,46 @@
-/* 关卡 03｜储运 —— 同样长在 V2 的场景里
-   在「储运」节点旁立两个罐：左边固定顶，右边外浮顶，同一个液位滑块同时灌。
-   液位越低，固定顶罐的油气空间越大；外浮顶的顶盖始终贴着油面。此为教学示意，不换算真实排放量。 */
+/* 关卡 03｜储运 —— 长在 V2 的场景里
+   左边固定顶罐，右边外浮顶罐，同一个液位滑块同时灌。
+   液位越低，固定顶罐的油气空间越大；外浮顶的浮盘始终贴着油面。此为教学示意，不换算真实排放量。
+
+   Phase 7：
+   - 罐体/泵组改为独立 Hero GLB（经 ModelLoader 加载、hash 与 extras 对账）
+   - 油面仍是本关的动态对象；浮盘按 manifest 的 floating_deck 绑定跟随油面
+   - 固定顶罐 roof_cone 是静态节点，任何液位下都不动
+   - 两个罐的结构状态**各自独立**（剖切按钮只作用于当前选中的罐）
+   - 泵送路径只认 process-connections.json 的 connectionId；未登记就不画管线，
+     绝不在 l3.js 里另造一条与实体不一致的 CatmullRom
+*/
 (function () {
   const stage = window.__stage;
   if (!stage || !window.__lvlEntry) return;
   const THREE = window.THREE;
 
+  /* 资产清单：目的一是让加载集中，二是失败时能明确说出是哪一个 */
+  const ASSETS = {
+    fixed: { assetId: 'storage_fixed_roof_tank', dir: 'assets/storage/storage_fixed_roof_tank' },
+    floating: { assetId: 'storage_floating_roof_tank', dir: 'assets/storage/storage_floating_roof_tank' },
+    pump: { assetId: 'transfer_pump_set', dir: 'assets/storage/transfer_pump_set' },
+  };
+  const PUMP_CONNECTION_ID = 'conn_store_transfer_to_refinery';
+
   let G = null, camera = null, baseScene = null, anchor = null;
-  let pumpFlow = null, pumpRunning = false, pumpPaused = false, cutMode = true, pumpMesh = null, pumpRing = null, selectTag = null, selectedTankId = 'fixed_roof_tank';
+  let pumpFlow = null, pumpRunning = false, pumpPaused = false, pumpMesh = null, pumpRing = null;
+  let selectTag = null, selectedTankId = 'fixed_roof_tank';
   let routeInfo = null;
   const flows = [];
   let occluderMeshes = [];
   const built = {};
+  const tanks = { fixed: null, floating: null };
+  let assetsReady = null, usingFallback = false, assetError = null;
+  let deckBindings = [];
 
+  /* ---------------------------------------------------------------- 流动粒子 */
   function makeFlowInGroup(curve, color, count, speed, size, opacity) {
     const group = new THREE.Group();
     const geo = new THREE.SphereGeometry(size * 1.35, 8, 6);
     const mat = new THREE.MeshBasicMaterial({
       color: color, transparent: true, opacity: opacity == null ? 0.9 : opacity,
-      blending: THREE.AdditiveBlending, depthWrite: false
+      blending: THREE.AdditiveBlending, depthWrite: false,
     });
     const items = [];
     for (let i = 0; i < count; i++) {
@@ -36,12 +58,278 @@
           m.position.copy(curve.getPoint(m.userData.t));
           m.scale.setScalar(0.6 + 0.6 * Math.sin(m.userData.t * Math.PI));
         });
-      }
+      },
     };
     flows.push(api);
     return api;
   }
 
+  /* ---------------------------------------------------------------- 结构模式 */
+  function modeOf(key) {
+    const t = tanks[key];
+    return t ? t.mode : null;
+  }
+
+  function applyStructure(key, mode, record) {
+    const t = tanks[key];
+    if (!t || !t.handle) return;
+    const rules = t.handle.manifest.structureModes;
+    const rule = rules[mode];
+    if (!rule) return;
+    t.mode = mode;
+
+    const show = new Set(rule.show || []);
+    const hide = new Set(rule.hide || []);
+    const ghost = new Set(rule.ghost || []);
+
+    /* 先全部按 hide/show 定可见性，再对 ghost 集合改材质。
+       材质已在加载时逐网格克隆，这里改不会波及其它网格（Phase 6 教训）。 */
+    t.handle.indices.object3dByUid.forEach(function (obj, uid) {
+      if (!obj.isMesh) return;
+      if (hide.has(uid)) obj.visible = false;
+      else if (show.has(uid)) obj.visible = true;
+      else obj.visible = true;   // 未列出的附件默认可见（如螺栓、铭牌）
+      if (ghost.has(uid)) {
+        obj.visible = true;
+        setGhost(obj, true);
+      } else {
+        setGhost(obj, false);
+      }
+    });
+
+    if (record !== false && stage.deviceState) {
+      stage.deviceState.set(t.objectId, { structure: mode }, 'level');
+    }
+    if (stage.setInteraction && record !== false) {
+      stage.setInteraction('inspect_tank_structure', t.objectId, mode);
+    }
+  }
+
+  const GHOST_OPACITY = 0.28;
+  function setGhost(mesh, on) {
+    const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    mats.forEach(function (m) {
+      if (!m) return;
+      if (!m.userData.ghostOrig) {
+        m.userData.ghostOrig = { transparent: m.transparent, opacity: m.opacity, depthWrite: m.depthWrite };
+      }
+      const o = m.userData.ghostOrig;
+      if (on) {
+        m.transparent = true;
+        m.opacity = Math.min(o.opacity == null ? 1 : o.opacity, GHOST_OPACITY);
+        m.depthWrite = false;
+      } else {
+        m.transparent = o.transparent;
+        m.opacity = o.opacity;
+        m.depthWrite = o.depthWrite;
+      }
+      m.needsUpdate = true;
+    });
+  }
+
+  /* ---------------------------------------------------------------- 液位驱动 */
+  function tankMetrics(key) {
+    const t = tanks[key];
+    if (!t) return null;
+    const b = t.handle.manifest.bounds;
+    const baseKey = key === 'fixed' ? 'anchor_fixed_liquid' : 'anchor_floating_liquid';
+    const baseAnchor = t.handle.indices.anchors.get(baseKey);
+    const baseZ = baseAnchor ? baseAnchor.position[1] : 0;
+    return {
+      radius: Math.abs(b.max[0]) - 0.06,
+      baseZ: baseZ,
+      height: b.max[1] - baseZ,
+    };
+  }
+
+  function applyLevel() {
+    const k = level;
+    Object.keys(tanks).forEach(function (key) {
+      const t = tanks[key];
+      if (!t) return;
+      const m = tankMetrics(key);
+      if (!m) return;
+      const surfaceY = m.baseZ + m.height * k;
+
+      /* 油面：本关自己的动态对象，不随资产走 */
+      if (t.oil) {
+        t.oil.scale.y = Math.max(0.01, k);
+        t.oil.position.y = m.baseZ + (m.height * k) / 2;
+        t.oil.visible = k > 0.015;
+      }
+
+      /* 外浮顶：浮盘总成跟随油面。固定顶罐没有这个总成，roof_cone 保持静止。 */
+      if (t.deckAssembly) {
+        t.deckAssembly.position.y = surfaceY - t.deckRestZ;
+      }
+
+    });
+
+    /* 设备状态与资产加载解耦：液位是任务/状态机的事实，不能因为 GLB 还没到
+       就不写（否则进关早期读 deviceState 会拿到 0，属于行为回归）。 */
+    if (stage.deviceState) {
+      stage.deviceState.set('fixed_roof_tank', { level: k }, 'level');
+      stage.deviceState.set('floating_roof_tank', { level: k }, 'level');
+    }
+
+    /* 固定顶：液位越低，油气空间越大 —— 呼吸阀溢出粒子的速度随之变化 */
+    if (built.fixed && built.fixed.ventFlow) built.fixed.ventFlow.speed = 0.05 + (1 - k) * 0.75;
+    syncStorageUi();
+  }
+
+  /* ---------------------------------------------------------------- 资产加载 */
+  function loadOne(cfg, onProgress) {
+    return window.ModelLoader.load({
+      glbUrl: cfg.dir + '/' + cfg.assetId + '.glb',
+      manifestUrl: cfg.dir + '/' + cfg.assetId + '.manifest.json',
+      onProgress: onProgress,
+    });
+  }
+
+  function buildTankFromHandle(key, handle, x, z) {
+    const objectId = key === 'fixed' ? 'fixed_roof_tank' : 'floating_roof_tank';
+    const group = new THREE.Group();
+    group.position.set(x, 0, z);
+    group.userData.objectId = objectId;
+    group.add(handle.root);
+    G.add(group);
+
+    /* 每个网格克隆材质：结构模式逐网格改材质，共享实例会互相覆盖 */
+    handle.root.traverse(function (o) {
+      if (!o.isMesh || !o.material) return;
+      o.material = Array.isArray(o.material) ? o.material.map(function (m) { return m.clone(); }) : o.material.clone();
+      o.frustumCulled = false;
+    });
+
+    const m = (function () {
+      const b = handle.manifest.bounds;
+      const baseAnchor = handle.indices.anchors.get(
+        key === 'fixed' ? 'anchor_fixed_liquid' : 'anchor_floating_liquid',
+      );
+      const baseZ = baseAnchor ? baseAnchor.position[1] : 0;
+      return { radius: Math.abs(b.max[0]) - 0.06, baseZ: baseZ, height: b.max[1] - baseZ };
+    })();
+
+    /* 油面：半径贴合罐壁，高度按液位缩放 */
+    /* 油面必须和剖切壳同一侧：整圈圆柱会把开口挡住，看起来像实心桶，
+       真实半剖就白做了。用 thetaStart/thetaLength 取后半圈，带半圆盖。 */
+    const oil = new THREE.Mesh(
+      new THREE.CylinderGeometry(m.radius, m.radius, m.height, 48, 1, false, Math.PI / 2, Math.PI),
+      new THREE.MeshBasicMaterial({ color: 0xd9a14a, toneMapped: false, side: THREE.DoubleSide }),
+    );
+    oil.position.y = m.baseZ + m.height * level / 2;
+    oil.scale.y = Math.max(0.01, level);
+    oil.name = key + '_oil';
+    group.add(oil);
+
+    /* 浮盘总成：把 manifest 声明为 floating_deck / rim_seal / guide 滚轮的节点
+       收进一个 Group，统一按油面平移；坐标是烘焙的，所以组位移=目标Z-原始Z。 */
+    let deckAssembly = null, deckRestZ = 0;
+    if (key === 'floating') {
+      const deckAnchor = handle.indices.anchors.get('anchor_floating_deck');
+      deckRestZ = deckAnchor ? deckAnchor.position[1] : 0;
+      deckAssembly = new THREE.Group();
+      deckAssembly.name = 'deck_assembly';
+      group.add(deckAssembly);
+      deckBindings = [];
+      handle.indices.object3dByUid.forEach(function (obj, uid) {
+        const node = handle.manifest.nodes.find(function (n) { return n.nodeUid === uid; });
+        if (!node) return;
+        const isDeck = node.role === 'floating_deck' || node.role === 'rim_seal' ||
+          (node.role === 'guide' && /roller/.test(node.semanticId));
+        if (!isDeck) return;
+        deckAssembly.attach(obj);
+        deckBindings.push(node.semanticId);
+      });
+    }
+
+    const tank = {
+      key: key,
+      objectId: objectId,
+      handle: handle,
+      group: group,
+      oil: oil,
+      deckAssembly: deckAssembly,
+      deckRestZ: deckRestZ,
+      mode: 'external',
+      radius: m.radius,
+      baseZ: m.baseZ,
+      height: m.height,
+      stats: handle.stats,
+    };
+    tanks[key] = tank;
+
+    /* 选择环 */
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(m.radius + 0.35, 0.065, 8, 48),
+      new THREE.MeshBasicMaterial({ color: 0xf0a22e, transparent: true, opacity: 0.98, depthWrite: false, depthTest: false }),
+    );
+    ring.rotation.x = Math.PI / 2;
+    ring.position.y = 0.24;
+    ring.renderOrder = 7;
+    ring.visible = false;
+    group.add(ring);
+    tank.selRing = ring;
+
+    applyStructure(key, 'external', false);
+    return tank;
+  }
+
+  function buildPumpFromHandle(handle) {
+    pumpMesh = new THREE.Group();
+    pumpMesh.position.set(3.9, 0, 1.8);
+    pumpMesh.userData.objectId = 'transfer_pump';
+    pumpMesh.add(handle.root);
+    handle.root.traverse(function (o) {
+      if (o.isMesh && o.material) {
+        o.material = Array.isArray(o.material) ? o.material.map(function (m) { return m.clone(); }) : o.material.clone();
+      }
+    });
+    G.add(pumpMesh);
+
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(3.0, 0.065, 8, 48),
+      new THREE.MeshBasicMaterial({ color: 0xf0a22e, transparent: true, opacity: 0.98, depthWrite: false, depthTest: false }),
+    );
+    ring.rotation.x = Math.PI / 2;
+    ring.position.set(3.9, 0.18, 1.8);
+    ring.renderOrder = 7;
+    ring.visible = false;
+    G.add(ring);
+    pumpRing = ring;
+
+    /* 泵组自身的排出管段（资产内真实存在的 pipe_spool）——只在这段里示意流动。
+       跨装置管线必须来自 process-connections.json，未登记就不画。 */
+    const spool = handle.manifest.nodes.find(function (n) { return n.semanticId === 'pipe_spool'; });
+    if (spool) {
+      const bound = new THREE.Box3().setFromObject(handle.indices.object3dByUid.get(spool.nodeUid));
+      const cx = (bound.min.x + bound.max.x) / 2 + 3.9;
+      const cz = (bound.min.z + bound.max.z) / 2 + 1.8;
+      const curve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(cx, bound.min.y, cz),
+        new THREE.Vector3(cx, (bound.min.y + bound.max.y) / 2, cz),
+        new THREE.Vector3(cx, bound.max.y, cz),
+      ]);
+      pumpFlow = makeFlowInGroup(curve, 0x7fd6a8, 8, 0.28, 0.055, 0.8);
+      pumpFlow.speed = 0;
+    }
+    return pumpMesh;
+  }
+
+  async function loadAssets() {
+    if (!window.ModelLoader) throw new Error('ModelLoader 不可用');
+    const progress = function (p) {
+      if (hint && p && p.phase === 'download' && p.ratio != null) {
+        hint.textContent = '正在加载储运资产 ' + Math.round(p.ratio * 100) + '%';
+      }
+    };
+    const fixed = await loadOne(ASSETS.fixed, progress);
+    const floating = await loadOne(ASSETS.floating, progress);
+    const pump = await loadOne(ASSETS.pump, progress);
+    return { fixed: fixed, floating: floating, pump: pump };
+  }
+
+  /* ---------------------------------------------------------------- 构建 */
   function build() {
     baseScene = stage.baseScene;
     const nodes = stage.nodes || [];
@@ -54,165 +342,143 @@
     if (window.__lvlGroup) window.__lvlGroup(2, G);
 
     const mSteel = new THREE.MeshStandardMaterial({ color: 0x2c3b46, roughness: 0.5, metalness: 0.7 });
-    const mOil = new THREE.MeshBasicMaterial({ color: 0xd9a14a, toneMapped: false });
-    const mRoof = new THREE.MeshStandardMaterial({ color: 0x3a4a55, roughness: 0.45, metalness: 0.8 });
 
-    function tank(x, z, floating) {
-      const g = new THREE.Group();
-      g.position.set(x, 0, z);
-      const bodyMat = new THREE.MeshStandardMaterial({ color: 0x33434e, roughness: 0.45, metalness: 0.7, transparent: true, opacity: 0.94, side: THREE.DoubleSide });
-      const body = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.55, 3.6, 26, 1, true), bodyMat);
-      body.position.y = 1.8;
-      g.add(body);
-
-      /* 半剖罐壁：只保留背向镜头的后半圈，前面敞开，能直接看到液面。 */
-      const bodyHalf = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.55, 3.6, 26, 1, true, Math.PI / 2, Math.PI), bodyMat);
-      bodyHalf.position.y = 1.8;
-      bodyHalf.visible = false;
-      g.add(bodyHalf);
-
-      const base = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 0.12, 26), mSteel);
-      base.position.y = 0.06;
-      g.add(base);
-
-      /* 油面 */
-      const oil = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 3.5, 26), mOil);
-      oil.position.y = 1.9;
-      oil.scale.y = 0.02;
-      g.add(oil);
-
-      let roof, vent = null, ventFlow = null;
-      if (floating) {
-        /* 外浮顶：一块贴着油面的盖板，随液位升降 */
-        roof = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 0.16, 26), mRoof);
-        roof.position.y = 0.2;
-        g.add(roof);
-      } else {
-        /* 固定顶：锥顶 + 呼吸阀 */
-        roof = new THREE.Mesh(new THREE.ConeGeometry(1.62, 0.8, 26), mSteel);
-        roof.position.y = 4.0;
-        g.add(roof);
-        vent = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.5, 12), mSteel);
-        vent.position.y = 4.5;
-        g.add(vent);
-        const curve = new THREE.CatmullRomCurve3([
-          new THREE.Vector3(0, 4.75, 0),
-          new THREE.Vector3(0.2, 5.4, 0.1),
-          new THREE.Vector3(-0.1, 6.1, 0)
-        ]);
-        ventFlow = makeFlowInGroup(curve, 0xd8e2e8, 10, 0.25, 0.07, 0.55);
-      }
-      const selRing = new THREE.Mesh(new THREE.TorusGeometry(1.78, 0.065, 8, 48),
-        new THREE.MeshBasicMaterial({ color: 0xf0a22e, transparent: true, opacity: 0.98, depthWrite: false, depthTest: false }));
-      selRing.rotation.x = Math.PI / 2;
-      selRing.position.y = 0.24;
-      selRing.renderOrder = 7;
-      selRing.visible = false;
-      g.add(selRing);
-      G.add(g);
-      return { group: g, body: body, bodyHalf: bodyHalf, bodyMat: bodyMat, oil: oil, roof: roof, ventFlow: ventFlow, selRing: selRing, floating: floating, x: x, z: z };
-    }
-
-    built.fixed = tank(-2.0, 0, false);
-    built.float = tank(2.0, 0, true);
+    /* 地面 */
+    const pad = new THREE.Mesh(new THREE.BoxGeometry(13, 0.12, 8.2),
+      new THREE.MeshStandardMaterial({ color: 0x263239, roughness: 0.95 }));
+    pad.position.y = 0.02;
+    G.add(pad);
 
     /* 标签 */
     const l1 = window.__lvlLabel('固定顶罐', '#cfc8ba');
-    l1.position.set(-2.0, 5.2, 0);
+    l1.position.set(-3.4, 8.3, 0);
     l1.scale.multiplyScalar(1.08);
     G.add(l1);
-
     const l2 = window.__lvlLabel('外浮顶罐', '#8fb6ad');
-    l2.position.set(2.0, 5.2, 0);
+    l2.position.set(3.4, 8.3, 0);
     l2.scale.multiplyScalar(1.08);
     G.add(l2);
-
     selectTag = window.__lvlLabel('已选', '#f0a22e');
     selectTag.scale.multiplyScalar(0.62);
     selectTag.visible = false;
     G.add(selectTag);
 
-    /* 地面 */
-    const pad = new THREE.Mesh(new THREE.BoxGeometry(11, 0.12, 6.2), new THREE.MeshStandardMaterial({ color: 0x263239, roughness: 0.95 }));
-    pad.position.y = 0.02;
-    G.add(pad);
-
-    /* 转输泵组：可识别泵体/电机/阀门/管架 */
-    pumpMesh = new THREE.Group();
-    pumpMesh.position.set(3.9, 0, 1.8);
-    pumpMesh.userData.objectId = 'transfer_pump';
-    G.add(pumpMesh);
-    const pumpBase = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.18, 1.5), mSteel);
-    pumpBase.position.y = 0.12; pumpMesh.add(pumpBase);
-    const pumpBody = new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.46, 0.8, 24), mSteel);
-    pumpBody.rotation.z = Math.PI / 2; pumpBody.position.set(-0.55, 0.65, 0); pumpMesh.add(pumpBody);
-    const motor = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.75, 0.8), new THREE.MeshStandardMaterial({ color: 0x3d4a44, roughness: 0.55, metalness: 0.5 }));
-    motor.position.set(0.7, 0.58, 0); pumpMesh.add(motor);
-    const wheel = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.035, 8, 18), new THREE.MeshStandardMaterial({ color: 0xd8a24a, roughness: 0.45 }));
-    wheel.rotation.x = Math.PI / 2; wheel.position.set(-0.55, 1.18, 0); pumpMesh.add(wheel);
-    const pumpLabel = window.__lvlLabel('转输泵组', '#d8a24a'); pumpLabel.position.set(3.9, 3.2, 1.8); pumpLabel.scale.multiplyScalar(1.0); G.add(pumpLabel);
-
-    pumpRing = new THREE.Mesh(new THREE.TorusGeometry(1.45, 0.065, 8, 48),
-      new THREE.MeshBasicMaterial({ color: 0xf0a22e, transparent: true, opacity: 0.98, depthWrite: false, depthTest: false }));
-    pumpRing.rotation.x = Math.PI / 2;
-    pumpRing.position.set(3.9, 0.18, 1.8);
-    pumpRing.renderOrder = 7;
-    pumpRing.visible = false;
-    G.add(pumpRing);
-
-    /* 泵送路径：终点接到全局 path_store_refine 的 storage 出口。 */
-    const globalRoute = stage.getRoute ? stage.getRoute('path_store_refine') : null;
-    let routeEnd = new THREE.Vector3(9.4, 1.2, 3.4);
-    if (globalRoute) {
-      const localStart = globalRoute.start.clone().sub(G.position);
-      const localEnd = globalRoute.end.clone().sub(G.position);
-      routeEnd = localEnd.clone();
-      routeInfo = {
-        pathId: 'path_store_refine',
-        storageOutlet: globalRoute.start.toArray(),
-        refineryFeed: globalRoute.end.toArray(),
-        localStart: localStart.toArray(),
-        localEnd: localEnd.toArray(),
-        startMode: 'local-pump-inlet'
-      };
-    }
-    const pumpCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(3.7, 1.15, 1.4),
-      new THREE.Vector3(5.3, 1.0, 2.0),
-      new THREE.Vector3((5.3 + routeEnd.x) / 2, Math.max(1.0, routeEnd.y), (2.0 + routeEnd.z) / 2),
-      routeEnd
+    /* 固定顶罐的呼吸阀溢出粒子（挂在关卡组上，随资产定位） */
+    const ventCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-3.4 + 0.95, 8.0, 0),
+      new THREE.Vector3(-3.4 + 1.15, 8.7, 0.1),
+      new THREE.Vector3(-3.4 + 0.85, 9.4, 0),
     ]);
-    const pipe = new THREE.Mesh(new THREE.TubeGeometry(pumpCurve, 40, 0.07, 8, false),
-      new THREE.MeshStandardMaterial({ color: 0x8b6b3f, roughness: 0.5, metalness: 0.4 }));
-    pipe.name = 'store_transfer_pipe'; pipe.userData.pathId = 'path_store_refine'; pipe.userData.pathEnd = routeEnd.toArray();
-    pipe.userData.pathEndWorld = routeEnd.clone().add(G.position).toArray(); G.add(pipe);
-    if (routeInfo) {
-      /* 终点误差必须在世界坐标里对全局 anchor 计算；曲线终点对 routeEnd 是自证。 */
-      routeInfo.curveStart = pumpCurve.getPoint(0).toArray();
-      routeInfo.curveStartWorld = new THREE.Vector3().fromArray(routeInfo.curveStart).add(G.position).toArray();
-      routeInfo.curveEndWorld = routeEnd.clone().add(G.position).toArray();
-      routeInfo.endError = new THREE.Vector3().fromArray(routeInfo.curveEndWorld).distanceTo(globalRoute.end);
-      routeInfo.startError = new THREE.Vector3().fromArray(routeInfo.curveStartWorld).distanceTo(globalRoute.start);
-    }
-    const valve = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.035, 8, 18), new THREE.MeshStandardMaterial({ color: 0xd8a24a, roughness: 0.45 }));
-    valve.rotation.x = Math.PI / 2; valve.position.set(5.2, 1.4, 1.9); G.add(valve);
-    const valveLabel = window.__lvlLabel('出口阀', '#d8a24a'); valveLabel.position.set(5.2, 2.6, 1.9); valveLabel.scale.multiplyScalar(1.0); G.add(valveLabel);
-    pumpFlow = makeFlowInGroup(pumpCurve, 0x7fd6a8, 12, 0.28, 0.06, 0.8);
-    pumpFlow.speed = 0;
+    const ventFlow = makeFlowInGroup(ventCurve, 0xd8e2e8, 10, 0.25, 0.07, 0.55);
+    built.fixed = { ventFlow: ventFlow };
 
-    /* 默认半剖：切掉朝镜头的前半罐壁，直接看到罐内液体。 */
+    const pumpLabel = window.__lvlLabel('转输泵组', '#d8a24a');
+    pumpLabel.position.set(7.4, 3.4, 1.8);
+    pumpLabel.scale.multiplyScalar(1.0);
+    G.add(pumpLabel);
+
+    /* 资产异步加载：UI 立即可用，加载完成后接上模型 */
+    assetsReady = loadAssets().then(function (handles) {
+      buildTankFromHandle('fixed', handles.fixed, -3.4, 0);
+      buildTankFromHandle('floating', handles.floating, 3.4, 0);
+      buildPumpFromHandle(handles.pump);
+      G.updateMatrixWorld(true);
+
+      applyStructure('fixed', 'half', false);
+      applyStructure('floating', 'half', false);
+
+      if (stage.deviceState) {
+        stage.deviceState.bind('fixed_roof_tank', 'detail', tanks.fixed.group);
+        stage.deviceState.bind('floating_roof_tank', 'detail', tanks.floating.group);
+        stage.deviceState.bind('transfer_pump', 'detail', pumpMesh);
+      }
+      applyLevel();
+      usingFallback = false;
+      if (badge) badge.hidden = true;
+      if (act) act.hidden = false;
+      hint.textContent = storageHint();
+      return handles;
+    }).catch(function (err) {
+      /* 资产不可用：明确标记，不静默用方块冒充 */
+      usingFallback = true;
+      assetError = (err && err.message) || String(err);
+      console.warn('[L3] 储运资产加载失败：' + assetError);
+      if (badge) {
+        badge.hidden = false;
+        badge.textContent = '⚠ 储运 HG 资产未加载（' + assetError.slice(0, 40) + '…）';
+        badge.title = assetError;
+      }
+      hint.textContent = '储运资产加载失败，仅保留液位与任务判定';
+      if (act) act.hidden = false;
+      applyLevel();
+      return null;
+    });
+
+    /* 泵送路由只读连接注册表，不依赖 GLB，因此在 build 阶段就解析，
+       让 UI 一进关就能显示"已登记/未登记"，而不是等资产加载完。 */
+    resolvePumpRoute();
     G.updateMatrixWorld(true);
-    if (cutMode) applyTankCut(true);
     return built;
   }
 
-  /* ---------- 相机 ---------- */
+  /* ---------------------------------------------------------------- 泵送路径 */
+  /* 只认 process-connections.json 的 connectionId。未登记 → 不建管线、不造曲线。 */
+  function resolvePumpRoute() {
+    const reg = window.PETRO_CONNECTIONS;
+    const conn = reg && typeof reg.get === 'function' ? reg.get(PUMP_CONNECTION_ID) : null;
+    if (!conn) {
+      routeInfo = {
+        connectionId: PUMP_CONNECTION_ID,
+        routeSource: 'unregistered',
+        status: 'blocked',
+        note: 'process-connections.json 未登记该连接；按规则不绘制与实体不一致的替代管线',
+        pipe: null,
+      };
+      if (ui.querySelector('#l3-route')) {
+        ui.querySelector('#l3-route').textContent =
+          '泵送：连接 ' + PUMP_CONNECTION_ID + ' 未登记（不绘制替代管线）';
+      }
+      return null;
+    }
+
+    let curve = null;
+    try { curve = reg.resolveCurve ? reg.resolveCurve(PUMP_CONNECTION_ID) : null; } catch (e) { curve = null; }
+    if (!curve) {
+      routeInfo = { connectionId: PUMP_CONNECTION_ID, routeSource: 'registered-no-curve', status: 'blocked', pipe: null };
+      return null;
+    }
+
+    const pipe = new THREE.Mesh(
+      new THREE.TubeGeometry(curve, 48, 0.07, 8, false),
+      new THREE.MeshStandardMaterial({ color: 0x8b6b3f, roughness: 0.5, metalness: 0.4 }),
+    );
+    pipe.name = 'store_transfer_pipe';
+    pipe.userData.connectionId = PUMP_CONNECTION_ID;
+    G.add(pipe);
+    const flow = makeFlowInGroup(curve, 0x7fd6a8, 12, 0.28, 0.06, 0.8);
+    flow.speed = 0;
+    pumpFlow = flow;
+
+    routeInfo = {
+      connectionId: PUMP_CONNECTION_ID,
+      routeSource: 'process-connections',
+      status: 'ok',
+      pipe: 'store_transfer_pipe',
+      start: curve.getPoint(0).toArray(),
+      end: curve.getPoint(1).toArray(),
+    };
+    return routeInfo;
+  }
+
+  /* ---------------------------------------------------------------- 相机 */
   let flyHandle = null;
   function fly(from, fromT, to, toT, dur, done) {
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { camera.position.copy(to); camera.lookAt(toT); if (typeof done === 'function') done(); return; }
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      camera.position.copy(to); camera.lookAt(toT); if (typeof done === 'function') done(); return;
+    }
     const t0 = performance.now();
     if (flyHandle) cancelAnimationFrame(flyHandle);
-    const ease = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    const ease = function (t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; };
     (function step() {
       const k = Math.min(1, (performance.now() - t0) / dur);
       const e = ease(k);
@@ -223,8 +489,7 @@
     })();
   }
 
-  let running = false;
-  let lastT = performance.now();
+  let running = false, lastT = performance.now();
   function loop() {
     if (!running) return;
     requestAnimationFrame(loop);
@@ -235,49 +500,12 @@
     flows.forEach(function (f) { f.update(dt); });
   }
 
-  /* ---------- 状态 ---------- */
+  /* ---------------------------------------------------------------- 状态 */
   let level = 0.02;
   let completed = false;
   let observedTanks = { fixed_roof_tank: false, floating_roof_tank: false };
 
-  function applyLevel() {
-    const k = level;
-    /* 固定顶：油面升高，油气空间变小 */
-    built.fixed.oil.scale.y = Math.max(0.02, k);
-    built.fixed.oil.position.y = 0.12 + (3.5 * k) / 2;
-    /* 外浮顶：盖板跟着油面走 */
-    built.float.oil.scale.y = Math.max(0.02, k);
-    built.float.oil.position.y = 0.12 + (3.5 * k) / 2;
-    built.float.roof.position.y = 0.14 + 3.5 * k;
-
-    /* 液位越低，固定顶罐油气空间越大（教学示意） */
-    if (built.fixed.ventFlow) built.fixed.ventFlow.speed = 0.05 + (1 - k) * 0.75;
-
-    if (stage.deviceState) {
-      stage.deviceState.set('fixed_roof_tank', { level: k }, 'level');
-      stage.deviceState.set('floating_roof_tank', { level: k }, 'level');
-    }
-    syncStorageUi();
-  }
-
-  function applyTankCut(on) {
-    [built.fixed, built.float].forEach(function (t) {
-      if (!t || !t.body) return;
-      /* 剖面模式只保留后半圈罐壁，前面敞开；既有罐体轮廓，又能直接看到液面。 */
-      t.body.visible = !on;
-      if (t.bodyHalf) t.bodyHalf.visible = on;
-      if (!t.bodyMat.userData.cutOrig) {
-        t.bodyMat.userData.cutOrig = { transparent: t.bodyMat.transparent, opacity: t.bodyMat.opacity, side: t.bodyMat.side };
-      }
-      t.bodyMat.clippingPlanes = [];
-      t.bodyMat.transparent = t.bodyMat.userData.cutOrig.transparent;
-      t.bodyMat.opacity = t.bodyMat.userData.cutOrig.opacity;
-      t.bodyMat.side = t.bodyMat.userData.cutOrig.side;
-      t.bodyMat.needsUpdate = true;
-    });
-  }
-
-  /* ---------- UI ---------- */
+  /* ---------------------------------------------------------------- UI */
   const ui = document.createElement('div');
   ui.className = 'lvl';
   ui.innerHTML = [
@@ -295,12 +523,13 @@
     '<div class="lvl__out"><span id="l3-space">油气空间 98%</span></div>',
     '</div>',
     '<details class="lvl2__more" id="l3-more"><summary>演示与结构</summary><div class="lvl2__tools">',
-    '<div class="lvl2__toolrow"><span class="lvl2__tool-label">结构</span><button type="button" class="lvl__btn" id="l3-cut" aria-pressed="false">罐体剖面</button></div>',
+    '<div class="lvl2__toolrow"><span class="lvl2__tool-label">结构</span><button type="button" class="lvl__btn" id="l3-cut" aria-pressed="true">恢复罐壁</button><span class="lvl2__stepnote" id="l3-cut-note">只作用于当前选中的罐</span></div>',
     '<div class="lvl2__toolrow"><span class="lvl2__tool-label">泵送</span><button type="button" class="lvl__btn" id="l3-pumpstart">启动泵送</button><button type="button" class="lvl__btn" id="l3-pumppause">暂停泵送</button><button type="button" class="lvl__btn" id="l3-pumpreplay">重播路径</button></div>',
+    '<div class="lvl2__toolrow"><span class="lvl2__tool-label">资产</span><span class="lvl2__badge" id="l3-asset-badge" hidden></span></div>',
     '</div></details>',
-    '<div class="lvl__out"><span id="l3-route">局部泵送：罐区泵出口 → 炼化入口（终点对齐全局）</span></div>',
+    '<div class="lvl__out"><span id="l3-route">泵送路径：读取中…</span></div>',
     '</div>',
-    '<button type="button" class="lvl__back" id="l3-back">返回总览</button>'
+    '<button type="button" class="lvl__back" id="l3-back">返回总览</button>',
   ].join('');
   stage.viewport.appendChild(ui);
 
@@ -312,33 +541,38 @@
   const uiSpace = ui.querySelector('#l3-space');
   const back = ui.querySelector('#l3-back');
   const cutBtn = ui.querySelector('#l3-cut');
-  ui.querySelector('#l3-fixed').addEventListener('click', function () { selectTank('fixed_roof_tank'); });
-  ui.querySelector('#l3-float').addEventListener('click', function () { selectTank('floating_roof_tank'); });
-  ui.querySelector('#l3-pump').addEventListener('click', function () { selectTank('transfer_pump'); });
+  const cutNote = ui.querySelector('#l3-cut-note');
+  const badge = ui.querySelector('#l3-asset-badge');
   const pumpStart = ui.querySelector('#l3-pumpstart');
   const pumpPause = ui.querySelector('#l3-pumppause');
   const pumpReplay = ui.querySelector('#l3-pumpreplay');
+
+  function selectedKey() {
+    if (selectedTankId === 'fixed_roof_tank') return 'fixed';
+    if (selectedTankId === 'floating_roof_tank') return 'floating';
+    return null;
+  }
+
   function selectTank(id) {
     selectedTankId = id;
     if (id === 'fixed_roof_tank' || id === 'floating_roof_tank') observedTanks[id] = true;
     if (stage.setContextObject) stage.setContextObject(id, 'storage');
     if (stage.deviceState) stage.deviceState.select(id);
-    if (built.fixed && built.fixed.selRing) built.fixed.selRing.visible = id === 'fixed_roof_tank';
-    if (built.float && built.float.selRing) built.float.selRing.visible = id === 'floating_roof_tank';
+    if (tanks.fixed && tanks.fixed.selRing) tanks.fixed.selRing.visible = id === 'fixed_roof_tank';
+    if (tanks.floating && tanks.floating.selRing) tanks.floating.selRing.visible = id === 'floating_roof_tank';
     if (pumpRing) pumpRing.visible = id === 'transfer_pump';
     if (selectTag) {
       selectTag.visible = true;
-      if (id === 'fixed_roof_tank') selectTag.position.set(-2.0, 5.95, 0);
-      else if (id === 'floating_roof_tank') selectTag.position.set(2.0, 5.95, 0);
-      else selectTag.position.set(3.9, 3.95, 1.8);
+      if (id === 'fixed_roof_tank') selectTag.position.set(-3.4, 9.05, 0);
+      else if (id === 'floating_roof_tank') selectTag.position.set(3.4, 9.05, 0);
+      else selectTag.position.set(7.4, 4.15, 1.8);
     }
     if (stage.setInteraction) stage.setInteraction('inspect_tank_structure', id, '罐型');
-    const names = { fixed_roof_tank: '固定顶罐', floating_roof_tank: '外浮顶罐', transfer_pump: '转输泵组' };
-    if (stateEl) stateEl.textContent = names[id] || '固定顶罐';
-    [['fixed_roof_tank', '#l3-fixed'], ['floating_roof_tank', '#l3-float'], ['transfer_pump', '#l3-pump']].forEach(function (pair) {
-      const btn = ui.querySelector(pair[1]);
-      if (btn) btn.setAttribute('aria-pressed', String(pair[0] === id));
-    });
+    [['fixed_roof_tank', '#l3-fixed'], ['floating_roof_tank', '#l3-float'], ['transfer_pump', '#l3-pump']]
+      .forEach(function (pair) {
+        const btn = ui.querySelector(pair[1]);
+        if (btn) btn.setAttribute('aria-pressed', String(pair[0] === id));
+      });
     if (id === 'transfer_pump') hint.textContent = '转输泵组 · 把油相送往炼化入口';
     else if (id === 'fixed_roof_tank') hint.textContent = '固定顶罐 · 油气空间随液位变化';
     else hint.textContent = '外浮顶罐 · 浮盘随液面升降';
@@ -363,8 +597,18 @@
     }
     const names = { fixed_roof_tank: '固定顶罐', floating_roof_tank: '外浮顶罐', transfer_pump: '转输泵组' };
     if (stateEl) stateEl.textContent = names[selectedTankId] || '固定顶罐';
-    cutBtn.textContent = cutMode ? '恢复罐壁' : '罐体剖面';
-    cutBtn.setAttribute('aria-pressed', String(cutMode));
+
+    const key = selectedKey();
+    const m = key ? modeOf(key) : null;
+    cutBtn.hidden = !key;
+    if (cutNote) cutNote.hidden = !key;
+    if (key) {
+      const isHalf = m === 'half' || m === 'ghost';
+      cutBtn.textContent = isHalf ? '恢复罐壁' : '罐体剖面';
+      cutBtn.setAttribute('aria-pressed', String(isHalf));
+      if (cutNote) cutNote.textContent = (key === 'fixed' ? '固定顶罐' : '外浮顶罐') + '当前：' + m;
+    }
+    if (badge && !usingFallback) badge.hidden = true;
   }
 
   function storageHint() {
@@ -374,21 +618,39 @@
       ? '外浮顶罐 · 浮盘随液面升降'
       : '固定顶罐 · 油气空间随液位变化';
   }
+
   cutBtn.addEventListener('click', function () {
-    cutMode = !cutMode; cutBtn.setAttribute('aria-pressed', String(cutMode));
-    cutBtn.textContent = cutMode ? '恢复罐壁' : '罐体剖面';
-    applyTankCut(cutMode);
-    if (stage.deviceState) {
-      stage.deviceState.set('fixed_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
-      stage.deviceState.set('floating_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
-    }
-    if (stage.setInteraction) stage.setInteraction('inspect_tank_structure', 'tank_cut', cutMode ? 'on' : 'off');
+    const key = selectedKey();
+    if (!key) return;
+    const cur = modeOf(key);
+    /* 只改当前选中的这个罐，另一个罐的状态保持不变 */
+    if (cur === 'external') applyStructure(key, 'half', true);
+    else if (cur === 'half') applyStructure(key, 'ghost', true);
+    else applyStructure(key, 'external', true);
     syncStorageUi();
   });
-  pumpStart.addEventListener('click', function () { if (!pumpFlow) return; pumpRunning = true; pumpPaused = false; pumpFlow.speed = 0.3; if (stage.deviceState) stage.deviceState.set('transfer_pump', { animation: 'running' }, 'level'); if (stage.setInteraction) stage.setInteraction('start_pump', 'transfer_pump', '运行'); hint.textContent = storageHint(); });
-  pumpPause.addEventListener('click', function () { pumpRunning = false; pumpPaused = true; if (pumpFlow) pumpFlow.speed = 0; if (stage.deviceState) stage.deviceState.set('transfer_pump', { animation: 'paused' }, 'level'); if (stage.setInteraction) stage.setInteraction('pause_pump', 'transfer_pump', '暂停'); hint.textContent = storageHint(); });
-  pumpReplay.addEventListener('click', function () { pumpRunning = true; pumpPaused = false; if (pumpFlow) pumpFlow.speed = 0.3; if (stage.deviceState) stage.deviceState.set('transfer_pump', { animation: 'running' }, 'level'); if (stage.setInteraction) stage.setInteraction('replay_pump', 'transfer_pump', '重播'); hint.textContent = '泵送路径重播'; });
 
+  pumpStart.addEventListener('click', function () {
+    pumpRunning = true; pumpPaused = false;
+    if (pumpFlow) pumpFlow.speed = 0.3;
+    if (stage.deviceState) stage.deviceState.set('transfer_pump', { animation: 'running' }, 'level');
+    if (stage.setInteraction) stage.setInteraction('start_pump', 'transfer_pump', '运行');
+    hint.textContent = storageHint();
+  });
+  pumpPause.addEventListener('click', function () {
+    pumpRunning = false; pumpPaused = true;
+    if (pumpFlow) pumpFlow.speed = 0;
+    if (stage.deviceState) stage.deviceState.set('transfer_pump', { animation: 'paused' }, 'level');
+    if (stage.setInteraction) stage.setInteraction('pause_pump', 'transfer_pump', '暂停');
+    hint.textContent = storageHint();
+  });
+  pumpReplay.addEventListener('click', function () {
+    pumpRunning = true; pumpPaused = false;
+    if (pumpFlow) pumpFlow.speed = 0.3;
+    if (stage.deviceState) stage.deviceState.set('transfer_pump', { animation: 'running' }, 'level');
+    if (stage.setInteraction) stage.setInteraction('replay_pump', 'transfer_pump', '重播');
+    hint.textContent = '泵送路径重播';
+  });
 
   slider.addEventListener('input', function () {
     level = +slider.value / 100;
@@ -411,7 +673,7 @@
     back.textContent = '完成，返回总览 →';
   }
 
-  /* ---------- 进 / 出 ---------- */
+  /* ---------------------------------------------------------------- 进 / 出 */
   function ensureCamera() {
     if (!camera) camera = new THREE.PerspectiveCamera(42, 1, 0.1, 400);
     stage.renderer.localClippingEnabled = true;
@@ -419,32 +681,26 @@
     camera.updateProjectionMatrix();
   }
 
-  /* 储运罐区位于前景平台后方，平台会把液位下半段挡住。
-     进入本关时临时隐藏前景地形层，退出时恢复；这样低液位也能直接看到液面。 */
   function setStorageOccluders(hide) {
     if (!occluderMeshes.length) {
       window.__stage.baseScene.traverse(function (o) {
         if (!o.isMesh || !o.material || !o.material.color) return;
         const c = o.material.color.getHexString();
-        if (c !== '4a4235' && c !== '6b5a3a' && c !== '1e1e18' && c !== '14140f' && c !== '3a3830' && c !== '2a2822' && c !== '33312a' && c !== '22221b') return;
+        if (c !== '4a4235' && c !== '6b5a3a' && c !== '1e1e18' && c !== '14140f' && c !== '3a3830' &&
+            c !== '2a2822' && c !== '33312a' && c !== '22221b') return;
         if (!o.geometry) return;
         o.geometry.computeBoundingBox();
         const b = o.geometry.boundingBox;
         const sx = b.max.x - b.min.x, sy = b.max.y - b.min.y, sz = b.max.z - b.min.z;
         const largeTerrain = sx > 10 && sz > 10;
-        /* 储罐上方横穿的台板/走道：薄、长、深，且位于罐体中段；一并隐藏。 */
         const slab = sy < 1.2 && sx > 5 && sz > 0.8 && b.max.y > 1.2;
         const darkSlab = c === '3a3830' || c === '2a2822' || c === '33312a';
-        /* 储运展台的大幅侧墙/围板，顶边会横穿罐体；只在本关隐藏。 */
         const stageWall = c === '14140f' && sx > 70 && sz > 6;
-        /* 储运区上方的展台地板：横跨罐区，遮住罐体中下部。 */
         const stageDeck = c === '2a2822' && sx > 8 && sz > 7 && b.min.y > 1.2 && b.max.y < 3.2;
-        /* 储运展台的大地台/围墙，顶面会形成横穿视野的长条。 */
         const stageBackdrop = c === '22221b' && sx > 70 && sz > 20;
         if (largeTerrain || (slab && darkSlab) || stageWall || stageDeck || stageBackdrop) occluderMeshes.push(o);
       });
     }
-    /* 有些台板/走道是合并后的通用材质，颜色不可靠；按“横穿罐区的薄长板”再兜一层。 */
     if (hide) {
       function inLevelGroup(o) {
         let p = o;
@@ -462,8 +718,7 @@
           q = q.parent;
         }
         const crossing = s.y < 1.6 && s.x > 4 && s.z > 0.6 && b.max.y > 1.2 && b.min.y < 3.2 &&
-            Math.abs(cx - anchor.x) < 8 && Math.abs(cz - anchor.z) < 7;
-        /* 储运关只保留罐、泵、管路；其余高于地面的展台/走道/围板从视线里移除。 */
+            Math.abs(cx - anchor.x) < 9 && Math.abs(cz - anchor.z) < 8;
         const backdrop = !keep && b.min.y > 1.0;
         if (crossing || backdrop) {
           if (occluderMeshes.indexOf(o) < 0) occluderMeshes.push(o);
@@ -503,15 +758,7 @@
     G.visible = true;
     setProcessLines(true);
     setStorageOccluders(true);
-    if (stage.deviceState) {
-      stage.deviceState.set('fixed_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
-      stage.deviceState.set('floating_roof_tank', { structure: cutMode ? 'half' : 'external' }, 'level');
-      stage.deviceState.bind('fixed_roof_tank', 'detail', built.fixed.group);
-      stage.deviceState.bind('floating_roof_tank', 'detail', built.float.group);
-      if (pumpMesh) stage.deviceState.bind('transfer_pump', 'detail', pumpMesh);
-    }
-    observedTanks = { fixed_roof_tank: false, floating_roof_tank: false };
-    completed = false;
+
     ui.classList.remove('done');
     back.classList.remove('pulse');
     back.textContent = '返回总览';
@@ -524,7 +771,8 @@
     if (!running) { running = true; loop(); }
 
     fly(startPos, startT,
-      new THREE.Vector3(anchor.x + 5.5, 6.2, anchor.z + 14.0), new THREE.Vector3(anchor.x + 0.8, 2.0, anchor.z), 1700, function () {
+      new THREE.Vector3(anchor.x + 10.5, 11.5, anchor.z + 26.0),
+      new THREE.Vector3(anchor.x, 3.4, anchor.z), 1700, function () {
         hint.textContent = storageHint();
         act.hidden = false;
       });
@@ -551,14 +799,91 @@
 
   back.onclick = exit;
   window.__lvlEntry(2, '进入 03 储运', enter);
-  window.__l3 = { enter: enter, exit: exit, selectTank: selectTank, get routeInfo() { return routeInfo; }, get lastInteraction() { return window.__sceneContext ? (window.__sceneContext.interaction || null) : null; }, get cutMode() { return cutMode; }, get pumpRunning() { return pumpRunning; }, get pumpPaused() { return pumpPaused; }, get completed() { return completed; }, get level() { return level; },
+  window.__l3 = {
+    enter: enter,
+    exit: exit,
+    selectTank: selectTank,
+    get routeInfo() { return routeInfo; },
+    get lastInteraction() {
+      return window.__sceneContext ? (window.__sceneContext.interaction || null) : null;
+    },
+    get cutMode() { const k = selectedKey(); return k ? (modeOf(k) === 'half' || modeOf(k) === 'ghost') : false; },
+    structureModeOf: function (objectId) {
+      if (objectId === 'fixed_roof_tank') return modeOf('fixed');
+      if (objectId === 'floating_roof_tank') return modeOf('floating');
+      return null;
+    },
+    setStructureMode: function (objectId, mode) {
+      const key = objectId === 'fixed_roof_tank' ? 'fixed' : objectId === 'floating_roof_tank' ? 'floating' : null;
+      if (!key || ['external', 'half', 'ghost'].indexOf(mode) < 0) return false;
+      applyStructure(key, mode, true);
+      syncStorageUi();
+      return true;
+    },
+    get pumpRunning() { return pumpRunning; },
+    get pumpPaused() { return pumpPaused; },
+    get completed() { return completed; },
+    get level() { return level; },
+    get selectedTankId() { return selectedTankId; },
+    get observedTanks() { return Object.assign({}, observedTanks); },
+    get usingFallback() { return usingFallback; },
+    get assetError() { return assetError; },
+    get assetsReady() { return assetsReady; },
+    get deckBindings() { return deckBindings.slice(); },
+    probe: function () {
+      /* E2E 用的只读探针：油面/浮盘/固定顶在某一液位下的世界坐标与可见性 */
+      const out = { level: level, tanks: {} };
+      Object.keys(tanks).forEach(function (key) {
+        const t = tanks[key];
+        if (!t) return;
+        const oilY = t.oil ? t.oil.position.y : null;
+        const oilTop = t.oil && t.oil.geometry ? t.oil.position.y + (t.oil.geometry.parameters.height * t.oil.scale.y) / 2 : null;
+        const deckY = t.deckAssembly ? t.deckAssembly.position.y + t.deckRestZ : null;
+        const roof = t.handle.indices.object3dByUid.get(
+          (t.handle.manifest.nodes.find(function (n) { return n.semanticId === 'roof_cone'; }) || {}).nodeUid,
+        );
+        out.tanks[key] = {
+          objectId: t.objectId,
+          mode: t.mode,
+          oilTop: oilTop,
+          deckY: deckY,
+          deckOffset: t.deckAssembly ? t.deckAssembly.position.y : null,
+          roofY: roof ? roof.position.y : null,
+          roofStatic: roof ? (roof.position.y === 0) : null,
+          visibleMeshes: (function () {
+            let n = 0;
+            t.handle.root.traverse(function (o) { if (o.isMesh && o.visible) n++; });
+            return n;
+          })(),
+          /* 按语义 ID 报可见性：结构模式断言必须比"身份"，不能只比数量 */
+          vis: (function () {
+            const want = ['shell', 'shell_cut', 'roof_cone', 'roof_rim', 'wind_girder',
+                          'deck', 'rim_seal', 'guide_pole_1', 'nozzle_inlet'];
+            const out = {};
+            want.forEach(function (sid) {
+              const node = t.handle.manifest.nodes.find(function (n) { return n.semanticId === sid; });
+              if (!node) return;
+              const obj = t.handle.indices.object3dByUid.get(node.nodeUid);
+              out[sid] = obj ? { visible: obj.visible, opacity: (function () {
+                const m = Array.isArray(obj.material) ? obj.material[0] : obj.material;
+                return m ? m.opacity : null;
+              })() } : null;
+            });
+            return out;
+          })(),
+          totalMeshes: t.handle.stats.meshes,
+          nodes: t.handle.stats.nodes,
+          reconciled: t.handle.stats.reconciled,
+        };
+      });
+      return out;
+    },
     setLevel: function (pct) {
       if (!slider) return;
       slider.value = String(Math.max(0, Math.min(100, Number(pct) || 0)));
       slider.dispatchEvent(new Event('input', { bubbles: true }));
     },
     startPump: function () { if (pumpStart) pumpStart.click(); },
-    pausePump: function () { if (pumpPause) pumpPause.click(); }
+    pausePump: function () { if (pumpPause) pumpPause.click(); },
   };
 })();
-

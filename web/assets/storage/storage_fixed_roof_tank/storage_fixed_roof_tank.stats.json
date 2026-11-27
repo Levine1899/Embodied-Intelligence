@@ -1,0 +1,92 @@
+{
+  "asset": "storage_fixed_roof_tank",
+  "objectId": "fixed_roof_tank",
+  "source": "tools/blender/build_storage_heroes.py",
+  "blender": "5.3.0",
+  "triangles": 9880,
+  "vertices": 4996,
+  "meshes": 35,
+  "anchors": [
+    {
+      "anchorId": "anchor_fixed_inlet",
+      "semanticId": "nozzle_inlet",
+      "role": "inlet",
+      "position": [
+        -3.6500000000000004,
+        0,
+        0.95
+      ]
+    },
+    {
+      "anchorId": "anchor_fixed_outlet",
+      "semanticId": "nozzle_outlet",
+      "role": "outlet",
+      "position": [
+        3.6500000000000004,
+        0,
+        0.95
+      ]
+    },
+    {
+      "anchorId": "anchor_fixed_vent",
+      "semanticId": "breather_valve",
+      "role": "vent",
+      "position": [
+        0.95,
+        0,
+        6.98
+      ]
+    },
+    {
+      "anchorId": "anchor_fixed_liquid",
+      "semanticId": "bottom_plate",
+      "role": "liquid_reference",
+      "position": [
+        0,
+        0,
+        0.3
+      ]
+    }
+  ],
+  "structure": {
+    "showExternal": [
+      "shell"
+    ],
+    "showCut": [
+      "shell_cut",
+      "cut_edge_left",
+      "cut_edge_right"
+    ],
+    "always": [
+      "foundation_ring",
+      "bottom_plate",
+      "stiffener_ring_1",
+      "stiffener_ring_2",
+      "stiffener_ring_3",
+      "stiffener_ring_4",
+      "roof_cone",
+      "roof_rim",
+      "roof_manhole",
+      "breather_stem",
+      "breather_valve",
+      "breather_cap",
+      "nozzle_inlet",
+      "nozzle_inlet_flange",
+      "nozzle_outlet",
+      "nozzle_outlet_flange",
+      "nozzle_drain",
+      "shell_manhole"
+    ]
+  },
+  "dimensions": {
+    "shellRadius": 3.2,
+    "shellHeight": 6.0,
+    "baseZ": 0.3
+  },
+  "units": "meters; Blender Z-up -> glTF Y-up",
+  "files": {
+    "glb_bytes": 255248,
+    "blend_bytes": 148490
+  },
+  "note": "Teaching-grade Hero；几何由脚本真实生成，允许二次修改后重跑。"
+}
