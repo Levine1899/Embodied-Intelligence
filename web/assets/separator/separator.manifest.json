@@ -10,19 +10,19 @@
   },
   "build": {
     "sourceFile": "assets-source/blender/separator_hero.blend",
-    "generator": "tools/blender/build_separator_hero.py",
-    "blenderVersion": "4.5.16",
-    "exporterVersion": "Khronos glTF Blender I/O v4.5.51",
-    "exportOptionsHash": "741c0ee6a0ad9e63",
-    "invocation": "blender -b -P tools/blender/build_separator_hero.py   # 该脚本无 CLI 参数，路径全部硬编码；现有产物即由此命令生成",
-    "exportExtras": false
+    "generator": "tools/blender/asset_identity_probe.py",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "Khronos glTF Blender I/O v5.3.43",
+    "exportOptionsHash": "e41799c4f8ed96ac",
+    "invocation": "PETRO_OUT=<tmp>/separator.glb blender -b assets-source/blender/separator_hero.blend -P tools/blender/asset_identity_probe.py -- --asset-id separator_three_phase --object-id three_phase_separator   # 只读打开 .blend，内存中写 petro 自定义属性后导出；不保存 .blend、不改 OBJ/MTL",
+    "exportExtras": true
   },
   "runtime": {
     "format": "glb",
     "uri": "assets/separator/separator.glb",
-    "sha256": "741c0ee6a0ad9e630f264c66900d2c3d54ec055034addd0f44570301c595d18b",
-    "bytes": 391188,
-    "extrasStatus": "pending_rebuild",
+    "sha256": "e41799c4f8ed96ac1e81a88018106341c9e31298cddad0ab9e6bfedbdc99f8ef",
+    "bytes": 403472,
+    "extrasStatus": "verified",
     "fallback": {
       "format": "obj",
       "uri": "assets/separator/separator.obj",

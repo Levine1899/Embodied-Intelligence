@@ -285,10 +285,10 @@ exit 1
 
 | # | 项 | 状态 | 原因 |
 |---|---|---|---|
-| 1 | 发布产物 `separator.glb` 回写 `extras.petro` | ⏸ `pending_rebuild` | 需覆盖发布资产；Phase 1 定位是建契约，且会使既有 phase-05 manifest 哈希失效 |
+| 1 | 发布产物 `separator.glb` 回写 `extras.petro` | ✅ **已闭环（2026-11-27）** | 见 §11。产物 43/43 带 `extras.petro`，`extrasStatus: verified`，`strict` 已转绿并接入 CI |
 | 2 | `tower` / `underground` / 5 个 hero 的 Manifest | ⏸ 未做 | 明确属 Phase 2/6 范围 |
 | 3 | Blender **4.5.16** 是否同样支持嵌套 extras | ⏸ NOT_RUN | 本机只有 5.3.0，4.5.16 已不可复现 |
-| 4 | CI 工作流实际运行 | ⏸ NOT_RUN | 需要 GitHub Actions 环境；本地无法验证 `npm ci` 在干净 clone 下成功 |
+| 4 | CI 工作流实际运行 | ⏸ NOT_RUN（本地已实跑等价命令） | 需要 GitHub Actions 环境；本地 `npm run validate:assets[:strict|:fixtures]` 三项均通过，但 `npm ci` 干净 clone 行为仍未验证 |
 | 5 | `petro.instanceId` 作为显式 `.blend` 属性 | ⏸ 未做 | 试点从已持久化对象名推导；Phase 2 改为显式属性 |
 | 6 | `anchorId` 由 Blender 写入 | ⏸ 未做 | 决策 D-03 已定，实现留 Phase 2 |
 | 7 | `processBasis` 真实内容 | ⛔ 空 | 需领域专家提供已审依据 |
@@ -322,6 +322,8 @@ exit 1
 
 **9/10 项完成 + 1 项部分完成**（`extrasStatus` 停在 `pending_rebuild`，这是本阶段唯一未闭环项，且已用 strict 模式使其失败可见）。
 
+> **2026-11-27 更新**：上述第 10 项已于本次收尾闭环，验收为 **10/10**。发布产物 `separator.glb` 现为 43/43 带 `extras.petro`、`extrasStatus: verified`，`strict` 通过。`separator.glb` 因此被更新（391,188 B → 403,472 B，几何内容不变，见 §11.3），"未改任何 `.glb`"这一条只在原 Phase 1 执行期间成立。
+
 ---
 
 ## 9. 结论
@@ -338,13 +340,13 @@ Phase 1 的门禁原文是："试点资产的节点身份可追踪、唯一、�
 
 **允许进入 Prompt 02（Phase 2：L4 语义清单和对象归属）**，但必须携带以下 3 项交接条件：
 
-1. **Phase 2 第一件事是回写 extras**：用 `tools/blender/asset_identity_probe.py` 的安全配方改 `build_separator_hero.py`，重导出 `separator.glb`，把 `extrasStatus` 改为 `verified` 并启用 CI 的 strict 步骤。在此之前，`strict` 会一直是红的。
+1. ~~**Phase 2 第一件事是回写 extras**：用 `tools/blender/asset_identity_probe.py` 的安全配方改 `build_separator_hero.py`，重导出 `separator.glb`，把 `extrasStatus` 改为 `verified` 并启用 CI 的 strict 步骤。~~ → ✅ **2026-11-27 已完成**（用探针直接重导出发布产物；`build_separator_hero.py` 因对已发布资产非逐字节可复现而**未改**，登记为 Phase 2 处理项，见 §11.4）。
 2. **tower 不要复用本阶段脚本**：`gen_pilot_separator_manifest.mjs` 的 ROLES 表是 separator 专用的；tower 需要先解决"83 个无归属对象 → nodes/support"的归属问题（Phase 0 §3.4），再谈 Manifest。
 3. **`instanceId` 要改成显式属性**：当前从对象名推导只是迁移期权宜；Phase 2 在 `.blend` 里写 `petro.instanceId`，否则对象改名即身份漂移。
 
 ### 不要在本阶段之后做的事
 
-- ❌ 不要把 `separator.manifest.json` 当作"已发布"——它是 `pending_rebuild` 状态的目标态清单。
+- ❌ ~~不要把 `separator.manifest.json` 当作"已发布"——它是 `pending_rebuild` 状态的目标态清单。~~ → 自 2026-11-27 起它**就是**已发布状态（`extrasStatus: verified`，与 GLB 逐节点一致）。
 - ❌ 不要用 `gen_pilot_separator_manifest.mjs` 生成 tower Manifest（ROLES 表不适用，会直接抛错，这是有意的）。
 - ❌ 不要在 Phase 2 之前接 `process-connections.json`（Phase 3）或 GLTFLoader（Phase 6）。
 
@@ -369,3 +371,90 @@ node tools/validate_assets.mjs --strict        # exit 1（预期）
 ```
 
 **Blender 只以 `-b` 后台模式读取 `.blend`，从未保存、从未覆盖 `web/assets` 下的任何产物。**
+
+---
+
+## 11. 收尾：发布产物 extras 回写（2026-11-27）
+
+> 环境：`main` / `b3fd865`，工作区启动时唯一改动是 Phase 00 复审计报告（用户改动，已保护）。
+> 本节只做 Phase 1 的**最后一个未闭环项**，不新增契约设计、不动业务代码。
+> 机器可读证据：[`extras-publish-evidence.json`](../evidence/phase-01/extras-publish-evidence.json)
+
+### 11.1 为什么不是"重做一遍 Phase 1"
+
+Phase 1 的交付物（`docs/model-contract.md`、`schemas/asset-manifest.schema.json`、`tools/validate_assets.mjs`、4 类 fixtures、`separator.manifest.json`）在 `6537085` 已入库并通过本次复核。**唯一不成立的是"发布产物里的 extras"**——原报告 §7.1-1 自己也把它标为未闭环，并写明导出走的是临时目录。
+
+本次因此只做一件事：**把探针已验证的 extras 通路落到已发布产物上**，并让它可被 `strict` 与 CI 持续守住。
+
+### 11.2 实际执行的校验链
+
+| 步骤 | 命令 | 结果 |
+|---|---|---|
+| Blender 干运行（不导出） | `blender -b separator_hero.blend -P asset_identity_probe.py -- --asset-id … --object-id …` | 43 网格对象、43 唯一 nodeUid、0 冲突 |
+| 连续两次导出到 `%TEMP%` | 同上 + `PETRO_OUT=…` | 两次 `sha256 = e41799c4…`，**字节级一致** |
+| 三方一致性（GLB extras ↔ Manifest nodes+support） | 脚本比对 | **43 / 43**，GLB-only 0、Manifest-only 0、同名不同 UID 0 |
+| 几何守恒（新旧发布 GLB） | 138 个 bufferView 按内容哈希排序比对 | **完全一致**（仅序列化顺序不同） |
+| 发布产物校验 | `npm run validate:assets` | **PASS**（1/1，0 告警） |
+| 严格模式 | `npm run validate:assets:strict` | **PASS，退出码 0** |
+| 校验器自测 | `npm run validate:assets:fixtures` | **PASS**（5/5 符合期望） |
+
+### 11.3 改动清单（3 个文件 + 1 个新证据）
+
+| 文件 | 改动 | 说明 |
+|---|---|---|
+| `web/assets/separator/separator.glb` | 391,188 B → **403,472 B** | 由探针只读打开 `.blend` 后带 `export_extras=True` 导出；43/43 节点含 `extras.petro`。**几何/材质二进制内容与上一版逐 bufferView 一致**，仅 mesh 序列化顺序不同（GLB 不保证顺序），43 个节点名集合不变 |
+| `web/assets/separator/separator.manifest.json` | `build` 与 `runtime` 两个块 | `blenderVersion` 4.5.16→**5.3.0**；`exporterVersion` v4.5.51→**v5.3.43**；`exportExtras` false→**true**；`generator` 改为探针；`sha256`/`bytes` 更新；`extrasStatus` `pending_rebuild`→**`verified`** |
+| `.github/workflows/validate-assets.yml` | 启用 strict 步骤 | 原被注释（理由：`pending_rebuild` 必红）；现已转绿，正式纳入 CI |
+| `docs/3d-model-optimization/evidence/phase-01/extras-publish-evidence.json` | **新增** | 本节全部数字的机器可读来源，由脚本从真实产物生成 |
+
+**未改动**：`separator.obj`、`separator.mtl`、`assets-source/blender/separator_hero.blend`、`web/levels/l1–l5.js`、`mission.js`、`immersion.js`、`sandbox.html`、`tools/blender/build_separator_hero.py`。
+
+### 11.4 本次暴露的两个新事实（已定性，均未"顺手修"）
+
+**（a）`build_separator_hero.py` 字节不可复现，但形状等价**
+
+把该脚本复制到临时根目录（`ROOT` 重定向）实跑后与发布 GLB 比对，并逐 mesh 深挖：
+
+| 指标 | 结果 |
+|---|---|
+| 拓扑（43 mesh / 10,140 顶点 / 22,092 索引） | **完全一致** |
+| 138 个 bufferView 的内容 | 8 个不同（8 published-only、8 rebuild-only） |
+| 差异落点 | **只在两个封头** `separator_head_left` / `separator_head_right`，属性为 `POSITION`/`NORMAL`/`TEXCOORD_0`/`INDICES` |
+| 两封头 bbox / 尺寸 / 点数 / 面数 | **完全一致**（559 点、960 面、尺寸 0.84×2×2 m） |
+| 顶点集合（按坐标排序） | **完全一致** |
+| 三角形集合（按坐标规范化） | **完全一致** |
+| 同索引位置的最大偏差 | 1.9808 m（≈ 罐体直径，符合"点被重排"的特征） |
+
+**结论修正**：这是**顶点与索引的重排**，不是几何漂移——形状、拓扑、面片集合都等价。因此**不需要修几何**。真正需要处理的是两件小事：
+
+1. 该脚本第 349–350 行的 glTF 导出**没有传 `export_extras=True`**。
+2. 因为存在重排，**不能用字节哈希做回归门禁**，必须用语义等价比对（顶点集 / 三角形集 / bbox / 计数）。
+
+> ⚠️ **实测警告（2026-11-27，勿重犯）**：只给该脚本补 `export_extras=True` **并不能修好**。把 `ROOT` 重定向到临时目录、仅追加 `export_extras=True` 后实跑，得到：
+>
+> | 指标 | 结果 |
+> |---|---|
+> | 带任意 `extras` 的节点 | 43 / 43 |
+> | 带 `extras.petro` 的节点 | **0 / 43** |
+> | extras 顶层键 | `semanticId`, `objectId`（扁平） |
+> | 样例 | `{"semanticId":"separator_base_left","objectId":"three_phase_separator"}` |
+>
+> 原因是该脚本第 52–53 行写的是**扁平** `obj["semanticId"]` / `obj["objectId"]`，不是嵌套 `petro`。而校验器只认 `node.extras.petro`（`validate_assets.mjs:273`）。**所以"补一行 export_extras"是假修复**：产物看起来有 extras，`strict` 依旧会红。
+>
+> 正确的改动是同一处三件事：**写嵌套 `petro` → 清掉扁平属性 → `export_extras=True`**，也就是下面 (b) 的内容。**(a) 与 (b) 实为同一处改动，不可拆开单独做。**
+
+**（b）`.blend` 里仍是扁平自定义属性 —— 这一条才是真正的契约缺口**
+
+`separator_hero.blend` 保存的是扁平 `semanticId` / `objectId`，不是嵌套 `petro`，更没有 `nodeUid`。本次由探针在**内存中**补齐并导出（探针明确不保存 `.blend`）。因此当前链条是：
+
+> 扁平属性 → 探针按语义路径确定性重算 petro → GLB extras
+
+而不是契约 §3.2 要求的"`.blend` 直接持久化持有 `petro`"。后果是：**nodeUid 是"推导"出来的，不是"持久化"的**——对象一旦改名，身份即漂移，而契约明确禁止这种依赖。`separator` 目前靠探针的确定性规避了这个风险，但 `tower`（253 对象、3 处 `.001` 重名）无法同样规避。
+
+因此 (b) 应作为 **Phase 2 的标准动作**（让 `petro` 写入成为构建脚本的固定步骤，tower 从一开始就按此生产），separator 自己的 `.blend` 迁移并入 Phase 4（与三态剖切一起做，那时本就要重导资产）。
+
+### 11.5 需要知情的副作用
+
+- `docs/phase-reports/evidence/phase-05/separator-asset-manifest.json` 记录的旧 GLB 哈希（`741c0ee6…`）随本次发布失效。**该文件是历史证据，未改写**——它记录的是 2026-11-23 那次构建，改写它等于伪造历史。需要引用当前产物时请用 §11 与证据 JSON。
+- `build.generator` 已改为探针，与 `docs/3d-model-optimization/decisions.md` D-01～D-07 无冲突，但**新增了一个"发布导出入口"的概念**，建议 Phase 2 在 `decisions.md` 补记：完整重建入口 vs 发布产物导出入口的分工。
+

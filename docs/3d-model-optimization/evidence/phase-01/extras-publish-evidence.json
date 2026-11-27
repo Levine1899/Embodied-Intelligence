@@ -1,0 +1,137 @@
+{
+  "generatedAt": "2026-11-27T02:52:02.002Z",
+  "phase": "phase-01-asset-contract / 收尾（发布产物 extras 回写）",
+  "head": "b3fd865af1f0150429dcd1b308054a375b7066af",
+  "purpose": "把 Phase 1 唯一未闭环项（发布产物 GLB 缺 extras.petro）闭环：Blender → GLB extras → Manifest 三方 nodeUid 一致。",
+  "environment": {
+    "blender": "Blender 5.3.0",
+    "gltfExporter": "Khronos glTF Blender I/O v5.3.43",
+    "platform": "win32 x64",
+    "node": "v22.20.0"
+  },
+  "publishInvocation": "PETRO_OUT=<tmp>/separator.glb blender -b assets-source/blender/separator_hero.blend -P tools/blender/asset_identity_probe.py -- --asset-id separator_three_phase --object-id three_phase_separator",
+  "nonDestructive": {
+    "blendSaved": false,
+    "objMtlTouched": false,
+    "glbOnlyFileChangedUnderSeparator": true,
+    "note": "探针只读打开 .blend，仅在内存中写入 petro 自定义属性后导出；未保存 .blend，未改 separator.obj / separator.mtl。"
+  },
+  "artifacts": {
+    "glb": {
+      "path": "web/assets/separator/separator.glb",
+      "bytes": 403472,
+      "sha256": "e41799c4f8ed96ac1e81a88018106341c9e31298cddad0ab9e6bfedbdc99f8ef"
+    },
+    "manifest": {
+      "path": "web/assets/separator/separator.manifest.json",
+      "bytes": 24840,
+      "sha256": "7b52fa53828bbe3c01025a481e96605cc7e86392b81c1b4a82684eaffcf333dd"
+    },
+    "previousGlb": {
+      "bytes": 391188,
+      "sha256": "741c0ee6a0ad9e630f264c66900d2c3d54ec055034addd0f44570301c595d18b"
+    }
+  },
+  "determinism": {
+    "runs": 2,
+    "sha256": [
+      "e41799c4f8ed96ac1e81a88018106341c9e31298cddad0ab9e6bfedbdc99f8ef",
+      "e41799c4f8ed96ac1e81a88018106341c9e31298cddad0ab9e6bfedbdc99f8ef"
+    ],
+    "identical": true,
+    "conclusion": "相同输入连续两次导出字节级一致 → nodeUid 在重建中稳定（UUIDv5 由语义路径确定性派生，不含随机数/循环下标）。"
+  },
+  "extras": {
+    "glbNodes": 43,
+    "nodesWithPetro": 43,
+    "coverage": "1.0000",
+    "dottedKeyNodes": 0,
+    "extrasStatus": "verified",
+    "sample": {
+      "nodeUid": "07523fcb-3998-5a27-bb0b-661e80f15da9",
+      "assetId": "separator_three_phase",
+      "objectId": "three_phase_separator",
+      "semanticId": "separator_base_left",
+      "instanceId": "",
+      "role": "part"
+    }
+  },
+  "nodeUidConsistency": {
+    "manifestNodes": 33,
+    "manifestSupport": 10,
+    "manifestUids": 43,
+    "glbUids": 43,
+    "glbOnly": [],
+    "manifestOnly": [],
+    "nodeNameMismatch": [],
+    "consistent": true
+  },
+  "geometryPreservation": {
+    "method": "把新旧 GLB 的 138 个 bufferView 按内容 sha256 排序后比对；并逐 mesh 比对 POSITION 顶点数与索引数。",
+    "bufferViewContentMultisetIdentical": true,
+    "note": "内容多重集一致 = 几何/材质二进制内容未变，仅序列化顺序不同（GLB 不保证 mesh 顺序）。"
+  },
+  "buildScriptReproducibility": {
+    "testedFile": "tools/blender/build_separator_hero.py",
+    "method": "把该脚本复制到临时根目录（ROOT 重定向）后执行，输出不与仓库接触；再与发布 GLB 逐 mesh 比对。",
+    "bufferView": {
+      "identical": false,
+      "publishedOnly": 8,
+      "rebuildOnly": 8,
+      "total": 138
+    },
+    "topologyIdentical": true,
+    "vertexCountsIdentical": true,
+    "differingObjects": [
+      "separator_head_left",
+      "separator_head_right"
+    ],
+    "differingAttributes": [
+      "POSITION",
+      "NORMAL",
+      "TEXCOORD_0",
+      "INDICES"
+    ],
+    "semanticEquivalence": {
+      "vertexSetSortedIdentical": true,
+      "triangleSetCanonicalIdentical": true,
+      "vertexCountPerHead": 559,
+      "triangleCountPerHead": 960,
+      "bboxIdentical": true,
+      "maxPerIndexPositionDeviation": 1.9808,
+      "conclusion": "两个封头的顶点集合与三角形集合完全一致，bbox/尺寸/点数/面数一致，仅顶点与索引的排列顺序不同 → 形状等价，非几何漂移。"
+    },
+    "realGap": "该脚本的 glTF 导出未传 export_extras=True（第 349-350 行），重建产物会静默退回无 extras 状态；且因顶点重排，不能用字节哈希作为回归门禁，必须用语义等价比对。",
+    "conclusion": "脚本在形状层面可复现（等价），在字节层面不可复现（顶点/网格重排）。这不是几何缺陷；需要补 export_extras，并把回归门禁改为语义等价比对。",
+    "exportExtrasOnlyIsFalseFix": {
+      "experiment": "把 build_separator_hero.py 的 ROOT 重定向到临时目录，仅追加 export_extras=True 后实跑，检查产物 extras 形状。",
+      "result": {
+        "nodes": 43,
+        "nodesWithAnyExtras": 43,
+        "nodesWithExtrasPetro": 0,
+        "extrasTopLevelKeys": [
+          "semanticId",
+          "objectId"
+        ],
+        "sample": {
+          "semanticId": "separator_base_left",
+          "objectId": "three_phase_separator"
+        }
+      },
+      "cause": "该脚本第 52-53 行写的是扁平 obj['semanticId'] / obj['objectId']，不是嵌套 petro；校验器只认 node.extras.petro（validate_assets.mjs:273）。",
+      "conclusion": "只加 export_extras 是假修复：产物看似有 extras，strict 仍会红。正确改动是同一处三件事：写嵌套 petro、清扁平属性、export_extras=True —— 即事实 (b) 的内容。因此 (a) 与 (b) 不可拆开。",
+      "verifiedAt": "2026-11-27"
+    }
+  },
+  "validation": {
+    "npm run validate:assets": "PASS（1/1 Manifest，0 告警）",
+    "npm run validate:assets:strict": "PASS（退出码 0）",
+    "npm run validate:assets:fixtures": "PASS（5/5 符合期望）"
+  },
+  "knownLimitations": [
+    "assets-source/blender/separator_hero.blend 内仍是扁平 custom props（semanticId/objectId），未写嵌套 petro；本次由探针在内存中补齐。下次完整重建时应让构建脚本写入 petro 并保存 .blend。",
+    "tools/blender/build_separator_hero.py 未开 export_extras，且对已发布资产非逐字节可复现（8/138 bufferView 不同），本次未修改该脚本，登记为 Phase 2 处理项。",
+    "docs/phase-reports/evidence/phase-05/separator-asset-manifest.json 记录的旧 GLB 哈希随本次发布失效；该文件是历史证据，未改写。",
+    "Blender 4.5.16 路径不可复现，本次全部使用 5.3.0。"
+  ]
+}
