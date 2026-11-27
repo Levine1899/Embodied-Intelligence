@@ -146,6 +146,10 @@ const RULES = [
   { re: /^RundownRack_(Naphtha|Kerosene|Diesel)_\d+(_Foot)?$/, objectId: 'side_draw_$1', systemId: 'side_draw_stripping', semanticId: 'rundown_rack_post', role: 'support_column', interactive: false },
 
   /* ---- 塔顶冷凝 / 回流（:343-368） ---- */
+  /* Phase 3：塔顶气相线由 web/data/process-connections.json 生成，对象名为 Pipe_Top_Vapor_{Seg,Elbow}N。
+   * 段与弯头分属不同语义角色，必须在通用 ^Pipe_Top_ 之前匹配。 */
+  { re: /^Pipe_Top_Vapor_Seg\d+$/, objectId: 'overhead_condenser', systemId: 'overhead_condensing', semanticId: 'overhead_vapor_segment', role: 'process_pipe', interactive: true, connectionId: 'conn_atm_overhead_to_condenser' },
+  { re: /^Pipe_Top_Vapor_Elbow\d+$/, objectId: 'overhead_condenser', systemId: 'overhead_condensing', semanticId: 'overhead_vapor_elbow', role: 'pipe_elbow', interactive: true, connectionId: 'conn_atm_overhead_to_condenser' },
   { re: /^Pipe_Top_/, objectId: 'overhead_condenser', systemId: 'overhead_condensing', semanticId: 'overhead_vapor_line', role: 'process_pipe', interactive: true },
   { re: /^Condenser_Shell$/, objectId: 'overhead_condenser', systemId: 'overhead_condensing', semanticId: 'condenser_shell', role: 'exchanger_shell', interactive: true },
   { re: /^Condenser_Head_/, objectId: 'overhead_condenser', systemId: 'overhead_condensing', semanticId: 'condenser_head', role: 'vessel_head', interactive: true },
@@ -272,9 +276,18 @@ function main() {
   const checkOnly = argv.includes('--check');
 
   const objs = parseObj(OBJ_PATH);
-  if (objs.length !== 253) {
-    console.error(`[FATAL] tower.obj 对象数为 ${objs.length}，预期 253。资产已变化，需重新核对规则表。`);
-    process.exit(2);
+  /* 资产对象数守卫：规则表是按固定对象集合核对的，数量一变就必须重新核对分类。
+   * Phase 3 起塔顶管线由 process-connections.json 生成，对象数会随 waypoint 变化而变化
+   * （点数 → 段数/弯头数），因此提供显式放行开关；放行时打印实际数量，绝不允许静默通过。 */
+  const allowAssetChange = process.env.PETRO_ALLOW_ASSET_CHANGE === '1';
+  const EXPECTED_OBJECT_COUNT = 253;
+  if (objs.length !== EXPECTED_OBJECT_COUNT) {
+    if (!allowAssetChange) {
+      console.error(`[FATAL] tower.obj 对象数为 ${objs.length}，预期 ${EXPECTED_OBJECT_COUNT}。资产已变化，需重新核对规则表。`);
+      console.error('         若变化来自 process-connections.json（连接几何点数改变），设 PETRO_ALLOW_ASSET_CHANGE=1 重新生成。');
+      process.exit(2);
+    }
+    console.warn(`[warn] 对象数 ${objs.length}（基准 ${EXPECTED_OBJECT_COUNT}）；已按 PETRO_ALLOW_ASSET_CHANGE=1 放行，请确认分类无 UNCLASSIFIED。`);
   }
 
   const meta = JSON.parse(readFileSync(META_PATH, 'utf8'));
@@ -438,6 +451,7 @@ function main() {
     anchorId,
     ownerObjectId: anchorId.includes('vacuum') ? 'vacuum_tower'
       : anchorId.includes('products') ? 'battery_limit_naphtha'
+      : anchorId.includes('condenser') ? 'overhead_condenser'
       : anchorId.includes('feed') ? 'heater'
       : anchorId.includes('trays') ? 'atmospheric_tower'
       : 'atmospheric_tower',

@@ -340,12 +340,35 @@ for name, z, cn, sx, sy in SIDE:
     for j, px in enumerate((4.2, 6.2, 8.4)):
         steel_post(f"RundownRack_{name}_{j}", px, fy, 0, 1.0, 0.14)
 
-# 塔顶 → 冷凝器
-# 塔顶气相线：一根连续立管 + 弯头 + 水平管，直接接到冷凝器。
-# 不再保留两段互相错位的短管，避免任何视角下看起来断开。
-cyl("Pipe_Top_Vertical", 0.4, 2.85, (ATM_R, 0, 27.425), seg=16, material=PIPE_COOL)
-sphere("Pipe_Top_Elbow", 0.46, (ATM_R, 0, 28.85), material=PIPE_COOL)
-cyl("Pipe_Top_Condenser", 0.4, 3.6, ((ATM_R + 5.8) / 2, 0, 28.85), rot=(0, 1.5708, 0), seg=16, material=PIPE_COOL)
+# 塔顶 → 冷凝器（Phase 3：唯一数据源 web/data/process-connections.json）
+# 端点坐标一律来自 ANCHORS 里的真实锚点；只有中间控制点来自该 JSON 的 waypoints。
+# 本段不再保留任何硬编码的工艺流程路径点——改 JSON 即改几何。
+CONNECTION_ID = "conn_atm_overhead_to_condenser"
+ATM_OVERHEAD_OUTLET = (ATM_R, 0.0, ATM_BASE + ATM_H)     # Blender Z-up → (2.2, 0, 26.0)
+CONDENSER_INLET = (5.8, 0.0, 28.85)                       # 水平管接冷凝器左端
+
+
+def _load_connection(connection_id):
+    conn_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "..", "web", "data", "process-connections.json")
+    with open(conn_path, "r", encoding="utf-8") as fh:
+        data = json.load(fh)
+    for c in data.get("connections", []):
+        if c.get("connectionId") == connection_id:
+            return c
+    raise SystemExit("[FATAL] 连接 %s 不在 web/data/process-connections.json 中" % connection_id)
+
+
+def _yup_to_blender(p):
+    """assetLocal(Y-up, 右手) → Blender(Z-up)：x=x, y=-z, z=y。"""
+    return (float(p[0]), -float(p[2]), float(p[1]))
+
+
+CONNECTION = _load_connection(CONNECTION_ID)
+CONNECTION_PTS = ([ATM_OVERHEAD_OUTLET]
+                  + [_yup_to_blender(w) for w in CONNECTION["waypoints"]]
+                  + [CONDENSER_INLET])
+pipe_poly("Pipe_Top_Vapor", CONNECTION_PTS, r=0.40, material=PIPE_COOL, seg=16)
 # 卧式塔顶冷凝器 + 鞍座 + 独立钢框架（不再用悬空方块）
 cyl("Condenser_Shell", 0.85, 3.0, (7.0, 0, 28.4), rot=(0, math.pi / 2, 0), seg=28, material=STEEL)
 sphere("Condenser_Head_A", 0.86, (5.5, 0, 28.4), scale_z=0.18, material=STEEL_DARK)
@@ -467,6 +490,9 @@ ANCHORS = {
     # 中心 (8.4, 0.65, -5.9)；锚点取 (8.4, 1.0, -5.9) 落在界区法兰高度上。
     # 历史问题：该值曾被写成 (8.4, 6.0, -5.9)，使网页锚点抬高约 5 m，重跑后更会变成 (8.4, -5.9, -6.0) 落到地面以下。
     "anchor_tower_products": (8.4, 5.9, 1.0),
+    # Phase 3：工艺连接端点锚点，由 web/data/process-connections.json 的 anchorId 引用。
+    "anchor_atm_overhead_outlet": ATM_OVERHEAD_OUTLET,
+    "anchor_condenser_inlet": CONDENSER_INLET,
 }
 for k, v in ANCHORS.items():
     empty(k, v)
@@ -502,7 +528,7 @@ if STAMP:
         for key in ("semanticId", "objectId", "nodeUid", "anchorId"):
             if key in o:
                 del o[key]
-        o["petro"] = {
+        _petro = {
             "nodeUid": rec["nodeUid"],
             "assetId": rec["assetId"],
             "objectId": rec["objectId"],
@@ -510,6 +536,13 @@ if STAMP:
             "instanceId": rec["instanceId"] or "",
             "role": rec["role"],
         }
+        # 连接几何追踪：由同一条 connection 派生的实体管线对象必须带上 connectionId，
+        # 导出后即可从 GLB extras 反查到 web/data/process-connections.json 的那一条。
+        for _ref in (CONNECTION.get("geometryRefs") or []):
+            if o.name.startswith(_ref):
+                _petro["connectionId"] = CONNECTION_ID
+                break
+        o["petro"] = _petro
     # 锚点空物体也盖章：否则 GLB 里 5 个 anchor_tower_* 节点没有 extras.petro，
     # 会让 extrasStatus=verified 的 258/258 覆盖率断言失败。
     for _k in ANCHORS:

@@ -27,6 +27,16 @@
       8.4,
       5.9,
       1.0
+    ],
+    "anchor_atm_overhead_outlet": [
+      2.2,
+      0.0,
+      26.0
+    ],
+    "anchor_condenser_inlet": [
+      5.8,
+      0.0,
+      28.85
     ]
   },
   "anchor_web_y_up": {
@@ -54,6 +64,16 @@
       8.4,
       1.0,
       -5.9
+    ],
+    "anchor_atm_overhead_outlet": [
+      2.2,
+      26.0,
+      -0.0
+    ],
+    "anchor_condenser_inlet": [
+      5.8,
+      28.85,
+      -0.0
     ]
   },
   "heater_bbox_obj_y_up": [

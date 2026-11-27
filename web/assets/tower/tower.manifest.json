@@ -4,7 +4,7 @@
   "assetVersion": "1.0.0+phase2l4",
   "source": {
     "repository": "gitee.com/LYU_PRO/scienceagent",
-    "commit": "b3fd865af1f0150429dcd1b308054a375b7066af",
+    "commit": "9f7cc91f69c6e7a69468e8b306f745e349d70af1",
     "path": "assets-source/blender/tower_hero.blend",
     "dirty": false
   },
@@ -13,15 +13,15 @@
     "generator": "tools/make_tower.py",
     "blenderVersion": "5.3.0",
     "exporterVersion": "Khronos glTF Blender I/O v5.3.43",
-    "exportOptionsHash": "f90553d987337f88",
+    "exportOptionsHash": "e9aca088f171855e",
     "invocation": "blender -b -P tools/make_tower.py -- <outDir>   # 输出目录可重定向；.blend 由 PETRO_TOWER_BLEND 指定",
     "exportExtras": true
   },
   "runtime": {
     "format": "glb",
     "uri": "assets/tower/tower.glb",
-    "sha256": "f90553d987337f88801fe896f116a2ba1842d4ec4a5bbb1171866e09947f9bf9",
-    "bytes": 3897992,
+    "sha256": "e9aca088f171855ed760c4b0fdcebf82d4427dbb7b8c262a63f3fb55a4cb7d91",
+    "bytes": 4033676,
     "extrasStatus": "verified",
     "fallback": {
       "format": "obj",
@@ -46,7 +46,7 @@
     ],
     "max": [
       60,
-      29.31,
+      29.298,
       60
     ]
   },
@@ -293,9 +293,11 @@
       "systemId": "overhead_condensing",
       "displayName": "塔顶冷凝器",
       "nodeUids": [
-        "a6666b13-ecce-5afa-b44c-5388f0a949f1",
-        "6dab32f7-a3d0-5b07-ae5c-9e5e43608d9d",
-        "8d62427c-85a0-550b-ba58-b2acf9bedab0",
+        "91be98c1-f5f3-5517-bd63-848f903d6dee",
+        "11efe758-08eb-59ff-9256-0d80abe600d8",
+        "7b7c327d-27cd-57fe-831c-1441d5d533ae",
+        "51f239ea-c6ef-5424-bfde-72f936c3291a",
+        "71efde2f-cc09-5b9f-bec3-5f75163051ff",
         "181f9286-63d4-5d94-be68-7e85c5550513",
         "197d37a1-bcad-5052-9cc4-389e20b7e6a1",
         "08acacb7-9069-5232-87f6-c26c2b2ab0d2",
@@ -1221,10 +1223,10 @@
       ]
     },
     {
-      "nodeUid": "a6666b13-ecce-5afa-b44c-5388f0a949f1",
-      "nodeName": "Pipe_Top_Vertical",
+      "nodeUid": "91be98c1-f5f3-5517-bd63-848f903d6dee",
+      "nodeName": "Pipe_Top_Vapor_Seg0",
       "objectId": "overhead_condenser",
-      "semanticId": "overhead_vapor_line",
+      "semanticId": "overhead_vapor_segment",
       "instanceId": "xp22_yp274_zp0",
       "role": "process_pipe",
       "interactive": true,
@@ -1233,11 +1235,11 @@
       ]
     },
     {
-      "nodeUid": "6dab32f7-a3d0-5b07-ae5c-9e5e43608d9d",
-      "nodeName": "Pipe_Top_Elbow",
+      "nodeUid": "11efe758-08eb-59ff-9256-0d80abe600d8",
+      "nodeName": "Pipe_Top_Vapor_Seg1",
       "objectId": "overhead_condenser",
-      "semanticId": "overhead_vapor_line",
-      "instanceId": "xp22_yp289_zp0",
+      "semanticId": "overhead_vapor_segment",
+      "instanceId": "xp40_yp289_zp0",
       "role": "process_pipe",
       "interactive": true,
       "representations": [
@@ -1245,12 +1247,36 @@
       ]
     },
     {
-      "nodeUid": "8d62427c-85a0-550b-ba58-b2acf9bedab0",
-      "nodeName": "Pipe_Top_Condenser",
+      "nodeUid": "7b7c327d-27cd-57fe-831c-1441d5d533ae",
+      "nodeName": "Pipe_Top_Vapor_Elbow0",
       "objectId": "overhead_condenser",
-      "semanticId": "overhead_vapor_line",
-      "instanceId": "xp40_yp289_zp0",
-      "role": "process_pipe",
+      "semanticId": "overhead_vapor_elbow",
+      "instanceId": "xp22_yp260_zp0",
+      "role": "pipe_elbow",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "51f239ea-c6ef-5424-bfde-72f936c3291a",
+      "nodeName": "Pipe_Top_Vapor_Elbow1",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_elbow",
+      "instanceId": "xp22_yp289_zp0",
+      "role": "pipe_elbow",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "71efde2f-cc09-5b9f-bec3-5f75163051ff",
+      "nodeName": "Pipe_Top_Vapor_Elbow2",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_elbow",
+      "instanceId": "xp58_yp289_zp0",
+      "role": "pipe_elbow",
       "interactive": true,
       "representations": [
         "detail"
@@ -1886,6 +1912,28 @@
         -5.9
       ],
       "kind": "teaching_marker"
+    },
+    {
+      "anchorId": "anchor_atm_overhead_outlet",
+      "ownerObjectId": "atmospheric_tower",
+      "coordinateSpaceId": "distillation_unit_asset_local",
+      "position": [
+        2.2,
+        26,
+        0
+      ],
+      "kind": "teaching_marker"
+    },
+    {
+      "anchorId": "anchor_condenser_inlet",
+      "ownerObjectId": "overhead_condenser",
+      "coordinateSpaceId": "distillation_unit_asset_local",
+      "position": [
+        5.8,
+        28.85,
+        0
+      ],
+      "kind": "teaching_marker"
     }
   ],
   "representations": {
@@ -1980,9 +2028,11 @@
       "3fa20cf1-b218-511c-aa72-03708a02cdc8",
       "8e5fb62c-f8c9-5325-87a6-3f5dd2743942",
       "195364e5-88a7-5d95-aec2-0815a13beb6d",
-      "a6666b13-ecce-5afa-b44c-5388f0a949f1",
-      "6dab32f7-a3d0-5b07-ae5c-9e5e43608d9d",
-      "8d62427c-85a0-550b-ba58-b2acf9bedab0",
+      "91be98c1-f5f3-5517-bd63-848f903d6dee",
+      "11efe758-08eb-59ff-9256-0d80abe600d8",
+      "7b7c327d-27cd-57fe-831c-1441d5d533ae",
+      "51f239ea-c6ef-5424-bfde-72f936c3291a",
+      "71efde2f-cc09-5b9f-bec3-5f75163051ff",
       "181f9286-63d4-5d94-be68-7e85c5550513",
       "197d37a1-bcad-5052-9cc4-389e20b7e6a1",
       "08acacb7-9069-5232-87f6-c26c2b2ab0d2",
@@ -2798,6 +2848,16 @@
     {
       "nodeUid": "9654d476-0717-585c-ad91-d326eb4576cb",
       "nodeName": "anchor_tower_products",
+      "reason": "教学锚点空物体：仅作 anchor 定位标记，不参与交互选择"
+    },
+    {
+      "nodeUid": "672807ad-f105-565e-9a64-b90ff972d40f",
+      "nodeName": "anchor_atm_overhead_outlet",
+      "reason": "教学锚点空物体：仅作 anchor 定位标记，不参与交互选择"
+    },
+    {
+      "nodeUid": "8eee96fe-9da9-57cd-a86f-00b123f9b8e4",
+      "nodeName": "anchor_condenser_inlet",
       "reason": "教学锚点空物体：仅作 anchor 定位标记，不参与交互选择"
     }
   ],

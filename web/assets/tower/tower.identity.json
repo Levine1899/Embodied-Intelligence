@@ -988,29 +988,45 @@
       "instanceId": "xp84_yp1_zm70",
       "role": "support_column"
     },
-    "Pipe_Top_Vertical": {
-      "nodeUid": "a6666b13-ecce-5afa-b44c-5388f0a949f1",
+    "Pipe_Top_Vapor_Seg0": {
+      "nodeUid": "91be98c1-f5f3-5517-bd63-848f903d6dee",
       "assetId": "distillation_unit_hero",
       "objectId": "overhead_condenser",
-      "semanticId": "overhead_vapor_line",
+      "semanticId": "overhead_vapor_segment",
       "instanceId": "xp22_yp274_zp0",
       "role": "process_pipe"
     },
-    "Pipe_Top_Elbow": {
-      "nodeUid": "6dab32f7-a3d0-5b07-ae5c-9e5e43608d9d",
+    "Pipe_Top_Vapor_Seg1": {
+      "nodeUid": "11efe758-08eb-59ff-9256-0d80abe600d8",
       "assetId": "distillation_unit_hero",
       "objectId": "overhead_condenser",
-      "semanticId": "overhead_vapor_line",
-      "instanceId": "xp22_yp289_zp0",
-      "role": "process_pipe"
-    },
-    "Pipe_Top_Condenser": {
-      "nodeUid": "8d62427c-85a0-550b-ba58-b2acf9bedab0",
-      "assetId": "distillation_unit_hero",
-      "objectId": "overhead_condenser",
-      "semanticId": "overhead_vapor_line",
+      "semanticId": "overhead_vapor_segment",
       "instanceId": "xp40_yp289_zp0",
       "role": "process_pipe"
+    },
+    "Pipe_Top_Vapor_Elbow0": {
+      "nodeUid": "7b7c327d-27cd-57fe-831c-1441d5d533ae",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_elbow",
+      "instanceId": "xp22_yp260_zp0",
+      "role": "pipe_elbow"
+    },
+    "Pipe_Top_Vapor_Elbow1": {
+      "nodeUid": "51f239ea-c6ef-5424-bfde-72f936c3291a",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_elbow",
+      "instanceId": "xp22_yp289_zp0",
+      "role": "pipe_elbow"
+    },
+    "Pipe_Top_Vapor_Elbow2": {
+      "nodeUid": "71efde2f-cc09-5b9f-bec3-5f75163051ff",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_elbow",
+      "instanceId": "xp58_yp289_zp0",
+      "role": "pipe_elbow"
     },
     "Condenser_Shell": {
       "nodeUid": "181f9286-63d4-5d94-be68-7e85c5550513",

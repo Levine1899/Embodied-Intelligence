@@ -18,6 +18,8 @@
     "validate:assets:strict": "node tools/validate_assets.mjs --strict",
     "validate:assets:fixtures": "node tools/validate_assets.mjs --fixtures",
     "manifest:pilot": "node tools/gen_pilot_separator_manifest.mjs",
+    "validate:connections": "node tools/validate_connections.mjs",
+    "validate:connections:strict": "node tools/validate_connections.mjs --strict",
     "manifest:tower": "node tools/gen_tower_manifest.mjs",
     "manifest:tower:check": "node tools/gen_tower_manifest.mjs --check"
   },
@@ -35,3 +37,4 @@
     "proper-lockfile": "4.1.2"
   }
 }
+

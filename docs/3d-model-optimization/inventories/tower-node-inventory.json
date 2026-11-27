@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-11-27T03:07:18.257Z",
+  "generatedAt": "2026-11-27T03:29:37.455Z",
   "assetId": "distillation_unit_hero",
-  "sourceObjects": 253,
-  "interactiveNodes": 124,
-  "supportEntries": 134,
+  "sourceObjects": 255,
+  "interactiveNodes": 126,
+  "supportEntries": 136,
   "systems": 6,
   "objects": 21,
   "note": "systemId 为工艺归属；换热器/泵组为 pending，见 processBasis。role/semanticId 来自 tools/make_tower.py。",
@@ -4089,13 +4089,13 @@
       "vertices": 8
     },
     {
-      "nodeName": "Pipe_Top_Vertical",
-      "nodeUid": "a6666b13-ecce-5afa-b44c-5388f0a949f1",
-      "semanticPath": "distillation_unit_hero/overhead_condenser/overhead_vapor_line#xp22_yp274_zp0",
+      "nodeName": "Pipe_Top_Vapor_Seg0",
+      "nodeUid": "91be98c1-f5f3-5517-bd63-848f903d6dee",
+      "semanticPath": "distillation_unit_hero/overhead_condenser/overhead_vapor_segment#xp22_yp274_zp0",
       "assetId": "distillation_unit_hero",
       "systemId": "overhead_condensing",
       "objectId": "overhead_condenser",
-      "semanticId": "overhead_vapor_line",
+      "semanticId": "overhead_vapor_segment",
       "instanceId": "xp22_yp274_zp0",
       "role": "process_pipe",
       "interactive": true,
@@ -4123,47 +4123,13 @@
       "vertices": 32
     },
     {
-      "nodeName": "Pipe_Top_Elbow",
-      "nodeUid": "6dab32f7-a3d0-5b07-ae5c-9e5e43608d9d",
-      "semanticPath": "distillation_unit_hero/overhead_condenser/overhead_vapor_line#xp22_yp289_zp0",
+      "nodeName": "Pipe_Top_Vapor_Seg1",
+      "nodeUid": "11efe758-08eb-59ff-9256-0d80abe600d8",
+      "semanticPath": "distillation_unit_hero/overhead_condenser/overhead_vapor_segment#xp40_yp289_zp0",
       "assetId": "distillation_unit_hero",
       "systemId": "overhead_condensing",
       "objectId": "overhead_condenser",
-      "semanticId": "overhead_vapor_line",
-      "instanceId": "xp22_yp289_zp0",
-      "role": "process_pipe",
-      "interactive": true,
-      "support": false,
-      "representations": [
-        "detail"
-      ],
-      "center": [
-        2.2,
-        28.85,
-        0
-      ],
-      "bbox": {
-        "min": [
-          1.74,
-          28.39,
-          -0.46
-        ],
-        "max": [
-          2.66,
-          29.31,
-          0.46
-        ]
-      },
-      "vertices": 482
-    },
-    {
-      "nodeName": "Pipe_Top_Condenser",
-      "nodeUid": "8d62427c-85a0-550b-ba58-b2acf9bedab0",
-      "semanticPath": "distillation_unit_hero/overhead_condenser/overhead_vapor_line#xp40_yp289_zp0",
-      "assetId": "distillation_unit_hero",
-      "systemId": "overhead_condensing",
-      "objectId": "overhead_condenser",
-      "semanticId": "overhead_vapor_line",
+      "semanticId": "overhead_vapor_segment",
       "instanceId": "xp40_yp289_zp0",
       "role": "process_pipe",
       "interactive": true,
@@ -4189,6 +4155,108 @@
         ]
       },
       "vertices": 32
+    },
+    {
+      "nodeName": "Pipe_Top_Vapor_Elbow0",
+      "nodeUid": "7b7c327d-27cd-57fe-831c-1441d5d533ae",
+      "semanticPath": "distillation_unit_hero/overhead_condenser/overhead_vapor_elbow#xp22_yp260_zp0",
+      "assetId": "distillation_unit_hero",
+      "systemId": "overhead_condensing",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_elbow",
+      "instanceId": "xp22_yp260_zp0",
+      "role": "pipe_elbow",
+      "interactive": true,
+      "support": false,
+      "representations": [
+        "detail"
+      ],
+      "center": [
+        2.2,
+        26,
+        0
+      ],
+      "bbox": {
+        "min": [
+          1.752,
+          25.552,
+          -0.448
+        ],
+        "max": [
+          2.648,
+          26.448,
+          0.448
+        ]
+      },
+      "vertices": 482
+    },
+    {
+      "nodeName": "Pipe_Top_Vapor_Elbow1",
+      "nodeUid": "51f239ea-c6ef-5424-bfde-72f936c3291a",
+      "semanticPath": "distillation_unit_hero/overhead_condenser/overhead_vapor_elbow#xp22_yp289_zp0",
+      "assetId": "distillation_unit_hero",
+      "systemId": "overhead_condensing",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_elbow",
+      "instanceId": "xp22_yp289_zp0",
+      "role": "pipe_elbow",
+      "interactive": true,
+      "support": false,
+      "representations": [
+        "detail"
+      ],
+      "center": [
+        2.2,
+        28.85,
+        0
+      ],
+      "bbox": {
+        "min": [
+          1.752,
+          28.402,
+          -0.448
+        ],
+        "max": [
+          2.648,
+          29.298,
+          0.448
+        ]
+      },
+      "vertices": 482
+    },
+    {
+      "nodeName": "Pipe_Top_Vapor_Elbow2",
+      "nodeUid": "71efde2f-cc09-5b9f-bec3-5f75163051ff",
+      "semanticPath": "distillation_unit_hero/overhead_condenser/overhead_vapor_elbow#xp58_yp289_zp0",
+      "assetId": "distillation_unit_hero",
+      "systemId": "overhead_condensing",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_elbow",
+      "instanceId": "xp58_yp289_zp0",
+      "role": "pipe_elbow",
+      "interactive": true,
+      "support": false,
+      "representations": [
+        "detail"
+      ],
+      "center": [
+        5.8,
+        28.85,
+        0
+      ],
+      "bbox": {
+        "min": [
+          5.352,
+          28.402,
+          -0.448
+        ],
+        "max": [
+          6.248,
+          29.298,
+          0.448
+        ]
+      },
+      "vertices": 482
     },
     {
       "nodeName": "Condenser_Shell",

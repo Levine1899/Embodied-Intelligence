@@ -206,11 +206,38 @@
     loadManifest().then(function (m) {
       towerManifest = m;
       nodeIndex = buildNodeIndex();
+      /* 连接模块的端点坐标只认 Manifest，不另存一份 */
+      if (towerManifest && window.PETRO_CONNECTIONS) window.PETRO_CONNECTIONS.setManifest(towerManifest);
       if (!towerManifest) {
         console.warn('[L4] tower.manifest.json 不可用：设备分组回退到 legacy 正则，属于临时状态，' +
           LEGACY_FALLBACK.removeAfter + ' 前必须移除');
       }
       loadTowerObj();
+    });
+  }
+
+  /* 工艺连接：教学线 / 箭头 / 粒子全部由 web/data/process-connections.json 驱动。
+   * 几何只在 assetLocal 里生成，然后挂到 unit 下，由 unit.scale(SCALE) 统一换算——
+   * 关卡脚本不叠加任何未声明的偏移，偏移只能写进连接的 display.displayOffset。 */
+  let connectionHandles = [];
+  function buildConnections() {
+    if (!window.PETRO_CONNECTIONS || !unit) return;
+    window.PETRO_CONNECTIONS.load().then(function () {
+      const list = window.PETRO_CONNECTIONS.list();
+      list.forEach(function (c) {
+        const h = window.PETRO_CONNECTIONS.create(c.connectionId);
+        if (!h) return;
+        unit.add(h.group);
+        connectionHandles.push(h);
+      });
+      const label = connectionHandles.map(function (h) { return h.group.userData.statusLabel; }).filter(Boolean);
+      if (label.length) console.warn('[L4] 工艺连接状态：' + Array.from(new Set(label)).join(' / '));
+      window.__l4Connections = {
+        handles: connectionHandles,
+        summary: window.PETRO_CONNECTIONS.resolvedSummary(),
+      };
+    }).catch(function (e) {
+      console.warn('[L4] 工艺连接数据不可用：' + (e && e.message || e));
     });
   }
 
@@ -221,6 +248,7 @@
       unit.scale.setScalar(SCALE);
       unit.position.set(0, 0, 0);
       G.add(unit);
+      buildConnections();
       unit.traverse(function (o) {
         if (!o.isMesh) return;
         const n = o.name || '';
@@ -688,6 +716,7 @@
     const now = performance.now();
     const dt = Math.min(0.05, (now - lastT) / 1000 || 0.016);
     lastT = now;
+    if (window.PETRO_CONNECTIONS) window.PETRO_CONNECTIONS.update(dt);
     flows.forEach(function (f) { if (!flowPaused) f.update(dt); });
     Object.keys(fractionGroups).forEach(function (k) {
       if (fractionGroups[k].group.visible) fractionGroups[k].flow.update(dt);

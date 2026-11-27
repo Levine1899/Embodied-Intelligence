@@ -55,3 +55,4 @@ jobs:
       # strict 步骤正式启用。新增资产在 extras 未闭环前必须标 pending_rebuild 并知悉本步骤会红。
       - name: 严格模式（要求 extras.petro 已回写）
         run: npm run validate:assets:strict
+
