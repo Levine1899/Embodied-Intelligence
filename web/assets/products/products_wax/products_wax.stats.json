@@ -1,0 +1,22 @@
+{
+  "asset": "products_wax",
+  "objectId": "wax_products",
+  "source": "tools/blender/build_product_heroes.py",
+  "blender": "5.3.0",
+  "triangles": 52,
+  "vertices": 32,
+  "meshes": 3,
+  "nodes": [
+    "wax_block",
+    "wax_block_bevel",
+    "wax_wick"
+  ],
+  "notes": [
+    "块状蜡材；顶部斜切与烛芯提醒它是蜡制品原料"
+  ],
+  "files": {
+    "glb_bytes": 6500,
+    "blend_bytes": 91396
+  },
+  "note": "教学示意级产品模型；几何由脚本生成，允许改后重跑。"
+}

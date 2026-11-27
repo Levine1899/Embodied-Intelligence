@@ -1,0 +1,25 @@
+{
+  "asset": "products_plastics",
+  "objectId": "plastic_products",
+  "source": "tools/blender/build_product_heroes.py",
+  "blender": "5.3.0",
+  "triangles": 844,
+  "vertices": 456,
+  "meshes": 6,
+  "nodes": [
+    "resin_pellets",
+    "plastic_bottle",
+    "plastic_bottle_shoulder",
+    "plastic_bottle_neck",
+    "plastic_bottle_cap",
+    "plastic_bottle_label"
+  ],
+  "notes": [
+    "树脂颗粒=材料；塑料瓶=制品。任务里只能绑制品节点"
+  ],
+  "files": {
+    "glb_bytes": 41124,
+    "blend_bytes": 101569
+  },
+  "note": "教学示意级产品模型；几何由脚本生成，允许改后重跑。"
+}

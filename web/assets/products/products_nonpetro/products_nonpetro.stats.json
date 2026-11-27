@@ -1,0 +1,35 @@
+{
+  "asset": "products_nonpetro",
+  "objectId": "nonpetro_products",
+  "source": "tools/blender/build_product_heroes.py",
+  "blender": "5.3.0",
+  "triangles": 1408,
+  "vertices": 736,
+  "meshes": 16,
+  "nodes": [
+    "glass_pane",
+    "glass_pane_edge",
+    "cotton_boll_1",
+    "cotton_boll_2",
+    "cotton_boll_3",
+    "cotton_boll_4",
+    "cotton_boll_5",
+    "cotton_stem",
+    "cement_bag",
+    "cement_bag_top",
+    "salt_crystal_1",
+    "salt_crystal_2",
+    "salt_crystal_3",
+    "salt_crystal_4",
+    "salt_crystal_5",
+    "salt_crystal_6"
+  ],
+  "notes": [
+    "四件非石油路线物品也给了真实模型，避免'对比项'只是占位"
+  ],
+  "files": {
+    "glb_bytes": 60184,
+    "blend_bytes": 115708
+  },
+  "note": "教学示意级产品模型；几何由脚本生成，允许改后重跑。"
+}

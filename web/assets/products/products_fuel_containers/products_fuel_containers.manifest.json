@@ -1,0 +1,359 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "products_fuel_containers",
+  "assetVersion": "1.0.0+phase8",
+  "source": {
+    "repository": "gitee.com/LYU_PRO/scienceagent",
+    "commit": "ca8de89cd0fbca0268416fc7ee636011664ef9f4",
+    "path": "assets-source/blender/products_fuel_containers.blend",
+    "dirty": false
+  },
+  "build": {
+    "sourceFile": "assets-source/blender/products_fuel_containers.blend",
+    "generator": "tools/blender/build_product_heroes.py",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "Khronos glTF Blender I/O v5.3.0",
+    "exportOptionsHash": "22c9a1f73a58999b",
+    "invocation": "blender -b -P tools/blender/build_product_heroes.py   # 无 CLI 参数，路径硬编码",
+    "exportExtras": true
+  },
+  "runtime": {
+    "format": "glb",
+    "uri": "assets/products/products_fuel_containers/products_fuel_containers.glb",
+    "sha256": "22c9a1f73a58999bab3104a777790a0033985f2faf91b7b20673e67809d7f2bb",
+    "bytes": 58968,
+    "extrasStatus": "verified"
+  },
+  "coordinateSystem": {
+    "unit": "meter",
+    "handedness": "right",
+    "upAxis": "+Y",
+    "spaceId": "products_fuel_containers_asset_local",
+    "sourceSpaceNote": "Blender Z-up -> glTF Y-up via export_yup=True"
+  },
+  "bounds": {
+    "coordinateSpaceId": "products_fuel_containers_asset_local",
+    "unit": "meter",
+    "min": [
+      -0.31,
+      0.01,
+      -0.35
+    ],
+    "max": [
+      2.18,
+      1.12,
+      0.35
+    ]
+  },
+  "defaults": {
+    "detailLevel": "detail",
+    "structureMode": "external",
+    "animationMode": "idle"
+  },
+  "systems": [
+    {
+      "systemId": "products_fuels",
+      "displayName": "燃料产品容器",
+      "objectIds": [
+        "diesel_drum",
+        "gasoline_can",
+        "jet_fuel_cartridge"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "objectId": "diesel_drum",
+      "systemId": "products_fuels",
+      "displayName": "diesel_drum",
+      "nodeUids": [
+        "b78e58a6-65ce-5762-a82f-ece993849fa3",
+        "3c14865f-7a63-5c86-9e84-70f890ec496d",
+        "a8c1e29c-5b49-5093-bbbc-23c897895d6d"
+      ]
+    },
+    {
+      "objectId": "gasoline_can",
+      "systemId": "products_fuels",
+      "displayName": "gasoline_can",
+      "nodeUids": [
+        "0eed138c-247e-57fb-b22b-0cee1e3bbfaa",
+        "215b0619-a601-5755-8b0b-5d8989ddaaa0",
+        "a4502070-4112-594d-8a9d-5ca4fcd8f036",
+        "ade32d14-045b-5f8a-8fc2-928d036161e7"
+      ]
+    },
+    {
+      "objectId": "jet_fuel_cartridge",
+      "systemId": "products_fuels",
+      "displayName": "jet_fuel_cartridge",
+      "nodeUids": [
+        "784e1982-0872-51b5-8a5f-3e5b779e5e80",
+        "864acddf-73c1-51ce-b7a9-a96bbd02029f",
+        "e876a3e1-c02c-5121-a7d4-3085c063b804",
+        "a4d8000a-6ad9-5fd2-a548-8cf8c2438814"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeUid": "b78e58a6-65ce-5762-a82f-ece993849fa3",
+      "nodeName": "diesel_drum",
+      "objectId": "diesel_drum",
+      "systemId": "products_fuels",
+      "semanticId": "diesel_drum",
+      "role": "product",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "3c14865f-7a63-5c86-9e84-70f890ec496d",
+      "nodeName": "diesel_drum_rib_1",
+      "objectId": "diesel_drum",
+      "systemId": "products_fuels",
+      "semanticId": "diesel_drum_rib_1",
+      "role": "product",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a8c1e29c-5b49-5093-bbbc-23c897895d6d",
+      "nodeName": "diesel_drum_rib_2",
+      "objectId": "diesel_drum",
+      "systemId": "products_fuels",
+      "semanticId": "diesel_drum_rib_2",
+      "role": "product",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "0eed138c-247e-57fb-b22b-0cee1e3bbfaa",
+      "nodeName": "gasoline_can",
+      "objectId": "gasoline_can",
+      "systemId": "products_fuels",
+      "semanticId": "gasoline_can",
+      "role": "product",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "215b0619-a601-5755-8b0b-5d8989ddaaa0",
+      "nodeName": "gasoline_can_cap",
+      "objectId": "gasoline_can",
+      "systemId": "products_fuels",
+      "semanticId": "gasoline_can_cap",
+      "role": "product",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a4502070-4112-594d-8a9d-5ca4fcd8f036",
+      "nodeName": "gasoline_can_handle",
+      "objectId": "gasoline_can",
+      "systemId": "products_fuels",
+      "semanticId": "gasoline_can_handle",
+      "role": "product",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "ade32d14-045b-5f8a-8fc2-928d036161e7",
+      "nodeName": "gasoline_can_neck",
+      "objectId": "gasoline_can",
+      "systemId": "products_fuels",
+      "semanticId": "gasoline_can_neck",
+      "role": "product",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "784e1982-0872-51b5-8a5f-3e5b779e5e80",
+      "nodeName": "jet_fuel_cartridge",
+      "objectId": "jet_fuel_cartridge",
+      "systemId": "products_fuels",
+      "semanticId": "jet_fuel_cartridge",
+      "role": "product",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "864acddf-73c1-51ce-b7a9-a96bbd02029f",
+      "nodeName": "jet_fuel_cartridge_label",
+      "objectId": "jet_fuel_cartridge",
+      "systemId": "products_fuels",
+      "semanticId": "jet_fuel_cartridge_label",
+      "role": "product",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e876a3e1-c02c-5121-a7d4-3085c063b804",
+      "nodeName": "jet_fuel_cartridge_neck",
+      "objectId": "jet_fuel_cartridge",
+      "systemId": "products_fuels",
+      "semanticId": "jet_fuel_cartridge_neck",
+      "role": "product",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a4d8000a-6ad9-5fd2-a548-8cf8c2438814",
+      "nodeName": "jet_fuel_cartridge_shoulder",
+      "objectId": "jet_fuel_cartridge",
+      "systemId": "products_fuels",
+      "semanticId": "jet_fuel_cartridge_shoulder",
+      "role": "product",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    }
+  ],
+  "anchors": [],
+  "representations": {
+    "overview": [
+      "b78e58a6-65ce-5762-a82f-ece993849fa3",
+      "3c14865f-7a63-5c86-9e84-70f890ec496d",
+      "a8c1e29c-5b49-5093-bbbc-23c897895d6d",
+      "0eed138c-247e-57fb-b22b-0cee1e3bbfaa",
+      "215b0619-a601-5755-8b0b-5d8989ddaaa0",
+      "a4502070-4112-594d-8a9d-5ca4fcd8f036",
+      "ade32d14-045b-5f8a-8fc2-928d036161e7",
+      "784e1982-0872-51b5-8a5f-3e5b779e5e80",
+      "864acddf-73c1-51ce-b7a9-a96bbd02029f",
+      "e876a3e1-c02c-5121-a7d4-3085c063b804",
+      "a4d8000a-6ad9-5fd2-a548-8cf8c2438814"
+    ],
+    "detail": [
+      "b78e58a6-65ce-5762-a82f-ece993849fa3",
+      "3c14865f-7a63-5c86-9e84-70f890ec496d",
+      "a8c1e29c-5b49-5093-bbbc-23c897895d6d",
+      "0eed138c-247e-57fb-b22b-0cee1e3bbfaa",
+      "215b0619-a601-5755-8b0b-5d8989ddaaa0",
+      "a4502070-4112-594d-8a9d-5ca4fcd8f036",
+      "ade32d14-045b-5f8a-8fc2-928d036161e7",
+      "784e1982-0872-51b5-8a5f-3e5b779e5e80",
+      "864acddf-73c1-51ce-b7a9-a96bbd02029f",
+      "e876a3e1-c02c-5121-a7d4-3085c063b804",
+      "a4d8000a-6ad9-5fd2-a548-8cf8c2438814"
+    ],
+    "closeup": [
+      "b78e58a6-65ce-5762-a82f-ece993849fa3",
+      "3c14865f-7a63-5c86-9e84-70f890ec496d",
+      "a8c1e29c-5b49-5093-bbbc-23c897895d6d",
+      "0eed138c-247e-57fb-b22b-0cee1e3bbfaa",
+      "215b0619-a601-5755-8b0b-5d8989ddaaa0",
+      "a4502070-4112-594d-8a9d-5ca4fcd8f036",
+      "ade32d14-045b-5f8a-8fc2-928d036161e7",
+      "784e1982-0872-51b5-8a5f-3e5b779e5e80",
+      "864acddf-73c1-51ce-b7a9-a96bbd02029f",
+      "e876a3e1-c02c-5121-a7d4-3085c063b804",
+      "a4d8000a-6ad9-5fd2-a548-8cf8c2438814"
+    ]
+  },
+  "structureModes": {
+    "external": {
+      "show": [
+        "b78e58a6-65ce-5762-a82f-ece993849fa3",
+        "3c14865f-7a63-5c86-9e84-70f890ec496d",
+        "a8c1e29c-5b49-5093-bbbc-23c897895d6d",
+        "0eed138c-247e-57fb-b22b-0cee1e3bbfaa",
+        "215b0619-a601-5755-8b0b-5d8989ddaaa0",
+        "a4502070-4112-594d-8a9d-5ca4fcd8f036",
+        "ade32d14-045b-5f8a-8fc2-928d036161e7",
+        "784e1982-0872-51b5-8a5f-3e5b779e5e80",
+        "864acddf-73c1-51ce-b7a9-a96bbd02029f",
+        "e876a3e1-c02c-5121-a7d4-3085c063b804",
+        "a4d8000a-6ad9-5fd2-a548-8cf8c2438814"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "half": {
+      "show": [
+        "b78e58a6-65ce-5762-a82f-ece993849fa3",
+        "3c14865f-7a63-5c86-9e84-70f890ec496d",
+        "a8c1e29c-5b49-5093-bbbc-23c897895d6d",
+        "0eed138c-247e-57fb-b22b-0cee1e3bbfaa",
+        "215b0619-a601-5755-8b0b-5d8989ddaaa0",
+        "a4502070-4112-594d-8a9d-5ca4fcd8f036",
+        "ade32d14-045b-5f8a-8fc2-928d036161e7",
+        "784e1982-0872-51b5-8a5f-3e5b779e5e80",
+        "864acddf-73c1-51ce-b7a9-a96bbd02029f",
+        "e876a3e1-c02c-5121-a7d4-3085c063b804",
+        "a4d8000a-6ad9-5fd2-a548-8cf8c2438814"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "ghost": {
+      "show": [
+        "b78e58a6-65ce-5762-a82f-ece993849fa3",
+        "3c14865f-7a63-5c86-9e84-70f890ec496d",
+        "a8c1e29c-5b49-5093-bbbc-23c897895d6d",
+        "0eed138c-247e-57fb-b22b-0cee1e3bbfaa",
+        "215b0619-a601-5755-8b0b-5d8989ddaaa0",
+        "a4502070-4112-594d-8a9d-5ca4fcd8f036",
+        "ade32d14-045b-5f8a-8fc2-928d036161e7",
+        "784e1982-0872-51b5-8a5f-3e5b779e5e80",
+        "864acddf-73c1-51ce-b7a9-a96bbd02029f",
+        "e876a3e1-c02c-5121-a7d4-3085c063b804",
+        "a4d8000a-6ad9-5fd2-a548-8cf8c2438814"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "full": {
+      "show": [
+        "b78e58a6-65ce-5762-a82f-ece993849fa3",
+        "3c14865f-7a63-5c86-9e84-70f890ec496d",
+        "a8c1e29c-5b49-5093-bbbc-23c897895d6d",
+        "0eed138c-247e-57fb-b22b-0cee1e3bbfaa",
+        "215b0619-a601-5755-8b0b-5d8989ddaaa0",
+        "a4502070-4112-594d-8a9d-5ca4fcd8f036",
+        "ade32d14-045b-5f8a-8fc2-928d036161e7",
+        "784e1982-0872-51b5-8a5f-3e5b779e5e80",
+        "864acddf-73c1-51ce-b7a9-a96bbd02029f",
+        "e876a3e1-c02c-5121-a7d4-3085c063b804",
+        "a4d8000a-6ad9-5fd2-a548-8cf8c2438814"
+      ],
+      "hide": [],
+      "ghost": []
+    }
+  },
+  "dynamicBindings": [],
+  "nonInteractiveSupport": [],
+  "processBasis": [],
+  "limitations": [
+    "教学示意级产品模型，不用于工程、包装或材料性能判定。",
+    "GLB 的 11 个节点全部携带 extras.petro，extrasStatus=verified。",
+    "产品资产无剖切壳，half/ghost 与 external 等价（不虚构）。",
+    "材料样本与制品/应用场景是不同节点（沥青块≠道路剖面，树脂颗粒≠塑料瓶）。"
+  ],
+  "license": {
+    "spdx": "LicenseRef-Proprietary",
+    "holder": "项目内部",
+    "terms": "由本仓库脚本生成，无第三方素材；仅限本项目内部使用。",
+    "thirdParty": []
+  }
+}

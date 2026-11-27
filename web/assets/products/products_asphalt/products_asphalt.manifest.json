@@ -1,0 +1,251 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "products_asphalt",
+  "assetVersion": "1.0.0+phase8",
+  "source": {
+    "repository": "gitee.com/LYU_PRO/scienceagent",
+    "commit": "ca8de89cd0fbca0268416fc7ee636011664ef9f4",
+    "path": "assets-source/blender/products_asphalt.blend",
+    "dirty": false
+  },
+  "build": {
+    "sourceFile": "assets-source/blender/products_asphalt.blend",
+    "generator": "tools/blender/build_product_heroes.py",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "Khronos glTF Blender I/O v5.3.0",
+    "exportOptionsHash": "1e624206d6238607",
+    "invocation": "blender -b -P tools/blender/build_product_heroes.py   # 无 CLI 参数，路径硬编码",
+    "exportExtras": true
+  },
+  "runtime": {
+    "format": "glb",
+    "uri": "assets/products/products_asphalt/products_asphalt.glb",
+    "sha256": "1e624206d62386074d456a1c8cef4d101e4f4e01eede83185b2dd25a2fcbc556",
+    "bytes": 26120,
+    "extrasStatus": "verified"
+  },
+  "coordinateSystem": {
+    "unit": "meter",
+    "handedness": "right",
+    "upAxis": "+Y",
+    "spaceId": "products_asphalt_asset_local",
+    "sourceSpaceNote": "Blender Z-up -> glTF Y-up via export_yup=True"
+  },
+  "bounds": {
+    "coordinateSpaceId": "products_asphalt_asset_local",
+    "unit": "meter",
+    "min": [
+      -1.141,
+      0,
+      -0.36
+    ],
+    "max": [
+      1.425,
+      0.471,
+      0.36
+    ]
+  },
+  "defaults": {
+    "detailLevel": "detail",
+    "structureMode": "external",
+    "animationMode": "idle"
+  },
+  "systems": [
+    {
+      "systemId": "products_materials",
+      "displayName": "沥青与道路剖面",
+      "objectIds": [
+        "asphalt_lump",
+        "road_section"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "objectId": "asphalt_lump",
+      "systemId": "products_materials",
+      "displayName": "asphalt_lump",
+      "nodeUids": [
+        "61bba325-a213-5a25-b835-d6615f6be586",
+        "e2ef7177-fea6-5574-99e4-f4cb179b73d5",
+        "63883367-cef2-547f-b501-ae1340526a24"
+      ]
+    },
+    {
+      "objectId": "road_section",
+      "systemId": "products_materials",
+      "displayName": "road_section",
+      "nodeUids": [
+        "28b6b8e2-7aa7-50d4-8f7a-ef13303e5e7c",
+        "d2676b3a-3147-5ae4-b72c-60ed08831e0e",
+        "6a9bb9a3-7421-5d24-be17-336e80a92668"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeUid": "61bba325-a213-5a25-b835-d6615f6be586",
+      "nodeName": "asphalt_lump",
+      "objectId": "asphalt_lump",
+      "systemId": "products_materials",
+      "semanticId": "asphalt_lump",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e2ef7177-fea6-5574-99e4-f4cb179b73d5",
+      "nodeName": "asphalt_lump_chip_a",
+      "objectId": "asphalt_lump",
+      "systemId": "products_materials",
+      "semanticId": "asphalt_lump_chip_a",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "63883367-cef2-547f-b501-ae1340526a24",
+      "nodeName": "asphalt_lump_chip_b",
+      "objectId": "asphalt_lump",
+      "systemId": "products_materials",
+      "semanticId": "asphalt_lump_chip_b",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "28b6b8e2-7aa7-50d4-8f7a-ef13303e5e7c",
+      "nodeName": "road_section",
+      "objectId": "road_section",
+      "systemId": "products_materials",
+      "semanticId": "road_section",
+      "role": "application_scene",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d2676b3a-3147-5ae4-b72c-60ed08831e0e",
+      "nodeName": "road_section_asphalt_course",
+      "objectId": "road_section",
+      "systemId": "products_materials",
+      "semanticId": "road_section_asphalt_course",
+      "role": "application_scene",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "6a9bb9a3-7421-5d24-be17-336e80a92668",
+      "nodeName": "road_section_marking",
+      "objectId": "road_section",
+      "systemId": "products_materials",
+      "semanticId": "road_section_marking",
+      "role": "application_scene",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    }
+  ],
+  "anchors": [],
+  "representations": {
+    "overview": [
+      "61bba325-a213-5a25-b835-d6615f6be586",
+      "e2ef7177-fea6-5574-99e4-f4cb179b73d5",
+      "63883367-cef2-547f-b501-ae1340526a24",
+      "28b6b8e2-7aa7-50d4-8f7a-ef13303e5e7c",
+      "d2676b3a-3147-5ae4-b72c-60ed08831e0e",
+      "6a9bb9a3-7421-5d24-be17-336e80a92668"
+    ],
+    "detail": [
+      "61bba325-a213-5a25-b835-d6615f6be586",
+      "e2ef7177-fea6-5574-99e4-f4cb179b73d5",
+      "63883367-cef2-547f-b501-ae1340526a24",
+      "28b6b8e2-7aa7-50d4-8f7a-ef13303e5e7c",
+      "d2676b3a-3147-5ae4-b72c-60ed08831e0e",
+      "6a9bb9a3-7421-5d24-be17-336e80a92668"
+    ],
+    "closeup": [
+      "61bba325-a213-5a25-b835-d6615f6be586",
+      "e2ef7177-fea6-5574-99e4-f4cb179b73d5",
+      "63883367-cef2-547f-b501-ae1340526a24",
+      "28b6b8e2-7aa7-50d4-8f7a-ef13303e5e7c",
+      "d2676b3a-3147-5ae4-b72c-60ed08831e0e",
+      "6a9bb9a3-7421-5d24-be17-336e80a92668"
+    ]
+  },
+  "structureModes": {
+    "external": {
+      "show": [
+        "61bba325-a213-5a25-b835-d6615f6be586",
+        "e2ef7177-fea6-5574-99e4-f4cb179b73d5",
+        "63883367-cef2-547f-b501-ae1340526a24",
+        "28b6b8e2-7aa7-50d4-8f7a-ef13303e5e7c",
+        "d2676b3a-3147-5ae4-b72c-60ed08831e0e",
+        "6a9bb9a3-7421-5d24-be17-336e80a92668"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "half": {
+      "show": [
+        "61bba325-a213-5a25-b835-d6615f6be586",
+        "e2ef7177-fea6-5574-99e4-f4cb179b73d5",
+        "63883367-cef2-547f-b501-ae1340526a24",
+        "28b6b8e2-7aa7-50d4-8f7a-ef13303e5e7c",
+        "d2676b3a-3147-5ae4-b72c-60ed08831e0e",
+        "6a9bb9a3-7421-5d24-be17-336e80a92668"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "ghost": {
+      "show": [
+        "61bba325-a213-5a25-b835-d6615f6be586",
+        "e2ef7177-fea6-5574-99e4-f4cb179b73d5",
+        "63883367-cef2-547f-b501-ae1340526a24",
+        "28b6b8e2-7aa7-50d4-8f7a-ef13303e5e7c",
+        "d2676b3a-3147-5ae4-b72c-60ed08831e0e",
+        "6a9bb9a3-7421-5d24-be17-336e80a92668"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "full": {
+      "show": [
+        "61bba325-a213-5a25-b835-d6615f6be586",
+        "e2ef7177-fea6-5574-99e4-f4cb179b73d5",
+        "63883367-cef2-547f-b501-ae1340526a24",
+        "28b6b8e2-7aa7-50d4-8f7a-ef13303e5e7c",
+        "d2676b3a-3147-5ae4-b72c-60ed08831e0e",
+        "6a9bb9a3-7421-5d24-be17-336e80a92668"
+      ],
+      "hide": [],
+      "ghost": []
+    }
+  },
+  "dynamicBindings": [],
+  "nonInteractiveSupport": [],
+  "processBasis": [],
+  "limitations": [
+    "教学示意级产品模型，不用于工程、包装或材料性能判定。",
+    "GLB 的 6 个节点全部携带 extras.petro，extrasStatus=verified。",
+    "产品资产无剖切壳，half/ghost 与 external 等价（不虚构）。",
+    "材料样本与制品/应用场景是不同节点（沥青块≠道路剖面，树脂颗粒≠塑料瓶）。"
+  ],
+  "license": {
+    "spdx": "LicenseRef-Proprietary",
+    "holder": "项目内部",
+    "terms": "由本仓库脚本生成，无第三方素材；仅限本项目内部使用。",
+    "thirdParty": []
+  }
+}

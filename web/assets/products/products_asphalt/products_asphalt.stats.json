@@ -1,0 +1,25 @@
+{
+  "asset": "products_asphalt",
+  "objectId": "asphalt_products",
+  "source": "tools/blender/build_product_heroes.py",
+  "blender": "5.3.0",
+  "triangles": 660,
+  "vertices": 342,
+  "meshes": 6,
+  "nodes": [
+    "asphalt_lump",
+    "asphalt_lump_chip_a",
+    "asphalt_lump_chip_b",
+    "road_section",
+    "road_section_asphalt_course",
+    "road_section_marking"
+  ],
+  "notes": [
+    "沥青块=材料样本；道路剖面=应用场景，两者是不同节点"
+  ],
+  "files": {
+    "glb_bytes": 26120,
+    "blend_bytes": 103932
+  },
+  "note": "教学示意级产品模型；几何由脚本生成，允许改后重跑。"
+}

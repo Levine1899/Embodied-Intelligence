@@ -1,0 +1,30 @@
+{
+  "asset": "products_fuel_containers",
+  "objectId": "fuel_products",
+  "source": "tools/blender/build_product_heroes.py",
+  "blender": "5.3.0",
+  "triangles": 1772,
+  "vertices": 904,
+  "meshes": 11,
+  "nodes": [
+    "gasoline_can",
+    "gasoline_can_handle",
+    "gasoline_can_neck",
+    "gasoline_can_cap",
+    "diesel_drum",
+    "diesel_drum_rib_1",
+    "diesel_drum_rib_2",
+    "jet_fuel_cartridge",
+    "jet_fuel_cartridge_shoulder",
+    "jet_fuel_cartridge_neck",
+    "jet_fuel_cartridge_label"
+  ],
+  "notes": [
+    "三种燃料用三种可辨识容器，避免只靠文字区分"
+  ],
+  "files": {
+    "glb_bytes": 58968,
+    "blend_bytes": 111287
+  },
+  "note": "教学示意级产品模型；几何由脚本生成，允许改后重跑。"
+}

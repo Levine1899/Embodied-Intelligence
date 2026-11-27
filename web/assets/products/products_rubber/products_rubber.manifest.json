@@ -1,0 +1,411 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "products_rubber",
+  "assetVersion": "1.0.0+phase8",
+  "source": {
+    "repository": "gitee.com/LYU_PRO/scienceagent",
+    "commit": "ca8de89cd0fbca0268416fc7ee636011664ef9f4",
+    "path": "assets-source/blender/products_rubber.blend",
+    "dirty": false
+  },
+  "build": {
+    "sourceFile": "assets-source/blender/products_rubber.blend",
+    "generator": "tools/blender/build_product_heroes.py",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "Khronos glTF Blender I/O v5.3.0",
+    "exportOptionsHash": "09c123a89fae4da9",
+    "invocation": "blender -b -P tools/blender/build_product_heroes.py   # 无 CLI 参数，路径硬编码",
+    "exportExtras": true
+  },
+  "runtime": {
+    "format": "glb",
+    "uri": "assets/products/products_rubber/products_rubber.glb",
+    "sha256": "09c123a89fae4da92cace5ca622b940cdfc9ad2d5ef779185ed00a4d8ea04cf9",
+    "bytes": 56596,
+    "extrasStatus": "verified"
+  },
+  "coordinateSystem": {
+    "unit": "meter",
+    "handedness": "right",
+    "upAxis": "+Y",
+    "spaceId": "products_rubber_asset_local",
+    "sourceSpaceNote": "Blender Z-up -> glTF Y-up via export_yup=True"
+  },
+  "bounds": {
+    "coordinateSpaceId": "products_rubber_asset_local",
+    "unit": "meter",
+    "min": [
+      -0.878,
+      -0.17,
+      -0.47
+    ],
+    "max": [
+      1.29,
+      0.77,
+      0.47
+    ]
+  },
+  "defaults": {
+    "detailLevel": "detail",
+    "structureMode": "external",
+    "animationMode": "idle"
+  },
+  "systems": [
+    {
+      "systemId": "products_elastomers",
+      "displayName": "合成橡胶与胎面",
+      "objectIds": [
+        "rubber_granules",
+        "tire_tread"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "objectId": "rubber_granules",
+      "systemId": "products_elastomers",
+      "displayName": "rubber_granules",
+      "nodeUids": [
+        "09c817b1-0b77-5f22-8754-44d9e59ee33c"
+      ]
+    },
+    {
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "displayName": "tire_tread",
+      "nodeUids": [
+        "a257a651-6bf0-5c16-bb66-a539cf1760cc",
+        "7d7d0b45-95e9-5887-b4fc-f487e009d7b5",
+        "0a7c200d-6967-57df-8a9f-f25f54e78a60",
+        "e00be7f6-f224-572c-9b50-4ad1c4fabc5a",
+        "3acccb02-8f31-5b95-b5e0-54967e895cb6",
+        "c4cc091f-a0b7-533e-a1e0-ebb45397d185",
+        "b18322be-119d-5fb0-9a78-ed3eb771292d",
+        "6195e36d-f2c6-5e8c-955f-07886a1a8606",
+        "7f0ae29c-b588-5082-952e-7d11d68e0852",
+        "cd4782c7-2890-5ca1-ae4e-95f62a62996c",
+        "0adf9230-64b5-5956-aaa0-8f0d54f76507",
+        "2554a4eb-de39-511b-90b2-4fcb15c836da",
+        "908d39e4-d6fb-545c-9c2a-6cfd2fe9e176"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeUid": "09c817b1-0b77-5f22-8754-44d9e59ee33c",
+      "nodeName": "rubber_granules",
+      "objectId": "rubber_granules",
+      "systemId": "products_elastomers",
+      "semanticId": "rubber_granules",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a257a651-6bf0-5c16-bb66-a539cf1760cc",
+      "nodeName": "tire_block_00",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_block_00",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7d7d0b45-95e9-5887-b4fc-f487e009d7b5",
+      "nodeName": "tire_block_01",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_block_01",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "0a7c200d-6967-57df-8a9f-f25f54e78a60",
+      "nodeName": "tire_block_02",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_block_02",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e00be7f6-f224-572c-9b50-4ad1c4fabc5a",
+      "nodeName": "tire_block_03",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_block_03",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "3acccb02-8f31-5b95-b5e0-54967e895cb6",
+      "nodeName": "tire_block_04",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_block_04",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "c4cc091f-a0b7-533e-a1e0-ebb45397d185",
+      "nodeName": "tire_block_05",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_block_05",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b18322be-119d-5fb0-9a78-ed3eb771292d",
+      "nodeName": "tire_block_06",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_block_06",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "6195e36d-f2c6-5e8c-955f-07886a1a8606",
+      "nodeName": "tire_block_07",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_block_07",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7f0ae29c-b588-5082-952e-7d11d68e0852",
+      "nodeName": "tire_block_08",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_block_08",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "cd4782c7-2890-5ca1-ae4e-95f62a62996c",
+      "nodeName": "tire_block_09",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_block_09",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "0adf9230-64b5-5956-aaa0-8f0d54f76507",
+      "nodeName": "tire_block_10",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_block_10",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "2554a4eb-de39-511b-90b2-4fcb15c836da",
+      "nodeName": "tire_block_11",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_block_11",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "908d39e4-d6fb-545c-9c2a-6cfd2fe9e176",
+      "nodeName": "tire_tread",
+      "objectId": "tire_tread",
+      "systemId": "products_elastomers",
+      "semanticId": "tire_tread",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    }
+  ],
+  "anchors": [],
+  "representations": {
+    "overview": [
+      "09c817b1-0b77-5f22-8754-44d9e59ee33c",
+      "a257a651-6bf0-5c16-bb66-a539cf1760cc",
+      "7d7d0b45-95e9-5887-b4fc-f487e009d7b5",
+      "0a7c200d-6967-57df-8a9f-f25f54e78a60",
+      "e00be7f6-f224-572c-9b50-4ad1c4fabc5a",
+      "3acccb02-8f31-5b95-b5e0-54967e895cb6",
+      "c4cc091f-a0b7-533e-a1e0-ebb45397d185",
+      "b18322be-119d-5fb0-9a78-ed3eb771292d",
+      "6195e36d-f2c6-5e8c-955f-07886a1a8606",
+      "7f0ae29c-b588-5082-952e-7d11d68e0852",
+      "cd4782c7-2890-5ca1-ae4e-95f62a62996c",
+      "0adf9230-64b5-5956-aaa0-8f0d54f76507",
+      "2554a4eb-de39-511b-90b2-4fcb15c836da",
+      "908d39e4-d6fb-545c-9c2a-6cfd2fe9e176"
+    ],
+    "detail": [
+      "09c817b1-0b77-5f22-8754-44d9e59ee33c",
+      "a257a651-6bf0-5c16-bb66-a539cf1760cc",
+      "7d7d0b45-95e9-5887-b4fc-f487e009d7b5",
+      "0a7c200d-6967-57df-8a9f-f25f54e78a60",
+      "e00be7f6-f224-572c-9b50-4ad1c4fabc5a",
+      "3acccb02-8f31-5b95-b5e0-54967e895cb6",
+      "c4cc091f-a0b7-533e-a1e0-ebb45397d185",
+      "b18322be-119d-5fb0-9a78-ed3eb771292d",
+      "6195e36d-f2c6-5e8c-955f-07886a1a8606",
+      "7f0ae29c-b588-5082-952e-7d11d68e0852",
+      "cd4782c7-2890-5ca1-ae4e-95f62a62996c",
+      "0adf9230-64b5-5956-aaa0-8f0d54f76507",
+      "2554a4eb-de39-511b-90b2-4fcb15c836da",
+      "908d39e4-d6fb-545c-9c2a-6cfd2fe9e176"
+    ],
+    "closeup": [
+      "09c817b1-0b77-5f22-8754-44d9e59ee33c",
+      "a257a651-6bf0-5c16-bb66-a539cf1760cc",
+      "7d7d0b45-95e9-5887-b4fc-f487e009d7b5",
+      "0a7c200d-6967-57df-8a9f-f25f54e78a60",
+      "e00be7f6-f224-572c-9b50-4ad1c4fabc5a",
+      "3acccb02-8f31-5b95-b5e0-54967e895cb6",
+      "c4cc091f-a0b7-533e-a1e0-ebb45397d185",
+      "b18322be-119d-5fb0-9a78-ed3eb771292d",
+      "6195e36d-f2c6-5e8c-955f-07886a1a8606",
+      "7f0ae29c-b588-5082-952e-7d11d68e0852",
+      "cd4782c7-2890-5ca1-ae4e-95f62a62996c",
+      "0adf9230-64b5-5956-aaa0-8f0d54f76507",
+      "2554a4eb-de39-511b-90b2-4fcb15c836da",
+      "908d39e4-d6fb-545c-9c2a-6cfd2fe9e176"
+    ]
+  },
+  "structureModes": {
+    "external": {
+      "show": [
+        "09c817b1-0b77-5f22-8754-44d9e59ee33c",
+        "a257a651-6bf0-5c16-bb66-a539cf1760cc",
+        "7d7d0b45-95e9-5887-b4fc-f487e009d7b5",
+        "0a7c200d-6967-57df-8a9f-f25f54e78a60",
+        "e00be7f6-f224-572c-9b50-4ad1c4fabc5a",
+        "3acccb02-8f31-5b95-b5e0-54967e895cb6",
+        "c4cc091f-a0b7-533e-a1e0-ebb45397d185",
+        "b18322be-119d-5fb0-9a78-ed3eb771292d",
+        "6195e36d-f2c6-5e8c-955f-07886a1a8606",
+        "7f0ae29c-b588-5082-952e-7d11d68e0852",
+        "cd4782c7-2890-5ca1-ae4e-95f62a62996c",
+        "0adf9230-64b5-5956-aaa0-8f0d54f76507",
+        "2554a4eb-de39-511b-90b2-4fcb15c836da",
+        "908d39e4-d6fb-545c-9c2a-6cfd2fe9e176"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "half": {
+      "show": [
+        "09c817b1-0b77-5f22-8754-44d9e59ee33c",
+        "a257a651-6bf0-5c16-bb66-a539cf1760cc",
+        "7d7d0b45-95e9-5887-b4fc-f487e009d7b5",
+        "0a7c200d-6967-57df-8a9f-f25f54e78a60",
+        "e00be7f6-f224-572c-9b50-4ad1c4fabc5a",
+        "3acccb02-8f31-5b95-b5e0-54967e895cb6",
+        "c4cc091f-a0b7-533e-a1e0-ebb45397d185",
+        "b18322be-119d-5fb0-9a78-ed3eb771292d",
+        "6195e36d-f2c6-5e8c-955f-07886a1a8606",
+        "7f0ae29c-b588-5082-952e-7d11d68e0852",
+        "cd4782c7-2890-5ca1-ae4e-95f62a62996c",
+        "0adf9230-64b5-5956-aaa0-8f0d54f76507",
+        "2554a4eb-de39-511b-90b2-4fcb15c836da",
+        "908d39e4-d6fb-545c-9c2a-6cfd2fe9e176"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "ghost": {
+      "show": [
+        "09c817b1-0b77-5f22-8754-44d9e59ee33c",
+        "a257a651-6bf0-5c16-bb66-a539cf1760cc",
+        "7d7d0b45-95e9-5887-b4fc-f487e009d7b5",
+        "0a7c200d-6967-57df-8a9f-f25f54e78a60",
+        "e00be7f6-f224-572c-9b50-4ad1c4fabc5a",
+        "3acccb02-8f31-5b95-b5e0-54967e895cb6",
+        "c4cc091f-a0b7-533e-a1e0-ebb45397d185",
+        "b18322be-119d-5fb0-9a78-ed3eb771292d",
+        "6195e36d-f2c6-5e8c-955f-07886a1a8606",
+        "7f0ae29c-b588-5082-952e-7d11d68e0852",
+        "cd4782c7-2890-5ca1-ae4e-95f62a62996c",
+        "0adf9230-64b5-5956-aaa0-8f0d54f76507",
+        "2554a4eb-de39-511b-90b2-4fcb15c836da",
+        "908d39e4-d6fb-545c-9c2a-6cfd2fe9e176"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "full": {
+      "show": [
+        "09c817b1-0b77-5f22-8754-44d9e59ee33c",
+        "a257a651-6bf0-5c16-bb66-a539cf1760cc",
+        "7d7d0b45-95e9-5887-b4fc-f487e009d7b5",
+        "0a7c200d-6967-57df-8a9f-f25f54e78a60",
+        "e00be7f6-f224-572c-9b50-4ad1c4fabc5a",
+        "3acccb02-8f31-5b95-b5e0-54967e895cb6",
+        "c4cc091f-a0b7-533e-a1e0-ebb45397d185",
+        "b18322be-119d-5fb0-9a78-ed3eb771292d",
+        "6195e36d-f2c6-5e8c-955f-07886a1a8606",
+        "7f0ae29c-b588-5082-952e-7d11d68e0852",
+        "cd4782c7-2890-5ca1-ae4e-95f62a62996c",
+        "0adf9230-64b5-5956-aaa0-8f0d54f76507",
+        "2554a4eb-de39-511b-90b2-4fcb15c836da",
+        "908d39e4-d6fb-545c-9c2a-6cfd2fe9e176"
+      ],
+      "hide": [],
+      "ghost": []
+    }
+  },
+  "dynamicBindings": [],
+  "nonInteractiveSupport": [],
+  "processBasis": [],
+  "limitations": [
+    "教学示意级产品模型，不用于工程、包装或材料性能判定。",
+    "GLB 的 14 个节点全部携带 extras.petro，extrasStatus=verified。",
+    "产品资产无剖切壳，half/ghost 与 external 等价（不虚构）。",
+    "材料样本与制品/应用场景是不同节点（沥青块≠道路剖面，树脂颗粒≠塑料瓶）。"
+  ],
+  "license": {
+    "spdx": "LicenseRef-Proprietary",
+    "holder": "项目内部",
+    "terms": "由本仓库脚本生成，无第三方素材；仅限本项目内部使用。",
+    "thirdParty": []
+  }
+}

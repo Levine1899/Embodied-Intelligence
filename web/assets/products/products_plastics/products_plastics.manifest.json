@@ -1,0 +1,251 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "products_plastics",
+  "assetVersion": "1.0.0+phase8",
+  "source": {
+    "repository": "gitee.com/LYU_PRO/scienceagent",
+    "commit": "ca8de89cd0fbca0268416fc7ee636011664ef9f4",
+    "path": "assets-source/blender/products_plastics.blend",
+    "dirty": false
+  },
+  "build": {
+    "sourceFile": "assets-source/blender/products_plastics.blend",
+    "generator": "tools/blender/build_product_heroes.py",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "Khronos glTF Blender I/O v5.3.0",
+    "exportOptionsHash": "14b5c9889af145b9",
+    "invocation": "blender -b -P tools/blender/build_product_heroes.py   # 无 CLI 参数，路径硬编码",
+    "exportExtras": true
+  },
+  "runtime": {
+    "format": "glb",
+    "uri": "assets/products/products_plastics/products_plastics.glb",
+    "sha256": "14b5c9889af145b9c94ce4cc3e998b2c79fe94fcc471fda277a28aa924ac17a1",
+    "bytes": 41124,
+    "extrasStatus": "verified"
+  },
+  "coordinateSystem": {
+    "unit": "meter",
+    "handedness": "right",
+    "upAxis": "+Y",
+    "spaceId": "products_plastics_asset_local",
+    "sourceSpaceNote": "Blender Z-up -> glTF Y-up via export_yup=True"
+  },
+  "bounds": {
+    "coordinateSpaceId": "products_plastics_asset_local",
+    "unit": "meter",
+    "min": [
+      -0.92,
+      0.039,
+      -0.262
+    ],
+    "max": [
+      1.002,
+      0.845,
+      0.271
+    ]
+  },
+  "defaults": {
+    "detailLevel": "detail",
+    "structureMode": "external",
+    "animationMode": "idle"
+  },
+  "systems": [
+    {
+      "systemId": "products_polymers",
+      "displayName": "树脂与塑料制品",
+      "objectIds": [
+        "plastic_bottle",
+        "resin_pellets"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "objectId": "plastic_bottle",
+      "systemId": "products_polymers",
+      "displayName": "plastic_bottle",
+      "nodeUids": [
+        "f0bcf2d2-5071-59d8-81ec-87bfd340876d",
+        "66a36e0d-135a-5987-8aa3-ee2f2255d3ca",
+        "87cda175-87a0-59d2-bda6-b2e6dddf5b4c",
+        "3379cbdb-dd98-5129-988e-870155362907",
+        "c3daefbc-de44-5620-aa7b-c76c0c1a4c97"
+      ]
+    },
+    {
+      "objectId": "resin_pellets",
+      "systemId": "products_polymers",
+      "displayName": "resin_pellets",
+      "nodeUids": [
+        "207e1d55-86c4-53cd-b215-28a8ae1acb9f"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeUid": "f0bcf2d2-5071-59d8-81ec-87bfd340876d",
+      "nodeName": "plastic_bottle",
+      "objectId": "plastic_bottle",
+      "systemId": "products_polymers",
+      "semanticId": "plastic_bottle",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "66a36e0d-135a-5987-8aa3-ee2f2255d3ca",
+      "nodeName": "plastic_bottle_cap",
+      "objectId": "plastic_bottle",
+      "systemId": "products_polymers",
+      "semanticId": "plastic_bottle_cap",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "87cda175-87a0-59d2-bda6-b2e6dddf5b4c",
+      "nodeName": "plastic_bottle_label",
+      "objectId": "plastic_bottle",
+      "systemId": "products_polymers",
+      "semanticId": "plastic_bottle_label",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "3379cbdb-dd98-5129-988e-870155362907",
+      "nodeName": "plastic_bottle_neck",
+      "objectId": "plastic_bottle",
+      "systemId": "products_polymers",
+      "semanticId": "plastic_bottle_neck",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "c3daefbc-de44-5620-aa7b-c76c0c1a4c97",
+      "nodeName": "plastic_bottle_shoulder",
+      "objectId": "plastic_bottle",
+      "systemId": "products_polymers",
+      "semanticId": "plastic_bottle_shoulder",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "207e1d55-86c4-53cd-b215-28a8ae1acb9f",
+      "nodeName": "resin_pellets",
+      "objectId": "resin_pellets",
+      "systemId": "products_polymers",
+      "semanticId": "resin_pellets",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    }
+  ],
+  "anchors": [],
+  "representations": {
+    "overview": [
+      "f0bcf2d2-5071-59d8-81ec-87bfd340876d",
+      "66a36e0d-135a-5987-8aa3-ee2f2255d3ca",
+      "87cda175-87a0-59d2-bda6-b2e6dddf5b4c",
+      "3379cbdb-dd98-5129-988e-870155362907",
+      "c3daefbc-de44-5620-aa7b-c76c0c1a4c97",
+      "207e1d55-86c4-53cd-b215-28a8ae1acb9f"
+    ],
+    "detail": [
+      "f0bcf2d2-5071-59d8-81ec-87bfd340876d",
+      "66a36e0d-135a-5987-8aa3-ee2f2255d3ca",
+      "87cda175-87a0-59d2-bda6-b2e6dddf5b4c",
+      "3379cbdb-dd98-5129-988e-870155362907",
+      "c3daefbc-de44-5620-aa7b-c76c0c1a4c97",
+      "207e1d55-86c4-53cd-b215-28a8ae1acb9f"
+    ],
+    "closeup": [
+      "f0bcf2d2-5071-59d8-81ec-87bfd340876d",
+      "66a36e0d-135a-5987-8aa3-ee2f2255d3ca",
+      "87cda175-87a0-59d2-bda6-b2e6dddf5b4c",
+      "3379cbdb-dd98-5129-988e-870155362907",
+      "c3daefbc-de44-5620-aa7b-c76c0c1a4c97",
+      "207e1d55-86c4-53cd-b215-28a8ae1acb9f"
+    ]
+  },
+  "structureModes": {
+    "external": {
+      "show": [
+        "f0bcf2d2-5071-59d8-81ec-87bfd340876d",
+        "66a36e0d-135a-5987-8aa3-ee2f2255d3ca",
+        "87cda175-87a0-59d2-bda6-b2e6dddf5b4c",
+        "3379cbdb-dd98-5129-988e-870155362907",
+        "c3daefbc-de44-5620-aa7b-c76c0c1a4c97",
+        "207e1d55-86c4-53cd-b215-28a8ae1acb9f"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "half": {
+      "show": [
+        "f0bcf2d2-5071-59d8-81ec-87bfd340876d",
+        "66a36e0d-135a-5987-8aa3-ee2f2255d3ca",
+        "87cda175-87a0-59d2-bda6-b2e6dddf5b4c",
+        "3379cbdb-dd98-5129-988e-870155362907",
+        "c3daefbc-de44-5620-aa7b-c76c0c1a4c97",
+        "207e1d55-86c4-53cd-b215-28a8ae1acb9f"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "ghost": {
+      "show": [
+        "f0bcf2d2-5071-59d8-81ec-87bfd340876d",
+        "66a36e0d-135a-5987-8aa3-ee2f2255d3ca",
+        "87cda175-87a0-59d2-bda6-b2e6dddf5b4c",
+        "3379cbdb-dd98-5129-988e-870155362907",
+        "c3daefbc-de44-5620-aa7b-c76c0c1a4c97",
+        "207e1d55-86c4-53cd-b215-28a8ae1acb9f"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "full": {
+      "show": [
+        "f0bcf2d2-5071-59d8-81ec-87bfd340876d",
+        "66a36e0d-135a-5987-8aa3-ee2f2255d3ca",
+        "87cda175-87a0-59d2-bda6-b2e6dddf5b4c",
+        "3379cbdb-dd98-5129-988e-870155362907",
+        "c3daefbc-de44-5620-aa7b-c76c0c1a4c97",
+        "207e1d55-86c4-53cd-b215-28a8ae1acb9f"
+      ],
+      "hide": [],
+      "ghost": []
+    }
+  },
+  "dynamicBindings": [],
+  "nonInteractiveSupport": [],
+  "processBasis": [],
+  "limitations": [
+    "教学示意级产品模型，不用于工程、包装或材料性能判定。",
+    "GLB 的 6 个节点全部携带 extras.petro，extrasStatus=verified。",
+    "产品资产无剖切壳，half/ghost 与 external 等价（不虚构）。",
+    "材料样本与制品/应用场景是不同节点（沥青块≠道路剖面，树脂颗粒≠塑料瓶）。"
+  ],
+  "license": {
+    "spdx": "LicenseRef-Proprietary",
+    "holder": "项目内部",
+    "terms": "由本仓库脚本生成，无第三方素材；仅限本项目内部使用。",
+    "thirdParty": []
+  }
+}

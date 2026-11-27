@@ -1,0 +1,35 @@
+{
+  "asset": "products_fiber",
+  "objectId": "fiber_products",
+  "source": "tools/blender/build_product_heroes.py",
+  "blender": "5.3.0",
+  "triangles": 1048,
+  "vertices": 568,
+  "meshes": 16,
+  "nodes": [
+    "fiber_tow",
+    "fiber_tow_band_a",
+    "fiber_tow_band_b",
+    "textile_weave",
+    "textile_warp_1",
+    "textile_weft_1",
+    "textile_warp_2",
+    "textile_weft_2",
+    "textile_warp_3",
+    "textile_weft_3",
+    "textile_warp_4",
+    "textile_weft_4",
+    "textile_warp_5",
+    "textile_weft_5",
+    "textile_warp_6",
+    "textile_weft_6"
+  ],
+  "notes": [
+    "丝束=材料；织物=制品。两者分开，避免把纺织品当纤维原料"
+  ],
+  "files": {
+    "glb_bytes": 50740,
+    "blend_bytes": 107259
+  },
+  "note": "教学示意级产品模型；几何由脚本生成，允许改后重跑。"
+}

@@ -1,0 +1,33 @@
+{
+  "asset": "products_rubber",
+  "objectId": "rubber_products",
+  "source": "tools/blender/build_product_heroes.py",
+  "blender": "5.3.0",
+  "triangles": 1272,
+  "vertices": 680,
+  "meshes": 14,
+  "nodes": [
+    "rubber_granules",
+    "tire_tread",
+    "tire_block_00",
+    "tire_block_01",
+    "tire_block_02",
+    "tire_block_03",
+    "tire_block_04",
+    "tire_block_05",
+    "tire_block_06",
+    "tire_block_07",
+    "tire_block_08",
+    "tire_block_09",
+    "tire_block_10",
+    "tire_block_11"
+  ],
+  "notes": [
+    "生胶颗粒=材料；胎面=制品"
+  ],
+  "files": {
+    "glb_bytes": 56596,
+    "blend_bytes": 116147
+  },
+  "note": "教学示意级产品模型；几何由脚本生成，允许改后重跑。"
+}

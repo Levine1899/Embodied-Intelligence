@@ -32,7 +32,10 @@
     "validate:assets:strict": "node tools/validate_assets.mjs --strict",
     "validate:connections": "node tools/validate_connections.mjs",
     "validate:connections:strict": "node tools/validate_connections.mjs --strict",
-    "verify": "npm run validate:assets && npm run validate:assets:fixtures && npm test"
+    "verify": "npm run validate:assets && npm run validate:assets:fixtures && npm test",
+    "gen:products": "node tools/gen_product_manifests.mjs",
+    "validate:products": "node tools/validate_products.mjs",
+    "test:e2e:products": "node tools/e2e/run-phase8.mjs"
   },
   "keywords": [
     "science-communication",

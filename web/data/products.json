@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedFrom": "人工编写；化学品与原料路线为通识性事实，未引用特定工艺包或企业配方。多原料来源按『可来自』而非『只能来自』表述。",
+  "note": "本文件只描述『常见石油/石化路线产品』，不代表某产品只能由石油生产。petroleumRouteDescription 用来说明石油路线，typicalFeedstocks 用来保留其它可行原料。",
+  "items": [
+    {
+      "productId": "gasoline",
+      "displayName": "汽油",
+      "productCategory": "fuel",
+      "representationType": "product",
+      "typicalFeedstocks": ["petroleum"],
+      "petroleumRouteDescription": "原油常压蒸馏与催化裂化/重整得到的轻馏分，调和后作为点燃式发动机燃料。",
+      "teachingNote": "石油最直接的一类去向：燃料。它同时也是『石油不只是燃料』这一课的对照基准。",
+      "modelAssetId": "products_fuel_containers",
+      "modelNodeUid": "gasoline_can",
+      "inTask": true
+    },
+    {
+      "productId": "diesel",
+      "displayName": "柴油",
+      "productCategory": "fuel",
+      "representationType": "product",
+      "typicalFeedstocks": ["petroleum"],
+      "petroleumRouteDescription": "原油蒸馏得到的中间馏分，经加氢精制后用作压燃式发动机燃料。",
+      "teachingNote": "与汽油同属燃料路线，但馏分更重、用途不同（重载运输、工程机械）。",
+      "modelAssetId": "products_fuel_containers",
+      "modelNodeUid": "diesel_drum",
+      "inTask": true
+    },
+    {
+      "productId": "jet_fuel",
+      "displayName": "航空煤油",
+      "productCategory": "fuel",
+      "representationType": "product",
+      "typicalFeedstocks": ["petroleum"],
+      "petroleumRouteDescription": "煤油馏分经深度精制（脱硫、脱芳）得到的喷气燃料，冰点与闪点有严格指标。",
+      "teachingNote": "同样是燃料，但质量标准比车用燃料更严，说明『同一桶原油、不同去向』。",
+      "modelAssetId": "products_fuel_containers",
+      "modelNodeUid": "jet_fuel_cartridge",
+      "inTask": true
+    },
+    {
+      "productId": "asphalt",
+      "displayName": "沥青",
+      "productCategory": "material",
+      "representationType": "material",
+      "typicalFeedstocks": ["petroleum"],
+      "petroleumRouteDescription": "原油减压渣油经氧化或溶剂脱沥青得到的黑色胶结材料。",
+      "teachingNote": "沥青是『材料』，道路是它的应用场景。本关中材料样本与道路剖面是两个独立模型，不能用道路代替材料本身。",
+      "modelAssetId": "products_asphalt",
+      "modelNodeUid": "asphalt_lump",
+      "inTask": true
+    },
+    {
+      "productId": "plastics",
+      "displayName": "塑料制品",
+      "productCategory": "polymer",
+      "representationType": "manufacturedItem",
+      "typicalFeedstocks": ["petroleum", "natural_gas", "coal", "biomass"],
+      "petroleumRouteDescription": "石油路线：石脑油裂解得到乙烯/丙烯，再聚合为 PE、PP 等树脂，成型为瓶、膜、件。",
+      "teachingNote": "石油不是塑料的唯一来源：天然气（乙烷）、煤化工（甲醇制烯烃）与生物基原料同样可以生产 PE/PP 等树脂。本关只说『常见石油/石化路线』，不做唯一来源断言。",
+      "modelAssetId": "products_plastics",
+      "modelNodeUid": "plastic_bottle",
+      "inTask": true
+    },
+    {
+      "productId": "paraffin_wax",
+      "displayName": "石蜡",
+      "productCategory": "material",
+      "representationType": "material",
+      "typicalFeedstocks": ["petroleum"],
+      "petroleumRouteDescription": "原油高沸点馏分经脱油、脱色得到的固态烃类混合物。",
+      "teachingNote": "常被忽略的一类石油产品：不是燃料，而是蜡烛、包装涂层、化妆品基料。",
+      "modelAssetId": "products_wax",
+      "modelNodeUid": "wax_block",
+      "inTask": true
+    },
+    {
+      "productId": "synthetic_fiber",
+      "displayName": "合成纤维",
+      "productCategory": "fiber",
+      "representationType": "material",
+      "typicalFeedstocks": ["petroleum", "natural_gas", "coal"],
+      "petroleumRouteDescription": "石油路线：对二甲苯→PTA、乙二醇→聚酯（PET），或丙烯腈→腈纶，经纺丝成丝束。",
+      "teachingNote": "丝束是材料，纺织品是制品。合成纤维同样可由煤基或天然气路线生产，不宣称唯一来源。",
+      "modelAssetId": "products_fiber",
+      "modelNodeUid": "fiber_tow",
+      "inTask": true
+    },
+    {
+      "productId": "synthetic_rubber",
+      "displayName": "合成橡胶",
+      "productCategory": "elastomer",
+      "representationType": "material",
+      "typicalFeedstocks": ["petroleum", "natural_gas"],
+      "petroleumRouteDescription": "石油路线：裂解 C4/C5 馏分得到丁二烯、异戊二烯，经乳液或溶液聚合得到 SBR、BR 等生胶。",
+      "teachingNote": "生胶（颗粒/块状）是材料，轮胎是制品。天然橡胶来自橡胶树，与合成橡胶是两条不同来源。",
+      "modelAssetId": "products_rubber",
+      "modelNodeUid": "rubber_granules",
+      "inTask": true
+    },
+    {
+      "productId": "glass",
+      "displayName": "玻璃",
+      "productCategory": "inorganic_material",
+      "representationType": "material",
+      "typicalFeedstocks": ["other"],
+      "petroleumRouteDescription": "不属于石油产品路线：以石英砂、纯碱、石灰石熔制而成。",
+      "teachingNote": "石油可作为熔窑燃料，但玻璃的成分不来自石油——『用过石油』不等于『是石油产品』。",
+      "modelAssetId": "products_nonpetro",
+      "modelNodeUid": "glass_pane",
+      "inTask": true
+    },
+    {
+      "productId": "cotton",
+      "displayName": "棉花",
+      "productCategory": "natural_fiber",
+      "representationType": "material",
+      "typicalFeedstocks": ["biomass"],
+      "petroleumRouteDescription": "不属于石油产品路线：天然植物纤维（纤维素）。",
+      "teachingNote": "与合成纤维并置，正好说明『纤维』这个类别里既有生物基也有石油基。",
+      "modelAssetId": "products_nonpetro",
+      "modelNodeUid": "cotton_boll",
+      "inTask": true
+    },
+    {
+      "productId": "cement",
+      "displayName": "水泥",
+      "productCategory": "inorganic_material",
+      "representationType": "material",
+      "typicalFeedstocks": ["other"],
+      "petroleumRouteDescription": "不属于石油产品路线：石灰石与黏土经高温煅烧得到熟料，再磨制成水泥。",
+      "teachingNote": "水泥窑确实烧燃料（可能含石油焦），但水泥本身不是石油产品。",
+      "modelAssetId": "products_nonpetro",
+      "modelNodeUid": "cement_bag",
+      "inTask": true
+    },
+    {
+      "productId": "salt",
+      "displayName": "食盐",
+      "productCategory": "mineral",
+      "representationType": "material",
+      "typicalFeedstocks": ["other"],
+      "petroleumRouteDescription": "不属于石油产品路线：岩盐开采或海水晒制得到的氯化钠。",
+      "teachingNote": "石油化工确实会副产氯化物，但食盐主要来自矿产与海水，不能算石油路线产品。",
+      "modelAssetId": "products_nonpetro",
+      "modelNodeUid": "salt_crystal",
+      "inTask": true
+    }
+  ]
+}

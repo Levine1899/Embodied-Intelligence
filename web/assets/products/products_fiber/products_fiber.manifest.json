@@ -1,0 +1,451 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "products_fiber",
+  "assetVersion": "1.0.0+phase8",
+  "source": {
+    "repository": "gitee.com/LYU_PRO/scienceagent",
+    "commit": "ca8de89cd0fbca0268416fc7ee636011664ef9f4",
+    "path": "assets-source/blender/products_fiber.blend",
+    "dirty": false
+  },
+  "build": {
+    "sourceFile": "assets-source/blender/products_fiber.blend",
+    "generator": "tools/blender/build_product_heroes.py",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "Khronos glTF Blender I/O v5.3.0",
+    "exportOptionsHash": "3889748e1f0b70b5",
+    "invocation": "blender -b -P tools/blender/build_product_heroes.py   # 无 CLI 参数，路径硬编码",
+    "exportExtras": true
+  },
+  "runtime": {
+    "format": "glb",
+    "uri": "assets/products/products_fiber/products_fiber.glb",
+    "sha256": "3889748e1f0b70b54766ca72fcf03e29c28002ad6ad2a81e7a11511c7e18621d",
+    "bytes": 50740,
+    "extrasStatus": "verified"
+  },
+  "coordinateSystem": {
+    "unit": "meter",
+    "handedness": "right",
+    "upAxis": "+Y",
+    "spaceId": "products_fiber_asset_local",
+    "sourceSpaceNote": "Blender Z-up -> glTF Y-up via export_yup=True"
+  },
+  "bounds": {
+    "coordinateSpaceId": "products_fiber_asset_local",
+    "unit": "meter",
+    "min": [
+      -0.842,
+      0.06,
+      -0.31
+    ],
+    "max": [
+      1.15,
+      0.78,
+      0.31
+    ]
+  },
+  "defaults": {
+    "detailLevel": "detail",
+    "structureMode": "external",
+    "animationMode": "idle"
+  },
+  "systems": [
+    {
+      "systemId": "products_fibers",
+      "displayName": "合成纤维与织物",
+      "objectIds": [
+        "fiber_tow",
+        "textile_weave"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "objectId": "fiber_tow",
+      "systemId": "products_fibers",
+      "displayName": "fiber_tow",
+      "nodeUids": [
+        "b8f2766e-6393-55e7-bc6d-2419b3a573cf",
+        "44354bde-4c3a-5578-8784-d7b282a53112",
+        "3705a79c-4e71-5e1c-ae29-0662aad9a6fc"
+      ]
+    },
+    {
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "displayName": "textile_weave",
+      "nodeUids": [
+        "583e40f9-84af-5699-ba06-5077b7f29598",
+        "c8f5ca69-fadc-50c0-a446-9d01bae123a2",
+        "c86f24a2-55fa-5560-b195-de1e9a934538",
+        "9ce14244-b497-5013-b011-2407280d2283",
+        "206b7b3d-f740-579e-84fc-2d75e88d2cde",
+        "ebd4ddb2-03d7-5d26-b432-77055c4f3f9f",
+        "7164be2a-58af-5c5b-b8e3-f0af3f8a3885",
+        "8948de5a-8bcd-58ed-890c-7be4dbbc487f",
+        "6168d795-0385-5358-9386-8519b2429155",
+        "a97a03a5-4262-57d3-a9b6-865f7a904e04",
+        "69530190-65e7-5340-a905-b2c3f222a3ba",
+        "a5e1c3b2-3ac1-5846-8769-e5952935c844",
+        "32be4a64-82c6-54fa-a627-b24b1ec33002"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeUid": "b8f2766e-6393-55e7-bc6d-2419b3a573cf",
+      "nodeName": "fiber_tow",
+      "objectId": "fiber_tow",
+      "systemId": "products_fibers",
+      "semanticId": "fiber_tow",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "44354bde-4c3a-5578-8784-d7b282a53112",
+      "nodeName": "fiber_tow_band_a",
+      "objectId": "fiber_tow",
+      "systemId": "products_fibers",
+      "semanticId": "fiber_tow_band_a",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "3705a79c-4e71-5e1c-ae29-0662aad9a6fc",
+      "nodeName": "fiber_tow_band_b",
+      "objectId": "fiber_tow",
+      "systemId": "products_fibers",
+      "semanticId": "fiber_tow_band_b",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "583e40f9-84af-5699-ba06-5077b7f29598",
+      "nodeName": "textile_warp_1",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_warp_1",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "c8f5ca69-fadc-50c0-a446-9d01bae123a2",
+      "nodeName": "textile_warp_2",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_warp_2",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "c86f24a2-55fa-5560-b195-de1e9a934538",
+      "nodeName": "textile_warp_3",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_warp_3",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "9ce14244-b497-5013-b011-2407280d2283",
+      "nodeName": "textile_warp_4",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_warp_4",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "206b7b3d-f740-579e-84fc-2d75e88d2cde",
+      "nodeName": "textile_warp_5",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_warp_5",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "ebd4ddb2-03d7-5d26-b432-77055c4f3f9f",
+      "nodeName": "textile_warp_6",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_warp_6",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7164be2a-58af-5c5b-b8e3-f0af3f8a3885",
+      "nodeName": "textile_weave",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_weave",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "8948de5a-8bcd-58ed-890c-7be4dbbc487f",
+      "nodeName": "textile_weft_1",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_weft_1",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "6168d795-0385-5358-9386-8519b2429155",
+      "nodeName": "textile_weft_2",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_weft_2",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a97a03a5-4262-57d3-a9b6-865f7a904e04",
+      "nodeName": "textile_weft_3",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_weft_3",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "69530190-65e7-5340-a905-b2c3f222a3ba",
+      "nodeName": "textile_weft_4",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_weft_4",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a5e1c3b2-3ac1-5846-8769-e5952935c844",
+      "nodeName": "textile_weft_5",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_weft_5",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "32be4a64-82c6-54fa-a627-b24b1ec33002",
+      "nodeName": "textile_weft_6",
+      "objectId": "textile_weave",
+      "systemId": "products_fibers",
+      "semanticId": "textile_weft_6",
+      "role": "manufactured_item",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    }
+  ],
+  "anchors": [],
+  "representations": {
+    "overview": [
+      "b8f2766e-6393-55e7-bc6d-2419b3a573cf",
+      "44354bde-4c3a-5578-8784-d7b282a53112",
+      "3705a79c-4e71-5e1c-ae29-0662aad9a6fc",
+      "583e40f9-84af-5699-ba06-5077b7f29598",
+      "c8f5ca69-fadc-50c0-a446-9d01bae123a2",
+      "c86f24a2-55fa-5560-b195-de1e9a934538",
+      "9ce14244-b497-5013-b011-2407280d2283",
+      "206b7b3d-f740-579e-84fc-2d75e88d2cde",
+      "ebd4ddb2-03d7-5d26-b432-77055c4f3f9f",
+      "7164be2a-58af-5c5b-b8e3-f0af3f8a3885",
+      "8948de5a-8bcd-58ed-890c-7be4dbbc487f",
+      "6168d795-0385-5358-9386-8519b2429155",
+      "a97a03a5-4262-57d3-a9b6-865f7a904e04",
+      "69530190-65e7-5340-a905-b2c3f222a3ba",
+      "a5e1c3b2-3ac1-5846-8769-e5952935c844",
+      "32be4a64-82c6-54fa-a627-b24b1ec33002"
+    ],
+    "detail": [
+      "b8f2766e-6393-55e7-bc6d-2419b3a573cf",
+      "44354bde-4c3a-5578-8784-d7b282a53112",
+      "3705a79c-4e71-5e1c-ae29-0662aad9a6fc",
+      "583e40f9-84af-5699-ba06-5077b7f29598",
+      "c8f5ca69-fadc-50c0-a446-9d01bae123a2",
+      "c86f24a2-55fa-5560-b195-de1e9a934538",
+      "9ce14244-b497-5013-b011-2407280d2283",
+      "206b7b3d-f740-579e-84fc-2d75e88d2cde",
+      "ebd4ddb2-03d7-5d26-b432-77055c4f3f9f",
+      "7164be2a-58af-5c5b-b8e3-f0af3f8a3885",
+      "8948de5a-8bcd-58ed-890c-7be4dbbc487f",
+      "6168d795-0385-5358-9386-8519b2429155",
+      "a97a03a5-4262-57d3-a9b6-865f7a904e04",
+      "69530190-65e7-5340-a905-b2c3f222a3ba",
+      "a5e1c3b2-3ac1-5846-8769-e5952935c844",
+      "32be4a64-82c6-54fa-a627-b24b1ec33002"
+    ],
+    "closeup": [
+      "b8f2766e-6393-55e7-bc6d-2419b3a573cf",
+      "44354bde-4c3a-5578-8784-d7b282a53112",
+      "3705a79c-4e71-5e1c-ae29-0662aad9a6fc",
+      "583e40f9-84af-5699-ba06-5077b7f29598",
+      "c8f5ca69-fadc-50c0-a446-9d01bae123a2",
+      "c86f24a2-55fa-5560-b195-de1e9a934538",
+      "9ce14244-b497-5013-b011-2407280d2283",
+      "206b7b3d-f740-579e-84fc-2d75e88d2cde",
+      "ebd4ddb2-03d7-5d26-b432-77055c4f3f9f",
+      "7164be2a-58af-5c5b-b8e3-f0af3f8a3885",
+      "8948de5a-8bcd-58ed-890c-7be4dbbc487f",
+      "6168d795-0385-5358-9386-8519b2429155",
+      "a97a03a5-4262-57d3-a9b6-865f7a904e04",
+      "69530190-65e7-5340-a905-b2c3f222a3ba",
+      "a5e1c3b2-3ac1-5846-8769-e5952935c844",
+      "32be4a64-82c6-54fa-a627-b24b1ec33002"
+    ]
+  },
+  "structureModes": {
+    "external": {
+      "show": [
+        "b8f2766e-6393-55e7-bc6d-2419b3a573cf",
+        "44354bde-4c3a-5578-8784-d7b282a53112",
+        "3705a79c-4e71-5e1c-ae29-0662aad9a6fc",
+        "583e40f9-84af-5699-ba06-5077b7f29598",
+        "c8f5ca69-fadc-50c0-a446-9d01bae123a2",
+        "c86f24a2-55fa-5560-b195-de1e9a934538",
+        "9ce14244-b497-5013-b011-2407280d2283",
+        "206b7b3d-f740-579e-84fc-2d75e88d2cde",
+        "ebd4ddb2-03d7-5d26-b432-77055c4f3f9f",
+        "7164be2a-58af-5c5b-b8e3-f0af3f8a3885",
+        "8948de5a-8bcd-58ed-890c-7be4dbbc487f",
+        "6168d795-0385-5358-9386-8519b2429155",
+        "a97a03a5-4262-57d3-a9b6-865f7a904e04",
+        "69530190-65e7-5340-a905-b2c3f222a3ba",
+        "a5e1c3b2-3ac1-5846-8769-e5952935c844",
+        "32be4a64-82c6-54fa-a627-b24b1ec33002"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "half": {
+      "show": [
+        "b8f2766e-6393-55e7-bc6d-2419b3a573cf",
+        "44354bde-4c3a-5578-8784-d7b282a53112",
+        "3705a79c-4e71-5e1c-ae29-0662aad9a6fc",
+        "583e40f9-84af-5699-ba06-5077b7f29598",
+        "c8f5ca69-fadc-50c0-a446-9d01bae123a2",
+        "c86f24a2-55fa-5560-b195-de1e9a934538",
+        "9ce14244-b497-5013-b011-2407280d2283",
+        "206b7b3d-f740-579e-84fc-2d75e88d2cde",
+        "ebd4ddb2-03d7-5d26-b432-77055c4f3f9f",
+        "7164be2a-58af-5c5b-b8e3-f0af3f8a3885",
+        "8948de5a-8bcd-58ed-890c-7be4dbbc487f",
+        "6168d795-0385-5358-9386-8519b2429155",
+        "a97a03a5-4262-57d3-a9b6-865f7a904e04",
+        "69530190-65e7-5340-a905-b2c3f222a3ba",
+        "a5e1c3b2-3ac1-5846-8769-e5952935c844",
+        "32be4a64-82c6-54fa-a627-b24b1ec33002"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "ghost": {
+      "show": [
+        "b8f2766e-6393-55e7-bc6d-2419b3a573cf",
+        "44354bde-4c3a-5578-8784-d7b282a53112",
+        "3705a79c-4e71-5e1c-ae29-0662aad9a6fc",
+        "583e40f9-84af-5699-ba06-5077b7f29598",
+        "c8f5ca69-fadc-50c0-a446-9d01bae123a2",
+        "c86f24a2-55fa-5560-b195-de1e9a934538",
+        "9ce14244-b497-5013-b011-2407280d2283",
+        "206b7b3d-f740-579e-84fc-2d75e88d2cde",
+        "ebd4ddb2-03d7-5d26-b432-77055c4f3f9f",
+        "7164be2a-58af-5c5b-b8e3-f0af3f8a3885",
+        "8948de5a-8bcd-58ed-890c-7be4dbbc487f",
+        "6168d795-0385-5358-9386-8519b2429155",
+        "a97a03a5-4262-57d3-a9b6-865f7a904e04",
+        "69530190-65e7-5340-a905-b2c3f222a3ba",
+        "a5e1c3b2-3ac1-5846-8769-e5952935c844",
+        "32be4a64-82c6-54fa-a627-b24b1ec33002"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "full": {
+      "show": [
+        "b8f2766e-6393-55e7-bc6d-2419b3a573cf",
+        "44354bde-4c3a-5578-8784-d7b282a53112",
+        "3705a79c-4e71-5e1c-ae29-0662aad9a6fc",
+        "583e40f9-84af-5699-ba06-5077b7f29598",
+        "c8f5ca69-fadc-50c0-a446-9d01bae123a2",
+        "c86f24a2-55fa-5560-b195-de1e9a934538",
+        "9ce14244-b497-5013-b011-2407280d2283",
+        "206b7b3d-f740-579e-84fc-2d75e88d2cde",
+        "ebd4ddb2-03d7-5d26-b432-77055c4f3f9f",
+        "7164be2a-58af-5c5b-b8e3-f0af3f8a3885",
+        "8948de5a-8bcd-58ed-890c-7be4dbbc487f",
+        "6168d795-0385-5358-9386-8519b2429155",
+        "a97a03a5-4262-57d3-a9b6-865f7a904e04",
+        "69530190-65e7-5340-a905-b2c3f222a3ba",
+        "a5e1c3b2-3ac1-5846-8769-e5952935c844",
+        "32be4a64-82c6-54fa-a627-b24b1ec33002"
+      ],
+      "hide": [],
+      "ghost": []
+    }
+  },
+  "dynamicBindings": [],
+  "nonInteractiveSupport": [],
+  "processBasis": [],
+  "limitations": [
+    "教学示意级产品模型，不用于工程、包装或材料性能判定。",
+    "GLB 的 16 个节点全部携带 extras.petro，extrasStatus=verified。",
+    "产品资产无剖切壳，half/ghost 与 external 等价（不虚构）。",
+    "材料样本与制品/应用场景是不同节点（沥青块≠道路剖面，树脂颗粒≠塑料瓶）。"
+  ],
+  "license": {
+    "spdx": "LicenseRef-Proprietary",
+    "holder": "项目内部",
+    "terms": "由本仓库脚本生成，无第三方素材；仅限本项目内部使用。",
+    "thirdParty": []
+  }
+}

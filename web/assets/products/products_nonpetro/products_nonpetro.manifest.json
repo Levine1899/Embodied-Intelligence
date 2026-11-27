@@ -1,0 +1,467 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "products_nonpetro",
+  "assetVersion": "1.0.0+phase8",
+  "source": {
+    "repository": "gitee.com/LYU_PRO/scienceagent",
+    "commit": "ca8de89cd0fbca0268416fc7ee636011664ef9f4",
+    "path": "assets-source/blender/products_nonpetro.blend",
+    "dirty": false
+  },
+  "build": {
+    "sourceFile": "assets-source/blender/products_nonpetro.blend",
+    "generator": "tools/blender/build_product_heroes.py",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "Khronos glTF Blender I/O v5.3.0",
+    "exportOptionsHash": "8a837ac4bac7720e",
+    "invocation": "blender -b -P tools/blender/build_product_heroes.py   # 无 CLI 参数，路径硬编码",
+    "exportExtras": true
+  },
+  "runtime": {
+    "format": "glb",
+    "uri": "assets/products/products_nonpetro/products_nonpetro.glb",
+    "sha256": "8a837ac4bac7720e4d4d43020bd09f9060c5f0ba1a53a92704abac2940a7fb21",
+    "bytes": 60184,
+    "extrasStatus": "verified"
+  },
+  "coordinateSystem": {
+    "unit": "meter",
+    "handedness": "right",
+    "upAxis": "+Y",
+    "spaceId": "products_nonpetro_asset_local",
+    "sourceSpaceNote": "Blender Z-up -> glTF Y-up via export_yup=True"
+  },
+  "bounds": {
+    "coordinateSpaceId": "products_nonpetro_asset_local",
+    "unit": "meter",
+    "min": [
+      -1.37,
+      0,
+      -0.235
+    ],
+    "max": [
+      1.192,
+      0.57,
+      0.235
+    ]
+  },
+  "defaults": {
+    "detailLevel": "detail",
+    "structureMode": "external",
+    "animationMode": "idle"
+  },
+  "systems": [
+    {
+      "systemId": "products_nonpetro",
+      "displayName": "非石油路线材料",
+      "objectIds": [
+        "cement_bag",
+        "cotton_boll",
+        "glass_pane",
+        "salt_crystal"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "objectId": "cement_bag",
+      "systemId": "products_nonpetro",
+      "displayName": "cement_bag",
+      "nodeUids": [
+        "66c6f85b-cd18-5cd9-8c47-e404d1ad3227",
+        "22befb7a-0990-50e6-ba81-b223d8e1a33f"
+      ]
+    },
+    {
+      "objectId": "cotton_boll",
+      "systemId": "products_nonpetro",
+      "displayName": "cotton_boll",
+      "nodeUids": [
+        "92003aaf-8a88-5b3b-b8be-2ec211371762",
+        "378167f8-86de-5fc4-8bfa-25bfc0453a7d",
+        "fc127fcd-15e4-5877-90d2-01eb03cbc1a7",
+        "a9ff27e3-aae0-59a1-95c5-d222d5015c68",
+        "90ac5e47-0a98-5738-8d8d-51e9c0fadf84",
+        "b11785ba-edb5-5916-b7a6-7edaa28b69a6"
+      ]
+    },
+    {
+      "objectId": "glass_pane",
+      "systemId": "products_nonpetro",
+      "displayName": "glass_pane",
+      "nodeUids": [
+        "b72320af-cb9b-5d4a-950e-80e9e237dd5b",
+        "a7004796-47a1-5690-b7d9-eb481c462c5a"
+      ]
+    },
+    {
+      "objectId": "salt_crystal",
+      "systemId": "products_nonpetro",
+      "displayName": "salt_crystal",
+      "nodeUids": [
+        "d94f0fa9-158f-561c-8af8-bc121c60c0b1",
+        "6b31f580-2afe-5395-9a47-7811dc73ae9d",
+        "6f7c9b76-cd1b-5551-a01f-8355cd336b9a",
+        "7416b9b2-50ec-5b02-878f-3d9c27b884c0",
+        "0eb3339f-87f8-5354-8154-b74628227af0",
+        "43d643ce-52dc-5e49-a799-1aa4a1ece218"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeUid": "66c6f85b-cd18-5cd9-8c47-e404d1ad3227",
+      "nodeName": "cement_bag",
+      "objectId": "cement_bag",
+      "systemId": "products_nonpetro",
+      "semanticId": "cement_bag",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "22befb7a-0990-50e6-ba81-b223d8e1a33f",
+      "nodeName": "cement_bag_top",
+      "objectId": "cement_bag",
+      "systemId": "products_nonpetro",
+      "semanticId": "cement_bag_top",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "92003aaf-8a88-5b3b-b8be-2ec211371762",
+      "nodeName": "cotton_boll_1",
+      "objectId": "cotton_boll",
+      "systemId": "products_nonpetro",
+      "semanticId": "cotton_boll_1",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "378167f8-86de-5fc4-8bfa-25bfc0453a7d",
+      "nodeName": "cotton_boll_2",
+      "objectId": "cotton_boll",
+      "systemId": "products_nonpetro",
+      "semanticId": "cotton_boll_2",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "fc127fcd-15e4-5877-90d2-01eb03cbc1a7",
+      "nodeName": "cotton_boll_3",
+      "objectId": "cotton_boll",
+      "systemId": "products_nonpetro",
+      "semanticId": "cotton_boll_3",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a9ff27e3-aae0-59a1-95c5-d222d5015c68",
+      "nodeName": "cotton_boll_4",
+      "objectId": "cotton_boll",
+      "systemId": "products_nonpetro",
+      "semanticId": "cotton_boll_4",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "90ac5e47-0a98-5738-8d8d-51e9c0fadf84",
+      "nodeName": "cotton_boll_5",
+      "objectId": "cotton_boll",
+      "systemId": "products_nonpetro",
+      "semanticId": "cotton_boll_5",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b11785ba-edb5-5916-b7a6-7edaa28b69a6",
+      "nodeName": "cotton_stem",
+      "objectId": "cotton_boll",
+      "systemId": "products_nonpetro",
+      "semanticId": "cotton_stem",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b72320af-cb9b-5d4a-950e-80e9e237dd5b",
+      "nodeName": "glass_pane",
+      "objectId": "glass_pane",
+      "systemId": "products_nonpetro",
+      "semanticId": "glass_pane",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a7004796-47a1-5690-b7d9-eb481c462c5a",
+      "nodeName": "glass_pane_edge",
+      "objectId": "glass_pane",
+      "systemId": "products_nonpetro",
+      "semanticId": "glass_pane_edge",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d94f0fa9-158f-561c-8af8-bc121c60c0b1",
+      "nodeName": "salt_crystal_1",
+      "objectId": "salt_crystal",
+      "systemId": "products_nonpetro",
+      "semanticId": "salt_crystal_1",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "6b31f580-2afe-5395-9a47-7811dc73ae9d",
+      "nodeName": "salt_crystal_2",
+      "objectId": "salt_crystal",
+      "systemId": "products_nonpetro",
+      "semanticId": "salt_crystal_2",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "6f7c9b76-cd1b-5551-a01f-8355cd336b9a",
+      "nodeName": "salt_crystal_3",
+      "objectId": "salt_crystal",
+      "systemId": "products_nonpetro",
+      "semanticId": "salt_crystal_3",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7416b9b2-50ec-5b02-878f-3d9c27b884c0",
+      "nodeName": "salt_crystal_4",
+      "objectId": "salt_crystal",
+      "systemId": "products_nonpetro",
+      "semanticId": "salt_crystal_4",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "0eb3339f-87f8-5354-8154-b74628227af0",
+      "nodeName": "salt_crystal_5",
+      "objectId": "salt_crystal",
+      "systemId": "products_nonpetro",
+      "semanticId": "salt_crystal_5",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "43d643ce-52dc-5e49-a799-1aa4a1ece218",
+      "nodeName": "salt_crystal_6",
+      "objectId": "salt_crystal",
+      "systemId": "products_nonpetro",
+      "semanticId": "salt_crystal_6",
+      "role": "material",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    }
+  ],
+  "anchors": [],
+  "representations": {
+    "overview": [
+      "66c6f85b-cd18-5cd9-8c47-e404d1ad3227",
+      "22befb7a-0990-50e6-ba81-b223d8e1a33f",
+      "92003aaf-8a88-5b3b-b8be-2ec211371762",
+      "378167f8-86de-5fc4-8bfa-25bfc0453a7d",
+      "fc127fcd-15e4-5877-90d2-01eb03cbc1a7",
+      "a9ff27e3-aae0-59a1-95c5-d222d5015c68",
+      "90ac5e47-0a98-5738-8d8d-51e9c0fadf84",
+      "b11785ba-edb5-5916-b7a6-7edaa28b69a6",
+      "b72320af-cb9b-5d4a-950e-80e9e237dd5b",
+      "a7004796-47a1-5690-b7d9-eb481c462c5a",
+      "d94f0fa9-158f-561c-8af8-bc121c60c0b1",
+      "6b31f580-2afe-5395-9a47-7811dc73ae9d",
+      "6f7c9b76-cd1b-5551-a01f-8355cd336b9a",
+      "7416b9b2-50ec-5b02-878f-3d9c27b884c0",
+      "0eb3339f-87f8-5354-8154-b74628227af0",
+      "43d643ce-52dc-5e49-a799-1aa4a1ece218"
+    ],
+    "detail": [
+      "66c6f85b-cd18-5cd9-8c47-e404d1ad3227",
+      "22befb7a-0990-50e6-ba81-b223d8e1a33f",
+      "92003aaf-8a88-5b3b-b8be-2ec211371762",
+      "378167f8-86de-5fc4-8bfa-25bfc0453a7d",
+      "fc127fcd-15e4-5877-90d2-01eb03cbc1a7",
+      "a9ff27e3-aae0-59a1-95c5-d222d5015c68",
+      "90ac5e47-0a98-5738-8d8d-51e9c0fadf84",
+      "b11785ba-edb5-5916-b7a6-7edaa28b69a6",
+      "b72320af-cb9b-5d4a-950e-80e9e237dd5b",
+      "a7004796-47a1-5690-b7d9-eb481c462c5a",
+      "d94f0fa9-158f-561c-8af8-bc121c60c0b1",
+      "6b31f580-2afe-5395-9a47-7811dc73ae9d",
+      "6f7c9b76-cd1b-5551-a01f-8355cd336b9a",
+      "7416b9b2-50ec-5b02-878f-3d9c27b884c0",
+      "0eb3339f-87f8-5354-8154-b74628227af0",
+      "43d643ce-52dc-5e49-a799-1aa4a1ece218"
+    ],
+    "closeup": [
+      "66c6f85b-cd18-5cd9-8c47-e404d1ad3227",
+      "22befb7a-0990-50e6-ba81-b223d8e1a33f",
+      "92003aaf-8a88-5b3b-b8be-2ec211371762",
+      "378167f8-86de-5fc4-8bfa-25bfc0453a7d",
+      "fc127fcd-15e4-5877-90d2-01eb03cbc1a7",
+      "a9ff27e3-aae0-59a1-95c5-d222d5015c68",
+      "90ac5e47-0a98-5738-8d8d-51e9c0fadf84",
+      "b11785ba-edb5-5916-b7a6-7edaa28b69a6",
+      "b72320af-cb9b-5d4a-950e-80e9e237dd5b",
+      "a7004796-47a1-5690-b7d9-eb481c462c5a",
+      "d94f0fa9-158f-561c-8af8-bc121c60c0b1",
+      "6b31f580-2afe-5395-9a47-7811dc73ae9d",
+      "6f7c9b76-cd1b-5551-a01f-8355cd336b9a",
+      "7416b9b2-50ec-5b02-878f-3d9c27b884c0",
+      "0eb3339f-87f8-5354-8154-b74628227af0",
+      "43d643ce-52dc-5e49-a799-1aa4a1ece218"
+    ]
+  },
+  "structureModes": {
+    "external": {
+      "show": [
+        "66c6f85b-cd18-5cd9-8c47-e404d1ad3227",
+        "22befb7a-0990-50e6-ba81-b223d8e1a33f",
+        "92003aaf-8a88-5b3b-b8be-2ec211371762",
+        "378167f8-86de-5fc4-8bfa-25bfc0453a7d",
+        "fc127fcd-15e4-5877-90d2-01eb03cbc1a7",
+        "a9ff27e3-aae0-59a1-95c5-d222d5015c68",
+        "90ac5e47-0a98-5738-8d8d-51e9c0fadf84",
+        "b11785ba-edb5-5916-b7a6-7edaa28b69a6",
+        "b72320af-cb9b-5d4a-950e-80e9e237dd5b",
+        "a7004796-47a1-5690-b7d9-eb481c462c5a",
+        "d94f0fa9-158f-561c-8af8-bc121c60c0b1",
+        "6b31f580-2afe-5395-9a47-7811dc73ae9d",
+        "6f7c9b76-cd1b-5551-a01f-8355cd336b9a",
+        "7416b9b2-50ec-5b02-878f-3d9c27b884c0",
+        "0eb3339f-87f8-5354-8154-b74628227af0",
+        "43d643ce-52dc-5e49-a799-1aa4a1ece218"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "half": {
+      "show": [
+        "66c6f85b-cd18-5cd9-8c47-e404d1ad3227",
+        "22befb7a-0990-50e6-ba81-b223d8e1a33f",
+        "92003aaf-8a88-5b3b-b8be-2ec211371762",
+        "378167f8-86de-5fc4-8bfa-25bfc0453a7d",
+        "fc127fcd-15e4-5877-90d2-01eb03cbc1a7",
+        "a9ff27e3-aae0-59a1-95c5-d222d5015c68",
+        "90ac5e47-0a98-5738-8d8d-51e9c0fadf84",
+        "b11785ba-edb5-5916-b7a6-7edaa28b69a6",
+        "b72320af-cb9b-5d4a-950e-80e9e237dd5b",
+        "a7004796-47a1-5690-b7d9-eb481c462c5a",
+        "d94f0fa9-158f-561c-8af8-bc121c60c0b1",
+        "6b31f580-2afe-5395-9a47-7811dc73ae9d",
+        "6f7c9b76-cd1b-5551-a01f-8355cd336b9a",
+        "7416b9b2-50ec-5b02-878f-3d9c27b884c0",
+        "0eb3339f-87f8-5354-8154-b74628227af0",
+        "43d643ce-52dc-5e49-a799-1aa4a1ece218"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "ghost": {
+      "show": [
+        "66c6f85b-cd18-5cd9-8c47-e404d1ad3227",
+        "22befb7a-0990-50e6-ba81-b223d8e1a33f",
+        "92003aaf-8a88-5b3b-b8be-2ec211371762",
+        "378167f8-86de-5fc4-8bfa-25bfc0453a7d",
+        "fc127fcd-15e4-5877-90d2-01eb03cbc1a7",
+        "a9ff27e3-aae0-59a1-95c5-d222d5015c68",
+        "90ac5e47-0a98-5738-8d8d-51e9c0fadf84",
+        "b11785ba-edb5-5916-b7a6-7edaa28b69a6",
+        "b72320af-cb9b-5d4a-950e-80e9e237dd5b",
+        "a7004796-47a1-5690-b7d9-eb481c462c5a",
+        "d94f0fa9-158f-561c-8af8-bc121c60c0b1",
+        "6b31f580-2afe-5395-9a47-7811dc73ae9d",
+        "6f7c9b76-cd1b-5551-a01f-8355cd336b9a",
+        "7416b9b2-50ec-5b02-878f-3d9c27b884c0",
+        "0eb3339f-87f8-5354-8154-b74628227af0",
+        "43d643ce-52dc-5e49-a799-1aa4a1ece218"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "full": {
+      "show": [
+        "66c6f85b-cd18-5cd9-8c47-e404d1ad3227",
+        "22befb7a-0990-50e6-ba81-b223d8e1a33f",
+        "92003aaf-8a88-5b3b-b8be-2ec211371762",
+        "378167f8-86de-5fc4-8bfa-25bfc0453a7d",
+        "fc127fcd-15e4-5877-90d2-01eb03cbc1a7",
+        "a9ff27e3-aae0-59a1-95c5-d222d5015c68",
+        "90ac5e47-0a98-5738-8d8d-51e9c0fadf84",
+        "b11785ba-edb5-5916-b7a6-7edaa28b69a6",
+        "b72320af-cb9b-5d4a-950e-80e9e237dd5b",
+        "a7004796-47a1-5690-b7d9-eb481c462c5a",
+        "d94f0fa9-158f-561c-8af8-bc121c60c0b1",
+        "6b31f580-2afe-5395-9a47-7811dc73ae9d",
+        "6f7c9b76-cd1b-5551-a01f-8355cd336b9a",
+        "7416b9b2-50ec-5b02-878f-3d9c27b884c0",
+        "0eb3339f-87f8-5354-8154-b74628227af0",
+        "43d643ce-52dc-5e49-a799-1aa4a1ece218"
+      ],
+      "hide": [],
+      "ghost": []
+    }
+  },
+  "dynamicBindings": [],
+  "nonInteractiveSupport": [],
+  "processBasis": [],
+  "limitations": [
+    "教学示意级产品模型，不用于工程、包装或材料性能判定。",
+    "GLB 的 16 个节点全部携带 extras.petro，extrasStatus=verified。",
+    "产品资产无剖切壳，half/ghost 与 external 等价（不虚构）。",
+    "材料样本与制品/应用场景是不同节点（沥青块≠道路剖面，树脂颗粒≠塑料瓶）。"
+  ],
+  "license": {
+    "spdx": "LicenseRef-Proprietary",
+    "holder": "项目内部",
+    "terms": "由本仓库脚本生成，无第三方素材；仅限本项目内部使用。",
+    "thirdParty": []
+  }
+}
