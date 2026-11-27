@@ -134,10 +134,28 @@ async function main() {
     /* ---------------- E 泵送：可选 + connectionId ---------------- */
     const route = await page.evaluate(() => {
       const r = window.__l3.routeInfo;
-      return r ? { connectionId: r.connectionId, routeSource: r.routeSource, status: r.status, pipe: r.pipe } : null;
+      const ov = window.__stage.getRoute ? window.__stage.getRoute('path_store_refine') : null;
+      return r ? {
+        connectionId: r.connectionId,
+        requested: r.requestedConnectionId,
+        routeSource: r.routeSource,
+        status: r.status,
+        pipe: r.pipe,
+        reused: r.reusedOverviewGeometry,
+        endError: r.endError,
+        overviewExists: !!ov,
+        overviewEnd: ov && ov.end ? ov.end.toArray() : null,
+      } : null;
     });
-    check('E 泵送绑定 connectionId', route && route.connectionId === 'conn_store_transfer_to_refinery', route);
-    check('E 未登记连接时不建替代管线', route && route.pipe === null && route.status === 'blocked', route);
+    check('E 请求的是登记的 connectionId', route && route.requested === 'conn_store_transfer_to_refinery', route);
+    check('E 该连接未登记 → connectionId 为 null（不冒充已登记）',
+      route && route.connectionId === null && route.status === 'unregistered-basis', route);
+    check('E 路径复用总览同一几何（reusedOverviewGeometry）',
+      route && route.reused === true && route.routeSource === 'overview-corridor' && route.pipe === 'store_transfer_pipe', route);
+    check('E 终点与总览一致（世界坐标误差 < 0.05m）',
+      route && route.endError != null && route.endError < 0.05,
+      route && { endError: route.endError, overviewEnd: route.overviewEnd });
+    check('E 总览连廊仍然存在（未被本关改动）', route && route.overviewExists === true);
     const pump = await page.evaluate(() => {
       window.__l3.selectTank('transfer_pump');
       const before = { running: window.__l3.pumpRunning };

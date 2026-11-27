@@ -8,9 +8,10 @@
 |---|---|---|
 | **模型资产生成** | **PASS（生成）** / **NOT_RUN（美术验收）** | 三个 GLB 由 `tools/blender/build_storage_heroes.py` 真实生成，88 个 mesh、24,980 三角形，`extras.petro` 100% 覆盖，Manifest strict 5/5 通过；但**未做美术/工程审图**，属教学示意级 |
 | **网页集成** | **PASS** | Phase 7 E2E **34/34**；L2/L3/L4 回归 **84/84**；`npm test` 130/130 |
-| **泵送路径（要求三/E）** | **BLOCKED** | `process-connections.json` **没有** `conn_store_transfer_to_refinery` 这条连接，`l3.js` 无法"读取 connectionId"绑定到真实管线；已按规则**不绘制任何替代曲线** |
+| **泵送路径（要求三/E）** | **BLOCKED（工艺依据）** / **已解（几何一致性）** | 第二轮已让 L3 **直接复用总览 `path_store_refine` 的同一条曲线几何**，"终点与总览一致"实测 Δ=0.000m；但该线是**区域连廊**、不是工艺连接，`process-connections.json` 仍未登记 `conn_store_transfer_to_refinery`，故工艺依据仍 BLOCKED |
 
-因为 E 无法完成（且不得伪造），本阶段**不能整体标 PASS**：`网页集成 PASS + 泵送连接 BLOCKED + 美术验收 NOT_RUN`。
+E 已从"完全不可用"推进到"几何与总览完全一致、但仍缺工艺依据"，因此本阶段**仍不能整体标 PASS**：
+`网页集成 PASS + 泵送工艺依据 BLOCKED + 美术验收 NOT_RUN`。
 
 ---
 
@@ -58,7 +59,10 @@ Manifest：`tools/gen_storage_manifest.mjs`（新增）。它**不手写 nodeUid
 - **浮盘总成**：按 Manifest `role ∈ {floating_deck, rim_seal}` + `guide_roller*` 收进 `deck_assembly` 组，整组按油面平移；位移 = 目标 Z − 锚点原始 Z。**固定顶罐没有该总成，`roof_cone` 位移恒为 0**（E2E 实测 `roofY:0`）。
 - **两罐结构独立**：`applyStructure(key, mode)` 只作用于一个罐；`#l3-cut` 按钮只切"当前选中的罐"。E2E 验证 fixed=ghost 时 floating 仍 half。
 - **结构一致性**：每个网格**克隆材质**再改（Phase 6 教训：GLB 材质共享，逐网格改会互相覆盖）。
-- **泵送**：只认 `PETRO_CONNECTIONS.get('conn_store_transfer_to_refinery')`。未登记 → `routeInfo={routeSource:'unregistered', status:'blocked', pipe:null}`，**不建管线、不造 CatmullRom**，UI 明写「连接 conn_store_transfer_to_refinery 未登记（不绘制替代管线）」。原来那条自建 4 点 CatmullRom 已删除。
+- **泵送（两轮）**：
+  - 第一轮：只认 `PETRO_CONNECTIONS.get('conn_store_transfer_to_refinery')`，未登记就不画线，原自建 4 点 CatmullRom 已删除。
+  - 第二轮（本轮）：查证后发现 `path_store_refine` **根本不在** `process-connections.json` 里 —— 它是 `immersion.js:898` 硬编码的**区域间连廊**（CatmullRom + 支架 + 法兰）。同时 `PETRO_CONNECTIONS.setManifest()` 只支持**单一 Manifest**（现只有 L4 注入 tower manifest），所以"登记一条 storage 连接"在当前架构下**解析不出坐标**。
+  - 于是改为：登记连接优先；未登记时**对总览曲线采样复用同一几何**（`sampleLocalCurve` 只做世界→局部平移，不引入新控制点），并如实标 `connectionId: null` / `status: 'unregistered-basis'` / `reusedOverviewGeometry: true`。实测 `endError = 0`。
 - **资产失败**：明确加徽标「⚠ 储运 HG 资产未加载」，不静默用方块冒充。
 
 **业务规则零改动**（逐条对照）：
@@ -82,7 +86,7 @@ Manifest：`tools/gen_storage_manifest.mjs`（新增）。它**不手写 nodeUid
 | B 重进 | 2% / 泵停 / 取消暂停 / 清完成 / 默认固定顶 | ✅ `level 0.02, slider "2", pumpRunning false, completed false, selected fixed_roof_tank` |
 | C 模型 | 10/50/90% 油面；固定顶不动；浮盘贴液面 | ✅ `deckY === oilTop` 三次全部 **diff 0**；`roofY:0` 恒定 |
 | D 结构 | external/half 身份正确、不穿模、ghost 半透明、互不影响 | ✅ half: `shell.visible=false` 且 `shell_cut.visible=true`；ghost `opacity 0.28`；fixed 切 half 后 floating 仍 external |
-| E 泵送 | 绑定 connectionId；未登记不建替代管线；可独立启停 | ✅ `connectionId` 正确、`pipe:null`、`status:blocked`；启停正常 |
+| E 泵送 | 请求登记的 connectionId；未登记不冒充已登记；路径与总览同一几何；可独立启停 | ✅ `requested=conn_store_transfer_to_refinery`、`connectionId=null`、`status=unregistered-basis`、`reusedOverviewGeometry=true`、**`endError=0`**、总览连廊未被改动；启停正常 |
 | F 隔离 | fixed/floating/pump 状态互不影响 | ✅ `fixed:'ghost'` + `floating:'half'` 并存；选择与 aria-pressed 同步 |
 
 回归：`run-levels` **84/84**（L2 32 · L4 19 · L3 33）、`npm test` **130/130**、`validate:assets:strict` **5/5**、`validate:connections:strict` 仍 exit 1（Phase 3 的 B5 未被本阶段绕过）。
@@ -115,10 +119,11 @@ Manifest：`tools/gen_storage_manifest.mjs`（新增）。它**不手写 nodeUid
 
 ## 七、NOT_RUN / BLOCKED
 
-- **BLOCKED｜泵送跨装置管线**：`process-connections.json` 只有 1 条 L4 连接；`conn_store_transfer_to_refinery` 未登记，且全仓无 approved 工艺依据（`decisions.md:25`）。补登需要：①storage 坐标系下的装卸/送出锚点；②经审的工艺路径。本阶段**不伪造**，因此"终点与总览一致"无法验证。
+- **BLOCKED｜泵送工艺依据**（几何已解）：全仓只有 1 条 L4 连接，且 `PETRO_CONNECTIONS` 只支持单一 Manifest，storage 锚点无法解析。本轮已用"复用总览同一曲线"把**几何一致性**做实（`endError=0`，可复验），但**工艺依据仍未登记**，所以不能宣称"工艺连接已验收"。真正解除需要两件外部输入：① 注册表支持多资产锚点（工程改造）；② 经审的 storage→炼化 工艺路径（`decisions.md:25`）。
 - **NOT_RUN｜美术/工程审图**：三个 Hero 是教学示意级组合体（管件、法兰、筋板均为示意），未做工程图纸核对、未做视觉走查确认。
 - **NOT_RUN｜GPU 性能**：本机集显 + headless SwiftShader，帧率不可信。
-- **NOT_RUN｜录屏**：本阶段只产出 4 张截图（external/half/ghost @90%、half @60%），无视频。
+- **NOT_RUN｜录屏**：本阶段产出 5 张截图（external/half/ghost @90%、half @60%、泵送路径 @45%），无视频。
+- **已知架构限制**：`PETRO_CONNECTIONS` 单 Manifest 设计使跨资产连接无法解析；补登 storage 连接前必须先改注册表。
 - **未迁移**：总览 `floating_roof_tank` 旧 OBJ 资产保持原样（不替换总览，避免一次性全站切换）。
 
 ---

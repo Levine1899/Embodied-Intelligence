@@ -422,51 +422,101 @@
   }
 
   /* ---------------------------------------------------------------- 泵送路径 */
-  /* 只认 process-connections.json 的 connectionId。未登记 → 不建管线、不造曲线。 */
+  /* 优先级：
+     1) process-connections.json 里登记的 connectionId（工艺连接，需 basis）
+     2) 都没有 → 复用总览已有连廊的**同一条曲线几何**（只做世界→局部平移），
+        绝不在这里新造控制点。
+     两条路都不通才不画线，并如实说明。 */
+  const OVERVIEW_ROUTE_ID = 'path_store_refine';
+
+  function sampleLocalCurve(worldCurve, n) {
+    const pts = [];
+    for (let i = 0; i <= n; i++) pts.push(worldCurve.getPoint(i / n).clone().sub(G.position));
+    return new THREE.CatmullRomCurve3(pts);
+  }
+
   function resolvePumpRoute() {
     const reg = window.PETRO_CONNECTIONS;
     const conn = reg && typeof reg.get === 'function' ? reg.get(PUMP_CONNECTION_ID) : null;
-    if (!conn) {
-      routeInfo = {
-        connectionId: PUMP_CONNECTION_ID,
-        routeSource: 'unregistered',
-        status: 'blocked',
-        note: 'process-connections.json 未登记该连接；按规则不绘制与实体不一致的替代管线',
-        pipe: null,
-      };
-      if (ui.querySelector('#l3-route')) {
-        ui.querySelector('#l3-route').textContent =
-          '泵送：连接 ' + PUMP_CONNECTION_ID + ' 未登记（不绘制替代管线）';
+    let curve = null, routeSource = null, pathId = null, note = '';
+
+    if (conn) {
+      try { curve = reg.resolveCurve ? reg.resolveCurve(PUMP_CONNECTION_ID) : null; } catch (e) { curve = null; }
+      if (curve) {
+        routeSource = 'process-connections';
+        pathId = PUMP_CONNECTION_ID;
+      } else {
+        routeSource = 'process-connections-no-curve';
+        note = '连接已登记但锚点无法解析（注册表当前只认单一 Manifest）';
       }
-      return null;
     }
 
-    let curve = null;
-    try { curve = reg.resolveCurve ? reg.resolveCurve(PUMP_CONNECTION_ID) : null; } catch (e) { curve = null; }
     if (!curve) {
-      routeInfo = { connectionId: PUMP_CONNECTION_ID, routeSource: 'registered-no-curve', status: 'blocked', pipe: null };
+      const overview = stage.getRoute ? stage.getRoute(OVERVIEW_ROUTE_ID) : null;
+      if (overview && overview.curve) {
+        /* 直接对总览曲线采样，不引入任何新控制点 */
+        curve = sampleLocalCurve(overview.curve, 48);
+        routeSource = 'overview-corridor';
+        pathId = OVERVIEW_ROUTE_ID;
+        note = '复用总览 ' + OVERVIEW_ROUTE_ID + ' 连廊的同一路径（区域连廊，非工艺连接，未登记工艺依据）';
+      }
+    }
+
+    const routeEl = ui.querySelector('#l3-route');
+    if (!curve) {
+      routeInfo = {
+        connectionId: PUMP_CONNECTION_ID,
+        routeSource: routeSource || 'unregistered',
+        status: 'blocked',
+        pipe: null,
+        note: note || '无可用路径',
+      };
+      if (routeEl) routeEl.textContent = '泵送：无可用路径（' + (note || '未登记工艺连接') + '）';
       return null;
     }
 
     const pipe = new THREE.Mesh(
-      new THREE.TubeGeometry(curve, 48, 0.07, 8, false),
+      new THREE.TubeGeometry(curve, 60, 0.07, 8, false),
       new THREE.MeshStandardMaterial({ color: 0x8b6b3f, roughness: 0.5, metalness: 0.4 }),
     );
     pipe.name = 'store_transfer_pipe';
-    pipe.userData.connectionId = PUMP_CONNECTION_ID;
+    pipe.userData.connectionId = conn ? PUMP_CONNECTION_ID : null;
+    pipe.userData.pathId = pathId;
     G.add(pipe);
-    const flow = makeFlowInGroup(curve, 0x7fd6a8, 12, 0.28, 0.06, 0.8);
-    flow.speed = 0;
-    pumpFlow = flow;
+
+    pumpFlow = makeFlowInGroup(curve, 0x7fd6a8, 12, 0.28, 0.06, 0.8);
+    pumpFlow.speed = 0;
+
+    const startLocal = curve.getPoint(0);
+    const endLocal = curve.getPoint(1);
+    const endWorld = endLocal.clone().add(G.position);
+
+    /* 「终点与总览一致」用世界坐标里对总览 anchor 的误差证明，不用自证 */
+    let endError = null;
+    const overview = stage.getRoute ? stage.getRoute(OVERVIEW_ROUTE_ID) : null;
+    if (overview && overview.end) endError = endWorld.distanceTo(overview.end);
 
     routeInfo = {
-      connectionId: PUMP_CONNECTION_ID,
-      routeSource: 'process-connections',
-      status: 'ok',
-      pipe: 'store_transfer_pipe',
-      start: curve.getPoint(0).toArray(),
-      end: curve.getPoint(1).toArray(),
+      connectionId: conn ? PUMP_CONNECTION_ID : null,
+      requestedConnectionId: PUMP_CONNECTION_ID,
+      routeSource: routeSource,
+      status: conn ? 'ok' : 'unregistered-basis',
+      pathId: pathId,
+      pipe: pipe.name,
+      reusedOverviewGeometry: routeSource === 'overview-corridor',
+      start: startLocal.toArray(),
+      end: endLocal.toArray(),
+      startWorld: startLocal.clone().add(G.position).toArray(),
+      endWorld: endWorld.toArray(),
+      endError: endError,
+      note: note,
     };
+
+    if (routeEl) {
+      routeEl.textContent = routeSource === 'overview-corridor'
+        ? '泵送：沿总览 ' + OVERVIEW_ROUTE_ID + ' 同一路径（未登记工艺依据，终点一致 Δ' + (endError == null ? '?' : endError.toFixed(3)) + '）'
+        : '泵送：工艺连接 ' + PUMP_CONNECTION_ID + '（已登记）';
+    }
     return routeInfo;
   }
 
