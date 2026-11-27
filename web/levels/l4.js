@@ -11,6 +11,20 @@
   let unit = null, assetLoaded = false;
   const detailGroups = {};
   let detailBindings = [];
+  /* ---- Phase 2：设备归属改由 tower.manifest.json 数据驱动 ----
+   * 权威来源：web/assets/tower/tower.manifest.json 的 nodes[].objectId。
+   * 下面的正则只是「manifest 尚未加载/缺失」时的过渡回退，不再作为权威分组依据。
+   * 迁移完成条件：全部 253 对象经 manifest 命中（nodeIndex 覆盖 100%）后，
+   * 删除 legacyObjectId() 与 LEGACY_FALLBACK 计数，改为直接报错。
+   * 计划删除阶段：Phase 4（L2 三态剖切同期统一 Loader 时）。 */
+  let towerManifest = null, nodeIndex = null, legacyFallbackHits = 0;
+  const LEGACY_FALLBACK = { enabled: true, removeAfter: 'phase-04' };
+  /* 需要独立选中/显隐/高亮的 8 个设备（与 manifest objects[] 对齐） */
+  const DEVICE_IDS = [
+    'atmospheric_tower', 'vacuum_tower', 'heater',
+    'stripper_naphtha', 'stripper_kerosene', 'stripper_diesel',
+    'overhead_condenser', 'reflux_drum',
+  ];
   let residueTarget = 'vacuum_tower';
   const fullMeshes = [], halfMeshes = [], trayMeshes = [], insulationMeshes = [], internals = [];
   const flows = [];
@@ -101,33 +115,64 @@
     return G;
   }
 
+  /* 过渡回退：仅在 manifest 缺失/某对象未登记时使用。不参与权威分组。 */
+  function legacyObjectId(n) {
+    if (!LEGACY_FALLBACK.enabled) return null;
+    if (/^Tower_Atmospheric|^Trays_A|^Pipe_Side_(Naphtha|Kerosene|Diesel)|^Box_(Naphtha|Kerosene|Diesel)|^Pipe_Top|^Pipe_Feed/.test(n)) return 'atmospheric_tower';
+    if (/^Tower_Vacuum|^Trays_V|^Condenser|^Pipe_Bottom_To_Vacuum|^Pipe_Residue_Bottom|^Box_Residue/.test(n)) return 'vacuum_tower';
+    if (/^Heater/.test(n)) return 'heater';
+    return null;
+  }
+
   function splitAndBindDetails() {
     if (!unit || detailGroups.atmospheric_tower) { bindDetails(); return; }
     const meshes = [];
     unit.traverse(function (o) { if (o.isMesh) meshes.push(o); });
-    ['atmospheric_tower', 'vacuum_tower', 'heater'].forEach(function (id) {
+    DEVICE_IDS.forEach(function (id) {
       const g = new THREE.Group();
       g.name = 'L4_Detail_' + id;
       unit.add(g);
       detailGroups[id] = g;
     });
+
+    let byManifest = 0, byLegacy = 0, unattributed = 0;
     meshes.forEach(function (o) {
       const n = o.name || '';
-      let id = null;
-      if (/^Tower_Atmospheric|^Trays_A|^Pipe_Side_(Naphtha|Kerosene|Diesel)|^Box_(Naphtha|Kerosene|Diesel)|^Pipe_Top|^Pipe_Feed/.test(n)) id = 'atmospheric_tower';
-      else if (/^Tower_Vacuum|^Trays_V|^Condenser|^Pipe_Bottom_To_Vacuum|^Pipe_Residue_Bottom|^Box_Residue/.test(n)) id = 'vacuum_tower';
-      else if (/^Heater/.test(n)) id = 'heater';
-      if (id) detailGroups[id].attach(o);
+      const rec = nodeIndex ? nodeIndex[n] : null;
+      let id = rec && rec.objectId ? rec.objectId : null;
+      if (rec && rec.semanticId) o.userData.semanticId = rec.semanticId;
+      if (rec && rec.nodeUid) o.userData.nodeUid = rec.nodeUid;
+
+      if (!id) {
+        const legacy = legacyObjectId(n);
+        if (legacy) { id = legacy; byLegacy++; legacyFallbackHits++; }
+      } else {
+        byManifest++;
+      }
+
+      if (id) {
+        o.userData.objectId = id;
+        if (DEVICE_IDS.indexOf(id) >= 0) detailGroups[id].attach(o);
+        /* 非设备对象（管线/支撑/换热器/泵组/场地）保留在 unit 上，不并入设备组 */
+      } else {
+        unattributed++;
+      }
     });
+
+    if (byLegacy || unattributed) {
+      console.warn('[L4] 设备分组回退统计：manifest 命中 ' + byManifest +
+        '，legacy 正则 ' + byLegacy + '，无归属 ' + unattributed +
+        '（manifest 为权威来源；legacy 仅过渡，计划在 ' + LEGACY_FALLBACK.removeAfter + ' 删除）');
+    }
     bindDetails();
   }
 
   function bindDetails() {
     if (!stage.deviceState || !detailGroups.atmospheric_tower) return;
-    ['atmospheric_tower', 'vacuum_tower', 'heater'].forEach(function (id) {
-      stage.deviceState.bind(id, 'detail', detailGroups[id]);
+    DEVICE_IDS.forEach(function (id) {
+      if (detailGroups[id]) stage.deviceState.bind(id, 'detail', detailGroups[id]);
     });
-    detailBindings = ['atmospheric_tower', 'vacuum_tower', 'heater'];
+    detailBindings = DEVICE_IDS.slice();
   }
 
   /* 管道物质色：进料/油气/石脑油/煤油/柴油/渣油分开，便于在图里对应物质。 */
@@ -141,7 +186,35 @@
     return 0x9fb7c0;
   }
 
+  /* 读取 Manifest（权威归属来源）。失败不阻断渲染，但会显式回退并告警。 */
+  function loadManifest() {
+    if (!window.fetch) return Promise.resolve(null);
+    return fetch('assets/tower/tower.manifest.json')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });
+  }
+
+  function buildNodeIndex() {
+    if (!towerManifest) return null;
+    const idx = {};
+    (towerManifest.nodes || []).forEach(function (n) { if (n && n.nodeName) idx[n.nodeName] = n; });
+    return idx;
+  }
+
   function loadAsset() {
+    if (!window.ObjLite) { hint.textContent = '装置模型加载器不可用'; return; }
+    loadManifest().then(function (m) {
+      towerManifest = m;
+      nodeIndex = buildNodeIndex();
+      if (!towerManifest) {
+        console.warn('[L4] tower.manifest.json 不可用：设备分组回退到 legacy 正则，属于临时状态，' +
+          LEGACY_FALLBACK.removeAfter + ' 前必须移除');
+      }
+      loadTowerObj();
+    });
+  }
+
+  function loadTowerObj() {
     if (!window.ObjLite) { hint.textContent = '装置模型加载器不可用'; return; }
     window.ObjLite.load('assets/tower/tower.obj?v=08', 'assets/tower/tower.mtl?v=08').then(function (root) {
       unit = root;

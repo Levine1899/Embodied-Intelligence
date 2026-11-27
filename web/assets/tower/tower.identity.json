@@ -1,0 +1,2032 @@
+{
+  "$comment": "由 tools/gen_tower_manifest.mjs 生成，供 make_tower.py 在 Blender 内写 petro 自定义属性。按 nodeName 引导映射只是首次盖章的引导；盖章后 .blend 持有 petro，重建不再依赖名称。新增/改名对象必须重新生成本文件，否则 make_tower.py 会 fail closed。",
+  "assetId": "distillation_unit_hero",
+  "namespace": "5c3d1f7a-2b48-4e6c-9f10-8a7d3e5b2c94",
+  "generatedFrom": "web/assets/tower/tower.obj",
+  "objects": {
+    "Tower_Atmospheric_Shell": {
+      "nodeUid": "d985eaf4-7be2-5ddc-929e-a8275f403ec2",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_shell",
+      "instanceId": "",
+      "role": "shell"
+    },
+    "Tower_Atmospheric_Skirt": {
+      "nodeUid": "bfdb7bc1-6dd1-5576-a5d3-c74143720d43",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_skirt",
+      "instanceId": "",
+      "role": "skirt"
+    },
+    "Tower_Atmospheric_Dome": {
+      "nodeUid": "edfcb732-6932-5aa7-950c-372559e9c1c0",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_dome",
+      "instanceId": "",
+      "role": "dome"
+    },
+    "Trays_A": {
+      "nodeUid": "c8143935-1a75-5321-a686-086569796bd1",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_trays",
+      "instanceId": "",
+      "role": "tray_bundle"
+    },
+    "Railing_10": {
+      "nodeUid": "ae65f60d-98fa-5bc7-8bb2-e14e57b0beaf",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_platform_railing",
+      "instanceId": "xp0_yp100_zp0",
+      "role": "railing"
+    },
+    "Post_10_0": {
+      "nodeUid": "1e5e8473-c8ea-5e71-bb62-65cbe028a41e",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_railing_post",
+      "instanceId": "xp29_yp105_zp0",
+      "role": "railing_post"
+    },
+    "Post_10_1": {
+      "nodeUid": "4bdfc1d2-5116-5375-a334-33e0b8b6e599",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_railing_post",
+      "instanceId": "xp15_yp105_zm25",
+      "role": "railing_post"
+    },
+    "Post_10_2": {
+      "nodeUid": "63191198-20da-5c45-9488-928f4b816fbd",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_railing_post",
+      "instanceId": "xm14_yp105_zm25",
+      "role": "railing_post"
+    },
+    "Post_10_3": {
+      "nodeUid": "b2edaaee-351d-5f6a-bb74-890645468a32",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_railing_post",
+      "instanceId": "xm29_yp105_zp0",
+      "role": "railing_post"
+    },
+    "Post_10_4": {
+      "nodeUid": "ee820390-f817-5594-b9c4-6f64e26114c5",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_railing_post",
+      "instanceId": "xm14_yp105_zp25",
+      "role": "railing_post"
+    },
+    "Post_10_5": {
+      "nodeUid": "e0e1baa9-c0e6-5157-945a-77e56569ae73",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_railing_post",
+      "instanceId": "xp15_yp105_zp25",
+      "role": "railing_post"
+    },
+    "Railing_18": {
+      "nodeUid": "87296442-e7f7-5f53-8a06-a498bd9c33a5",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_platform_railing",
+      "instanceId": "xp0_yp180_zp0",
+      "role": "railing"
+    },
+    "Post_18_0": {
+      "nodeUid": "61cfaea1-a644-54ea-bb0d-8a674003c212",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_railing_post",
+      "instanceId": "xp29_yp185_zp0",
+      "role": "railing_post"
+    },
+    "Post_18_1": {
+      "nodeUid": "efe4737c-38db-53c2-88fc-389e54700c89",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_railing_post",
+      "instanceId": "xp15_yp185_zm25",
+      "role": "railing_post"
+    },
+    "Post_18_2": {
+      "nodeUid": "4142db16-b72c-55ec-9fe7-ed912fe4096b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_railing_post",
+      "instanceId": "xm14_yp185_zm25",
+      "role": "railing_post"
+    },
+    "Post_18_3": {
+      "nodeUid": "8bb86718-c5a7-5a1f-86e0-b5faabe7f427",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_railing_post",
+      "instanceId": "xm29_yp185_zp0",
+      "role": "railing_post"
+    },
+    "Post_18_4": {
+      "nodeUid": "7fd9d1c4-0a79-5854-b78e-5a4de2123407",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_railing_post",
+      "instanceId": "xm14_yp185_zp25",
+      "role": "railing_post"
+    },
+    "Post_18_5": {
+      "nodeUid": "405b8f4c-4d4c-5fba-9cdb-e3c62746a14e",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_railing_post",
+      "instanceId": "xp15_yp185_zp25",
+      "role": "railing_post"
+    },
+    "Manway_12": {
+      "nodeUid": "2b168d4f-6f0e-5d20-a671-dc299ac27cc0",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_manway",
+      "instanceId": "xp22_yp120_zp0",
+      "role": "manway"
+    },
+    "Manway_22": {
+      "nodeUid": "85c3fcf0-399a-5104-8a82-2f251e535a88",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_manway",
+      "instanceId": "xp22_yp220_zp0",
+      "role": "manway"
+    },
+    "Nozzle_9": {
+      "nodeUid": "b266f84d-78db-5920-85ec-048de6333df4",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_nozzle",
+      "instanceId": "xp23_yp90_zm9",
+      "role": "nozzle"
+    },
+    "Flange_9": {
+      "nodeUid": "f7cf9445-f4ab-5e59-8a5e-521c81a01955",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_flange",
+      "instanceId": "xp27_yp90_zm10",
+      "role": "flange"
+    },
+    "Nozzle_16": {
+      "nodeUid": "4916aec8-55a1-5d91-945f-79d8072bb64f",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_nozzle",
+      "instanceId": "xp19_yp160_zp17",
+      "role": "nozzle"
+    },
+    "Flange_16": {
+      "nodeUid": "66bce3de-048a-55b8-ad49-20bad2c70a81",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_flange",
+      "instanceId": "xp21_yp160_zp19",
+      "role": "flange"
+    },
+    "Nozzle_24": {
+      "nodeUid": "79cbb6da-1b5a-5caa-b0d6-1fd21a7f0a19",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_nozzle",
+      "instanceId": "xm15_yp240_zm20",
+      "role": "nozzle"
+    },
+    "Flange_24": {
+      "nodeUid": "1b258a33-90b7-5905-b034-4353a4038884",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_flange",
+      "instanceId": "xm17_yp240_zm23",
+      "role": "flange"
+    },
+    "Ladder": {
+      "nodeUid": "cd208c85-2e1a-5e7a-b9f0-0d6fc04727cb",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder",
+      "instanceId": "",
+      "role": "ladder"
+    },
+    "Tower_Vacuum_Shell": {
+      "nodeUid": "3684eb6d-2c06-5982-b831-33407111b7d3",
+      "assetId": "distillation_unit_hero",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_shell",
+      "instanceId": "",
+      "role": "shell"
+    },
+    "Tower_Vacuum_Dome": {
+      "nodeUid": "d5c16242-0518-59b4-9efa-edbe55d817f1",
+      "assetId": "distillation_unit_hero",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_dome",
+      "instanceId": "",
+      "role": "dome"
+    },
+    "Tower_Vacuum_Skirt": {
+      "nodeUid": "0b04fff8-7d7a-576f-801c-451e314b3543",
+      "assetId": "distillation_unit_hero",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_skirt",
+      "instanceId": "",
+      "role": "skirt"
+    },
+    "Trays_V": {
+      "nodeUid": "0e2bf382-d86e-5103-adb3-fd493518dbb2",
+      "assetId": "distillation_unit_hero",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_trays",
+      "instanceId": "",
+      "role": "tray_bundle"
+    },
+    "Heater": {
+      "nodeUid": "4ce70fbb-a1c8-55a8-bfbc-8b92018c0679",
+      "assetId": "distillation_unit_hero",
+      "objectId": "heater",
+      "semanticId": "heater_shell",
+      "instanceId": "",
+      "role": "furnace"
+    },
+    "Heater_Chimney": {
+      "nodeUid": "8f8763c0-3fb3-5abb-a3c8-64d8cd8f6599",
+      "assetId": "distillation_unit_hero",
+      "objectId": "heater",
+      "semanticId": "heater_chimney",
+      "instanceId": "",
+      "role": "stack"
+    },
+    "Pipe_Feed_Riser": {
+      "nodeUid": "93361048-f3da-5240-bc17-a5c942440309",
+      "assetId": "distillation_unit_hero",
+      "objectId": "heater",
+      "semanticId": "feed_line",
+      "instanceId": "xm70_yp100_zp0",
+      "role": "process_pipe"
+    },
+    "Pipe_Feed_Horizontal": {
+      "nodeUid": "1f099aa9-d8d8-5b9d-a30a-22774f48bbbf",
+      "assetId": "distillation_unit_hero",
+      "objectId": "heater",
+      "semanticId": "feed_line",
+      "instanceId": "xm45_yp130_zp0",
+      "role": "process_pipe"
+    },
+    "Pipe_Bottom_To_Vacuum": {
+      "nodeUid": "731391f8-263a-528b-b65f-81700d4be00d",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pipe_bottom_to_vacuum",
+      "semanticId": "atm_bottom_to_vacuum",
+      "instanceId": "",
+      "role": "process_pipe"
+    },
+    "Nozzle_Side_Naphtha": {
+      "nodeUid": "7342155c-2e00-58d7-8e35-4f617138bedb",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_nozzle",
+      "instanceId": "",
+      "role": "nozzle"
+    },
+    "Flange_Side_Naphtha": {
+      "nodeUid": "4e7e5526-7060-5e38-aa2a-15da42a34809",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_flange",
+      "instanceId": "",
+      "role": "flange"
+    },
+    "Pipe_Side_Naphtha_Seg0": {
+      "nodeUid": "6d3efcc5-2232-51dc-914a-838aa843448f",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp210_zm24",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Naphtha_Seg1": {
+      "nodeUid": "3d60b429-9721-59e2-9a6c-5ae2b4d25c2b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp30_yp210_zm48",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Naphtha_Seg2": {
+      "nodeUid": "cb6831cf-b9f6-59b0-95c9-52c6b530f397",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp34_yp150_zm48",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Naphtha_Elbow0": {
+      "nodeUid": "1d85948d-1dd2-5f32-95d5-d5d502abc015",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp210_zp0",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Naphtha_Elbow1": {
+      "nodeUid": "646c9e73-f05c-5ae7-a705-dc02a86ce7ca",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp210_zm48",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Naphtha_Elbow2": {
+      "nodeUid": "6a7b393b-bf29-5c82-be3c-f6dae61975eb",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp34_yp210_zm48",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Naphtha_Elbow3": {
+      "nodeUid": "5ecf1865-5051-5c2e-a345-11301a7e19be",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp34_yp90_zm48",
+      "role": "process_pipe"
+    },
+    "SideRack_Col_Naphtha_A": {
+      "nodeUid": "3d2e1861-ac58-554c-8fd8-2c2911f70b52",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_rack_column",
+      "instanceId": "xp30_yp105_zm48",
+      "role": "support_column"
+    },
+    "SideRack_Col_Naphtha_A_Foot": {
+      "nodeUid": "e689363a-94f2-5d0d-81fa-35823e9c0dc9",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_rack_column",
+      "instanceId": "xp30_yp1_zm48",
+      "role": "support_column"
+    },
+    "SideRack_Col_Naphtha_B": {
+      "nodeUid": "0f1a61a4-4864-5d8d-be46-6164e9d9ab03",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_rack_column",
+      "instanceId": "xp32_yp105_zm48",
+      "role": "support_column"
+    },
+    "SideRack_Col_Naphtha_B_Foot": {
+      "nodeUid": "1f1fd264-cdec-51f8-815f-7c23cd6fe835",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_rack_column",
+      "instanceId": "xp32_yp1_zm48",
+      "role": "support_column"
+    },
+    "Stripper_Naphtha_Foundation": {
+      "nodeUid": "b573a3e2-5d0e-5b69-a4b3-5d4d2f23d6cb",
+      "assetId": "distillation_unit_hero",
+      "objectId": "stripper_naphtha",
+      "semanticId": "stripper_foundation",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "Stripper_Naphtha_Skirt": {
+      "nodeUid": "9a3bed05-3dbd-510e-9b4e-b13174f4aa61",
+      "assetId": "distillation_unit_hero",
+      "objectId": "stripper_naphtha",
+      "semanticId": "stripper_skirt",
+      "instanceId": "",
+      "role": "skirt"
+    },
+    "Stripper_Naphtha_Shell": {
+      "nodeUid": "e1607b81-fc0c-5cb9-9d5e-7517070f5614",
+      "assetId": "distillation_unit_hero",
+      "objectId": "stripper_naphtha",
+      "semanticId": "stripper_shell",
+      "instanceId": "",
+      "role": "shell"
+    },
+    "Stripper_Naphtha_Dome": {
+      "nodeUid": "06f86046-cc3e-5712-b613-4fa3bf1789a1",
+      "assetId": "distillation_unit_hero",
+      "objectId": "stripper_naphtha",
+      "semanticId": "stripper_dome",
+      "instanceId": "",
+      "role": "dome"
+    },
+    "Pipe_Rundown_Naphtha_Seg0": {
+      "nodeUid": "c08b5762-b5bb-5104-b5e5-58c50287ed2c",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp59_yp10_zm48",
+      "role": "process_pipe"
+    },
+    "Pipe_Rundown_Naphtha_Elbow0": {
+      "nodeUid": "ea3d71f5-24e8-514f-9b1b-58e2eed3e5b3",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp34_yp10_zm48",
+      "role": "process_pipe"
+    },
+    "Pipe_Rundown_Naphtha_Elbow1": {
+      "nodeUid": "3ede9a68-30df-51a6-be41-9c34fd086869",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp83_yp10_zm48",
+      "role": "process_pipe"
+    },
+    "BatteryLimit_Naphtha": {
+      "nodeUid": "0fc9a890-f949-56a7-844e-03376fae90be",
+      "assetId": "distillation_unit_hero",
+      "objectId": "battery_limit_naphtha",
+      "semanticId": "battery_limit_flange",
+      "instanceId": "",
+      "role": "boundary_flange"
+    },
+    "BatteryLimit_Naphtha_Support": {
+      "nodeUid": "fdf97ad5-79af-5746-9f51-9844220e4199",
+      "assetId": "distillation_unit_hero",
+      "objectId": "battery_limit_naphtha",
+      "semanticId": "battery_limit_support",
+      "instanceId": "",
+      "role": "support_column"
+    },
+    "BatteryLimit_Naphtha_Foot": {
+      "nodeUid": "2f68a160-16d5-5671-9bd8-a5b9479a24d4",
+      "assetId": "distillation_unit_hero",
+      "objectId": "battery_limit_naphtha",
+      "semanticId": "battery_limit_foot",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "RundownRack_Naphtha_0": {
+      "nodeUid": "ca7d1d4a-9483-5af0-be2d-a9904fb3289d",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp42_yp5_zm48",
+      "role": "support_column"
+    },
+    "RundownRack_Naphtha_0_Foot": {
+      "nodeUid": "f11a8ebf-4db6-5ae6-895c-5edb8a525a87",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp42_yp1_zm48",
+      "role": "support_column"
+    },
+    "RundownRack_Naphtha_1": {
+      "nodeUid": "419b00fc-2cc4-5a2e-9f91-0cf96681ed51",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp62_yp5_zm48",
+      "role": "support_column"
+    },
+    "RundownRack_Naphtha_1_Foot": {
+      "nodeUid": "b93abe0e-663c-5cde-a0e6-d9a0a9259de6",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp62_yp1_zm48",
+      "role": "support_column"
+    },
+    "RundownRack_Naphtha_2": {
+      "nodeUid": "812cd5d2-fee1-580b-9980-cc95f7e2be38",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp84_yp5_zm48",
+      "role": "support_column"
+    },
+    "RundownRack_Naphtha_2_Foot": {
+      "nodeUid": "0f0bb468-7f59-522a-84aa-153ab5ec7f55",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp84_yp1_zm48",
+      "role": "support_column"
+    },
+    "Nozzle_Side_Kerosene": {
+      "nodeUid": "925e31ef-5784-5522-bdb8-b351def6e8ab",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_nozzle",
+      "instanceId": "",
+      "role": "nozzle"
+    },
+    "Flange_Side_Kerosene": {
+      "nodeUid": "f876c150-57e3-53fa-a2f1-02b51b4f429b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_flange",
+      "instanceId": "",
+      "role": "flange"
+    },
+    "Pipe_Side_Kerosene_Seg0": {
+      "nodeUid": "91b9a482-0cad-5d47-9411-0a0f0a0a6439",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp184_zm29",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Kerosene_Seg1": {
+      "nodeUid": "a1106315-44c7-5127-b82b-2481e22f0415",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp38_yp184_zm59",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Kerosene_Seg2": {
+      "nodeUid": "5a995678-ef8b-5c86-b599-52c473d01361",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp50_yp137_zm59",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Kerosene_Elbow0": {
+      "nodeUid": "9d61c864-ab29-5ef6-b49e-0985f8d681c5",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp184_zp0",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Kerosene_Elbow1": {
+      "nodeUid": "4099fc6c-e7ed-59bd-a2cf-f65a16de30f1",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp184_zm59",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Kerosene_Elbow2": {
+      "nodeUid": "89bb59f7-1c68-5a8b-b9de-267be6bebc55",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp50_yp184_zm59",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Kerosene_Elbow3": {
+      "nodeUid": "05169b6d-c575-53d9-ae9e-f3be45e1bbe6",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp50_yp90_zm59",
+      "role": "process_pipe"
+    },
+    "SideRack_Col_Kerosene_A": {
+      "nodeUid": "68747780-3ad5-5e26-a2d1-f975a8901908",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_rack_column",
+      "instanceId": "xp30_yp92_zm59",
+      "role": "support_column"
+    },
+    "SideRack_Col_Kerosene_A_Foot": {
+      "nodeUid": "dfb51aae-98e8-54b0-9d59-3b2444be978b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_rack_column",
+      "instanceId": "xp30_yp1_zm59",
+      "role": "support_column"
+    },
+    "SideRack_Col_Kerosene_B": {
+      "nodeUid": "86633f39-0a73-5f07-814f-e74cf1e469fb",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_rack_column",
+      "instanceId": "xp40_yp92_zm59",
+      "role": "support_column"
+    },
+    "SideRack_Col_Kerosene_B_Foot": {
+      "nodeUid": "a5348693-81fe-507e-bdd5-4432308215a2",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_rack_column",
+      "instanceId": "xp40_yp1_zm59",
+      "role": "support_column"
+    },
+    "Stripper_Kerosene_Foundation": {
+      "nodeUid": "88803e80-c8f0-5ef6-ad60-ad1f3bf802c6",
+      "assetId": "distillation_unit_hero",
+      "objectId": "stripper_kerosene",
+      "semanticId": "stripper_foundation",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "Stripper_Kerosene_Skirt": {
+      "nodeUid": "49512a1c-3011-5cb7-8ffe-a0b8b40df7fa",
+      "assetId": "distillation_unit_hero",
+      "objectId": "stripper_kerosene",
+      "semanticId": "stripper_skirt",
+      "instanceId": "",
+      "role": "skirt"
+    },
+    "Stripper_Kerosene_Shell": {
+      "nodeUid": "1dfb94e6-f00f-5c79-b8f3-f115f44c9a58",
+      "assetId": "distillation_unit_hero",
+      "objectId": "stripper_kerosene",
+      "semanticId": "stripper_shell",
+      "instanceId": "",
+      "role": "shell"
+    },
+    "Stripper_Kerosene_Dome": {
+      "nodeUid": "d860afa5-9f77-55e2-a37b-ed0b0e75759f",
+      "assetId": "distillation_unit_hero",
+      "objectId": "stripper_kerosene",
+      "semanticId": "stripper_dome",
+      "instanceId": "",
+      "role": "dome"
+    },
+    "Pipe_Rundown_Kerosene_Seg0": {
+      "nodeUid": "f2170821-01bf-5b90-858a-a7b3527cc75b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp67_yp10_zm59",
+      "role": "process_pipe"
+    },
+    "Pipe_Rundown_Kerosene_Elbow0": {
+      "nodeUid": "7cc91852-9a77-56f6-9f6b-995ae9f8a1ae",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp50_yp10_zm59",
+      "role": "process_pipe"
+    },
+    "Pipe_Rundown_Kerosene_Elbow1": {
+      "nodeUid": "b9310859-dcac-5478-906d-78516c151dc4",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp83_yp10_zm59",
+      "role": "process_pipe"
+    },
+    "BatteryLimit_Kerosene": {
+      "nodeUid": "772f1b91-6d7b-56de-9bd9-4e6a5e29da03",
+      "assetId": "distillation_unit_hero",
+      "objectId": "battery_limit_kerosene",
+      "semanticId": "battery_limit_flange",
+      "instanceId": "",
+      "role": "boundary_flange"
+    },
+    "BatteryLimit_Kerosene_Support": {
+      "nodeUid": "6026ce52-940a-5423-81ea-57c8d7d0a5fe",
+      "assetId": "distillation_unit_hero",
+      "objectId": "battery_limit_kerosene",
+      "semanticId": "battery_limit_support",
+      "instanceId": "",
+      "role": "support_column"
+    },
+    "BatteryLimit_Kerosene_Foot": {
+      "nodeUid": "e8d506b8-c15d-5bbd-ab05-17e2e8bf5ddb",
+      "assetId": "distillation_unit_hero",
+      "objectId": "battery_limit_kerosene",
+      "semanticId": "battery_limit_foot",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "RundownRack_Kerosene_0": {
+      "nodeUid": "f471d14d-9ab6-5d1e-b878-979a42af1fcd",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp42_yp5_zm59",
+      "role": "support_column"
+    },
+    "RundownRack_Kerosene_0_Foot": {
+      "nodeUid": "740d03a9-4743-5762-8069-08b9b7bf2d18",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp42_yp1_zm59",
+      "role": "support_column"
+    },
+    "RundownRack_Kerosene_1": {
+      "nodeUid": "1e5f6428-6140-5159-94a8-3475d4bde970",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp62_yp5_zm59",
+      "role": "support_column"
+    },
+    "RundownRack_Kerosene_1_Foot": {
+      "nodeUid": "3daceaca-7359-5b97-910f-03cdf677e4c1",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp62_yp1_zm59",
+      "role": "support_column"
+    },
+    "RundownRack_Kerosene_2": {
+      "nodeUid": "943fd554-f6bf-5873-9927-8bc204afcfe3",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp84_yp5_zm59",
+      "role": "support_column"
+    },
+    "RundownRack_Kerosene_2_Foot": {
+      "nodeUid": "2e581d7d-21a9-5a7c-9a72-bbc4fea042e4",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp84_yp1_zm59",
+      "role": "support_column"
+    },
+    "Nozzle_Side_Diesel": {
+      "nodeUid": "1b15c50b-72f8-59f4-942a-08e7589a3afb",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_nozzle",
+      "instanceId": "",
+      "role": "nozzle"
+    },
+    "Flange_Side_Diesel": {
+      "nodeUid": "bfd25c19-1568-58ba-9f8c-6b4df6a8c4d1",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_flange",
+      "instanceId": "",
+      "role": "flange"
+    },
+    "Pipe_Side_Diesel_Seg0": {
+      "nodeUid": "c317031d-e610-5359-b079-1b1afb809e95",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp158_zm35",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Diesel_Seg1": {
+      "nodeUid": "22332d49-3c88-5193-81fc-02ab57e56e0c",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp46_yp158_zm70",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Diesel_Seg2": {
+      "nodeUid": "c7e2dee6-4f1a-5422-8896-c866c6e5adb9",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp66_yp124_zm70",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Diesel_Elbow0": {
+      "nodeUid": "2eb39663-e648-50a8-837f-dce6d1ba11ac",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp158_zp0",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Diesel_Elbow1": {
+      "nodeUid": "ab858255-913e-5269-b655-6a0d0b519553",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp158_zm70",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Diesel_Elbow2": {
+      "nodeUid": "98a6e159-8462-5ec3-adf9-a72cd884be89",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp66_yp158_zm70",
+      "role": "process_pipe"
+    },
+    "Pipe_Side_Diesel_Elbow3": {
+      "nodeUid": "2b0f206f-2c7f-57f5-a28b-93b671de7587",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp66_yp90_zm70",
+      "role": "process_pipe"
+    },
+    "SideRack_Col_Diesel_A": {
+      "nodeUid": "c02b0ba7-000c-5b47-8b3f-a260944f0440",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_rack_column",
+      "instanceId": "xp30_yp79_zm70",
+      "role": "support_column"
+    },
+    "SideRack_Col_Diesel_A_Foot": {
+      "nodeUid": "7f9d01b9-a6d6-5719-a18b-4a2a0d82803b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_rack_column",
+      "instanceId": "xp30_yp1_zm70",
+      "role": "support_column"
+    },
+    "SideRack_Col_Diesel_B": {
+      "nodeUid": "22c250bb-2c80-502a-9f09-4b8d025d14d6",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_rack_column",
+      "instanceId": "xp48_yp79_zm70",
+      "role": "support_column"
+    },
+    "SideRack_Col_Diesel_B_Foot": {
+      "nodeUid": "f12d5287-efb9-55b7-af16-632eb83eb991",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_rack_column",
+      "instanceId": "xp48_yp1_zm70",
+      "role": "support_column"
+    },
+    "Stripper_Diesel_Foundation": {
+      "nodeUid": "ae4fbac1-2ec8-52d8-b596-5e8b65c8cb02",
+      "assetId": "distillation_unit_hero",
+      "objectId": "stripper_diesel",
+      "semanticId": "stripper_foundation",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "Stripper_Diesel_Skirt": {
+      "nodeUid": "5728ecd7-9174-55c4-90f8-c9a7bbe88086",
+      "assetId": "distillation_unit_hero",
+      "objectId": "stripper_diesel",
+      "semanticId": "stripper_skirt",
+      "instanceId": "",
+      "role": "skirt"
+    },
+    "Stripper_Diesel_Shell": {
+      "nodeUid": "b6be7b8b-133a-51c6-93dd-c4667840b68f",
+      "assetId": "distillation_unit_hero",
+      "objectId": "stripper_diesel",
+      "semanticId": "stripper_shell",
+      "instanceId": "",
+      "role": "shell"
+    },
+    "Stripper_Diesel_Dome": {
+      "nodeUid": "d7a8a992-5521-5009-afcf-89c47a13e899",
+      "assetId": "distillation_unit_hero",
+      "objectId": "stripper_diesel",
+      "semanticId": "stripper_dome",
+      "instanceId": "",
+      "role": "dome"
+    },
+    "Pipe_Rundown_Diesel_Seg0": {
+      "nodeUid": "bdad6023-60ef-51a2-a703-8e598d47aa3b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp75_yp10_zm70",
+      "role": "process_pipe"
+    },
+    "Pipe_Rundown_Diesel_Elbow0": {
+      "nodeUid": "3fa20cf1-b218-511c-aa72-03708a02cdc8",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp66_yp10_zm70",
+      "role": "process_pipe"
+    },
+    "Pipe_Rundown_Diesel_Elbow1": {
+      "nodeUid": "8e5fb62c-f8c9-5325-87a6-3f5dd2743942",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp83_yp10_zm70",
+      "role": "process_pipe"
+    },
+    "BatteryLimit_Diesel": {
+      "nodeUid": "195364e5-88a7-5d95-aec2-0815a13beb6d",
+      "assetId": "distillation_unit_hero",
+      "objectId": "battery_limit_diesel",
+      "semanticId": "battery_limit_flange",
+      "instanceId": "",
+      "role": "boundary_flange"
+    },
+    "BatteryLimit_Diesel_Support": {
+      "nodeUid": "98840bd8-f00c-5a24-a624-75228b0c4c7a",
+      "assetId": "distillation_unit_hero",
+      "objectId": "battery_limit_diesel",
+      "semanticId": "battery_limit_support",
+      "instanceId": "",
+      "role": "support_column"
+    },
+    "BatteryLimit_Diesel_Foot": {
+      "nodeUid": "8a80ab6a-7591-51f2-b30f-18285513f85f",
+      "assetId": "distillation_unit_hero",
+      "objectId": "battery_limit_diesel",
+      "semanticId": "battery_limit_foot",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "RundownRack_Diesel_0": {
+      "nodeUid": "96225869-6543-59f9-a0ab-fec4d7db525d",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp42_yp5_zm70",
+      "role": "support_column"
+    },
+    "RundownRack_Diesel_0_Foot": {
+      "nodeUid": "f7cfeecc-caa6-59cc-9ab1-5213293a537d",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp42_yp1_zm70",
+      "role": "support_column"
+    },
+    "RundownRack_Diesel_1": {
+      "nodeUid": "756f5592-9c2e-5290-a5ff-4d3076b14fd9",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp62_yp5_zm70",
+      "role": "support_column"
+    },
+    "RundownRack_Diesel_1_Foot": {
+      "nodeUid": "82e2cede-c12e-5c68-9da0-33d7a120660d",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp62_yp1_zm70",
+      "role": "support_column"
+    },
+    "RundownRack_Diesel_2": {
+      "nodeUid": "847559d8-6e3c-5c6a-a643-a147c44646af",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp84_yp5_zm70",
+      "role": "support_column"
+    },
+    "RundownRack_Diesel_2_Foot": {
+      "nodeUid": "8cb948fd-2ce5-5512-bdd0-403006a699cd",
+      "assetId": "distillation_unit_hero",
+      "objectId": "side_draw_diesel",
+      "semanticId": "rundown_rack_post",
+      "instanceId": "xp84_yp1_zm70",
+      "role": "support_column"
+    },
+    "Pipe_Top_Vertical": {
+      "nodeUid": "a6666b13-ecce-5afa-b44c-5388f0a949f1",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_line",
+      "instanceId": "xp22_yp274_zp0",
+      "role": "process_pipe"
+    },
+    "Pipe_Top_Elbow": {
+      "nodeUid": "6dab32f7-a3d0-5b07-ae5c-9e5e43608d9d",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_line",
+      "instanceId": "xp22_yp289_zp0",
+      "role": "process_pipe"
+    },
+    "Pipe_Top_Condenser": {
+      "nodeUid": "8d62427c-85a0-550b-ba58-b2acf9bedab0",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_line",
+      "instanceId": "xp40_yp289_zp0",
+      "role": "process_pipe"
+    },
+    "Condenser_Shell": {
+      "nodeUid": "181f9286-63d4-5d94-be68-7e85c5550513",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_shell",
+      "instanceId": "",
+      "role": "exchanger_shell"
+    },
+    "Condenser_Head_A": {
+      "nodeUid": "197d37a1-bcad-5052-9cc4-389e20b7e6a1",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_head",
+      "instanceId": "xp55_yp284_zp0",
+      "role": "vessel_head"
+    },
+    "Condenser_Head_B": {
+      "nodeUid": "08acacb7-9069-5232-87f6-c26c2b2ab0d2",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_head",
+      "instanceId": "xp85_yp284_zp0",
+      "role": "vessel_head"
+    },
+    "Condenser_Saddle_0": {
+      "nodeUid": "00d01119-c1aa-5938-a3a8-326cd9264521",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_saddle",
+      "instanceId": "xp61_yp277_zp0",
+      "role": "saddle"
+    },
+    "Condenser_Beam_0": {
+      "nodeUid": "b49808c1-ff3b-5a2a-99b1-2dcbd9464b0d",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_beam",
+      "instanceId": "xp61_yp275_zm17",
+      "role": "structural_beam"
+    },
+    "Condenser_Saddle_1": {
+      "nodeUid": "42809fbb-a893-5a6c-a973-31728443558e",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_saddle",
+      "instanceId": "xp79_yp277_zp0",
+      "role": "saddle"
+    },
+    "Condenser_Beam_1": {
+      "nodeUid": "2eacee16-99ef-5761-aa98-060dcf1453be",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_beam",
+      "instanceId": "xp79_yp275_zm17",
+      "role": "structural_beam"
+    },
+    "Condenser_Frame_0": {
+      "nodeUid": "46f306f6-3c48-5122-b86f-312b2bc90d01",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_frame",
+      "instanceId": "xp58_yp138_zm34",
+      "role": "structural_frame"
+    },
+    "Condenser_Frame_0_Foot": {
+      "nodeUid": "fbe97c6a-cf9c-578d-9913-5db60f06c7cb",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_frame",
+      "instanceId": "xp58_yp1_zm34",
+      "role": "structural_frame"
+    },
+    "Condenser_Frame_1": {
+      "nodeUid": "733a3822-d168-51d3-986b-8f03dbeeef67",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_frame",
+      "instanceId": "xp82_yp138_zm34",
+      "role": "structural_frame"
+    },
+    "Condenser_Frame_1_Foot": {
+      "nodeUid": "cc47a439-960a-52c9-a5d1-34ab0f74f88f",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_frame",
+      "instanceId": "xp82_yp1_zm34",
+      "role": "structural_frame"
+    },
+    "Condenser_Frame_LongBeam": {
+      "nodeUid": "af74c06f-e947-5fad-9cd2-42bc8f7b1ee9",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_frame",
+      "instanceId": "xp70_yp275_zm34",
+      "role": "structural_frame"
+    },
+    "Reflux_Drum": {
+      "nodeUid": "b695af7d-8a4d-5294-b3c8-27555c154dd5",
+      "assetId": "distillation_unit_hero",
+      "objectId": "reflux_drum",
+      "semanticId": "reflux_drum_shell",
+      "instanceId": "",
+      "role": "vessel_shell"
+    },
+    "Reflux_Drum_Head_A": {
+      "nodeUid": "59d78514-5fbd-598a-aa9d-6e3fb79341e3",
+      "assetId": "distillation_unit_hero",
+      "objectId": "reflux_drum",
+      "semanticId": "reflux_drum_part",
+      "instanceId": "xp61_yp255_zm2",
+      "role": "vessel_part"
+    },
+    "Reflux_Drum_Head_B": {
+      "nodeUid": "0ebb52c2-d527-56a6-aedb-f676eadf9738",
+      "assetId": "distillation_unit_hero",
+      "objectId": "reflux_drum",
+      "semanticId": "reflux_drum_part",
+      "instanceId": "xp79_yp255_zm2",
+      "role": "vessel_part"
+    },
+    "Reflux_Drum_Beam": {
+      "nodeUid": "f85b3f0a-9450-5200-ad37-46bea5738b0c",
+      "assetId": "distillation_unit_hero",
+      "objectId": "reflux_drum",
+      "semanticId": "reflux_drum_part",
+      "instanceId": "xp70_yp252_zm34",
+      "role": "vessel_part"
+    },
+    "Reflux_Drum_Cantilever_A": {
+      "nodeUid": "889cd1fc-8c23-5925-898e-569c9c746059",
+      "assetId": "distillation_unit_hero",
+      "objectId": "reflux_drum",
+      "semanticId": "reflux_drum_part",
+      "instanceId": "xp63_yp252_zm17",
+      "role": "vessel_part"
+    },
+    "Reflux_Drum_Cantilever_B": {
+      "nodeUid": "cb2a9b39-622b-50d8-8487-e088dea02c99",
+      "assetId": "distillation_unit_hero",
+      "objectId": "reflux_drum",
+      "semanticId": "reflux_drum_part",
+      "instanceId": "xp77_yp252_zm17",
+      "role": "vessel_part"
+    },
+    "Reflux_Drum_Saddle_A": {
+      "nodeUid": "b661eb2b-cb49-500a-a067-62a5f313457d",
+      "assetId": "distillation_unit_hero",
+      "objectId": "reflux_drum",
+      "semanticId": "reflux_drum_part",
+      "instanceId": "xp63_yp249_zm2",
+      "role": "vessel_part"
+    },
+    "Reflux_Drum_Saddle_B": {
+      "nodeUid": "f9a9118f-782a-54ff-95d7-23977d3b3074",
+      "assetId": "distillation_unit_hero",
+      "objectId": "reflux_drum",
+      "semanticId": "reflux_drum_part",
+      "instanceId": "xp77_yp249_zm2",
+      "role": "vessel_part"
+    },
+    "Pipe_Condenser_To_Drum_Seg0": {
+      "nodeUid": "9ed154cc-943e-5a4d-a8fe-a15231f3aadb",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_to_drum_pipe",
+      "instanceId": "xp70_yp269_zp0",
+      "role": "process_pipe"
+    },
+    "Pipe_Condenser_To_Drum_Elbow0": {
+      "nodeUid": "45e88252-cd38-5e4d-8101-4f02a04ce6fc",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_to_drum_pipe",
+      "instanceId": "xp70_yp276_zp0",
+      "role": "process_pipe"
+    },
+    "Pipe_Condenser_To_Drum_Elbow1": {
+      "nodeUid": "a6bf2372-b474-5fcb-81fb-6a0c97b48dcc",
+      "assetId": "distillation_unit_hero",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_to_drum_pipe",
+      "instanceId": "xp70_yp261_zp0",
+      "role": "process_pipe"
+    },
+    "Pump_1": {
+      "nodeUid": "70cd0ea6-9c24-5a75-99d1-35ecdc326429",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_1",
+      "semanticId": "pump_body",
+      "instanceId": "",
+      "role": "pump_body"
+    },
+    "Pump_2": {
+      "nodeUid": "0cbfa31f-3abf-5531-977f-4abeaf38e457",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_2",
+      "semanticId": "pump_body",
+      "instanceId": "",
+      "role": "pump_body"
+    },
+    "Foundation_Atm": {
+      "nodeUid": "b58eef60-100b-5d0d-aae4-bfa107c4e861",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_foundation",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "Foundation_Vac": {
+      "nodeUid": "a4d7587c-d246-5ef8-b9b2-73cc47916e25",
+      "assetId": "distillation_unit_hero",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_foundation",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "Foundation_Heater": {
+      "nodeUid": "101a53b0-8cc1-53f6-ac41-6f540b0a5029",
+      "assetId": "distillation_unit_hero",
+      "objectId": "heater",
+      "semanticId": "heater_foundation",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "Exchanger_1_Shell": {
+      "nodeUid": "8cadbb61-f047-52f7-970e-f7b96ed9fac7",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_shell",
+      "instanceId": "",
+      "role": "exchanger_shell"
+    },
+    "Exchanger_1_Saddle_A": {
+      "nodeUid": "7fcac7d8-a325-5790-9989-dd89aaacef1f",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_saddle",
+      "instanceId": "xm141_yp35_zp30",
+      "role": "saddle"
+    },
+    "Exchanger_1_Saddle_B": {
+      "nodeUid": "d2424d14-a3b8-533d-9470-12552b647b17",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_saddle",
+      "instanceId": "xm109_yp35_zp30",
+      "role": "saddle"
+    },
+    "Exchanger_1_Head_A": {
+      "nodeUid": "127e5d94-263b-58c2-bbfb-6271af2f1acc",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_head",
+      "instanceId": "xm151_yp44_zp30",
+      "role": "vessel_head"
+    },
+    "Exchanger_1_Head_B": {
+      "nodeUid": "e084f8e1-2866-50ca-bb9a-efa5669e8ad4",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_head",
+      "instanceId": "xm99_yp44_zp30",
+      "role": "vessel_head"
+    },
+    "Exchanger_1_Nozzle": {
+      "nodeUid": "bd9f4610-7c22-5378-8750-7768fe4b3a2d",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_nozzle",
+      "instanceId": "xm125_yp52_zp30",
+      "role": "nozzle"
+    },
+    "Exchanger_1_Nozzle_Out": {
+      "nodeUid": "2cf7abfa-789f-5c5f-a503-f60d0e51270b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_nozzle",
+      "instanceId": "xm125_yp36_zp30",
+      "role": "nozzle"
+    },
+    "Exchanger_2_Shell": {
+      "nodeUid": "7f5de310-4f07-5a34-8b87-e88bfd3144f6",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_shell",
+      "instanceId": "",
+      "role": "exchanger_shell"
+    },
+    "Exchanger_2_Saddle_A": {
+      "nodeUid": "5ccf4529-0137-5977-bd75-b60f12a78906",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_saddle",
+      "instanceId": "xm141_yp35_zm30",
+      "role": "saddle"
+    },
+    "Exchanger_2_Saddle_B": {
+      "nodeUid": "ff47da0e-c06a-5ba9-a3e4-ed1e6cfd3f2d",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_saddle",
+      "instanceId": "xm109_yp35_zm30",
+      "role": "saddle"
+    },
+    "Exchanger_2_Head_A": {
+      "nodeUid": "b97013c2-1e34-53ea-827b-814d1cf74d56",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_head",
+      "instanceId": "xm151_yp44_zm30",
+      "role": "vessel_head"
+    },
+    "Exchanger_2_Head_B": {
+      "nodeUid": "e5764b32-c1c9-53c3-aedd-1e306ac0d9de",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_head",
+      "instanceId": "xm99_yp44_zm30",
+      "role": "vessel_head"
+    },
+    "Exchanger_2_Nozzle": {
+      "nodeUid": "9d861de0-6ed1-5908-8faf-72b45be7ed4b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_nozzle",
+      "instanceId": "xm125_yp52_zm30",
+      "role": "nozzle"
+    },
+    "Exchanger_2_Nozzle_Out": {
+      "nodeUid": "de59a436-fa92-5437-ab87-bd1182624f71",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_nozzle",
+      "instanceId": "xm125_yp36_zm30",
+      "role": "nozzle"
+    },
+    "Exchanger_3_Shell": {
+      "nodeUid": "12325544-a5a1-52d1-bbfe-bb8fc5b9f411",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_shell",
+      "instanceId": "",
+      "role": "exchanger_shell"
+    },
+    "Exchanger_3_Saddle_A": {
+      "nodeUid": "de1cbf72-cd21-552a-8462-e08b4dac176b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_saddle",
+      "instanceId": "xm98_yp35_zp30",
+      "role": "saddle"
+    },
+    "Exchanger_3_Saddle_B": {
+      "nodeUid": "03a8860d-f4a6-5246-8695-399c4da2be95",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_saddle",
+      "instanceId": "xm72_yp35_zp30",
+      "role": "saddle"
+    },
+    "Exchanger_3_Head_A": {
+      "nodeUid": "381dfed5-90ee-5116-972b-d4509cdf3482",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_head",
+      "instanceId": "xm106_yp44_zp30",
+      "role": "vessel_head"
+    },
+    "Exchanger_3_Head_B": {
+      "nodeUid": "c868512f-7353-5360-a8c9-9bbbd08e50d8",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_head",
+      "instanceId": "xm64_yp44_zp30",
+      "role": "vessel_head"
+    },
+    "Exchanger_3_Nozzle": {
+      "nodeUid": "cbb64bd4-bfa2-5d12-ac94-405f168ebb49",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_nozzle",
+      "instanceId": "xm85_yp52_zp30",
+      "role": "nozzle"
+    },
+    "Exchanger_3_Nozzle_Out": {
+      "nodeUid": "48f5cb79-12bb-572b-b51d-8513f913166e",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_nozzle",
+      "instanceId": "xm85_yp36_zp30",
+      "role": "nozzle"
+    },
+    "Exchanger_1_Base": {
+      "nodeUid": "e8356f11-221f-556a-b6e3-2de4b8bcf1dc",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_base",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "Exchanger_2_Base": {
+      "nodeUid": "049c370b-58cc-58e3-bcb9-51287ee08812",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_base",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "Exchanger_3_Base": {
+      "nodeUid": "f89c8c42-c808-52a1-8d6d-886e0dba2f9b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_base",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "PumpSkid_Base": {
+      "nodeUid": "3440d27b-f652-599f-9c35-8ef1904fc581",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_skid_base",
+      "instanceId": "",
+      "role": "foundation"
+    },
+    "Pump_A_0_Body": {
+      "nodeUid": "593f2189-3f0a-54e2-a9e0-a186edca0cf5",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_body",
+      "instanceId": "xp22_yp10_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_0_Motor": {
+      "nodeUid": "7bbd494c-c2c9-58a5-997f-44ce7ec353cf",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_motor",
+      "instanceId": "xp32_yp9_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_0_Suction": {
+      "nodeUid": "77f7ded6-e79a-5f0c-be5e-d58b64cfce24",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_suction",
+      "instanceId": "xp12_yp13_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_0_Discharge": {
+      "nodeUid": "7364a5d9-92f0-5f3c-b7b9-4f5eb1408b84",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_discharge",
+      "instanceId": "xp22_yp20_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_0_ValveWheel": {
+      "nodeUid": "b043960b-8580-5985-bc91-24b87e7b7ef7",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_valvewheel",
+      "instanceId": "xp22_yp28_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_1_Body": {
+      "nodeUid": "b126bd15-d02f-5876-9dd3-2e4b70905a27",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_body",
+      "instanceId": "xp40_yp10_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_1_Motor": {
+      "nodeUid": "0b5561f4-d6d7-5f68-9acc-b49758e00c97",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_motor",
+      "instanceId": "xp50_yp9_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_1_Suction": {
+      "nodeUid": "527a4302-7189-5afa-a72a-abf6b3b5e1a0",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_suction",
+      "instanceId": "xp30_yp13_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_1_Discharge": {
+      "nodeUid": "10eef08e-1c45-5c6a-937f-f9d18d8e0b62",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_discharge",
+      "instanceId": "xp40_yp20_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_1_ValveWheel": {
+      "nodeUid": "a38ccaa2-08d0-5e81-9fa2-829abf8fbc93",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_valvewheel",
+      "instanceId": "xp40_yp28_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_2_Body": {
+      "nodeUid": "e5f135ae-eff0-546b-8535-5a82fad152f8",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_body",
+      "instanceId": "xp58_yp10_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_2_Motor": {
+      "nodeUid": "7c3cf811-49ab-5d98-808c-355f14d3dea0",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_motor",
+      "instanceId": "xp68_yp9_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_2_Suction": {
+      "nodeUid": "e33734ee-d14c-5cfa-9323-6801e5903830",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_suction",
+      "instanceId": "xp48_yp13_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_2_Discharge": {
+      "nodeUid": "888e57f3-5cc6-5854-98ce-0d13f9880506",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_discharge",
+      "instanceId": "xp58_yp20_zp62",
+      "role": "pump_part"
+    },
+    "Pump_A_2_ValveWheel": {
+      "nodeUid": "2f6985ba-3a83-580e-aecc-8a861fd53a80",
+      "assetId": "distillation_unit_hero",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_valvewheel",
+      "instanceId": "xp58_yp28_zp62",
+      "role": "pump_part"
+    },
+    "PipeRack_Column_0": {
+      "nodeUid": "a9b9e777-9ba2-5b7c-9f4b-801c03c91dde",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_pipe_rack",
+      "semanticId": "pipe_rack_part",
+      "instanceId": "xp105_yp33_zp94",
+      "role": "pipe_rack"
+    },
+    "PipeRack_Column_1": {
+      "nodeUid": "c5b9e7b9-bffe-5c6b-9c39-3734f73dcdcb",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_pipe_rack",
+      "semanticId": "pipe_rack_part",
+      "instanceId": "xp127_yp33_zp94",
+      "role": "pipe_rack"
+    },
+    "PipeRack_Column_2": {
+      "nodeUid": "b9115b30-6847-5ae1-9f09-72b1177128af",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_pipe_rack",
+      "semanticId": "pipe_rack_part",
+      "instanceId": "xp149_yp33_zp94",
+      "role": "pipe_rack"
+    },
+    "PipeRack_Column_3": {
+      "nodeUid": "52e59652-284e-55ed-a07c-5277fd11cce2",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_pipe_rack",
+      "semanticId": "pipe_rack_part",
+      "instanceId": "xp171_yp33_zp94",
+      "role": "pipe_rack"
+    },
+    "PipeRack_Beam_31": {
+      "nodeUid": "7dfc0890-806f-52c7-bbb4-ac358ee1bb57",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_pipe_rack",
+      "semanticId": "pipe_rack_part",
+      "instanceId": "xp138_yp31_zp94",
+      "role": "pipe_rack"
+    },
+    "PipeRack_Beam_56": {
+      "nodeUid": "769cf55e-9fe0-58ee-a94e-5ccc341a75e1",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_pipe_rack",
+      "semanticId": "pipe_rack_part",
+      "instanceId": "xp138_yp56_zp94",
+      "role": "pipe_rack"
+    },
+    "PipeRack_Pipe_0": {
+      "nodeUid": "20fb2da1-0100-54fc-932c-ce399f75fe00",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_pipe_rack",
+      "semanticId": "pipe_rack_part",
+      "instanceId": "xp138_yp38_zp98",
+      "role": "pipe_rack"
+    },
+    "PipeRack_Pipe_1": {
+      "nodeUid": "c80bdd19-cea8-52ba-938a-170e7c9de6e1",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_pipe_rack",
+      "semanticId": "pipe_rack_part",
+      "instanceId": "xp138_yp50_zp95",
+      "role": "pipe_rack"
+    },
+    "PipeRack_Pipe_2": {
+      "nodeUid": "b8d70c72-b945-5f78-835f-b61cc47989db",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_pipe_rack",
+      "semanticId": "pipe_rack_part",
+      "instanceId": "xp138_yp59_zp92",
+      "role": "pipe_rack"
+    },
+    "Platform_Grate_10": {
+      "nodeUid": "ba7c17bc-c6a4-5dd2-b5e3-614d5accd8e6",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_platform_part",
+      "instanceId": "xp0_yp100_zp33",
+      "role": "platform"
+    },
+    "Platform_Post_10_-24": {
+      "nodeUid": "7bf12b9d-fa95-5dbc-8cbb-43670596de94",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_platform_part",
+      "instanceId": "xm24_yp106_zp40",
+      "role": "platform"
+    },
+    "Platform_Post_10_24": {
+      "nodeUid": "0bea6efc-f37d-5f42-b713-86ae454d7132",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_platform_part",
+      "instanceId": "xp25_yp106_zp40",
+      "role": "platform"
+    },
+    "Platform_Rail_10": {
+      "nodeUid": "e53c4384-b4a3-593e-9579-e7a34b2f07b1",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_platform_part",
+      "instanceId": "xp0_yp111_zp40",
+      "role": "platform"
+    },
+    "Platform_Grate_18": {
+      "nodeUid": "b45da9ac-11d9-541f-8721-c9df44c4f153",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_platform_part",
+      "instanceId": "xp0_yp180_zp33",
+      "role": "platform"
+    },
+    "Platform_Post_18_-24": {
+      "nodeUid": "71fe773b-79d4-5a18-a25d-41f86ab41327",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_platform_part",
+      "instanceId": "xm24_yp186_zp40",
+      "role": "platform"
+    },
+    "Platform_Post_18_24": {
+      "nodeUid": "bffa8c98-df98-5828-bada-427a8437a808",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_platform_part",
+      "instanceId": "xp25_yp186_zp40",
+      "role": "platform"
+    },
+    "Platform_Rail_18": {
+      "nodeUid": "7b2950fd-0d71-50ce-bb33-8b46ff078ca5",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_platform_part",
+      "instanceId": "xp0_yp191_zp40",
+      "role": "platform"
+    },
+    "Ladder_Rung_0": {
+      "nodeUid": "7c9bca32-69a4-5122-a6f3-646dab09f680",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp12_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_1": {
+      "nodeUid": "d27b87fe-bb9e-5a78-b09c-9a8273a66124",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp20_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_2": {
+      "nodeUid": "c3d6e152-786f-5520-98ae-932770f91928",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp28_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_3": {
+      "nodeUid": "0b5c7c6c-e0d6-50ca-9516-77b837962614",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp36_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_4": {
+      "nodeUid": "2a266245-fa04-5bcb-aff6-da47719c4a39",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp44_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_5": {
+      "nodeUid": "d77198b8-b786-5b28-9828-389aed3d17f7",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp53_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_6": {
+      "nodeUid": "6e63e0ce-7736-54be-9c01-9542416752ba",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp61_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_7": {
+      "nodeUid": "effb1984-b80e-514d-8471-62c7349509d0",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp69_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_8": {
+      "nodeUid": "a38f58ab-bf45-5e2d-9192-44cb1f8318b0",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp77_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_9": {
+      "nodeUid": "23f2c250-7840-530b-9c15-62312169270b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp85_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_10": {
+      "nodeUid": "cf41bbf9-241f-545d-ac0e-f065a228a688",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp94_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_11": {
+      "nodeUid": "1c4e9416-496b-5d7e-bed1-98b4e347a9cf",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp102_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_12": {
+      "nodeUid": "49defa9f-c7d0-5d94-b20b-8a891b69e2a2",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp110_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_13": {
+      "nodeUid": "a6b78b24-054f-5b94-9859-ebbe5fb0c754",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp118_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_14": {
+      "nodeUid": "b0efe2fb-be0f-55b2-bea3-ab9471a4ea1b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp126_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_15": {
+      "nodeUid": "1fe4303e-da05-5a18-8c1c-324fed6da905",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp135_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_16": {
+      "nodeUid": "ba786516-5fca-546a-8f86-5d60425e7b05",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp143_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_17": {
+      "nodeUid": "7289277c-a671-5604-98e9-3e28a7f0f2e4",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp151_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_18": {
+      "nodeUid": "392ef0e4-22f9-59fb-93f6-4bc2024b076c",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp159_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_19": {
+      "nodeUid": "cb475a73-74e2-5ca2-b017-11d91a607fe6",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp167_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_20": {
+      "nodeUid": "aff52ae4-8f9f-5a8b-869e-e30d8fa0e5cb",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp176_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rung_21": {
+      "nodeUid": "8dfbc90a-3f6e-51ff-b4c0-49e065fa0214",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rung",
+      "instanceId": "xp26_yp184_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rail_L": {
+      "nodeUid": "b006c20a-3f74-5646-b404-891dbf7a1f96",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rail",
+      "instanceId": "xp30_yp95_zp33",
+      "role": "ladder"
+    },
+    "Ladder_Rail_R": {
+      "nodeUid": "51d7c182-cbff-5bfd-840c-8c4531ba132f",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_ladder_rail",
+      "instanceId": "xp23_yp95_zp33",
+      "role": "ladder"
+    },
+    "Insulation_Band_7": {
+      "nodeUid": "ab5f31b1-6393-5ac4-9deb-dd0bc5efda34",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_insulation_band",
+      "instanceId": "xp0_yp75_zp0",
+      "role": "insulation"
+    },
+    "Insulation_Band_13": {
+      "nodeUid": "c6bdd5b7-562a-57fd-8f70-8751c2534f43",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_insulation_band",
+      "instanceId": "xp0_yp135_zp0",
+      "role": "insulation"
+    },
+    "Insulation_Band_20": {
+      "nodeUid": "232c9825-894d-53ef-a8bc-e7bfc80394ae",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_insulation_band",
+      "instanceId": "xp0_yp205_zp0",
+      "role": "insulation"
+    },
+    "Stair_0": {
+      "nodeUid": "738240c6-731e-540f-b315-37f2ebc4a26e",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_stair",
+      "instanceId": "xp33_yp7_zp44",
+      "role": "stair"
+    },
+    "Stair_1": {
+      "nodeUid": "b07ace77-87e8-5198-8323-c12de485c923",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_stair",
+      "instanceId": "xp33_yp16_zp42",
+      "role": "stair"
+    },
+    "Stair_2": {
+      "nodeUid": "cf7022eb-db37-5931-82de-eed616746f03",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_stair",
+      "instanceId": "xp33_yp25_zp40",
+      "role": "stair"
+    },
+    "Stair_3": {
+      "nodeUid": "00832cf8-b0e2-55fa-a23a-48e81adce45a",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_stair",
+      "instanceId": "xp33_yp34_zp38",
+      "role": "stair"
+    },
+    "Stair_4": {
+      "nodeUid": "b29837a5-9184-5741-8495-e854c12291b4",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_stair",
+      "instanceId": "xp33_yp43_zp37",
+      "role": "stair"
+    },
+    "Stair_5": {
+      "nodeUid": "28fbc8b0-342a-5ed1-a170-4053086f4930",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_stair",
+      "instanceId": "xp33_yp53_zp35",
+      "role": "stair"
+    },
+    "Stair_6": {
+      "nodeUid": "42b9ce83-86e6-5292-ac06-f51176b17246",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_stair",
+      "instanceId": "xp33_yp62_zp33",
+      "role": "stair"
+    },
+    "Stair_7": {
+      "nodeUid": "ed693852-d898-59ec-9d82-80940e884cfa",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_stair",
+      "instanceId": "xp33_yp71_zp32",
+      "role": "stair"
+    },
+    "Stair_8": {
+      "nodeUid": "a88f8377-0cf7-5e66-9001-8a838c8ffce6",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_stair",
+      "instanceId": "xp33_yp80_zp30",
+      "role": "stair"
+    },
+    "Stair_9": {
+      "nodeUid": "84efd3ef-ddf8-52dc-922f-805d26afbad2",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_platform",
+      "semanticId": "access_stair",
+      "instanceId": "xp33_yp89_zp28",
+      "role": "stair"
+    },
+    "Ground": {
+      "nodeUid": "e83b49bd-28ad-546b-aff5-8dd138f367f9",
+      "assetId": "distillation_unit_hero",
+      "objectId": "site_ground",
+      "semanticId": "ground_plane",
+      "instanceId": "",
+      "role": "ground"
+    },
+    "Tower_Atmospheric_ShellHalf": {
+      "nodeUid": "848b6462-5eb2-5cbc-950f-cb023c4eb7c5",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_shell_half",
+      "instanceId": "",
+      "role": "cutaway_shell"
+    },
+    "Tower_Vacuum_ShellHalf": {
+      "nodeUid": "68524a17-1c7a-51f8-9bde-c3d88c763fc2",
+      "assetId": "distillation_unit_hero",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_shell_half",
+      "instanceId": "",
+      "role": "cutaway_shell"
+    },
+    "Tower_Atmospheric_DomeHalf": {
+      "nodeUid": "a2714e6b-7f94-5958-9bfd-737b18ef884b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_dome_half",
+      "instanceId": "",
+      "role": "cutaway_dome"
+    },
+    "Tower_Vacuum_DomeHalf": {
+      "nodeUid": "a57f8c41-315e-5fea-94af-ea136499f44b",
+      "assetId": "distillation_unit_hero",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_dome_half",
+      "instanceId": "",
+      "role": "cutaway_dome"
+    }
+  }
+}

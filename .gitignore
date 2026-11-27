@@ -17,3 +17,7 @@ server/data/**/*.lock
 
 # codegraph 本地索引与临时截图
 .codegraph/
+
+# Blender 保存时自动生成的备份文件
+*.blend1
+

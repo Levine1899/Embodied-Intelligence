@@ -216,21 +216,47 @@
     hs_products: 'anchor_tower_products'
   };
 
-  function applyMeta(meta) {
-    META = meta;
-    var anchors = meta.anchor_web_y_up || {};
+  var MANIFEST = null;
+  /* Phase 2：设备归属与热点成员改由 tower.manifest.json 驱动，与 web/levels/l4.js 同源。
+   * tower.meta.json 只保留 anchors/heater_bbox 之类的构建期几何副产物，
+   * 其 groups.hotspots 已不再是映射来源（该字段已从生成器移除）。 */
+  var HOTSPOT_OBJECTS = {
+    hs_atm_tower: ['atmospheric_tower'],
+    hs_vacuum: ['vacuum_tower'],
+    hs_heater: ['heater'],
+    hs_crude_feed: ['heater'],                 // 进料线 Pipe_Feed_* 在 Manifest 中归 heater 对象
+    hs_products: ['battery_limit_naphtha', 'battery_limit_kerosene', 'battery_limit_diesel']
+  };
+
+  function applyManifest(m) {
+    MANIFEST = m;
+    var anchors = {};
+    (m.anchors || []).forEach(function (a) { if (a && a.anchorId) anchors[a.anchorId] = a.position; });
+    var namesByObject = {};
+    (m.nodes || []).forEach(function (n) {
+      if (!n || !n.objectId || !n.nodeName) return;
+      if (!namesByObject[n.objectId]) namesByObject[n.objectId] = [];
+      namesByObject[n.objectId].push(n.nodeName);
+    });
     HOTSPOTS.forEach(function (h) {
       var key = HOTSPOT_ANCHOR[h.id];
       if (key && anchors[key]) h.pos.set(anchors[key][0], anchors[key][1], anchors[key][2]);
-      var names = meta.groups && meta.groups.hotspots && meta.groups.hotspots[h.id];
-      if (names) h.names = [].concat(names);
+      var objs = HOTSPOT_OBJECTS[h.id];
+      if (!objs) return;
+      var names = [];
+      objs.forEach(function (o) { names = names.concat(namesByObject[o] || []); });
+      if (names.length) h.names = names;
     });
-    var bbox = meta.heater_bbox_obj_y_up;
-    var heater = HOTSPOTS.filter(function (h) { return h.id === 'hs_heater'; })[0];
-    if (heater && bbox) {
-      heater.pos.set((bbox[0] + bbox[3]) / 2, (bbox[1] + bbox[4]) / 2, (bbox[2] + bbox[5]) / 2);
-    }
-    labelsEl && Object.keys(labelEls).forEach(function (id) { /* 位置每帧投影，无需重排 */ });
+  }
+
+  /* 加热炉热点位置由已加载几何的包围盒推出，不再依赖 tower.meta.json。 */
+  function placeHeaterHotspot(meshes) {
+    if (!meshes.length) return;
+    var bb = new THREE.Box3();
+    meshes.forEach(function (m) { bb.expandByObject(m); });
+    if (bb.isEmpty()) return;
+    var c = bb.getCenter(new THREE.Vector3());
+    HOTSPOTS.forEach(function (h) { if (h.id === 'hs_heater') h.pos.copy(c); });
   }
 
   function matchesHotspot(h, name) {
@@ -242,9 +268,7 @@
     return h.match.test(name);
   }
 
-  fetch('assets/tower/tower.meta.json?v=20261125e').then(function (r) { return r.ok ? r.json() : null; }).then(function (m) {
-    if (m) applyMeta(m);
-  }).catch(function () {});
+  /* Manifest 与 OBJ 一起加载，保证热点归属在打标签之前就已就绪（不再有竞态）。 */
 
   var hotspotMeshes = [];
   var labelsEl = document.getElementById('labels');
@@ -471,20 +495,30 @@
   // ---------------------------------------------------------------- 加载
   var BASE = 'assets/tower/';
   Promise.all([
-    fetch(BASE + 'tower.obj?v=20261125e').then(function (r) { if (!r.ok) throw new Error('OBJ ' + r.status); return r.text(); }),
+    fetch(BASE + 'tower.manifest.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+    fetch(BASE + 'tower.obj?v=p2').then(function (r) { if (!r.ok) throw new Error('OBJ ' + r.status); return r.text(); }),
     fetch(BASE + 'tower.mtl').then(function (r) { return r.ok ? r.text() : ''; }).catch(function () { return ''; })
   ]).then(function (res) {
-    var obj = parseOBJ(res[0], parseMTL(res[1] || ''));
+    if (res[0]) applyManifest(res[0]);
+    else console.warn('[tower] tower.manifest.json 不可用：热点成员将回退到内置正则');
+    var obj = parseOBJ(res[1], parseMTL(res[2] || ''));
     scene.add(obj);
     state.loaded = true;
     setLevel(0);   // 显式初始化外观：整壳显示、半剖壳隐藏
 
+    var heaterMeshes = [];
     HOTSPOTS.forEach(function (h) {
       obj.traverse(function (o) {
         if (!o.isMesh) return;
-        if (matchesHotspot(h, o.name)) { o.userData.hotspot = h.id; hotspotMeshes.push(o); }
+        if (matchesHotspot(h, o.name)) {
+          o.userData.hotspot = h.id;
+          hotspotMeshes.push(o);
+          if (h.id === 'hs_heater') heaterMeshes.push(o);
+        }
       });
     });
+    obj.updateMatrixWorld(true);
+    placeHeaterHotspot(heaterMeshes);
 
     // 塔内汽液：全剖时显示（青色上升=汽相，琥珀下降=回流液，均为示意）
     internals = new THREE.Group();

@@ -20,6 +20,7 @@ import bmesh
 import math
 import json
 import os
+import uuid
 import sys
 from mathutils import Vector
 
@@ -382,8 +383,10 @@ box("Foundation_Heater", (5.4, 5.4, 0.30), (HEAT_X, HEAT_Y, 0.15), CONCRETE)
 # 换热器组：三台卧式管壳式换热器 + 鞍座/接管/封头
 def exchanger(name, x, y, z, length=5.0, radius=0.82):
     cyl(name + "_Shell", radius, length, (x, y, z), rot=(0, math.pi / 2, 0), seg=24, material=STEEL)
-    for dx in (-length * 0.30, length * 0.30):
-        box(name + "_Saddle", (0.55, 1.5, 1.05), (x + dx, y, z - 0.95), STEEL_DARK)
+    # 两个鞍座必须有各自的名字：原来两处都用 name + "_Saddle"，第二个被 Blender
+    # 自动改成 .001，导致".001 承担业务语义"。这里用 A/B 显式区分。
+    for tag, dx in (("A", -length * 0.30), ("B", length * 0.30)):
+        box(name + "_Saddle_" + tag, (0.55, 1.5, 1.05), (x + dx, y, z - 0.95), STEEL_DARK)
     cyl(name + "_Head_A", radius * 1.02, 0.16, (x - length / 2, y, z), rot=(0, math.pi / 2, 0), seg=24, material=STEEL_DARK)
     cyl(name + "_Head_B", radius * 1.02, 0.16, (x + length / 2, y, z), rot=(0, math.pi / 2, 0), seg=24, material=STEEL_DARK)
     cyl(name + "_Nozzle", 0.18, 0.90, (x, y, z + 0.82), seg=12, material=PIPE_COOL)
@@ -469,11 +472,70 @@ for k, v in ANCHORS.items():
     empty(k, v)
 
 
+# ---------------------------------------------------------------- 身份盖章（petro）
+# 规则唯一来源 = tools/gen_tower_manifest.mjs 的 RULES 表（它同时生成 tower.identity.json）。
+# 本脚本只负责把已算好的 nodeUid/semanticId/... 写进 Blender 对象，再由 export_extras
+# 导出成 glTF extras.petro。禁止在本脚本里另写一套归属规则。
+# PETRO_TOWER_STAMP=1 才盖章；未盖章时用于"先产出 OBJ → 再生成身份映射"的引导轮。
+STAMP = os.environ.get("PETRO_TOWER_STAMP") == "1"
+if STAMP:
+    identity_path = os.path.normpath(os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "web", "assets", "tower", "tower.identity.json"))
+    with open(identity_path, "r", encoding="utf-8") as fh:
+        _ident = json.load(fh)
+    IDENTITY = _ident["objects"]
+    NAMESPACE = uuid.UUID(_ident["namespace"])
+    ASSET_ID = _ident["assetId"]
+
+    mesh_objects = [o for o in bpy.context.scene.objects if o.type == "MESH"]
+    unregistered = [o.name for o in mesh_objects if o.name not in IDENTITY]
+    if unregistered:
+        raise SystemExit("[FATAL] 以下对象未在 tower.identity.json 登记，禁止导出：%s" % unregistered[:10])
+
+    seen_uid = {}
+    for o in mesh_objects:
+        rec = IDENTITY[o.name]
+        if rec["nodeUid"] in seen_uid:
+            raise SystemExit("[FATAL] nodeUid 重复：%s 与 %s" % (seen_uid[rec["nodeUid"]], o.name))
+        seen_uid[rec["nodeUid"]] = o.name
+        # 清掉可能残留的扁平旧属性，否则 extras 会出现 semanticId.001/objectId.001
+        for key in ("semanticId", "objectId", "nodeUid", "anchorId"):
+            if key in o:
+                del o[key]
+        o["petro"] = {
+            "nodeUid": rec["nodeUid"],
+            "assetId": rec["assetId"],
+            "objectId": rec["objectId"],
+            "semanticId": rec["semanticId"],
+            "instanceId": rec["instanceId"] or "",
+            "role": rec["role"],
+        }
+    # 锚点空物体也盖章：否则 GLB 里 5 个 anchor_tower_* 节点没有 extras.petro，
+    # 会让 extrasStatus=verified 的 258/258 覆盖率断言失败。
+    for _k in ANCHORS:
+        _ob = bpy.data.objects.get(_k)
+        if not _ob:
+            continue
+        for _key in ("semanticId", "objectId", "nodeUid", "anchorId"):
+            if _key in _ob:
+                del _ob[_key]
+        _ob["petro"] = {
+            "nodeUid": str(uuid.uuid5(NAMESPACE, "%s/anchor_marker/%s" % (ASSET_ID, _k))),
+            "assetId": ASSET_ID,
+            "objectId": _k,
+            "semanticId": "anchor_marker",
+            "instanceId": "",
+            "role": "anchor_marker",
+        }
+    print("[ok] petro stamped:", len(mesh_objects) + len(ANCHORS), "nodes /", len(seen_uid), "mesh uids")
+
+
 # ---------------------------------------------------------------- 保存可编辑源
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BLEND_DIR = os.path.join(ROOT, "assets-source", "blender")
 os.makedirs(BLEND_DIR, exist_ok=True)
-blend_path = os.path.join(BLEND_DIR, "tower_hero.blend")
+# PETRO_TOWER_BLEND 可把 .blend 重定向到临时路径，用于不覆盖已发布源文件的验证构建
+blend_path = os.environ.get("PETRO_TOWER_BLEND") or os.path.join(BLEND_DIR, "tower_hero.blend")
 bpy.ops.wm.save_as_mainfile(filepath=blend_path)
 print("[ok] blend:", blend_path, os.path.getsize(blend_path) if os.path.exists(blend_path) else "MISSING")
 
@@ -491,7 +553,9 @@ bpy.ops.wm.obj_export(
 )
 
 glb_path = os.path.join(OUT, "tower.glb")
-bpy.ops.export_scene.gltf(filepath=glb_path, export_format="GLB", use_selection=False)
+# export_extras=True 才能把自定义属性 petro 落成 glTF extras；缺了它产品会静默退回"无 extras"。
+bpy.ops.export_scene.gltf(filepath=glb_path, export_format="GLB", use_selection=False,
+                          export_extras=True)
 
 
 # ---------------------------------------------------------------- 自检：Heater 在 OBJ 里的包围盒
@@ -519,17 +583,9 @@ meta = {
     "anchor_blender_z_up": ANCHORS,
     "anchor_web_y_up": {k: [v[0], v[2], -v[1]] for k, v in ANCHORS.items()},
     "heater_bbox_obj_y_up": heater_o,
-    "groups": {
-        "cutaway_hide": ["Tower_Atmospheric_Shell", "Tower_Atmospheric_Dome"],
-        "cutaway_show_only": ["Trays_A", "Trays_V"],
-        "hotspots": {
-            "hs_crude_feed": "Pipe_Feed_Horizontal",
-            "hs_heater": "Heater",
-            "hs_atm_tower": "Tower_Atmospheric_Shell",
-            "hs_vacuum": "Tower_Vacuum_Shell",
-            "hs_products": "BatteryLimit_",
-        },
-    },
+    # 注意：不再输出 groups.hotspots / cutaway_* —— 设备归属与热点成员已统一由
+    # tower.manifest.json 表达（Phase 2），此文件只保留构建期几何事实（锚点、包围盒）。
+    # 允许在此登记的仅限「几何测量值」，禁止再放任何映射表。
 }
 with open(os.path.join(OUT, "tower.meta.json"), "w", encoding="utf-8") as f:
     json.dump(meta, f, ensure_ascii=False, indent=2)
@@ -597,3 +653,5 @@ except Exception as e:  # 渲染失败不影响导出
     print("[warn] 渲染失败：", e)
 
 print("[done]")
+
+

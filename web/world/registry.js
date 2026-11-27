@@ -108,8 +108,46 @@
       objectId: 'heater', displayName: '加热炉', zoneId: 'refining', stageId: 'refine', stageIndex: 3,
       knowledgeIds: ['kb_refine'], chapterId: 'refine', levelIndex: 3,
       modelPath: 'assets/tower/tower.obj', modelNode: 'Heater',
-      overviewRepresentation: 'heater_overview', detailRepresentation: 'heater_detail', anchor: 'anchor_tower_heater',
+      overviewRepresentation: 'heater_overview', detailRepresentation: 'heater_detail', anchor: 'anchor_tower_feed',
       capabilities: ['select', 'animation'], assetStatus: 'hero', interaction: ['select', 'run']
+    },
+    /* ---- Phase 2 新增：L4 独立设备（来自 tower.manifest.json objects[]） ----
+     * 这 5 个设备此前只存在于几何里，registry 无登记，因此章节树与 AI 上下文取不到。
+     * anchor 暂复用最近的既有教学锚点；Phase 3 引入连接数据时会给出真实端口锚点。 */
+    {
+      objectId: 'stripper_naphtha', displayName: '石脑油侧线汽提塔', zoneId: 'refining', stageId: 'refine', stageIndex: 3,
+      knowledgeIds: ['kb_refine'], chapterId: 'refine', levelIndex: 3,
+      modelPath: 'assets/tower/tower.obj', modelNode: 'Stripper_Naphtha_Shell',
+      overviewRepresentation: null, detailRepresentation: 'stripper_naphtha_detail', anchor: 'anchor_tower_products',
+      capabilities: ['select'], assetStatus: 'hero', interaction: ['select']
+    },
+    {
+      objectId: 'stripper_kerosene', displayName: '煤油侧线汽提塔', zoneId: 'refining', stageId: 'refine', stageIndex: 3,
+      knowledgeIds: ['kb_refine'], chapterId: 'refine', levelIndex: 3,
+      modelPath: 'assets/tower/tower.obj', modelNode: 'Stripper_Kerosene_Shell',
+      overviewRepresentation: null, detailRepresentation: 'stripper_kerosene_detail', anchor: 'anchor_tower_products',
+      capabilities: ['select'], assetStatus: 'hero', interaction: ['select']
+    },
+    {
+      objectId: 'stripper_diesel', displayName: '柴油侧线汽提塔', zoneId: 'refining', stageId: 'refine', stageIndex: 3,
+      knowledgeIds: ['kb_refine'], chapterId: 'refine', levelIndex: 3,
+      modelPath: 'assets/tower/tower.obj', modelNode: 'Stripper_Diesel_Shell',
+      overviewRepresentation: null, detailRepresentation: 'stripper_diesel_detail', anchor: 'anchor_tower_products',
+      capabilities: ['select'], assetStatus: 'hero', interaction: ['select']
+    },
+    {
+      objectId: 'overhead_condenser', displayName: '塔顶冷凝器', zoneId: 'refining', stageId: 'refine', stageIndex: 3,
+      knowledgeIds: ['kb_refine'], chapterId: 'refine', levelIndex: 3,
+      modelPath: 'assets/tower/tower.obj', modelNode: 'Condenser_Shell',
+      overviewRepresentation: 'condenser_overview', detailRepresentation: 'overhead_condenser_detail', anchor: 'anchor_tower_overview',
+      capabilities: ['select'], assetStatus: 'hero', interaction: ['select']
+    },
+    {
+      objectId: 'reflux_drum', displayName: '回流罐', zoneId: 'refining', stageId: 'refine', stageIndex: 3,
+      knowledgeIds: ['kb_refine'], chapterId: 'refine', levelIndex: 3,
+      modelPath: 'assets/tower/tower.obj', modelNode: 'Reflux_Drum',
+      overviewRepresentation: null, detailRepresentation: 'reflux_drum_detail', anchor: 'anchor_tower_overview',
+      capabilities: ['select'], assetStatus: 'hero', interaction: ['select']
     },
     {
       objectId: 'fuel_dispenser', displayName: '加油机', zoneId: 'city', stageId: 'use', stageIndex: 4,
