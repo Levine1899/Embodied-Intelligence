@@ -30,9 +30,11 @@
      分"全景"与三个近景，避免所有信息挤在一个机位里。 */
   const VIEWS = {
     wide: { cam: [-1.2 + 13.7, 10.2, 23.0], tgt: [-1.2, 3.0, 0] },
-    fixed: { cam: [LAYOUT.fixedX + 5.2, 6.6, 7.8], tgt: [LAYOUT.fixedX + 0.9, 3.6, 0] },
-    floating: { cam: [LAYOUT.floatX + 5.2, 6.6, 7.8], tgt: [LAYOUT.floatX + 0.9, 3.6, 0] },
-    pump: { cam: [LAYOUT.pumpX + 3.8, 3.8, 6.2], tgt: [LAYOUT.pumpX, 1.2, LAYOUT.pumpZ] },
+    /* 近景要能看到整台罐（含罐顶栏杆），且把罐推到左侧面板右方：
+       目标点取罐体左侧 → 罐在画面偏右。 */
+    fixed: { cam: [LAYOUT.fixedX + 5.0, 8.2, 11.2], tgt: [LAYOUT.fixedX - 2.2, 3.6, 0] },
+    floating: { cam: [LAYOUT.floatX + 5.0, 8.2, 11.2], tgt: [LAYOUT.floatX - 2.2, 3.6, 0] },
+    pump: { cam: [LAYOUT.pumpX + 4.6, 4.4, 7.6], tgt: [LAYOUT.pumpX - 1.4, 1.2, LAYOUT.pumpZ] },
   };
 
   let G = null, camera = null, baseScene = null, anchor = null;
