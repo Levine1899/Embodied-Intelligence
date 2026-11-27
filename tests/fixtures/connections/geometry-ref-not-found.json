@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedFrom": "人工编写；坐标取自 tools/make_tower.py 的程序化几何（Blender Z-up → assetLocal Y-up 按 [x, z, -y] 换算）。无外部工艺设计文件可用。",
+  "coordinateSpace": {
+    "coordinateSpaceId": "distillation_unit_asset_local",
+    "unit": "meter",
+    "upAxis": "+Y",
+    "handedness": "right",
+    "rootObjectId": "distillation_unit_hero",
+    "notes": "与 tower.glb / tower.manifest.json 的 assetLocal 同一空间。端点坐标不写在本文件，一律由 Manifest anchors[].position 提供；waypoints 由 Blender 与前端共用同一次 assetRoot matrixWorld 解释。"
+  },
+  "connections": [
+    {
+      "connectionId": "conn_atm_overhead_to_condenser",
+      "from": {
+        "objectId": "atmospheric_tower",
+        "anchorId": "anchor_atm_overhead_outlet"
+      },
+      "to": {
+        "objectId": "overhead_condenser",
+        "anchorId": "anchor_condenser_inlet"
+      },
+      "coordinateSpaceId": "distillation_unit_asset_local",
+      "waypoints": [
+        [
+          2.2,
+          28.85,
+          0
+        ]
+      ],
+      "medium": "常压塔顶油气",
+      "phase": "vapor",
+      "direction": "forward",
+      "displayColorToken": "--flow-vapor",
+      "display": {
+        "overview": true,
+        "detail": true,
+        "particles": true,
+        "displayOffset": [
+          0,
+          0,
+          0
+        ],
+        "particleCount": 18,
+        "particleSpeed": 0.32,
+        "particleSize": 0.075,
+        "lineRadius": 0.028
+      },
+      "teachingSimplification": "真实常压塔顶油气要经空冷器/水冷器多级冷凝、并设回流分配与不凝气排放；此处简化为「塔顶立管 → 弯头 → 水平管 → 一台卧式冷凝器」，只保留「塔顶油气去冷凝」这一教学要点。",
+      "basis": {
+        "basisId": "basis_pending_process_review",
+        "version": "0.1.0-draft",
+        "sourceTitle": "塔顶气相线程序化几何（本项目 build 脚本）",
+        "sourceOrg": "本项目（无外部权威来源）",
+        "sourceUrlOrDoc": "tools/make_tower.py「塔顶 → 冷凝器」段",
+        "sourceSection": "Pipe_Top_Vertical / Pipe_Top_Elbow / Pipe_Top_Condenser",
+        "scope": "仅描述本项目几何里已有的塔顶气相走向；不代表经审核的炼油工艺设计",
+        "limitations": [
+          "未经任何工艺设计文件、教材或领域专家核对",
+          "未包含空冷器、水冷器、回流泵、不凝气排放等真实设备",
+          "管径、标高、走向均为教学示意，非真实尺寸",
+          "仓库内不存在 approved 级工艺依据（见 decisions.md B5）"
+        ],
+        "reviewStatus": "draft",
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "pendingBasis": true
+      },
+      "geometryRefs": [
+        "Pipe_Top_Vapor",
+        "Pipe_Does_Not_Exist"
+      ]
+    }
+  ]
+}

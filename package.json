@@ -8,20 +8,26 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "dev": "node server/dev.mjs",
     "api": "node server/proxy.mjs",
+    "auth:perf": "node tests/auth-perf.mjs",
+    "dev": "node server/dev.mjs",
+    "manifest:pilot": "node tools/gen_pilot_separator_manifest.mjs",
+    "manifest:tower": "node tools/gen_tower_manifest.mjs",
+    "manifest:tower:check": "node tools/gen_tower_manifest.mjs --check",
     "start": "node server/proxy.mjs",
     "test": "node --test --test-concurrency=1 \"tests/*.test.mjs\"",
     "test:auth": "node --test --test-concurrency=1 \"tests/auth-crypto.test.mjs\" \"tests/auth-store.test.mjs\" \"tests/auth-session.test.mjs\" \"tests/auth-cli.test.mjs\" \"tests/auth-api.test.mjs\" \"tests/auth-pages.test.mjs\"",
-    "auth:perf": "node tests/auth-perf.mjs",
-    "validate:assets": "node tools/validate_assets.mjs",
-    "validate:assets:strict": "node tools/validate_assets.mjs --strict",
+    "test:e2e": "node tools/e2e/run-levels.mjs",
+    "test:smoke": "node tools/e2e/run-smoke.mjs",
+    "test:unit": "node --test --test-concurrency=1 \"tests/*.test.mjs\"",
+    "validate:assets": "node tools/validate_assets.mjs && node tools/validate_connections.mjs",
     "validate:assets:fixtures": "node tools/validate_assets.mjs --fixtures",
-    "manifest:pilot": "node tools/gen_pilot_separator_manifest.mjs",
+    "validate:assets:manifest": "node tools/validate_assets.mjs",
+    "validate:assets:manifest:strict": "node tools/validate_assets.mjs --strict",
+    "validate:assets:strict": "node tools/validate_assets.mjs --strict",
     "validate:connections": "node tools/validate_connections.mjs",
     "validate:connections:strict": "node tools/validate_connections.mjs --strict",
-    "manifest:tower": "node tools/gen_tower_manifest.mjs",
-    "manifest:tower:check": "node tools/gen_tower_manifest.mjs --check"
+    "verify": "npm run validate:assets && npm run validate:assets:fixtures && npm test"
   },
   "keywords": [
     "science-communication",
@@ -31,10 +37,10 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "ajv": "8.20.0",
-    "ajv-formats": "3.0.1"
+    "ajv-formats": "3.0.1",
+    "playwright-core": "^1.65.1"
   },
   "dependencies": {
     "proper-lockfile": "4.1.2"
   }
 }
-

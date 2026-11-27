@@ -1,0 +1,2899 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "distillation_unit_hero",
+  "assetVersion": "1.0.0+phase2l4",
+  "source": {
+    "repository": "gitee.com/LYU_PRO/scienceagent",
+    "commit": "9f7cc91f69c6e7a69468e8b306f745e349d70af1",
+    "path": "assets-source/blender/tower_hero.blend",
+    "dirty": false
+  },
+  "build": {
+    "sourceFile": "assets-source/blender/tower_hero.blend",
+    "generator": "tools/make_tower.py",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "Khronos glTF Blender I/O v5.3.43",
+    "exportOptionsHash": "e9aca088f171855e",
+    "invocation": "blender -b -P tools/make_tower.py -- <outDir>   # 输出目录可重定向；.blend 由 PETRO_TOWER_BLEND 指定",
+    "exportExtras": true
+  },
+  "runtime": {
+    "format": "glb",
+    "uri": "assets/tower/tower.glb",
+    "sha256": "e9aca088f171855ed760c4b0fdcebf82d4427dbb7b8c262a63f3fb55a4cb7d91",
+    "bytes": 4033676,
+    "extrasStatus": "verified",
+    "fallback": {
+      "format": "obj",
+      "uri": "assets/tower/tower.obj",
+      "mtlUri": "assets/tower/tower.mtl"
+    }
+  },
+  "coordinateSystem": {
+    "unit": "meter",
+    "handedness": "right",
+    "upAxis": "+Y",
+    "spaceId": "distillation_unit_override_local",
+    "sourceSpaceNote": "Blender Z-up → OBJ/GLB Y-up（make_tower.py: obj_export forward_axis=NEGATIVE_Z, up_axis=Y）。OBJ 与 GLB 均为 assetLocal，未含 SCALE；l4.js 运行时另乘 SCALE=0.46 得到关卡坐标。"
+  },
+  "bounds": {
+    "coordinateSpaceId": "distillation_unit_asset_local",
+    "unit": "meter",
+    "min": [
+      -60,
+      0,
+      -60
+    ],
+    "max": [
+      60,
+      29.298,
+      60
+    ]
+  },
+  "defaults": {
+    "detailLevel": "detail",
+    "structureMode": "external",
+    "animationMode": "idle"
+  },
+  "systems": [
+    {
+      "systemId": "atmospheric_distillation",
+      "displayName": "常压蒸馏系统",
+      "objectIds": [
+        "atmospheric_tower",
+        "pipe_bottom_to_vacuum"
+      ]
+    },
+    {
+      "systemId": "vacuum_distillation",
+      "displayName": "减压蒸馏系统",
+      "objectIds": [
+        "vacuum_tower"
+      ]
+    },
+    {
+      "systemId": "feed_heater",
+      "displayName": "加热炉与进料系统",
+      "objectIds": [
+        "heater"
+      ]
+    },
+    {
+      "systemId": "side_draw_stripping",
+      "displayName": "侧线汽提与产品出路系统",
+      "objectIds": [
+        "side_draw_naphtha",
+        "stripper_naphtha",
+        "battery_limit_naphtha",
+        "side_draw_kerosene",
+        "stripper_kerosene",
+        "battery_limit_kerosene",
+        "side_draw_diesel",
+        "stripper_diesel",
+        "battery_limit_diesel"
+      ]
+    },
+    {
+      "systemId": "overhead_condensing",
+      "displayName": "塔顶冷凝与回流系统",
+      "objectIds": [
+        "overhead_condenser",
+        "reflux_drum"
+      ]
+    },
+    {
+      "systemId": "pending_process_attribution",
+      "displayName": "待工艺确认装置群（无审核依据，禁止按名称猜测）",
+      "objectIds": [
+        "pump_1",
+        "pump_2",
+        "exchanger_1",
+        "exchanger_2",
+        "exchanger_3",
+        "pump_group_a"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "objectId": "atmospheric_tower",
+      "systemId": "atmospheric_distillation",
+      "displayName": "常压蒸馏塔",
+      "nodeUids": [
+        "d985eaf4-7be2-5ddc-929e-a8275f403ec2",
+        "bfdb7bc1-6dd1-5576-a5d3-c74143720d43",
+        "edfcb732-6932-5aa7-950c-372559e9c1c0",
+        "c8143935-1a75-5321-a686-086569796bd1",
+        "2b168d4f-6f0e-5d20-a671-dc299ac27cc0",
+        "85c3fcf0-399a-5104-8a82-2f251e535a88",
+        "b266f84d-78db-5920-85ec-048de6333df4",
+        "f7cf9445-f4ab-5e59-8a5e-521c81a01955",
+        "4916aec8-55a1-5d91-945f-79d8072bb64f",
+        "66bce3de-048a-55b8-ad49-20bad2c70a81",
+        "79cbb6da-1b5a-5caa-b0d6-1fd21a7f0a19",
+        "1b258a33-90b7-5905-b034-4353a4038884",
+        "b58eef60-100b-5d0d-aae4-bfa107c4e861",
+        "ab5f31b1-6393-5ac4-9deb-dd0bc5efda34",
+        "c6bdd5b7-562a-57fd-8f70-8751c2534f43",
+        "232c9825-894d-53ef-a8bc-e7bfc80394ae",
+        "848b6462-5eb2-5cbc-950f-cb023c4eb7c5",
+        "a2714e6b-7f94-5958-9bfd-737b18ef884b"
+      ]
+    },
+    {
+      "objectId": "vacuum_tower",
+      "systemId": "vacuum_distillation",
+      "displayName": "减压蒸馏塔",
+      "nodeUids": [
+        "3684eb6d-2c06-5982-b831-33407111b7d3",
+        "d5c16242-0518-59b4-9efa-edbe55d817f1",
+        "0b04fff8-7d7a-576f-801c-451e314b3543",
+        "0e2bf382-d86e-5103-adb3-fd493518dbb2",
+        "a4d7587c-d246-5ef8-b9b2-73cc47916e25",
+        "68524a17-1c7a-51f8-9bde-c3d88c763fc2",
+        "a57f8c41-315e-5fea-94af-ea136499f44b"
+      ]
+    },
+    {
+      "objectId": "heater",
+      "systemId": "feed_heater",
+      "displayName": "加热炉",
+      "nodeUids": [
+        "4ce70fbb-a1c8-55a8-bfbc-8b92018c0679",
+        "8f8763c0-3fb3-5abb-a3c8-64d8cd8f6599",
+        "93361048-f3da-5240-bc17-a5c942440309",
+        "1f099aa9-d8d8-5b9d-a30a-22774f48bbbf",
+        "101a53b0-8cc1-53f6-ac41-6f540b0a5029"
+      ]
+    },
+    {
+      "objectId": "pipe_bottom_to_vacuum",
+      "systemId": "atmospheric_distillation",
+      "displayName": "常压塔底至减压塔管线",
+      "nodeUids": [
+        "731391f8-263a-528b-b65f-81700d4be00d"
+      ]
+    },
+    {
+      "objectId": "side_draw_naphtha",
+      "systemId": "side_draw_stripping",
+      "displayName": "石脑油侧线系统",
+      "nodeUids": [
+        "7342155c-2e00-58d7-8e35-4f617138bedb",
+        "4e7e5526-7060-5e38-aa2a-15da42a34809",
+        "6d3efcc5-2232-51dc-914a-838aa843448f",
+        "3d60b429-9721-59e2-9a6c-5ae2b4d25c2b",
+        "cb6831cf-b9f6-59b0-95c9-52c6b530f397",
+        "1d85948d-1dd2-5f32-95d5-d5d502abc015",
+        "646c9e73-f05c-5ae7-a705-dc02a86ce7ca",
+        "6a7b393b-bf29-5c82-be3c-f6dae61975eb",
+        "5ecf1865-5051-5c2e-a345-11301a7e19be",
+        "c08b5762-b5bb-5104-b5e5-58c50287ed2c",
+        "ea3d71f5-24e8-514f-9b1b-58e2eed3e5b3",
+        "3ede9a68-30df-51a6-be41-9c34fd086869"
+      ]
+    },
+    {
+      "objectId": "stripper_naphtha",
+      "systemId": "side_draw_stripping",
+      "displayName": "石脑油侧线汽提塔",
+      "nodeUids": [
+        "b573a3e2-5d0e-5b69-a4b3-5d4d2f23d6cb",
+        "9a3bed05-3dbd-510e-9b4e-b13174f4aa61",
+        "e1607b81-fc0c-5cb9-9d5e-7517070f5614",
+        "06f86046-cc3e-5712-b613-4fa3bf1789a1"
+      ]
+    },
+    {
+      "objectId": "battery_limit_naphtha",
+      "systemId": "side_draw_stripping",
+      "displayName": "石脑油界区法兰",
+      "nodeUids": [
+        "0fc9a890-f949-56a7-844e-03376fae90be"
+      ]
+    },
+    {
+      "objectId": "side_draw_kerosene",
+      "systemId": "side_draw_stripping",
+      "displayName": "煤油侧线系统",
+      "nodeUids": [
+        "925e31ef-5784-5522-bdb8-b351def6e8ab",
+        "f876c150-57e3-53fa-a2f1-02b51b4f429b",
+        "91b9a482-0cad-5d47-9411-0a0f0a0a6439",
+        "a1106315-44c7-5127-b82b-2481e22f0415",
+        "5a995678-ef8b-5c86-b599-52c473d01361",
+        "9d61c864-ab29-5ef6-b49e-0985f8d681c5",
+        "4099fc6c-e7ed-59bd-a2cf-f65a16de30f1",
+        "89bb59f7-1c68-5a8b-b9de-267be6bebc55",
+        "05169b6d-c575-53d9-ae9e-f3be45e1bbe6",
+        "f2170821-01bf-5b90-858a-a7b3527cc75b",
+        "7cc91852-9a77-56f6-9f6b-995ae9f8a1ae",
+        "b9310859-dcac-5478-906d-78516c151dc4"
+      ]
+    },
+    {
+      "objectId": "stripper_kerosene",
+      "systemId": "side_draw_stripping",
+      "displayName": "煤油侧线汽提塔",
+      "nodeUids": [
+        "88803e80-c8f0-5ef6-ad60-ad1f3bf802c6",
+        "49512a1c-3011-5cb7-8ffe-a0b8b40df7fa",
+        "1dfb94e6-f00f-5c79-b8f3-f115f44c9a58",
+        "d860afa5-9f77-55e2-a37b-ed0b0e75759f"
+      ]
+    },
+    {
+      "objectId": "battery_limit_kerosene",
+      "systemId": "side_draw_stripping",
+      "displayName": "煤油界区法兰",
+      "nodeUids": [
+        "772f1b91-6d7b-56de-9bd9-4e6a5e29da03"
+      ]
+    },
+    {
+      "objectId": "side_draw_diesel",
+      "systemId": "side_draw_stripping",
+      "displayName": "柴油侧线系统",
+      "nodeUids": [
+        "1b15c50b-72f8-59f4-942a-08e7589a3afb",
+        "bfd25c19-1568-58ba-9f8c-6b4df6a8c4d1",
+        "c317031d-e610-5359-b079-1b1afb809e95",
+        "22332d49-3c88-5193-81fc-02ab57e56e0c",
+        "c7e2dee6-4f1a-5422-8896-c866c6e5adb9",
+        "2eb39663-e648-50a8-837f-dce6d1ba11ac",
+        "ab858255-913e-5269-b655-6a0d0b519553",
+        "98a6e159-8462-5ec3-adf9-a72cd884be89",
+        "2b0f206f-2c7f-57f5-a28b-93b671de7587",
+        "bdad6023-60ef-51a2-a703-8e598d47aa3b",
+        "3fa20cf1-b218-511c-aa72-03708a02cdc8",
+        "8e5fb62c-f8c9-5325-87a6-3f5dd2743942"
+      ]
+    },
+    {
+      "objectId": "stripper_diesel",
+      "systemId": "side_draw_stripping",
+      "displayName": "柴油侧线汽提塔",
+      "nodeUids": [
+        "ae4fbac1-2ec8-52d8-b596-5e8b65c8cb02",
+        "5728ecd7-9174-55c4-90f8-c9a7bbe88086",
+        "b6be7b8b-133a-51c6-93dd-c4667840b68f",
+        "d7a8a992-5521-5009-afcf-89c47a13e899"
+      ]
+    },
+    {
+      "objectId": "battery_limit_diesel",
+      "systemId": "side_draw_stripping",
+      "displayName": "柴油界区法兰",
+      "nodeUids": [
+        "195364e5-88a7-5d95-aec2-0815a13beb6d"
+      ]
+    },
+    {
+      "objectId": "overhead_condenser",
+      "systemId": "overhead_condensing",
+      "displayName": "塔顶冷凝器",
+      "nodeUids": [
+        "91be98c1-f5f3-5517-bd63-848f903d6dee",
+        "11efe758-08eb-59ff-9256-0d80abe600d8",
+        "7b7c327d-27cd-57fe-831c-1441d5d533ae",
+        "51f239ea-c6ef-5424-bfde-72f936c3291a",
+        "71efde2f-cc09-5b9f-bec3-5f75163051ff",
+        "181f9286-63d4-5d94-be68-7e85c5550513",
+        "197d37a1-bcad-5052-9cc4-389e20b7e6a1",
+        "08acacb7-9069-5232-87f6-c26c2b2ab0d2",
+        "9ed154cc-943e-5a4d-a8fe-a15231f3aadb",
+        "45e88252-cd38-5e4d-8101-4f02a04ce6fc",
+        "a6bf2372-b474-5fcb-81fb-6a0c97b48dcc"
+      ]
+    },
+    {
+      "objectId": "reflux_drum",
+      "systemId": "overhead_condensing",
+      "displayName": "回流罐",
+      "nodeUids": [
+        "b695af7d-8a4d-5294-b3c8-27555c154dd5"
+      ]
+    },
+    {
+      "objectId": "pump_1",
+      "systemId": "pending_process_attribution",
+      "displayName": "泵 1（工艺角色待确认）",
+      "nodeUids": [
+        "70cd0ea6-9c24-5a75-99d1-35ecdc326429"
+      ]
+    },
+    {
+      "objectId": "pump_2",
+      "systemId": "pending_process_attribution",
+      "displayName": "泵 2（工艺角色待确认）",
+      "nodeUids": [
+        "0cbfa31f-3abf-5531-977f-4abeaf38e457"
+      ]
+    },
+    {
+      "objectId": "exchanger_1",
+      "systemId": "pending_process_attribution",
+      "displayName": "换热器 1（工艺角色待确认）",
+      "nodeUids": [
+        "8cadbb61-f047-52f7-970e-f7b96ed9fac7",
+        "127e5d94-263b-58c2-bbfb-6271af2f1acc",
+        "e084f8e1-2866-50ca-bb9a-efa5669e8ad4",
+        "bd9f4610-7c22-5378-8750-7768fe4b3a2d",
+        "2cf7abfa-789f-5c5f-a503-f60d0e51270b"
+      ]
+    },
+    {
+      "objectId": "exchanger_2",
+      "systemId": "pending_process_attribution",
+      "displayName": "换热器 2（工艺角色待确认）",
+      "nodeUids": [
+        "7f5de310-4f07-5a34-8b87-e88bfd3144f6",
+        "b97013c2-1e34-53ea-827b-814d1cf74d56",
+        "e5764b32-c1c9-53c3-aedd-1e306ac0d9de",
+        "9d861de0-6ed1-5908-8faf-72b45be7ed4b",
+        "de59a436-fa92-5437-ab87-bd1182624f71"
+      ]
+    },
+    {
+      "objectId": "exchanger_3",
+      "systemId": "pending_process_attribution",
+      "displayName": "换热器 3（工艺角色待确认）",
+      "nodeUids": [
+        "12325544-a5a1-52d1-bbfe-bb8fc5b9f411",
+        "381dfed5-90ee-5116-972b-d4509cdf3482",
+        "c868512f-7353-5360-a8c9-9bbbd08e50d8",
+        "cbb64bd4-bfa2-5d12-ac94-405f168ebb49",
+        "48f5cb79-12bb-572b-b51d-8513f913166e"
+      ]
+    },
+    {
+      "objectId": "pump_group_a",
+      "systemId": "pending_process_attribution",
+      "displayName": "泵组 A（工艺角色待确认）",
+      "nodeUids": [
+        "593f2189-3f0a-54e2-a9e0-a186edca0cf5",
+        "7bbd494c-c2c9-58a5-997f-44ce7ec353cf",
+        "77f7ded6-e79a-5f0c-be5e-d58b64cfce24",
+        "7364a5d9-92f0-5f3c-b7b9-4f5eb1408b84",
+        "b043960b-8580-5985-bc91-24b87e7b7ef7",
+        "b126bd15-d02f-5876-9dd3-2e4b70905a27",
+        "0b5561f4-d6d7-5f68-9acc-b49758e00c97",
+        "527a4302-7189-5afa-a72a-abf6b3b5e1a0",
+        "10eef08e-1c45-5c6a-937f-f9d18d8e0b62",
+        "a38ccaa2-08d0-5e81-9fa2-829abf8fbc93",
+        "e5f135ae-eff0-546b-8535-5a82fad152f8",
+        "7c3cf811-49ab-5d98-808c-355f14d3dea0",
+        "e33734ee-d14c-5cfa-9323-6801e5903830",
+        "888e57f3-5cc6-5854-98ce-0d13f9880506",
+        "2f6985ba-3a83-580e-aecc-8a861fd53a80"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeUid": "d985eaf4-7be2-5ddc-929e-a8275f403ec2",
+      "nodeName": "Tower_Atmospheric_Shell",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_shell",
+      "role": "shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "bfdb7bc1-6dd1-5576-a5d3-c74143720d43",
+      "nodeName": "Tower_Atmospheric_Skirt",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_skirt",
+      "role": "skirt",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "edfcb732-6932-5aa7-950c-372559e9c1c0",
+      "nodeName": "Tower_Atmospheric_Dome",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_dome",
+      "role": "dome",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "c8143935-1a75-5321-a686-086569796bd1",
+      "nodeName": "Trays_A",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_trays",
+      "role": "tray_bundle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "2b168d4f-6f0e-5d20-a671-dc299ac27cc0",
+      "nodeName": "Manway_12",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_manway",
+      "instanceId": "xp22_yp120_zp0",
+      "role": "manway",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "85c3fcf0-399a-5104-8a82-2f251e535a88",
+      "nodeName": "Manway_22",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_manway",
+      "instanceId": "xp22_yp220_zp0",
+      "role": "manway",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b266f84d-78db-5920-85ec-048de6333df4",
+      "nodeName": "Nozzle_9",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_nozzle",
+      "instanceId": "xp23_yp90_zm9",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "f7cf9445-f4ab-5e59-8a5e-521c81a01955",
+      "nodeName": "Flange_9",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_flange",
+      "instanceId": "xp27_yp90_zm10",
+      "role": "flange",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "4916aec8-55a1-5d91-945f-79d8072bb64f",
+      "nodeName": "Nozzle_16",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_nozzle",
+      "instanceId": "xp19_yp160_zp17",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "66bce3de-048a-55b8-ad49-20bad2c70a81",
+      "nodeName": "Flange_16",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_flange",
+      "instanceId": "xp21_yp160_zp19",
+      "role": "flange",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "79cbb6da-1b5a-5caa-b0d6-1fd21a7f0a19",
+      "nodeName": "Nozzle_24",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_nozzle",
+      "instanceId": "xm15_yp240_zm20",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "1b258a33-90b7-5905-b034-4353a4038884",
+      "nodeName": "Flange_24",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_flange",
+      "instanceId": "xm17_yp240_zm23",
+      "role": "flange",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "3684eb6d-2c06-5982-b831-33407111b7d3",
+      "nodeName": "Tower_Vacuum_Shell",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_shell",
+      "role": "shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d5c16242-0518-59b4-9efa-edbe55d817f1",
+      "nodeName": "Tower_Vacuum_Dome",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_dome",
+      "role": "dome",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "0b04fff8-7d7a-576f-801c-451e314b3543",
+      "nodeName": "Tower_Vacuum_Skirt",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_skirt",
+      "role": "skirt",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "0e2bf382-d86e-5103-adb3-fd493518dbb2",
+      "nodeName": "Trays_V",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_trays",
+      "role": "tray_bundle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "4ce70fbb-a1c8-55a8-bfbc-8b92018c0679",
+      "nodeName": "Heater",
+      "objectId": "heater",
+      "semanticId": "heater_shell",
+      "role": "furnace",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "8f8763c0-3fb3-5abb-a3c8-64d8cd8f6599",
+      "nodeName": "Heater_Chimney",
+      "objectId": "heater",
+      "semanticId": "heater_chimney",
+      "role": "stack",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "93361048-f3da-5240-bc17-a5c942440309",
+      "nodeName": "Pipe_Feed_Riser",
+      "objectId": "heater",
+      "semanticId": "feed_line",
+      "instanceId": "xm70_yp100_zp0",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "1f099aa9-d8d8-5b9d-a30a-22774f48bbbf",
+      "nodeName": "Pipe_Feed_Horizontal",
+      "objectId": "heater",
+      "semanticId": "feed_line",
+      "instanceId": "xm45_yp130_zp0",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "731391f8-263a-528b-b65f-81700d4be00d",
+      "nodeName": "Pipe_Bottom_To_Vacuum",
+      "objectId": "pipe_bottom_to_vacuum",
+      "semanticId": "atm_bottom_to_vacuum",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7342155c-2e00-58d7-8e35-4f617138bedb",
+      "nodeName": "Nozzle_Side_Naphtha",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_nozzle",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "4e7e5526-7060-5e38-aa2a-15da42a34809",
+      "nodeName": "Flange_Side_Naphtha",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_flange",
+      "role": "flange",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "6d3efcc5-2232-51dc-914a-838aa843448f",
+      "nodeName": "Pipe_Side_Naphtha_Seg0",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp210_zm24",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "3d60b429-9721-59e2-9a6c-5ae2b4d25c2b",
+      "nodeName": "Pipe_Side_Naphtha_Seg1",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp30_yp210_zm48",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "cb6831cf-b9f6-59b0-95c9-52c6b530f397",
+      "nodeName": "Pipe_Side_Naphtha_Seg2",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp34_yp150_zm48",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "1d85948d-1dd2-5f32-95d5-d5d502abc015",
+      "nodeName": "Pipe_Side_Naphtha_Elbow0",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp210_zp0",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "646c9e73-f05c-5ae7-a705-dc02a86ce7ca",
+      "nodeName": "Pipe_Side_Naphtha_Elbow1",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp210_zm48",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "6a7b393b-bf29-5c82-be3c-f6dae61975eb",
+      "nodeName": "Pipe_Side_Naphtha_Elbow2",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp34_yp210_zm48",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "5ecf1865-5051-5c2e-a345-11301a7e19be",
+      "nodeName": "Pipe_Side_Naphtha_Elbow3",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "side_pipe",
+      "instanceId": "xp34_yp90_zm48",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b573a3e2-5d0e-5b69-a4b3-5d4d2f23d6cb",
+      "nodeName": "Stripper_Naphtha_Foundation",
+      "objectId": "stripper_naphtha",
+      "semanticId": "stripper_foundation",
+      "role": "foundation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "9a3bed05-3dbd-510e-9b4e-b13174f4aa61",
+      "nodeName": "Stripper_Naphtha_Skirt",
+      "objectId": "stripper_naphtha",
+      "semanticId": "stripper_skirt",
+      "role": "skirt",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e1607b81-fc0c-5cb9-9d5e-7517070f5614",
+      "nodeName": "Stripper_Naphtha_Shell",
+      "objectId": "stripper_naphtha",
+      "semanticId": "stripper_shell",
+      "role": "shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "06f86046-cc3e-5712-b613-4fa3bf1789a1",
+      "nodeName": "Stripper_Naphtha_Dome",
+      "objectId": "stripper_naphtha",
+      "semanticId": "stripper_dome",
+      "role": "dome",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "c08b5762-b5bb-5104-b5e5-58c50287ed2c",
+      "nodeName": "Pipe_Rundown_Naphtha_Seg0",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp59_yp10_zm48",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "ea3d71f5-24e8-514f-9b1b-58e2eed3e5b3",
+      "nodeName": "Pipe_Rundown_Naphtha_Elbow0",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp34_yp10_zm48",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "3ede9a68-30df-51a6-be41-9c34fd086869",
+      "nodeName": "Pipe_Rundown_Naphtha_Elbow1",
+      "objectId": "side_draw_naphtha",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp83_yp10_zm48",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "0fc9a890-f949-56a7-844e-03376fae90be",
+      "nodeName": "BatteryLimit_Naphtha",
+      "objectId": "battery_limit_naphtha",
+      "semanticId": "battery_limit_flange",
+      "role": "boundary_flange",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "925e31ef-5784-5522-bdb8-b351def6e8ab",
+      "nodeName": "Nozzle_Side_Kerosene",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_nozzle",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "f876c150-57e3-53fa-a2f1-02b51b4f429b",
+      "nodeName": "Flange_Side_Kerosene",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_flange",
+      "role": "flange",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "91b9a482-0cad-5d47-9411-0a0f0a0a6439",
+      "nodeName": "Pipe_Side_Kerosene_Seg0",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp184_zm29",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a1106315-44c7-5127-b82b-2481e22f0415",
+      "nodeName": "Pipe_Side_Kerosene_Seg1",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp38_yp184_zm59",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "5a995678-ef8b-5c86-b599-52c473d01361",
+      "nodeName": "Pipe_Side_Kerosene_Seg2",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp50_yp137_zm59",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "9d61c864-ab29-5ef6-b49e-0985f8d681c5",
+      "nodeName": "Pipe_Side_Kerosene_Elbow0",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp184_zp0",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "4099fc6c-e7ed-59bd-a2cf-f65a16de30f1",
+      "nodeName": "Pipe_Side_Kerosene_Elbow1",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp184_zm59",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "89bb59f7-1c68-5a8b-b9de-267be6bebc55",
+      "nodeName": "Pipe_Side_Kerosene_Elbow2",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp50_yp184_zm59",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "05169b6d-c575-53d9-ae9e-f3be45e1bbe6",
+      "nodeName": "Pipe_Side_Kerosene_Elbow3",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "side_pipe",
+      "instanceId": "xp50_yp90_zm59",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "88803e80-c8f0-5ef6-ad60-ad1f3bf802c6",
+      "nodeName": "Stripper_Kerosene_Foundation",
+      "objectId": "stripper_kerosene",
+      "semanticId": "stripper_foundation",
+      "role": "foundation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "49512a1c-3011-5cb7-8ffe-a0b8b40df7fa",
+      "nodeName": "Stripper_Kerosene_Skirt",
+      "objectId": "stripper_kerosene",
+      "semanticId": "stripper_skirt",
+      "role": "skirt",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "1dfb94e6-f00f-5c79-b8f3-f115f44c9a58",
+      "nodeName": "Stripper_Kerosene_Shell",
+      "objectId": "stripper_kerosene",
+      "semanticId": "stripper_shell",
+      "role": "shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d860afa5-9f77-55e2-a37b-ed0b0e75759f",
+      "nodeName": "Stripper_Kerosene_Dome",
+      "objectId": "stripper_kerosene",
+      "semanticId": "stripper_dome",
+      "role": "dome",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "f2170821-01bf-5b90-858a-a7b3527cc75b",
+      "nodeName": "Pipe_Rundown_Kerosene_Seg0",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp67_yp10_zm59",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7cc91852-9a77-56f6-9f6b-995ae9f8a1ae",
+      "nodeName": "Pipe_Rundown_Kerosene_Elbow0",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp50_yp10_zm59",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b9310859-dcac-5478-906d-78516c151dc4",
+      "nodeName": "Pipe_Rundown_Kerosene_Elbow1",
+      "objectId": "side_draw_kerosene",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp83_yp10_zm59",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "772f1b91-6d7b-56de-9bd9-4e6a5e29da03",
+      "nodeName": "BatteryLimit_Kerosene",
+      "objectId": "battery_limit_kerosene",
+      "semanticId": "battery_limit_flange",
+      "role": "boundary_flange",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "1b15c50b-72f8-59f4-942a-08e7589a3afb",
+      "nodeName": "Nozzle_Side_Diesel",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_nozzle",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "bfd25c19-1568-58ba-9f8c-6b4df6a8c4d1",
+      "nodeName": "Flange_Side_Diesel",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_flange",
+      "role": "flange",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "c317031d-e610-5359-b079-1b1afb809e95",
+      "nodeName": "Pipe_Side_Diesel_Seg0",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp158_zm35",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "22332d49-3c88-5193-81fc-02ab57e56e0c",
+      "nodeName": "Pipe_Side_Diesel_Seg1",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp46_yp158_zm70",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "c7e2dee6-4f1a-5422-8896-c866c6e5adb9",
+      "nodeName": "Pipe_Side_Diesel_Seg2",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp66_yp124_zm70",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "2eb39663-e648-50a8-837f-dce6d1ba11ac",
+      "nodeName": "Pipe_Side_Diesel_Elbow0",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp158_zp0",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "ab858255-913e-5269-b655-6a0d0b519553",
+      "nodeName": "Pipe_Side_Diesel_Elbow1",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp26_yp158_zm70",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "98a6e159-8462-5ec3-adf9-a72cd884be89",
+      "nodeName": "Pipe_Side_Diesel_Elbow2",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp66_yp158_zm70",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "2b0f206f-2c7f-57f5-a28b-93b671de7587",
+      "nodeName": "Pipe_Side_Diesel_Elbow3",
+      "objectId": "side_draw_diesel",
+      "semanticId": "side_pipe",
+      "instanceId": "xp66_yp90_zm70",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "ae4fbac1-2ec8-52d8-b596-5e8b65c8cb02",
+      "nodeName": "Stripper_Diesel_Foundation",
+      "objectId": "stripper_diesel",
+      "semanticId": "stripper_foundation",
+      "role": "foundation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "5728ecd7-9174-55c4-90f8-c9a7bbe88086",
+      "nodeName": "Stripper_Diesel_Skirt",
+      "objectId": "stripper_diesel",
+      "semanticId": "stripper_skirt",
+      "role": "skirt",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b6be7b8b-133a-51c6-93dd-c4667840b68f",
+      "nodeName": "Stripper_Diesel_Shell",
+      "objectId": "stripper_diesel",
+      "semanticId": "stripper_shell",
+      "role": "shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d7a8a992-5521-5009-afcf-89c47a13e899",
+      "nodeName": "Stripper_Diesel_Dome",
+      "objectId": "stripper_diesel",
+      "semanticId": "stripper_dome",
+      "role": "dome",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "bdad6023-60ef-51a2-a703-8e598d47aa3b",
+      "nodeName": "Pipe_Rundown_Diesel_Seg0",
+      "objectId": "side_draw_diesel",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp75_yp10_zm70",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "3fa20cf1-b218-511c-aa72-03708a02cdc8",
+      "nodeName": "Pipe_Rundown_Diesel_Elbow0",
+      "objectId": "side_draw_diesel",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp66_yp10_zm70",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "8e5fb62c-f8c9-5325-87a6-3f5dd2743942",
+      "nodeName": "Pipe_Rundown_Diesel_Elbow1",
+      "objectId": "side_draw_diesel",
+      "semanticId": "product_rundown_pipe",
+      "instanceId": "xp83_yp10_zm70",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "195364e5-88a7-5d95-aec2-0815a13beb6d",
+      "nodeName": "BatteryLimit_Diesel",
+      "objectId": "battery_limit_diesel",
+      "semanticId": "battery_limit_flange",
+      "role": "boundary_flange",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "91be98c1-f5f3-5517-bd63-848f903d6dee",
+      "nodeName": "Pipe_Top_Vapor_Seg0",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_segment",
+      "instanceId": "xp22_yp274_zp0",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "11efe758-08eb-59ff-9256-0d80abe600d8",
+      "nodeName": "Pipe_Top_Vapor_Seg1",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_segment",
+      "instanceId": "xp40_yp289_zp0",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7b7c327d-27cd-57fe-831c-1441d5d533ae",
+      "nodeName": "Pipe_Top_Vapor_Elbow0",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_elbow",
+      "instanceId": "xp22_yp260_zp0",
+      "role": "pipe_elbow",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "51f239ea-c6ef-5424-bfde-72f936c3291a",
+      "nodeName": "Pipe_Top_Vapor_Elbow1",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_elbow",
+      "instanceId": "xp22_yp289_zp0",
+      "role": "pipe_elbow",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "71efde2f-cc09-5b9f-bec3-5f75163051ff",
+      "nodeName": "Pipe_Top_Vapor_Elbow2",
+      "objectId": "overhead_condenser",
+      "semanticId": "overhead_vapor_elbow",
+      "instanceId": "xp58_yp289_zp0",
+      "role": "pipe_elbow",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "181f9286-63d4-5d94-be68-7e85c5550513",
+      "nodeName": "Condenser_Shell",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_shell",
+      "role": "exchanger_shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "197d37a1-bcad-5052-9cc4-389e20b7e6a1",
+      "nodeName": "Condenser_Head_A",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_head",
+      "instanceId": "xp55_yp284_zp0",
+      "role": "vessel_head",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "08acacb7-9069-5232-87f6-c26c2b2ab0d2",
+      "nodeName": "Condenser_Head_B",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_head",
+      "instanceId": "xp85_yp284_zp0",
+      "role": "vessel_head",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b695af7d-8a4d-5294-b3c8-27555c154dd5",
+      "nodeName": "Reflux_Drum",
+      "objectId": "reflux_drum",
+      "semanticId": "reflux_drum_shell",
+      "role": "vessel_shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "9ed154cc-943e-5a4d-a8fe-a15231f3aadb",
+      "nodeName": "Pipe_Condenser_To_Drum_Seg0",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_to_drum_pipe",
+      "instanceId": "xp70_yp269_zp0",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "45e88252-cd38-5e4d-8101-4f02a04ce6fc",
+      "nodeName": "Pipe_Condenser_To_Drum_Elbow0",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_to_drum_pipe",
+      "instanceId": "xp70_yp276_zp0",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a6bf2372-b474-5fcb-81fb-6a0c97b48dcc",
+      "nodeName": "Pipe_Condenser_To_Drum_Elbow1",
+      "objectId": "overhead_condenser",
+      "semanticId": "condenser_to_drum_pipe",
+      "instanceId": "xp70_yp261_zp0",
+      "role": "process_pipe",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "70cd0ea6-9c24-5a75-99d1-35ecdc326429",
+      "nodeName": "Pump_1",
+      "objectId": "pump_1",
+      "semanticId": "pump_body",
+      "role": "pump_body",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "0cbfa31f-3abf-5531-977f-4abeaf38e457",
+      "nodeName": "Pump_2",
+      "objectId": "pump_2",
+      "semanticId": "pump_body",
+      "role": "pump_body",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b58eef60-100b-5d0d-aae4-bfa107c4e861",
+      "nodeName": "Foundation_Atm",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_foundation",
+      "role": "foundation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a4d7587c-d246-5ef8-b9b2-73cc47916e25",
+      "nodeName": "Foundation_Vac",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_foundation",
+      "role": "foundation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "101a53b0-8cc1-53f6-ac41-6f540b0a5029",
+      "nodeName": "Foundation_Heater",
+      "objectId": "heater",
+      "semanticId": "heater_foundation",
+      "role": "foundation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "8cadbb61-f047-52f7-970e-f7b96ed9fac7",
+      "nodeName": "Exchanger_1_Shell",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_shell",
+      "role": "exchanger_shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "127e5d94-263b-58c2-bbfb-6271af2f1acc",
+      "nodeName": "Exchanger_1_Head_A",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_head",
+      "instanceId": "xm151_yp44_zp30",
+      "role": "vessel_head",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e084f8e1-2866-50ca-bb9a-efa5669e8ad4",
+      "nodeName": "Exchanger_1_Head_B",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_head",
+      "instanceId": "xm99_yp44_zp30",
+      "role": "vessel_head",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "bd9f4610-7c22-5378-8750-7768fe4b3a2d",
+      "nodeName": "Exchanger_1_Nozzle",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_nozzle",
+      "instanceId": "xm125_yp52_zp30",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "2cf7abfa-789f-5c5f-a503-f60d0e51270b",
+      "nodeName": "Exchanger_1_Nozzle_Out",
+      "objectId": "exchanger_1",
+      "semanticId": "exchanger_nozzle",
+      "instanceId": "xm125_yp36_zp30",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7f5de310-4f07-5a34-8b87-e88bfd3144f6",
+      "nodeName": "Exchanger_2_Shell",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_shell",
+      "role": "exchanger_shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b97013c2-1e34-53ea-827b-814d1cf74d56",
+      "nodeName": "Exchanger_2_Head_A",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_head",
+      "instanceId": "xm151_yp44_zm30",
+      "role": "vessel_head",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e5764b32-c1c9-53c3-aedd-1e306ac0d9de",
+      "nodeName": "Exchanger_2_Head_B",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_head",
+      "instanceId": "xm99_yp44_zm30",
+      "role": "vessel_head",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "9d861de0-6ed1-5908-8faf-72b45be7ed4b",
+      "nodeName": "Exchanger_2_Nozzle",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_nozzle",
+      "instanceId": "xm125_yp52_zm30",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "de59a436-fa92-5437-ab87-bd1182624f71",
+      "nodeName": "Exchanger_2_Nozzle_Out",
+      "objectId": "exchanger_2",
+      "semanticId": "exchanger_nozzle",
+      "instanceId": "xm125_yp36_zm30",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "12325544-a5a1-52d1-bbfe-bb8fc5b9f411",
+      "nodeName": "Exchanger_3_Shell",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_shell",
+      "role": "exchanger_shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "381dfed5-90ee-5116-972b-d4509cdf3482",
+      "nodeName": "Exchanger_3_Head_A",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_head",
+      "instanceId": "xm106_yp44_zp30",
+      "role": "vessel_head",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "c868512f-7353-5360-a8c9-9bbbd08e50d8",
+      "nodeName": "Exchanger_3_Head_B",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_head",
+      "instanceId": "xm64_yp44_zp30",
+      "role": "vessel_head",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "cbb64bd4-bfa2-5d12-ac94-405f168ebb49",
+      "nodeName": "Exchanger_3_Nozzle",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_nozzle",
+      "instanceId": "xm85_yp52_zp30",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "48f5cb79-12bb-572b-b51d-8513f913166e",
+      "nodeName": "Exchanger_3_Nozzle_Out",
+      "objectId": "exchanger_3",
+      "semanticId": "exchanger_nozzle",
+      "instanceId": "xm85_yp36_zp30",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "593f2189-3f0a-54e2-a9e0-a186edca0cf5",
+      "nodeName": "Pump_A_0_Body",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_body",
+      "instanceId": "xp22_yp10_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7bbd494c-c2c9-58a5-997f-44ce7ec353cf",
+      "nodeName": "Pump_A_0_Motor",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_motor",
+      "instanceId": "xp32_yp9_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "77f7ded6-e79a-5f0c-be5e-d58b64cfce24",
+      "nodeName": "Pump_A_0_Suction",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_suction",
+      "instanceId": "xp12_yp13_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7364a5d9-92f0-5f3c-b7b9-4f5eb1408b84",
+      "nodeName": "Pump_A_0_Discharge",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_discharge",
+      "instanceId": "xp22_yp20_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b043960b-8580-5985-bc91-24b87e7b7ef7",
+      "nodeName": "Pump_A_0_ValveWheel",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_valvewheel",
+      "instanceId": "xp22_yp28_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b126bd15-d02f-5876-9dd3-2e4b70905a27",
+      "nodeName": "Pump_A_1_Body",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_body",
+      "instanceId": "xp40_yp10_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "0b5561f4-d6d7-5f68-9acc-b49758e00c97",
+      "nodeName": "Pump_A_1_Motor",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_motor",
+      "instanceId": "xp50_yp9_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "527a4302-7189-5afa-a72a-abf6b3b5e1a0",
+      "nodeName": "Pump_A_1_Suction",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_suction",
+      "instanceId": "xp30_yp13_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "10eef08e-1c45-5c6a-937f-f9d18d8e0b62",
+      "nodeName": "Pump_A_1_Discharge",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_discharge",
+      "instanceId": "xp40_yp20_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a38ccaa2-08d0-5e81-9fa2-829abf8fbc93",
+      "nodeName": "Pump_A_1_ValveWheel",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_valvewheel",
+      "instanceId": "xp40_yp28_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e5f135ae-eff0-546b-8535-5a82fad152f8",
+      "nodeName": "Pump_A_2_Body",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_body",
+      "instanceId": "xp58_yp10_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7c3cf811-49ab-5d98-808c-355f14d3dea0",
+      "nodeName": "Pump_A_2_Motor",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_motor",
+      "instanceId": "xp68_yp9_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e33734ee-d14c-5cfa-9323-6801e5903830",
+      "nodeName": "Pump_A_2_Suction",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_suction",
+      "instanceId": "xp48_yp13_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "888e57f3-5cc6-5854-98ce-0d13f9880506",
+      "nodeName": "Pump_A_2_Discharge",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_discharge",
+      "instanceId": "xp58_yp20_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "2f6985ba-3a83-580e-aecc-8a861fd53a80",
+      "nodeName": "Pump_A_2_ValveWheel",
+      "objectId": "pump_group_a",
+      "semanticId": "pump_valvewheel",
+      "instanceId": "xp58_yp28_zp62",
+      "role": "pump_part",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "ab5f31b1-6393-5ac4-9deb-dd0bc5efda34",
+      "nodeName": "Insulation_Band_7",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_insulation_band",
+      "instanceId": "xp0_yp75_zp0",
+      "role": "insulation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "c6bdd5b7-562a-57fd-8f70-8751c2534f43",
+      "nodeName": "Insulation_Band_13",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_insulation_band",
+      "instanceId": "xp0_yp135_zp0",
+      "role": "insulation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "232c9825-894d-53ef-a8bc-e7bfc80394ae",
+      "nodeName": "Insulation_Band_20",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_insulation_band",
+      "instanceId": "xp0_yp205_zp0",
+      "role": "insulation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "848b6462-5eb2-5cbc-950f-cb023c4eb7c5",
+      "nodeName": "Tower_Atmospheric_ShellHalf",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_shell_half",
+      "role": "cutaway_shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "68524a17-1c7a-51f8-9bde-c3d88c763fc2",
+      "nodeName": "Tower_Vacuum_ShellHalf",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_shell_half",
+      "role": "cutaway_shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a2714e6b-7f94-5958-9bfd-737b18ef884b",
+      "nodeName": "Tower_Atmospheric_DomeHalf",
+      "objectId": "atmospheric_tower",
+      "semanticId": "atm_dome_half",
+      "role": "cutaway_dome",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a57f8c41-315e-5fea-94af-ea136499f44b",
+      "nodeName": "Tower_Vacuum_DomeHalf",
+      "objectId": "vacuum_tower",
+      "semanticId": "vac_dome_half",
+      "role": "cutaway_dome",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    }
+  ],
+  "anchors": [
+    {
+      "anchorId": "anchor_tower_overview",
+      "ownerObjectId": "atmospheric_tower",
+      "coordinateSpaceId": "distillation_unit_asset_local",
+      "position": [
+        0,
+        14,
+        0
+      ],
+      "kind": "teaching_marker"
+    },
+    {
+      "anchorId": "anchor_tower_feed",
+      "ownerObjectId": "heater",
+      "coordinateSpaceId": "distillation_unit_asset_local",
+      "position": [
+        -4.5,
+        13,
+        0
+      ],
+      "kind": "teaching_marker"
+    },
+    {
+      "anchorId": "anchor_tower_trays",
+      "ownerObjectId": "atmospheric_tower",
+      "coordinateSpaceId": "distillation_unit_asset_local",
+      "position": [
+        0,
+        16,
+        0
+      ],
+      "kind": "teaching_marker"
+    },
+    {
+      "anchorId": "anchor_tower_vacuum",
+      "ownerObjectId": "vacuum_tower",
+      "coordinateSpaceId": "distillation_unit_asset_local",
+      "position": [
+        7.6,
+        9,
+        0
+      ],
+      "kind": "teaching_marker"
+    },
+    {
+      "anchorId": "anchor_tower_products",
+      "ownerObjectId": "battery_limit_naphtha",
+      "coordinateSpaceId": "distillation_unit_asset_local",
+      "position": [
+        8.4,
+        1,
+        -5.9
+      ],
+      "kind": "teaching_marker"
+    },
+    {
+      "anchorId": "anchor_atm_overhead_outlet",
+      "ownerObjectId": "atmospheric_tower",
+      "coordinateSpaceId": "distillation_unit_asset_local",
+      "position": [
+        2.2,
+        26,
+        0
+      ],
+      "kind": "teaching_marker"
+    },
+    {
+      "anchorId": "anchor_condenser_inlet",
+      "ownerObjectId": "overhead_condenser",
+      "coordinateSpaceId": "distillation_unit_asset_local",
+      "position": [
+        5.8,
+        28.85,
+        0
+      ],
+      "kind": "teaching_marker"
+    }
+  ],
+  "representations": {
+    "overview": [
+      "d985eaf4-7be2-5ddc-929e-a8275f403ec2",
+      "edfcb732-6932-5aa7-950c-372559e9c1c0",
+      "3684eb6d-2c06-5982-b831-33407111b7d3",
+      "d5c16242-0518-59b4-9efa-edbe55d817f1",
+      "e1607b81-fc0c-5cb9-9d5e-7517070f5614",
+      "1dfb94e6-f00f-5c79-b8f3-f115f44c9a58",
+      "b6be7b8b-133a-51c6-93dd-c4667840b68f",
+      "06f86046-cc3e-5712-b613-4fa3bf1789a1",
+      "d860afa5-9f77-55e2-a37b-ed0b0e75759f",
+      "d7a8a992-5521-5009-afcf-89c47a13e899",
+      "181f9286-63d4-5d94-be68-7e85c5550513",
+      "b695af7d-8a4d-5294-b3c8-27555c154dd5",
+      "4ce70fbb-a1c8-55a8-bfbc-8b92018c0679",
+      "bfdb7bc1-6dd1-5576-a5d3-c74143720d43",
+      "0b04fff8-7d7a-576f-801c-451e314b3543",
+      "8f8763c0-3fb3-5abb-a3c8-64d8cd8f6599"
+    ],
+    "detail": [
+      "d985eaf4-7be2-5ddc-929e-a8275f403ec2",
+      "bfdb7bc1-6dd1-5576-a5d3-c74143720d43",
+      "edfcb732-6932-5aa7-950c-372559e9c1c0",
+      "c8143935-1a75-5321-a686-086569796bd1",
+      "2b168d4f-6f0e-5d20-a671-dc299ac27cc0",
+      "85c3fcf0-399a-5104-8a82-2f251e535a88",
+      "b266f84d-78db-5920-85ec-048de6333df4",
+      "f7cf9445-f4ab-5e59-8a5e-521c81a01955",
+      "4916aec8-55a1-5d91-945f-79d8072bb64f",
+      "66bce3de-048a-55b8-ad49-20bad2c70a81",
+      "79cbb6da-1b5a-5caa-b0d6-1fd21a7f0a19",
+      "1b258a33-90b7-5905-b034-4353a4038884",
+      "3684eb6d-2c06-5982-b831-33407111b7d3",
+      "d5c16242-0518-59b4-9efa-edbe55d817f1",
+      "0b04fff8-7d7a-576f-801c-451e314b3543",
+      "0e2bf382-d86e-5103-adb3-fd493518dbb2",
+      "4ce70fbb-a1c8-55a8-bfbc-8b92018c0679",
+      "8f8763c0-3fb3-5abb-a3c8-64d8cd8f6599",
+      "93361048-f3da-5240-bc17-a5c942440309",
+      "1f099aa9-d8d8-5b9d-a30a-22774f48bbbf",
+      "731391f8-263a-528b-b65f-81700d4be00d",
+      "7342155c-2e00-58d7-8e35-4f617138bedb",
+      "4e7e5526-7060-5e38-aa2a-15da42a34809",
+      "6d3efcc5-2232-51dc-914a-838aa843448f",
+      "3d60b429-9721-59e2-9a6c-5ae2b4d25c2b",
+      "cb6831cf-b9f6-59b0-95c9-52c6b530f397",
+      "1d85948d-1dd2-5f32-95d5-d5d502abc015",
+      "646c9e73-f05c-5ae7-a705-dc02a86ce7ca",
+      "6a7b393b-bf29-5c82-be3c-f6dae61975eb",
+      "5ecf1865-5051-5c2e-a345-11301a7e19be",
+      "b573a3e2-5d0e-5b69-a4b3-5d4d2f23d6cb",
+      "9a3bed05-3dbd-510e-9b4e-b13174f4aa61",
+      "e1607b81-fc0c-5cb9-9d5e-7517070f5614",
+      "06f86046-cc3e-5712-b613-4fa3bf1789a1",
+      "c08b5762-b5bb-5104-b5e5-58c50287ed2c",
+      "ea3d71f5-24e8-514f-9b1b-58e2eed3e5b3",
+      "3ede9a68-30df-51a6-be41-9c34fd086869",
+      "0fc9a890-f949-56a7-844e-03376fae90be",
+      "925e31ef-5784-5522-bdb8-b351def6e8ab",
+      "f876c150-57e3-53fa-a2f1-02b51b4f429b",
+      "91b9a482-0cad-5d47-9411-0a0f0a0a6439",
+      "a1106315-44c7-5127-b82b-2481e22f0415",
+      "5a995678-ef8b-5c86-b599-52c473d01361",
+      "9d61c864-ab29-5ef6-b49e-0985f8d681c5",
+      "4099fc6c-e7ed-59bd-a2cf-f65a16de30f1",
+      "89bb59f7-1c68-5a8b-b9de-267be6bebc55",
+      "05169b6d-c575-53d9-ae9e-f3be45e1bbe6",
+      "88803e80-c8f0-5ef6-ad60-ad1f3bf802c6",
+      "49512a1c-3011-5cb7-8ffe-a0b8b40df7fa",
+      "1dfb94e6-f00f-5c79-b8f3-f115f44c9a58",
+      "d860afa5-9f77-55e2-a37b-ed0b0e75759f",
+      "f2170821-01bf-5b90-858a-a7b3527cc75b",
+      "7cc91852-9a77-56f6-9f6b-995ae9f8a1ae",
+      "b9310859-dcac-5478-906d-78516c151dc4",
+      "772f1b91-6d7b-56de-9bd9-4e6a5e29da03",
+      "1b15c50b-72f8-59f4-942a-08e7589a3afb",
+      "bfd25c19-1568-58ba-9f8c-6b4df6a8c4d1",
+      "c317031d-e610-5359-b079-1b1afb809e95",
+      "22332d49-3c88-5193-81fc-02ab57e56e0c",
+      "c7e2dee6-4f1a-5422-8896-c866c6e5adb9",
+      "2eb39663-e648-50a8-837f-dce6d1ba11ac",
+      "ab858255-913e-5269-b655-6a0d0b519553",
+      "98a6e159-8462-5ec3-adf9-a72cd884be89",
+      "2b0f206f-2c7f-57f5-a28b-93b671de7587",
+      "ae4fbac1-2ec8-52d8-b596-5e8b65c8cb02",
+      "5728ecd7-9174-55c4-90f8-c9a7bbe88086",
+      "b6be7b8b-133a-51c6-93dd-c4667840b68f",
+      "d7a8a992-5521-5009-afcf-89c47a13e899",
+      "bdad6023-60ef-51a2-a703-8e598d47aa3b",
+      "3fa20cf1-b218-511c-aa72-03708a02cdc8",
+      "8e5fb62c-f8c9-5325-87a6-3f5dd2743942",
+      "195364e5-88a7-5d95-aec2-0815a13beb6d",
+      "91be98c1-f5f3-5517-bd63-848f903d6dee",
+      "11efe758-08eb-59ff-9256-0d80abe600d8",
+      "7b7c327d-27cd-57fe-831c-1441d5d533ae",
+      "51f239ea-c6ef-5424-bfde-72f936c3291a",
+      "71efde2f-cc09-5b9f-bec3-5f75163051ff",
+      "181f9286-63d4-5d94-be68-7e85c5550513",
+      "197d37a1-bcad-5052-9cc4-389e20b7e6a1",
+      "08acacb7-9069-5232-87f6-c26c2b2ab0d2",
+      "b695af7d-8a4d-5294-b3c8-27555c154dd5",
+      "9ed154cc-943e-5a4d-a8fe-a15231f3aadb",
+      "45e88252-cd38-5e4d-8101-4f02a04ce6fc",
+      "a6bf2372-b474-5fcb-81fb-6a0c97b48dcc",
+      "70cd0ea6-9c24-5a75-99d1-35ecdc326429",
+      "0cbfa31f-3abf-5531-977f-4abeaf38e457",
+      "b58eef60-100b-5d0d-aae4-bfa107c4e861",
+      "a4d7587c-d246-5ef8-b9b2-73cc47916e25",
+      "101a53b0-8cc1-53f6-ac41-6f540b0a5029",
+      "8cadbb61-f047-52f7-970e-f7b96ed9fac7",
+      "127e5d94-263b-58c2-bbfb-6271af2f1acc",
+      "e084f8e1-2866-50ca-bb9a-efa5669e8ad4",
+      "bd9f4610-7c22-5378-8750-7768fe4b3a2d",
+      "2cf7abfa-789f-5c5f-a503-f60d0e51270b",
+      "7f5de310-4f07-5a34-8b87-e88bfd3144f6",
+      "b97013c2-1e34-53ea-827b-814d1cf74d56",
+      "e5764b32-c1c9-53c3-aedd-1e306ac0d9de",
+      "9d861de0-6ed1-5908-8faf-72b45be7ed4b",
+      "de59a436-fa92-5437-ab87-bd1182624f71",
+      "12325544-a5a1-52d1-bbfe-bb8fc5b9f411",
+      "381dfed5-90ee-5116-972b-d4509cdf3482",
+      "c868512f-7353-5360-a8c9-9bbbd08e50d8",
+      "cbb64bd4-bfa2-5d12-ac94-405f168ebb49",
+      "48f5cb79-12bb-572b-b51d-8513f913166e",
+      "593f2189-3f0a-54e2-a9e0-a186edca0cf5",
+      "7bbd494c-c2c9-58a5-997f-44ce7ec353cf",
+      "77f7ded6-e79a-5f0c-be5e-d58b64cfce24",
+      "7364a5d9-92f0-5f3c-b7b9-4f5eb1408b84",
+      "b043960b-8580-5985-bc91-24b87e7b7ef7",
+      "b126bd15-d02f-5876-9dd3-2e4b70905a27",
+      "0b5561f4-d6d7-5f68-9acc-b49758e00c97",
+      "527a4302-7189-5afa-a72a-abf6b3b5e1a0",
+      "10eef08e-1c45-5c6a-937f-f9d18d8e0b62",
+      "a38ccaa2-08d0-5e81-9fa2-829abf8fbc93",
+      "e5f135ae-eff0-546b-8535-5a82fad152f8",
+      "7c3cf811-49ab-5d98-808c-355f14d3dea0",
+      "e33734ee-d14c-5cfa-9323-6801e5903830",
+      "888e57f3-5cc6-5854-98ce-0d13f9880506",
+      "2f6985ba-3a83-580e-aecc-8a861fd53a80",
+      "ab5f31b1-6393-5ac4-9deb-dd0bc5efda34",
+      "c6bdd5b7-562a-57fd-8f70-8751c2534f43",
+      "232c9825-894d-53ef-a8bc-e7bfc80394ae",
+      "848b6462-5eb2-5cbc-950f-cb023c4eb7c5",
+      "68524a17-1c7a-51f8-9bde-c3d88c763fc2",
+      "a2714e6b-7f94-5958-9bfd-737b18ef884b",
+      "a57f8c41-315e-5fea-94af-ea136499f44b"
+    ],
+    "closeup": [
+      "d985eaf4-7be2-5ddc-929e-a8275f403ec2",
+      "edfcb732-6932-5aa7-950c-372559e9c1c0",
+      "3684eb6d-2c06-5982-b831-33407111b7d3",
+      "d5c16242-0518-59b4-9efa-edbe55d817f1",
+      "e1607b81-fc0c-5cb9-9d5e-7517070f5614",
+      "1dfb94e6-f00f-5c79-b8f3-f115f44c9a58",
+      "b6be7b8b-133a-51c6-93dd-c4667840b68f",
+      "06f86046-cc3e-5712-b613-4fa3bf1789a1",
+      "d860afa5-9f77-55e2-a37b-ed0b0e75759f",
+      "d7a8a992-5521-5009-afcf-89c47a13e899",
+      "181f9286-63d4-5d94-be68-7e85c5550513",
+      "b695af7d-8a4d-5294-b3c8-27555c154dd5",
+      "4ce70fbb-a1c8-55a8-bfbc-8b92018c0679",
+      "c8143935-1a75-5321-a686-086569796bd1",
+      "0e2bf382-d86e-5103-adb3-fd493518dbb2",
+      "848b6462-5eb2-5cbc-950f-cb023c4eb7c5",
+      "a2714e6b-7f94-5958-9bfd-737b18ef884b",
+      "68524a17-1c7a-51f8-9bde-c3d88c763fc2",
+      "a57f8c41-315e-5fea-94af-ea136499f44b"
+    ]
+  },
+  "structureModes": {
+    "external": {
+      "show": [
+        "d985eaf4-7be2-5ddc-929e-a8275f403ec2",
+        "edfcb732-6932-5aa7-950c-372559e9c1c0",
+        "3684eb6d-2c06-5982-b831-33407111b7d3",
+        "d5c16242-0518-59b4-9efa-edbe55d817f1",
+        "e1607b81-fc0c-5cb9-9d5e-7517070f5614",
+        "1dfb94e6-f00f-5c79-b8f3-f115f44c9a58",
+        "b6be7b8b-133a-51c6-93dd-c4667840b68f",
+        "06f86046-cc3e-5712-b613-4fa3bf1789a1",
+        "d860afa5-9f77-55e2-a37b-ed0b0e75759f",
+        "d7a8a992-5521-5009-afcf-89c47a13e899",
+        "181f9286-63d4-5d94-be68-7e85c5550513",
+        "b695af7d-8a4d-5294-b3c8-27555c154dd5"
+      ],
+      "hide": [
+        "848b6462-5eb2-5cbc-950f-cb023c4eb7c5",
+        "a2714e6b-7f94-5958-9bfd-737b18ef884b",
+        "68524a17-1c7a-51f8-9bde-c3d88c763fc2",
+        "a57f8c41-315e-5fea-94af-ea136499f44b",
+        "c8143935-1a75-5321-a686-086569796bd1",
+        "0e2bf382-d86e-5103-adb3-fd493518dbb2"
+      ],
+      "ghost": []
+    },
+    "half": {
+      "show": [
+        "848b6462-5eb2-5cbc-950f-cb023c4eb7c5",
+        "a2714e6b-7f94-5958-9bfd-737b18ef884b",
+        "68524a17-1c7a-51f8-9bde-c3d88c763fc2",
+        "a57f8c41-315e-5fea-94af-ea136499f44b",
+        "c8143935-1a75-5321-a686-086569796bd1",
+        "0e2bf382-d86e-5103-adb3-fd493518dbb2"
+      ],
+      "hide": [
+        "d985eaf4-7be2-5ddc-929e-a8275f403ec2",
+        "edfcb732-6932-5aa7-950c-372559e9c1c0",
+        "3684eb6d-2c06-5982-b831-33407111b7d3",
+        "d5c16242-0518-59b4-9efa-edbe55d817f1"
+      ],
+      "ghost": []
+    },
+    "full": {
+      "show": [
+        "848b6462-5eb2-5cbc-950f-cb023c4eb7c5",
+        "a2714e6b-7f94-5958-9bfd-737b18ef884b",
+        "68524a17-1c7a-51f8-9bde-c3d88c763fc2",
+        "a57f8c41-315e-5fea-94af-ea136499f44b",
+        "c8143935-1a75-5321-a686-086569796bd1",
+        "0e2bf382-d86e-5103-adb3-fd493518dbb2"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "ghost": {
+      "show": [
+        "848b6462-5eb2-5cbc-950f-cb023c4eb7c5",
+        "a2714e6b-7f94-5958-9bfd-737b18ef884b",
+        "68524a17-1c7a-51f8-9bde-c3d88c763fc2",
+        "a57f8c41-315e-5fea-94af-ea136499f44b",
+        "c8143935-1a75-5321-a686-086569796bd1",
+        "0e2bf382-d86e-5103-adb3-fd493518dbb2"
+      ],
+      "hide": [],
+      "ghost": [
+        "d985eaf4-7be2-5ddc-929e-a8275f403ec2",
+        "edfcb732-6932-5aa7-950c-372559e9c1c0",
+        "3684eb6d-2c06-5982-b831-33407111b7d3",
+        "d5c16242-0518-59b4-9efa-edbe55d817f1"
+      ]
+    }
+  },
+  "dynamicBindings": [],
+  "nonInteractiveSupport": [
+    {
+      "nodeUid": "ae65f60d-98fa-5bc7-8bb2-e14e57b0beaf",
+      "nodeName": "Railing_10",
+      "reason": "栏杆：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "1e5e8473-c8ea-5e71-bb62-65cbe028a41e",
+      "nodeName": "Post_10_0",
+      "reason": "栏杆立柱：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "4bdfc1d2-5116-5375-a334-33e0b8b6e599",
+      "nodeName": "Post_10_1",
+      "reason": "栏杆立柱：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "63191198-20da-5c45-9488-928f4b816fbd",
+      "nodeName": "Post_10_2",
+      "reason": "栏杆立柱：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "b2edaaee-351d-5f6a-bb74-890645468a32",
+      "nodeName": "Post_10_3",
+      "reason": "栏杆立柱：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "ee820390-f817-5594-b9c4-6f64e26114c5",
+      "nodeName": "Post_10_4",
+      "reason": "栏杆立柱：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "e0e1baa9-c0e6-5157-945a-77e56569ae73",
+      "nodeName": "Post_10_5",
+      "reason": "栏杆立柱：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "87296442-e7f7-5f53-8a06-a498bd9c33a5",
+      "nodeName": "Railing_18",
+      "reason": "栏杆：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "61cfaea1-a644-54ea-bb0d-8a674003c212",
+      "nodeName": "Post_18_0",
+      "reason": "栏杆立柱：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "efe4737c-38db-53c2-88fc-389e54700c89",
+      "nodeName": "Post_18_1",
+      "reason": "栏杆立柱：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "4142db16-b72c-55ec-9fe7-ed912fe4096b",
+      "nodeName": "Post_18_2",
+      "reason": "栏杆立柱：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "8bb86718-c5a7-5a1f-86e0-b5faabe7f427",
+      "nodeName": "Post_18_3",
+      "reason": "栏杆立柱：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "7fd9d1c4-0a79-5854-b78e-5a4de2123407",
+      "nodeName": "Post_18_4",
+      "reason": "栏杆立柱：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "405b8f4c-4d4c-5fba-9cdb-e3c62746a14e",
+      "nodeName": "Post_18_5",
+      "reason": "栏杆立柱：安全防护，不参与交互"
+    },
+    {
+      "nodeUid": "cd208c85-2e1a-5e7a-b9f0-0d6fc04727cb",
+      "nodeName": "Ladder",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "3d2e1861-ac58-554c-8fd8-2c2911f70b52",
+      "nodeName": "SideRack_Col_Naphtha_A",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "e689363a-94f2-5d0d-81fa-35823e9c0dc9",
+      "nodeName": "SideRack_Col_Naphtha_A_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "0f1a61a4-4864-5d8d-be46-6164e9d9ab03",
+      "nodeName": "SideRack_Col_Naphtha_B",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "1f1fd264-cdec-51f8-815f-7c23cd6fe835",
+      "nodeName": "SideRack_Col_Naphtha_B_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "fdf97ad5-79af-5746-9f51-9844220e4199",
+      "nodeName": "BatteryLimit_Naphtha_Support",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "2f68a160-16d5-5671-9bd8-a5b9479a24d4",
+      "nodeName": "BatteryLimit_Naphtha_Foot",
+      "reason": "设备基础：混凝土基础，不参与交互"
+    },
+    {
+      "nodeUid": "ca7d1d4a-9483-5af0-be2d-a9904fb3289d",
+      "nodeName": "RundownRack_Naphtha_0",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "f11a8ebf-4db6-5ae6-895c-5edb8a525a87",
+      "nodeName": "RundownRack_Naphtha_0_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "419b00fc-2cc4-5a2e-9f91-0cf96681ed51",
+      "nodeName": "RundownRack_Naphtha_1",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "b93abe0e-663c-5cde-a0e6-d9a0a9259de6",
+      "nodeName": "RundownRack_Naphtha_1_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "812cd5d2-fee1-580b-9980-cc95f7e2be38",
+      "nodeName": "RundownRack_Naphtha_2",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "0f0bb468-7f59-522a-84aa-153ab5ec7f55",
+      "nodeName": "RundownRack_Naphtha_2_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "68747780-3ad5-5e26-a2d1-f975a8901908",
+      "nodeName": "SideRack_Col_Kerosene_A",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "dfb51aae-98e8-54b0-9d59-3b2444be978b",
+      "nodeName": "SideRack_Col_Kerosene_A_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "86633f39-0a73-5f07-814f-e74cf1e469fb",
+      "nodeName": "SideRack_Col_Kerosene_B",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "a5348693-81fe-507e-bdd5-4432308215a2",
+      "nodeName": "SideRack_Col_Kerosene_B_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "6026ce52-940a-5423-81ea-57c8d7d0a5fe",
+      "nodeName": "BatteryLimit_Kerosene_Support",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "e8d506b8-c15d-5bbd-ab05-17e2e8bf5ddb",
+      "nodeName": "BatteryLimit_Kerosene_Foot",
+      "reason": "设备基础：混凝土基础，不参与交互"
+    },
+    {
+      "nodeUid": "f471d14d-9ab6-5d1e-b878-979a42af1fcd",
+      "nodeName": "RundownRack_Kerosene_0",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "740d03a9-4743-5762-8069-08b9b7bf2d18",
+      "nodeName": "RundownRack_Kerosene_0_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "1e5f6428-6140-5159-94a8-3475d4bde970",
+      "nodeName": "RundownRack_Kerosene_1",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "3daceaca-7359-5b97-910f-03cdf677e4c1",
+      "nodeName": "RundownRack_Kerosene_1_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "943fd554-f6bf-5873-9927-8bc204afcfe3",
+      "nodeName": "RundownRack_Kerosene_2",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "2e581d7d-21a9-5a7c-9a72-bbc4fea042e4",
+      "nodeName": "RundownRack_Kerosene_2_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "c02b0ba7-000c-5b47-8b3f-a260944f0440",
+      "nodeName": "SideRack_Col_Diesel_A",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "7f9d01b9-a6d6-5719-a18b-4a2a0d82803b",
+      "nodeName": "SideRack_Col_Diesel_A_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "22c250bb-2c80-502a-9f09-4b8d025d14d6",
+      "nodeName": "SideRack_Col_Diesel_B",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "f12d5287-efb9-55b7-af16-632eb83eb991",
+      "nodeName": "SideRack_Col_Diesel_B_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "98840bd8-f00c-5a24-a624-75228b0c4c7a",
+      "nodeName": "BatteryLimit_Diesel_Support",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "8a80ab6a-7591-51f2-b30f-18285513f85f",
+      "nodeName": "BatteryLimit_Diesel_Foot",
+      "reason": "设备基础：混凝土基础，不参与交互"
+    },
+    {
+      "nodeUid": "96225869-6543-59f9-a0ab-fec4d7db525d",
+      "nodeName": "RundownRack_Diesel_0",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "f7cfeecc-caa6-59cc-9ab1-5213293a537d",
+      "nodeName": "RundownRack_Diesel_0_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "756f5592-9c2e-5290-a5ff-4d3076b14fd9",
+      "nodeName": "RundownRack_Diesel_1",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "82e2cede-c12e-5c68-9da0-33d7a120660d",
+      "nodeName": "RundownRack_Diesel_1_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "847559d8-6e3c-5c6a-a643-a147c44646af",
+      "nodeName": "RundownRack_Diesel_2",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "8cb948fd-2ce5-5512-bdd0-403006a699cd",
+      "nodeName": "RundownRack_Diesel_2_Foot",
+      "reason": "支撑柱：结构必需但不参与交互选择"
+    },
+    {
+      "nodeUid": "00d01119-c1aa-5938-a3a8-326cd9264521",
+      "nodeName": "Condenser_Saddle_0",
+      "reason": "鞍座：设备支座，不参与交互"
+    },
+    {
+      "nodeUid": "b49808c1-ff3b-5a2a-99b1-2dcbd9464b0d",
+      "nodeName": "Condenser_Beam_0",
+      "reason": "结构梁：承托设备，不参与交互"
+    },
+    {
+      "nodeUid": "42809fbb-a893-5a6c-a973-31728443558e",
+      "nodeName": "Condenser_Saddle_1",
+      "reason": "鞍座：设备支座，不参与交互"
+    },
+    {
+      "nodeUid": "2eacee16-99ef-5761-aa98-060dcf1453be",
+      "nodeName": "Condenser_Beam_1",
+      "reason": "结构梁：承托设备，不参与交互"
+    },
+    {
+      "nodeUid": "46f306f6-3c48-5122-b86f-312b2bc90d01",
+      "nodeName": "Condenser_Frame_0",
+      "reason": "钢框架：承托冷凝器/回流罐，不参与交互"
+    },
+    {
+      "nodeUid": "fbe97c6a-cf9c-578d-9913-5db60f06c7cb",
+      "nodeName": "Condenser_Frame_0_Foot",
+      "reason": "钢框架：承托冷凝器/回流罐，不参与交互"
+    },
+    {
+      "nodeUid": "733a3822-d168-51d3-986b-8f03dbeeef67",
+      "nodeName": "Condenser_Frame_1",
+      "reason": "钢框架：承托冷凝器/回流罐，不参与交互"
+    },
+    {
+      "nodeUid": "cc47a439-960a-52c9-a5d1-34ab0f74f88f",
+      "nodeName": "Condenser_Frame_1_Foot",
+      "reason": "钢框架：承托冷凝器/回流罐，不参与交互"
+    },
+    {
+      "nodeUid": "af74c06f-e947-5fad-9cd2-42bc8f7b1ee9",
+      "nodeName": "Condenser_Frame_LongBeam",
+      "reason": "钢框架：承托冷凝器/回流罐，不参与交互"
+    },
+    {
+      "nodeUid": "59d78514-5fbd-598a-aa9d-6e3fb79341e3",
+      "nodeName": "Reflux_Drum_Head_A",
+      "reason": "罐体附件（封头/梁/鞍座）：非交互部件"
+    },
+    {
+      "nodeUid": "0ebb52c2-d527-56a6-aedb-f676eadf9738",
+      "nodeName": "Reflux_Drum_Head_B",
+      "reason": "罐体附件（封头/梁/鞍座）：非交互部件"
+    },
+    {
+      "nodeUid": "f85b3f0a-9450-5200-ad37-46bea5738b0c",
+      "nodeName": "Reflux_Drum_Beam",
+      "reason": "罐体附件（封头/梁/鞍座）：非交互部件"
+    },
+    {
+      "nodeUid": "889cd1fc-8c23-5925-898e-569c9c746059",
+      "nodeName": "Reflux_Drum_Cantilever_A",
+      "reason": "罐体附件（封头/梁/鞍座）：非交互部件"
+    },
+    {
+      "nodeUid": "cb2a9b39-622b-50d8-8487-e088dea02c99",
+      "nodeName": "Reflux_Drum_Cantilever_B",
+      "reason": "罐体附件（封头/梁/鞍座）：非交互部件"
+    },
+    {
+      "nodeUid": "b661eb2b-cb49-500a-a067-62a5f313457d",
+      "nodeName": "Reflux_Drum_Saddle_A",
+      "reason": "罐体附件（封头/梁/鞍座）：非交互部件"
+    },
+    {
+      "nodeUid": "f9a9118f-782a-54ff-95d7-23977d3b3074",
+      "nodeName": "Reflux_Drum_Saddle_B",
+      "reason": "罐体附件（封头/梁/鞍座）：非交互部件"
+    },
+    {
+      "nodeUid": "7fcac7d8-a325-5790-9989-dd89aaacef1f",
+      "nodeName": "Exchanger_1_Saddle_A",
+      "reason": "鞍座：设备支座，不参与交互"
+    },
+    {
+      "nodeUid": "d2424d14-a3b8-533d-9470-12552b647b17",
+      "nodeName": "Exchanger_1_Saddle_B",
+      "reason": "鞍座：设备支座，不参与交互"
+    },
+    {
+      "nodeUid": "5ccf4529-0137-5977-bd75-b60f12a78906",
+      "nodeName": "Exchanger_2_Saddle_A",
+      "reason": "鞍座：设备支座，不参与交互"
+    },
+    {
+      "nodeUid": "ff47da0e-c06a-5ba9-a3e4-ed1e6cfd3f2d",
+      "nodeName": "Exchanger_2_Saddle_B",
+      "reason": "鞍座：设备支座，不参与交互"
+    },
+    {
+      "nodeUid": "de1cbf72-cd21-552a-8462-e08b4dac176b",
+      "nodeName": "Exchanger_3_Saddle_A",
+      "reason": "鞍座：设备支座，不参与交互"
+    },
+    {
+      "nodeUid": "03a8860d-f4a6-5246-8695-399c4da2be95",
+      "nodeName": "Exchanger_3_Saddle_B",
+      "reason": "鞍座：设备支座，不参与交互"
+    },
+    {
+      "nodeUid": "e8356f11-221f-556a-b6e3-2de4b8bcf1dc",
+      "nodeName": "Exchanger_1_Base",
+      "reason": "设备基础：混凝土基础，不参与交互"
+    },
+    {
+      "nodeUid": "049c370b-58cc-58e3-bcb9-51287ee08812",
+      "nodeName": "Exchanger_2_Base",
+      "reason": "设备基础：混凝土基础，不参与交互"
+    },
+    {
+      "nodeUid": "f89c8c42-c808-52a1-8d6d-886e0dba2f9b",
+      "nodeName": "Exchanger_3_Base",
+      "reason": "设备基础：混凝土基础，不参与交互"
+    },
+    {
+      "nodeUid": "3440d27b-f652-599f-9c35-8ef1904fc581",
+      "nodeName": "PumpSkid_Base",
+      "reason": "设备基础：混凝土基础，不参与交互"
+    },
+    {
+      "nodeUid": "a9b9e777-9ba2-5b7c-9f4b-801c03c91dde",
+      "nodeName": "PipeRack_Column_0",
+      "reason": "管廊结构：走管支撑，不参与交互"
+    },
+    {
+      "nodeUid": "c5b9e7b9-bffe-5c6b-9c39-3734f73dcdcb",
+      "nodeName": "PipeRack_Column_1",
+      "reason": "管廊结构：走管支撑，不参与交互"
+    },
+    {
+      "nodeUid": "b9115b30-6847-5ae1-9f09-72b1177128af",
+      "nodeName": "PipeRack_Column_2",
+      "reason": "管廊结构：走管支撑，不参与交互"
+    },
+    {
+      "nodeUid": "52e59652-284e-55ed-a07c-5277fd11cce2",
+      "nodeName": "PipeRack_Column_3",
+      "reason": "管廊结构：走管支撑，不参与交互"
+    },
+    {
+      "nodeUid": "7dfc0890-806f-52c7-bbb4-ac358ee1bb57",
+      "nodeName": "PipeRack_Beam_31",
+      "reason": "管廊结构：走管支撑，不参与交互"
+    },
+    {
+      "nodeUid": "769cf55e-9fe0-58ee-a94e-5ccc341a75e1",
+      "nodeName": "PipeRack_Beam_56",
+      "reason": "管廊结构：走管支撑，不参与交互"
+    },
+    {
+      "nodeUid": "20fb2da1-0100-54fc-932c-ce399f75fe00",
+      "nodeName": "PipeRack_Pipe_0",
+      "reason": "管廊结构：走管支撑，不参与交互"
+    },
+    {
+      "nodeUid": "c80bdd19-cea8-52ba-938a-170e7c9de6e1",
+      "nodeName": "PipeRack_Pipe_1",
+      "reason": "管廊结构：走管支撑，不参与交互"
+    },
+    {
+      "nodeUid": "b8d70c72-b945-5f78-835f-b61cc47989db",
+      "nodeName": "PipeRack_Pipe_2",
+      "reason": "管廊结构：走管支撑，不参与交互"
+    },
+    {
+      "nodeUid": "ba7c17bc-c6a4-5dd2-b5e3-614d5accd8e6",
+      "nodeName": "Platform_Grate_10",
+      "reason": "检修平台：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "7bf12b9d-fa95-5dbc-8cbb-43670596de94",
+      "nodeName": "Platform_Post_10_-24",
+      "reason": "检修平台：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "0bea6efc-f37d-5f42-b713-86ae454d7132",
+      "nodeName": "Platform_Post_10_24",
+      "reason": "检修平台：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "e53c4384-b4a3-593e-9579-e7a34b2f07b1",
+      "nodeName": "Platform_Rail_10",
+      "reason": "检修平台：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "b45da9ac-11d9-541f-8721-c9df44c4f153",
+      "nodeName": "Platform_Grate_18",
+      "reason": "检修平台：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "71fe773b-79d4-5a18-a25d-41f86ab41327",
+      "nodeName": "Platform_Post_18_-24",
+      "reason": "检修平台：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "bffa8c98-df98-5828-bada-427a8437a808",
+      "nodeName": "Platform_Post_18_24",
+      "reason": "检修平台：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "7b2950fd-0d71-50ce-bb33-8b46ff078ca5",
+      "nodeName": "Platform_Rail_18",
+      "reason": "检修平台：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "7c9bca32-69a4-5122-a6f3-646dab09f680",
+      "nodeName": "Ladder_Rung_0",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "d27b87fe-bb9e-5a78-b09c-9a8273a66124",
+      "nodeName": "Ladder_Rung_1",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "c3d6e152-786f-5520-98ae-932770f91928",
+      "nodeName": "Ladder_Rung_2",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "0b5c7c6c-e0d6-50ca-9516-77b837962614",
+      "nodeName": "Ladder_Rung_3",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "2a266245-fa04-5bcb-aff6-da47719c4a39",
+      "nodeName": "Ladder_Rung_4",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "d77198b8-b786-5b28-9828-389aed3d17f7",
+      "nodeName": "Ladder_Rung_5",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "6e63e0ce-7736-54be-9c01-9542416752ba",
+      "nodeName": "Ladder_Rung_6",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "effb1984-b80e-514d-8471-62c7349509d0",
+      "nodeName": "Ladder_Rung_7",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "a38f58ab-bf45-5e2d-9192-44cb1f8318b0",
+      "nodeName": "Ladder_Rung_8",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "23f2c250-7840-530b-9c15-62312169270b",
+      "nodeName": "Ladder_Rung_9",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "cf41bbf9-241f-545d-ac0e-f065a228a688",
+      "nodeName": "Ladder_Rung_10",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "1c4e9416-496b-5d7e-bed1-98b4e347a9cf",
+      "nodeName": "Ladder_Rung_11",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "49defa9f-c7d0-5d94-b20b-8a891b69e2a2",
+      "nodeName": "Ladder_Rung_12",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "a6b78b24-054f-5b94-9859-ebbe5fb0c754",
+      "nodeName": "Ladder_Rung_13",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "b0efe2fb-be0f-55b2-bea3-ab9471a4ea1b",
+      "nodeName": "Ladder_Rung_14",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "1fe4303e-da05-5a18-8c1c-324fed6da905",
+      "nodeName": "Ladder_Rung_15",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "ba786516-5fca-546a-8f86-5d60425e7b05",
+      "nodeName": "Ladder_Rung_16",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "7289277c-a671-5604-98e9-3e28a7f0f2e4",
+      "nodeName": "Ladder_Rung_17",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "392ef0e4-22f9-59fb-93f6-4bc2024b076c",
+      "nodeName": "Ladder_Rung_18",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "cb475a73-74e2-5ca2-b017-11d91a607fe6",
+      "nodeName": "Ladder_Rung_19",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "aff52ae4-8f9f-5a8b-869e-e30d8fa0e5cb",
+      "nodeName": "Ladder_Rung_20",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "8dfbc90a-3f6e-51ff-b4c0-49e065fa0214",
+      "nodeName": "Ladder_Rung_21",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "b006c20a-3f74-5646-b404-891dbf7a1f96",
+      "nodeName": "Ladder_Rail_L",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "51d7c182-cbff-5bfd-840c-8c4531ba132f",
+      "nodeName": "Ladder_Rail_R",
+      "reason": "直梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "738240c6-731e-540f-b315-37f2ebc4a26e",
+      "nodeName": "Stair_0",
+      "reason": "钢梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "b07ace77-87e8-5198-8323-c12de485c923",
+      "nodeName": "Stair_1",
+      "reason": "钢梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "cf7022eb-db37-5931-82de-eed616746f03",
+      "nodeName": "Stair_2",
+      "reason": "钢梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "00832cf8-b0e2-55fa-a23a-48e81adce45a",
+      "nodeName": "Stair_3",
+      "reason": "钢梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "b29837a5-9184-5741-8495-e854c12291b4",
+      "nodeName": "Stair_4",
+      "reason": "钢梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "28fbc8b0-342a-5ed1-a170-4053086f4930",
+      "nodeName": "Stair_5",
+      "reason": "钢梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "42b9ce83-86e6-5292-ac06-f51176b17246",
+      "nodeName": "Stair_6",
+      "reason": "钢梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "ed693852-d898-59ec-9d82-80940e884cfa",
+      "nodeName": "Stair_7",
+      "reason": "钢梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "a88f8377-0cf7-5e66-9001-8a838c8ffce6",
+      "nodeName": "Stair_8",
+      "reason": "钢梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "84efd3ef-ddf8-52dc-922f-805d26afbad2",
+      "nodeName": "Stair_9",
+      "reason": "钢梯：通行结构，不参与交互"
+    },
+    {
+      "nodeUid": "e83b49bd-28ad-546b-aff5-8dd138f367f9",
+      "nodeName": "Ground",
+      "reason": "地面基准：场景底板，不参与交互"
+    },
+    {
+      "nodeUid": "973d3c9b-8255-51c7-a4f8-855142395fc0",
+      "nodeName": "anchor_tower_overview",
+      "reason": "教学锚点空物体：仅作 anchor 定位标记，不参与交互选择"
+    },
+    {
+      "nodeUid": "51fb2a2b-0ca9-5c89-81ac-eb5a586c025c",
+      "nodeName": "anchor_tower_feed",
+      "reason": "教学锚点空物体：仅作 anchor 定位标记，不参与交互选择"
+    },
+    {
+      "nodeUid": "98a44e25-8c56-5d0e-bf81-94bdb2f9514c",
+      "nodeName": "anchor_tower_trays",
+      "reason": "教学锚点空物体：仅作 anchor 定位标记，不参与交互选择"
+    },
+    {
+      "nodeUid": "49fe80fc-e997-5b0c-8acf-6bc4c35e487a",
+      "nodeName": "anchor_tower_vacuum",
+      "reason": "教学锚点空物体：仅作 anchor 定位标记，不参与交互选择"
+    },
+    {
+      "nodeUid": "9654d476-0717-585c-ad91-d326eb4576cb",
+      "nodeName": "anchor_tower_products",
+      "reason": "教学锚点空物体：仅作 anchor 定位标记，不参与交互选择"
+    },
+    {
+      "nodeUid": "672807ad-f105-565e-9a64-b90ff972d40f",
+      "nodeName": "anchor_atm_overhead_outlet",
+      "reason": "教学锚点空物体：仅作 anchor 定位标记，不参与交互选择"
+    },
+    {
+      "nodeUid": "8eee96fe-9da9-57cd-a86f-00b123f9b8e4",
+      "nodeName": "anchor_condenser_inlet",
+      "reason": "教学锚点空物体：仅作 anchor 定位标记，不参与交互选择"
+    }
+  ],
+  "processBasis": [
+    {
+      "basisId": "generator_source_structure",
+      "version": "1.0.0",
+      "reviewStatus": "draft",
+      "sourceTitle": "tools/make_tower.py 生成器源码（几何与注释）",
+      "sourceOrg": "本项目",
+      "scope": "仅证明对象由该脚本在指定标高/位置创建，以及塔顶管线在几何上源自常压塔顶。不构成工艺审查结论。",
+      "limitations": [
+        "未经领域专家审核，不得作为正式工艺事实发布"
+      ]
+    },
+    {
+      "basisId": "pending_process_attribution",
+      "version": "1.0.0",
+      "reviewStatus": "draft",
+      "sourceTitle": "尚无审核资料",
+      "sourceOrg": "待补",
+      "scope": "换热器_1..3、泵组 A、泵 1/2 的工艺角色（属于哪条流程、处理何种介质）在现有仓库资料中无法证明。",
+      "limitations": [
+        "这些对象的 systemId 一律置为 pending_process_attribution，禁止按英文名称前缀猜测工艺归属"
+      ]
+    }
+  ],
+  "limitations": [
+    "教学示意模型，不用于工程设计、设备选型、强度计算或 CFD 仿真。",
+    "换热器与泵组的工艺归属 pending，仅登记为装置群，不代表已确认流程位置。",
+    "anchors 为教学锚点，坐标由 make_tower.py 的 ANCHORS 写入，未做现场测量。",
+    "structureModes 中 full 与 half 使用同一组半剖节点；本资产没有独立的“全剖”几何。"
+  ],
+  "license": {
+    "spdx": "LicenseRef-Proprietary",
+    "holder": "本项目权利人",
+    "terms": "仅限本项目教学使用；对外再分发需书面许可。"
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "runId": "phase-05-2026-11-27",
+  "commit": "2cc8253c55b04d88615dae214a6faeafd25b05fc",
+  "commitShort": "2cc8253",
+  "branch": "dev",
+  "dirtyAtRun": true,
+  "node": "v22.20.0",
+  "npm": "10.9.3",
+  "platform": "win32 10.0.26200 x64",
+  "gpu": "AMD Ryzen 7 6800H with Radeon Graphics         ",
+  "browser": {
+    "product": "Google Chrome (headless)",
+    "version": "158.0.8127.88",
+    "viewport": "1440x900 CSS px",
+    "dpr": 1,
+    "note": "SwiftShader 软件光栅，仅功能冒烟，不代表 GPU 性能"
+  },
+  "gates": {
+    "validate:assets": {
+      "exit": 0,
+      "log": "validate-assets.log"
+    },
+    "validate:assets:fixtures": {
+      "exit": 0,
+      "log": "validate-assets-fixtures.log"
+    },
+    "validate:connections": {
+      "exit": 0,
+      "log": "validate-connections.log"
+    },
+    "validate:connections:strict": {
+      "exit": 1,
+      "expectedExit": 1,
+      "why": "当前连接 basis=draft，发布门禁必须失败",
+      "log": "validate-connections-strict.log"
+    },
+    "npm test": {
+      "exit": 0,
+      "tests": 130,
+      "pass": 130,
+      "fail": 0,
+      "log": "npm-test.log"
+    },
+    "npm run test:smoke": {
+      "exit": 0,
+      "passed": "14/14",
+      "log": "e2e-smoke.log",
+      "screenshot": "smoke/sandbox.png"
+    },
+    "npm run test:e2e": {
+      "exit": 0,
+      "passed": "L2 32/32 · L4 19/19 · L3 33/33 = 84/84",
+      "log": "e2e-levels.log"
+    }
+  },
+  "notRun": {
+    "npm run build": "仓库没有构建阶段（package.json 无 build 脚本），本阶段未引入；状态 NOT_APPLICABLE",
+    "GPU 性能验收": "本机仅集显；headless WebGL 只证明能出帧，性能状态 NOT_MEASURED",
+    "CI 中的浏览器 E2E": "CI 无 GPU/无 Chrome 环境；CI 只跑 node 级门禁，浏览器 E2E 标记 NOT_RUN"
+  },
+  "screenshots": [
+    "smoke/sandbox.png",
+    "levels/l2-external.png",
+    "levels/l2-half.png",
+    "levels/l2-ghost.png",
+    "levels/l3-initial.png",
+    "levels/l3-completed.png",
+    "levels/l4-connections.png"
+  ],
+  "assets": {
+    "web/assets/tower/tower.glb": {
+      "sha256": "e9aca088f171855ed760c4b0fdcebf82d4427dbb7b8c262a63f3fb55a4cb7d91",
+      "bytes": 4033676
+    },
+    "web/assets/tower/tower.obj": {
+      "sha256": "600a5fd6b15944ad62ecf41a4a378462170540c9e165e40aeb1e3f28a50cdba8",
+      "bytes": 3989992
+    },
+    "web/assets/tower/tower.manifest.json": {
+      "sha256": "68c13dc495ed62fa262129161c53ee2b65f9ccdf00d08fa951a31cf4b0ddb632",
+      "bytes": 89816
+    },
+    "web/assets/separator/separator.glb": {
+      "sha256": "e41799c4f8ed96ac1e81a88018106341c9e31298cddad0ab9e6bfedbdc99f8ef",
+      "bytes": 403472
+    },
+    "web/assets/separator/separator.obj": {
+      "sha256": "02c49491b219033fc7939c3fc3a63cf817bed7dff472dabc32be09327a0c3145",
+      "bytes": 495915
+    },
+    "web/assets/separator/separator.manifest.json": {
+      "sha256": "b491cf3f1dcab352c83bf93ac54963ac877e894ae3ccba9e35e1740fd692775d",
+      "bytes": 24969
+    },
+    "web/data/process-connections.json": {
+      "sha256": "02b6d0e95d48f178bf110143f3237cb23756c2ab72cd63ffb6ec110c68f2dca5",
+      "bytes": 2843
+    }
+  }
+}

@@ -59,6 +59,14 @@ jobs:
       - name: 工艺连接（开发态：结构/引用/几何/依据字段合法性）
         run: npm run validate:connections
 
+      # Phase 5：单元/契约回归（node:test，无浏览器依赖）
+      # 含 资产 GLB/extras/hash 变异用例、连接非法 fixture、L2 三态契约、L3 业务回归。
+      # 浏览器 E2E（test:smoke / test:e2e）不在 CI 跑：CI 无 GPU，headless 的 WebGL
+      # 只能做功能冒烟，不能代表真实 GPU 性能；这些在本机执行并在
+      # docs/3d-model-optimization/evidence/ 下留证。CI 里标记为 NOT_RUN。
+      - name: 单元 / 契约回归
+        run: npm test
+
   # 生产工艺连接门禁（发布用，与日常 validate 分开）。
   #
   # 为什么不并进 validate：push 不等于「正式发布」。当前连接是 draft + pendingBasis，

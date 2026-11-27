@@ -27,8 +27,14 @@ const CONN_PATH = process.env.PETRO_CONNECTIONS_PATH
   ? path.resolve(process.env.PETRO_CONNECTIONS_PATH)
   : path.join(ROOT, 'web/data/process-connections.json');
 const SCHEMA_PATH = path.join(ROOT, 'schemas/process-connections.schema.json');
-const MANIFEST_PATH = path.join(ROOT, 'web/assets/tower/tower.manifest.json');
-const GLB_PATH = path.join(ROOT, 'web/assets/tower/tower.glb');
+/* Manifest / GLB 同样允许指向副本：契约测试要让「同一份合法连接」在不同资产副本上失败，
+ * 而不必改动仓库里的正式资产。默认值保持不变。 */
+const MANIFEST_PATH = process.env.PETRO_TOWER_MANIFEST_PATH
+  ? path.resolve(process.env.PETRO_TOWER_MANIFEST_PATH)
+  : path.join(ROOT, 'web/assets/tower/tower.manifest.json');
+const GLB_PATH = process.env.PETRO_TOWER_GLB_PATH
+  ? path.resolve(process.env.PETRO_TOWER_GLB_PATH)
+  : path.join(ROOT, 'web/assets/tower/tower.glb');
 
 const STRICT = process.argv.includes('--strict');
 const TOLERANCE = 1e-6;          // 端点重合判定
