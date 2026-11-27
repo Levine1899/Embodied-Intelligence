@@ -152,8 +152,10 @@ async function main() {
     check('F 退出微观后回到剖面', (await page.evaluate(() => window.__l1.microMode)) === false);
 
     /* ---------------- 截图证据 ---------------- */
-    await page.evaluate(() => { window.__l1.exitPore(); window.__l1.setRep('detail'); });
-    await page.waitForTimeout(500);
+    /* 入场 1.2s 后会自动进孔隙视图（flyTo 到罐内）。拍"剖面总览"前必须先退出，
+       并等 900ms 的恢复动画跑完，否则拍到的是罐内特写。 */
+    await page.evaluate(() => { window.__l1.exitPore(true); window.__l1.setRep('detail'); });
+    await page.waitForTimeout(1600);
     await page.screenshot({ path: `${OUT}/l1-front.png` });
     await page.evaluate(() => {
       const l = window.__l1, c = l.camera;

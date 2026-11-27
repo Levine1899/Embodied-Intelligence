@@ -60,6 +60,12 @@ def clear():
     random.seed(20261127)
 
 
+def _srgb_to_linear(c):
+    """Principled 的 Base Color 是线性空间；按 sRGB 直觉填 0.49/0.66 会被当线性值渲染，
+    显示出来接近 0.73/0.84，四层颜色全被冲成米白。这里显式换算。"""
+    return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+
+
 def mat(name, color, rough=0.85, metal=0.0, emit=None):
     m = bpy.data.materials.get(name)
     if m:
@@ -67,11 +73,13 @@ def mat(name, color, rough=0.85, metal=0.0, emit=None):
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     b = m.node_tree.nodes.get("Principled BSDF")
-    b.inputs["Base Color"].default_value = (color[0], color[1], color[2], 1.0)
+    lin = [_srgb_to_linear(c) for c in color]
+    b.inputs["Base Color"].default_value = (lin[0], lin[1], lin[2], 1.0)
     b.inputs["Roughness"].default_value = rough
     b.inputs["Metallic"].default_value = metal
     if emit:
-        b.inputs["Emission Color"].default_value = (emit[0], emit[1], emit[2], 1.0)
+        el = [_srgb_to_linear(c) for c in emit]
+        b.inputs["Emission Color"].default_value = (el[0], el[1], el[2], 1.0)
         b.inputs["Emission Strength"].default_value = 1.4
     return m
 

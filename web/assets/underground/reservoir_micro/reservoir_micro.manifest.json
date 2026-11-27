@@ -4,7 +4,7 @@
   "assetVersion": "2.0.0+phase9",
   "source": {
     "repository": "gitee.com/LYU_PRO/scienceagent",
-    "commit": "ce0402a590781971ccde17e855de05be6d612ddb",
+    "commit": "06ae97a0da4b3519f31b76ece154a6c195fcab1f",
     "path": "assets-source/blender/reservoir_micro.blend",
     "dirty": false
   },
@@ -13,15 +13,15 @@
     "generator": "tools/blender/build_underground_v2.py",
     "blenderVersion": "5.3.0",
     "exporterVersion": "Khronos glTF Blender I/O",
-    "exportOptionsHash": "7c0679b8a67de2c4",
+    "exportOptionsHash": "d73d309edade24fa",
     "invocation": "blender -b -P tools/blender/build_underground_v2.py",
     "exportExtras": true
   },
   "runtime": {
     "format": "glb",
     "uri": "assets/underground/reservoir_micro/reservoir_micro.glb",
-    "sha256": "7c0679b8a67de2c45c0388462679b4d93cec530e6ed0b34545c46e796ba15132",
-    "bytes": 304916,
+    "sha256": "d73d309edade24faa8f37d8b026a1da7dcfd19bbfcc2b9937f082e5f7a3d1697",
+    "bytes": 304924,
     "extrasStatus": "verified"
   },
   "coordinateSystem": {

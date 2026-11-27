@@ -4,7 +4,7 @@
   "assetVersion": "2.0.0+phase9",
   "source": {
     "repository": "gitee.com/LYU_PRO/scienceagent",
-    "commit": "ce0402a590781971ccde17e855de05be6d612ddb",
+    "commit": "06ae97a0da4b3519f31b76ece154a6c195fcab1f",
     "path": "assets-source/blender/underground_strata.blend",
     "dirty": false
   },
@@ -13,15 +13,15 @@
     "generator": "tools/blender/build_underground_v2.py",
     "blenderVersion": "5.3.0",
     "exporterVersion": "Khronos glTF Blender I/O",
-    "exportOptionsHash": "2c8a255b12a603c0",
+    "exportOptionsHash": "3520c947d498b3bf",
     "invocation": "blender -b -P tools/blender/build_underground_v2.py",
     "exportExtras": true
   },
   "runtime": {
     "format": "glb",
     "uri": "assets/underground/underground_strata/underground_strata.glb",
-    "sha256": "2c8a255b12a603c0960f825713253ff9b7380d38a8840e2a165012e47f08aa6a",
-    "bytes": 92260,
+    "sha256": "3520c947d498b3bfcf5854abce918b0c8db495c4d528e6e702d95324740163a3",
+    "bytes": 92272,
     "extrasStatus": "verified"
   },
   "coordinateSystem": {
@@ -35,12 +35,12 @@
     "coordinateSpaceId": "underground_strata_asset_local",
     "unit": "meter",
     "min": [
-      -9.027,
+      -9.024,
       -12.28,
       -6
     ],
     "max": [
-      9.026,
+      9.025,
       0.34,
       6.011
     ]

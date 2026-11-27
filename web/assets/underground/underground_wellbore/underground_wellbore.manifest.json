@@ -4,7 +4,7 @@
   "assetVersion": "2.0.0+phase9",
   "source": {
     "repository": "gitee.com/LYU_PRO/scienceagent",
-    "commit": "ce0402a590781971ccde17e855de05be6d612ddb",
+    "commit": "06ae97a0da4b3519f31b76ece154a6c195fcab1f",
     "path": "assets-source/blender/underground_wellbore.blend",
     "dirty": false
   },
@@ -13,15 +13,15 @@
     "generator": "tools/blender/build_underground_v2.py",
     "blenderVersion": "5.3.0",
     "exporterVersion": "Khronos glTF Blender I/O",
-    "exportOptionsHash": "434f3a466b1e347d",
+    "exportOptionsHash": "1b306f47b8d5b6f5",
     "invocation": "blender -b -P tools/blender/build_underground_v2.py",
     "exportExtras": true
   },
   "runtime": {
     "format": "glb",
     "uri": "assets/underground/underground_wellbore/underground_wellbore.glb",
-    "sha256": "434f3a466b1e347dd83387963868ee41e786999403df350a8a47680873c804dd",
-    "bytes": 43436,
+    "sha256": "1b306f47b8d5b6f515ce2f9a729831a90870136e06af0baa19347624ef059399",
+    "bytes": 43452,
     "extrasStatus": "verified"
   },
   "coordinateSystem": {

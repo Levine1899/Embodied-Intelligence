@@ -1748,7 +1748,10 @@ const v2 = {
     document.body.classList.add('in-level');
     hint.textContent = '镜头进入地下剖面…';
     if (!running) { running = true; lastT = performance.now(); loop(); }
-    flyTo(worldPoint(14, 8.6, 18), worldPoint(0, -4.2, 0), 1500, function () {
+    /* 取景：退到块体外的 3/4 视角，让四层轮廓、井筒与储层透镜同时入画。
+       原为 (14, 8.6, 18)：块体 18×12.6，这个距离下正面几乎顶满画框，
+       且镜头容易被左侧面板压住。 */
+    flyTo(worldPoint(17, 7.6, 24), worldPoint(0, -5.2, 0), 1500, function () {
       hint.textContent = '剖面总览 · 找到储层';
       setInfo('地下地质剖面', '四层岩性、储层透镜和井筒都在这一个空间里。点击剖面岩层，或使用左侧按钮逐层查看。',
         '教学示意：不是真实油藏数据，也不是真实地质比例。');
