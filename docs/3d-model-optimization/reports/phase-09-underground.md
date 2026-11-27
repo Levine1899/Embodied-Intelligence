@@ -201,3 +201,17 @@ E2E 增加 H 段 4 条断言，验证三条粒子路径都声明了锚点来源�
 
 ### 4. 验证
 `run-phase9` **28 / 28**、`npm test` **134 / 134**、`run-levels` **84 / 84**、`validate:assets --strict` **16 / 16**。
+
+---
+
+## 附：L1 已按用户要求退回 Phase 9 之前的实现（2026-11-27）
+
+用户决定 "L1 替换为原图" 并明确选择 **B. 退回 Phase 9 之前的 L1 实现**，因此：
+
+- `web/levels/l1.js` 已用 `git checkout ce0402a^ -- web/levels/l1.js` 精确还原（1377 行，0 处 v2 引用，回到 `underground.obj` + `ObjLite` 加载路径）。
+- 本报告前面记录的 v2 四资产 / anchors / 微观视图 / 射孔锚点**在当前代码中已不再生效**；资产文件仍保留在仓库中供以后复用。
+- 只对 v2 成立的两项测试已退役：
+  - `tools/e2e/run-phase9.mjs` → 归档为 `evidence/phase-11-l1-revert/run-phase9.retired.txt`（不再执行）；
+  - `tests/l1-structure.test.mjs`（v2 不变量守卫）→ 删除。
+- 退休后回归：`npm test` **137/137**、`run-levels` **84/84**。
+- 本报告的总评（PASS）与第三章"资产/几何"结论仍是对 **Phase 9 当时交付物** 的记录，但**不再描述当前 L1 运行时行为**。

@@ -1,3 +1,11 @@
+# Phase 9 E2E 脚本已退役（2026-11-27）
+
+用户决定把 L1 退回 Phase 9 之前的实现（版本 ce0402a^），因此本脚本断言的 v2 四资产、
+anchors、微观视图、射孔锚点等前提已不存在。
+
+原始脚本内容见下方，仅作证据保留，不再执行：
+
+---
 #!/usr/bin/env node
 /**
  * Phase 9｜L1 地下开采 E2E
@@ -220,3 +228,4 @@ async function main() {
 }
 
 main().catch((e) => { console.error('[PHASE9] ' + (e && e.stack ? e.stack : e)); process.exit(1); });
+
