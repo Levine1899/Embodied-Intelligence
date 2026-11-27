@@ -23,6 +23,18 @@
   };
   const PUMP_CONNECTION_ID = 'conn_store_transfer_to_refinery';
 
+  /* 储运区布局集中在一处：重排罐位时不会漏改标签/选择环/粒子曲线。 */
+  const LAYOUT = { fixedX: -2.6, floatX: 3.4, pumpX: 9.2, pumpZ: 1.8 };
+
+  /* 取景预设（局部坐标，调用时加 G.position 变成世界坐标）。
+     分"全景"与三个近景，避免所有信息挤在一个机位里。 */
+  const VIEWS = {
+    wide: { cam: [-1.2 + 13.7, 10.2, 23.0], tgt: [-1.2, 3.0, 0] },
+    fixed: { cam: [LAYOUT.fixedX + 5.2, 6.6, 7.8], tgt: [LAYOUT.fixedX + 0.9, 3.6, 0] },
+    floating: { cam: [LAYOUT.floatX + 5.2, 6.6, 7.8], tgt: [LAYOUT.floatX + 0.9, 3.6, 0] },
+    pump: { cam: [LAYOUT.pumpX + 3.8, 3.8, 6.2], tgt: [LAYOUT.pumpX, 1.2, LAYOUT.pumpZ] },
+  };
+
   let G = null, camera = null, baseScene = null, anchor = null;
   let pumpFlow = null, pumpRunning = false, pumpPaused = false, pumpMesh = null, pumpRing = null;
   let selectTag = null, selectedTankId = 'fixed_roof_tank';
@@ -277,7 +289,7 @@
 
   function buildPumpFromHandle(handle) {
     pumpMesh = new THREE.Group();
-    pumpMesh.position.set(3.9, 0, 1.8);
+    pumpMesh.position.set(LAYOUT.pumpX, 0, LAYOUT.pumpZ);
     pumpMesh.userData.objectId = 'transfer_pump';
     pumpMesh.add(handle.root);
     handle.root.traverse(function (o) {
@@ -292,7 +304,7 @@
       new THREE.MeshBasicMaterial({ color: 0xf0a22e, transparent: true, opacity: 0.98, depthWrite: false, depthTest: false }),
     );
     ring.rotation.x = Math.PI / 2;
-    ring.position.set(3.9, 0.18, 1.8);
+    ring.position.set(LAYOUT.pumpX, 0.18, LAYOUT.pumpZ);
     ring.renderOrder = 7;
     ring.visible = false;
     G.add(ring);
@@ -303,8 +315,8 @@
     const spool = handle.manifest.nodes.find(function (n) { return n.semanticId === 'pipe_spool'; });
     if (spool) {
       const bound = new THREE.Box3().setFromObject(handle.indices.object3dByUid.get(spool.nodeUid));
-      const cx = (bound.min.x + bound.max.x) / 2 + 3.9;
-      const cz = (bound.min.z + bound.max.z) / 2 + 1.8;
+      const cx = (bound.min.x + bound.max.x) / 2 + LAYOUT.pumpX;
+      const cz = (bound.min.z + bound.max.z) / 2 + LAYOUT.pumpZ;
       const curve = new THREE.CatmullRomCurve3([
         new THREE.Vector3(cx, bound.min.y, cz),
         new THREE.Vector3(cx, (bound.min.y + bound.max.y) / 2, cz),
@@ -351,11 +363,11 @@
 
     /* 标签 */
     const l1 = window.__lvlLabel('固定顶罐', '#cfc8ba');
-    l1.position.set(-3.4, 8.3, 0);
+    l1.position.set(LAYOUT.fixedX, 8.3, 0);
     l1.scale.multiplyScalar(1.08);
     G.add(l1);
     const l2 = window.__lvlLabel('外浮顶罐', '#8fb6ad');
-    l2.position.set(3.4, 8.3, 0);
+    l2.position.set(LAYOUT.floatX, 8.3, 0);
     l2.scale.multiplyScalar(1.08);
     G.add(l2);
     selectTag = window.__lvlLabel('已选', '#f0a22e');
@@ -365,22 +377,22 @@
 
     /* 固定顶罐的呼吸阀溢出粒子（挂在关卡组上，随资产定位） */
     const ventCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-3.4 + 0.95, 8.0, 0),
-      new THREE.Vector3(-3.4 + 1.15, 8.7, 0.1),
-      new THREE.Vector3(-3.4 + 0.85, 9.4, 0),
+      new THREE.Vector3(LAYOUT.fixedX + 0.95, 8.0, 0),
+      new THREE.Vector3(LAYOUT.fixedX + 1.15, 8.7, 0.1),
+      new THREE.Vector3(LAYOUT.fixedX + 0.85, 9.4, 0),
     ]);
     const ventFlow = makeFlowInGroup(ventCurve, 0xd8e2e8, 10, 0.25, 0.07, 0.55);
     built.fixed = { ventFlow: ventFlow };
 
     const pumpLabel = window.__lvlLabel('转输泵组', '#d8a24a');
-    pumpLabel.position.set(7.4, 3.4, 1.8);
+    pumpLabel.position.set(LAYOUT.pumpX, 3.4, LAYOUT.pumpZ);
     pumpLabel.scale.multiplyScalar(1.0);
     G.add(pumpLabel);
 
     /* 资产异步加载：UI 立即可用，加载完成后接上模型 */
     assetsReady = loadAssets().then(function (handles) {
-      buildTankFromHandle('fixed', handles.fixed, -3.4, 0);
-      buildTankFromHandle('floating', handles.floating, 3.4, 0);
+      buildTankFromHandle('fixed', handles.fixed, LAYOUT.fixedX, 0);
+      buildTankFromHandle('floating', handles.floating, LAYOUT.floatX, 0);
       buildPumpFromHandle(handles.pump);
       G.updateMatrixWorld(true);
 
@@ -522,15 +534,33 @@
 
   /* ---------------------------------------------------------------- 相机 */
   let flyHandle = null;
+  function isFiniteVec(v) {
+    return !!v && isFinite(v.x) && isFinite(v.y) && isFinite(v.z);
+  }
+
   function fly(from, fromT, to, toT, dur, done) {
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       camera.position.copy(to); camera.lookAt(toT); if (typeof done === 'function') done(); return;
     }
+    /* 守卫：lerpVectors 遇到 NaN 会把相机永久写成 NaN（画面冻结、四张截图字节相同）。
+       这里先判定，坏值直接落位到目标，并记录是哪个参数坏了。 */
+    if (![from, fromT, to, toT].every(isFiniteVec)) {
+      console.warn('[L3] fly 收到非有限坐标，已跳过插值并直接落位', {
+        from: isFiniteVec(from), fromT: isFiniteVec(fromT),
+        to: isFiniteVec(to), toT: isFiniteVec(toT),
+      });
+      if (isFiniteVec(to)) camera.position.copy(to);
+      if (isFiniteVec(toT)) camera.lookAt(toT);
+      if (typeof done === 'function') done();
+      return;
+    }
+
+    const durMs = Math.max(1, dur || 1000);
     const t0 = performance.now();
     if (flyHandle) cancelAnimationFrame(flyHandle);
     const ease = function (t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; };
     (function step() {
-      const k = Math.min(1, (performance.now() - t0) / dur);
+      const k = Math.min(1, (performance.now() - t0) / durMs);
       const e = ease(k);
       camera.position.lerpVectors(from, to, e);
       camera.lookAt(new THREE.Vector3().lerpVectors(fromT, toT, e));
@@ -573,6 +603,7 @@
     '<div class="lvl__out"><span id="l3-space">油气空间 98%</span></div>',
     '</div>',
     '<details class="lvl2__more" id="l3-more"><summary>演示与结构</summary><div class="lvl2__tools">',
+    '<div class="lvl2__toolrow"><span class="lvl2__tool-label">取景</span><button type="button" class="lvl__btn" id="l3-view-wide" aria-pressed="true">全景</button><button type="button" class="lvl__btn" id="l3-view-fixed" aria-pressed="false">固定顶近景</button><button type="button" class="lvl__btn" id="l3-view-floating" aria-pressed="false">外浮顶近景</button><button type="button" class="lvl__btn" id="l3-view-pump" aria-pressed="false">泵组近景</button></div>',
     '<div class="lvl2__toolrow"><span class="lvl2__tool-label">结构</span><button type="button" class="lvl__btn" id="l3-cut" aria-pressed="true">恢复罐壁</button><span class="lvl2__stepnote" id="l3-cut-note">只作用于当前选中的罐</span></div>',
     '<div class="lvl2__toolrow"><span class="lvl2__tool-label">泵送</span><button type="button" class="lvl__btn" id="l3-pumpstart">启动泵送</button><button type="button" class="lvl__btn" id="l3-pumppause">暂停泵送</button><button type="button" class="lvl__btn" id="l3-pumpreplay">重播路径</button></div>',
     '<div class="lvl2__toolrow"><span class="lvl2__tool-label">资产</span><span class="lvl2__badge" id="l3-asset-badge" hidden></span></div>',
@@ -613,9 +644,9 @@
     if (pumpRing) pumpRing.visible = id === 'transfer_pump';
     if (selectTag) {
       selectTag.visible = true;
-      if (id === 'fixed_roof_tank') selectTag.position.set(-3.4, 9.05, 0);
-      else if (id === 'floating_roof_tank') selectTag.position.set(3.4, 9.05, 0);
-      else selectTag.position.set(7.4, 4.15, 1.8);
+      if (id === 'fixed_roof_tank') selectTag.position.set(LAYOUT.fixedX, 9.05, 0);
+      else if (id === 'floating_roof_tank') selectTag.position.set(LAYOUT.floatX, 9.05, 0);
+      else selectTag.position.set(LAYOUT.pumpX, 4.15, LAYOUT.pumpZ);
     }
     if (stage.setInteraction) stage.setInteraction('inspect_tank_structure', id, '罐型');
     [['fixed_roof_tank', '#l3-fixed'], ['floating_roof_tank', '#l3-float'], ['transfer_pump', '#l3-pump']]
@@ -669,6 +700,11 @@
       : '固定顶罐 · 油气空间随液位变化';
   }
 
+  ['wide', 'fixed', 'floating', 'pump'].forEach(function (v) {
+    const btn = ui.querySelector('#l3-view-' + v);
+    if (btn) btn.addEventListener('click', function () { applyView(v); });
+  });
+
   cutBtn.addEventListener('click', function () {
     const key = selectedKey();
     if (!key) return;
@@ -721,6 +757,38 @@
     if (stage.setNodeDone) stage.setNodeDone(2, true);
     back.classList.add('pulse');
     back.textContent = '完成，返回总览 →';
+  }
+
+  /* ---------------------------------------------------------------- 取景 */
+  function viewCam(id) {
+    const v = VIEWS[id] || VIEWS.wide;
+    return new THREE.Vector3(anchor.x + v.cam[0], v.cam[1], anchor.z + v.cam[2]);
+  }
+  function viewTgt(id) {
+    const v = VIEWS[id] || VIEWS.wide;
+    return new THREE.Vector3(anchor.x + v.tgt[0], v.tgt[1], anchor.z + v.tgt[2]);
+  }
+  let currentView = 'wide';
+  function applyView(id, dur) {
+    if (!VIEWS[id] || !camera) return false;
+    currentView = id;
+    const from = camera.position.clone();
+    const fromT = new THREE.Vector3(anchor.x + (VIEWS[id] || VIEWS.wide).tgt[0], 2.0, anchor.z);
+    const _dur = dur == null ? 1100 : dur;
+    if (_dur <= 0) {
+      /* 立即落位：不走插值（dur=0 会导致除零 NaN） */
+      if (flyHandle) { cancelAnimationFrame(flyHandle); flyHandle = null; }
+      camera.position.copy(viewCam(id));
+      camera.lookAt(viewTgt(id));
+    } else {
+      fly(from, fromT, viewCam(id), viewTgt(id), _dur, null);
+    }
+    ['wide', 'fixed', 'floating', 'pump'].forEach(function (v) {
+      const btn = ui.querySelector('#l3-view-' + v);
+      if (btn) btn.setAttribute('aria-pressed', String(v === id));
+    });
+    if (stage.setInteraction) stage.setInteraction('change_view', id, '取景');
+    return true;
   }
 
   /* ---------------------------------------------------------------- 进 / 出 */
@@ -818,14 +886,17 @@
     document.body.classList.add('in-level');
     syncStorageUi();
     hint.textContent = '镜头正在靠近罐区…';
+    currentView = 'wide';
+    ['wide', 'fixed', 'floating', 'pump'].forEach(function (v) {
+      const btn = ui.querySelector('#l3-view-' + v);
+      if (btn) btn.setAttribute('aria-pressed', String(v === 'wide'));
+    });
     if (!running) { running = true; loop(); }
 
-    fly(startPos, startT,
-      new THREE.Vector3(anchor.x + 12.5, 10.2, anchor.z + 23.0),
-      new THREE.Vector3(anchor.x + 0.4, 3.0, anchor.z), 1700, function () {
-        hint.textContent = storageHint();
-        act.hidden = false;
-      });
+    fly(startPos, startT, viewCam('wide'), viewTgt('wide'), 1700, function () {
+      hint.textContent = storageHint();
+      act.hidden = false;
+    });
   }
 
   function exit() {
@@ -837,13 +908,20 @@
     setStorageOccluders(false);
     if (stage.setContextObject) stage.setContextObject(null, 'storage');
     if (stage.deviceState) stage.deviceState.select(null);
+    /* 收尾必须无条件执行：之前退出偶发卡住 45s，根因是回调里任一步抛错就会
+       跳过 stage.back()，isLevel 永远是 true。用 try/finally 把状态复位钉死。 */
     fly(camera.position.clone(), new THREE.Vector3(anchor.x, 2.6, anchor.z),
       new THREE.Vector3(anchor.x, 11, anchor.z + 20), new THREE.Vector3(0, 1.2, 0), 1500, function () {
         running = false;
-        if (stage.setOverviewVisible) stage.setOverviewVisible(true);
-        stage.back();
-        const seg = document.querySelector('#stages [data-stage="2"]');
-        if (seg) seg.classList.add('done-level');
+        try {
+          if (stage.setOverviewVisible) stage.setOverviewVisible(true);
+          const seg = document.querySelector('#stages [data-stage="2"]');
+          if (seg) seg.classList.add('done-level');
+        } catch (e) {
+          console.warn('[L3] exit 收尾异常（已吞掉，保证能回到总览）', e);
+        } finally {
+          stage.back();
+        }
       });
   }
 
@@ -927,6 +1005,12 @@
         };
       });
       return out;
+    },
+    setView: function (id) { return applyView(id, 0); },
+    get currentView() { return currentView; },
+    cameraDistanceTo: function (id) {
+      if (!camera) return null;
+      return camera.position.distanceTo(viewTgt(id));
     },
     setLevel: function (pct) {
       if (!slider) return;

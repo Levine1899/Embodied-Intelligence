@@ -189,6 +189,33 @@ async function main() {
       { sel1: iso.sel1, sel2: iso.sel2 });
     check('F 按钮 aria-pressed 跟随选择', iso.pressed1 === 'true' && iso.pumpPressed === 'true', iso);
 
+    /* ---------------- G 取景：四视图必须真的不同 ---------------- */
+    const views = await page.evaluate(() => {
+      const out = { dists: {}, positions: {}, warns: [] };
+      ['wide', 'fixed', 'floating', 'pump'].forEach((v) => {
+        window.__l3.setView(v);
+        out.dists[v] = window.__l3.cameraDistanceTo(v);
+        out.positions[v] = window.__stage.camera.position.toArray();
+      });
+      window.__l3.setView('wide');
+      out.activeView = window.__l3.currentView;
+      return out;
+    });
+    const finite = (n) => typeof n === 'number' && isFinite(n);
+    check('G 四视图距离有限（无 NaN）',
+      ['wide', 'fixed', 'floating', 'pump'].every((v) => finite(views.dists[v])), views.dists);
+    check('G 近景确实比全景近',
+      finite(views.dists.fixed) && finite(views.dists.wide) && finite(views.dists.pump) &&
+      views.dists.fixed < views.dists.wide && views.dists.pump < views.dists.wide, views.dists);
+    /* 位置必须两两不同：否则"切了视图但画面没动"会静默通过 */
+    const posKeys = ['wide', 'fixed', 'floating', 'pump'].map((v) =>
+      views.positions[v].map((n) => Math.round(n * 100)).join(','));
+    check('G 四视图相机位置两两不同', new Set(posKeys).size === 4, views.positions);
+    check('G 切回全景后 currentView=wide', views.activeView === 'wide', views.activeView);
+    check('G 取景后相机无 NaN',
+      posKeys.every((k) => !/NaN/.test(k)) &&
+      Object.values(views.positions).every((p) => p.every(finite)), views.positions);
+
     /* ---------------- B 重进重置 ---------------- */
     await page.evaluate(() => window.__l3.exit());
     await waitNotLevel(page, { timeoutMs: 15000 });

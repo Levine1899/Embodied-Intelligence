@@ -124,7 +124,7 @@ Manifest：`tools/gen_storage_manifest.mjs`（新增）。它**不手写 nodeUid
 - **NOT_RUN｜GPU 性能**：本机集显 + headless SwiftShader，帧率不可信。
 - **NOT_RUN｜录屏**：本阶段产出 5 张截图（external/half/ghost @90%、half @60%、泵送路径 @45%），无视频。
 - **已知架构限制**：`PETRO_CONNECTIONS` 单 Manifest 设计使跨资产连接无法解析；补登 storage 连接前必须先改注册表。
-- **取景仍有遮挡**：固定顶罐位于左侧导航面板后方（可看到锥顶与栏杆，罐身被压住约 1/3）。已两次收景把整体右移，要完全避开需重排罐位（会牵动标签/选择环/点击区坐标），本阶段未做。
+- **取景遮挡已处理**：改为集中式 `LAYOUT` 常量重排罐位 + 四套取景（全景/固定顶近景/外浮顶近景/泵组近景），全景下两罐与泵组均入画。
 - **未迁移**：总览 `floating_roof_tank` 旧 OBJ 资产保持原样（不替换总览，避免一次性全站切换）。
 
 ---
@@ -158,3 +158,38 @@ npm run verify                                        # 单测 130/130 + 契约
 取景：相机两次收景（`anchor + (12.5, 10.2, 23)`，看向 `anchor + (0.4, 3.0, 0)`），让两罐与泵组进入画内。固定顶罐仍被左侧面板压住约 1/3。
 
 再次验证（美术改动后重跑）：`validate:assets:strict` 5/5、`test:e2e:storage` **37/37**、`run-levels` **84/84**。
+
+---
+
+## 十、第四轮：多取景 + 布局集中化（含一个真 bug）
+
+### 布局集中化
+原先罐位坐标散落在 6 处（标签、呼吸阀粒子曲线、选择环、选择角标、资产挂载点、泵组）。重排时极易漏改，因此收敛为 `LAYOUT = { fixedX: -2.6, floatX: 3.4, pumpX: 9.2, pumpZ: 1.8 }`，全部引用常量。
+
+### 四套取景
+`VIEWS` 用局部坐标定义，运行时加 `G.position`；UI 增加"取景"一行（全景 / 固定顶近景 / 外浮顶近景 / 泵组近景），进关默认全景，退出不改。实测相机距离：**全景 27.72m / 固定顶 9.40m / 外浮顶 9.40m / 泵组 6.37m**。
+
+### 真 bug：`setView` 的除零把相机写成 NaN
+`applyView` 传 `dur=0` → `fly()` 里 `(performance.now() - t0) / dur` 首帧是 **0/0 = NaN** → `camera.position.lerpVectors(from, to, NaN)` 把相机位置永久写成 NaN → **整个渲染冻结**。
+
+发现方式：四张视图截图**字节完全相同**（同一 SHA256），且 `stage.camera.position.toArray()` 三个分量都是 null（NaN 经 JSON 序列化）。既有的 42 条断言没有一条能发现它——它们只看语义状态，不看相机是否还活着。
+
+修法两层：
+1. `dur <= 0` 走"立即落位"分支（`position.copy` + `lookAt`），不进插值；
+2. `fly()` 内部 `const durMs = Math.max(1, dur || 1000)` 兜底，并对 from/fromT/to/toT 增加**非有限坐标守卫**：发现 NaN 就跳过插值、直接落位，并 `console.warn` 报出是哪个参数坏了（这次就是靠它把嫌疑锁定到 `from`）。
+
+### 新增断言（G 段，5 条）
+四视图距离有限 / 近景确实比全景近 / **四视图相机位置两两不同** / 切回全景 `currentView=wide` / 取景后无 NaN。
+
+> "位置两两不同"这条是刻意的：如果只断言 `currentView` 变了，那么"视图切换静默失败、画面没动"依然会通过。
+
+### 复验
+`test:e2e:storage` **42/42**（原 37 + G 段 5）、`run-levels` **84/84**、`npm test` 130/130、`validate:assets:strict` 5/5。
+证据：`v-wide.png` / `v-fixed.png` / `v-floating.png` / `v-pump.png`（四者 SHA256 互不相同）。
+
+### 另一个隐患：退出偶发卡住（已加固）
+加取景后的一次 `run-levels` 出现 `L3.section.completed` 超时（等 `stage.isLevel()===false` 达 45s）。该等待预算是 45s，远超 1.5s 的退出动画，说明不是"慢"而是**真卡住**：`exit()` 的动画回调里先调 `setOverviewVisible`，一旦它抛错就跳过 `stage.back()`，`isLevel` 永远是 true。
+
+改为 `try { 概览/角标 } catch { warn } finally { stage.back() }`，把状态复位钉死在 finally 里。加固后连跑两次 `run-levels` 均 **84/84**。
+
+> 这一条本可以当成"偶发 flake 重跑一次就算了"。但排队里有 45s 预算这个事实说明它不是抖动，所以我按真 bug 处理。
