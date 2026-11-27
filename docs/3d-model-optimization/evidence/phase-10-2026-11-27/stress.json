@@ -1,0 +1,1245 @@
+{
+  "schemaVersion": "1.0.0",
+  "exitFailures": [
+    {
+      "level": "l2",
+      "cycle": 1,
+      "error": "等待超时：stage.isLevel() === false（exit 动画结束）"
+    },
+    {
+      "level": "l2",
+      "cycle": 2,
+      "error": "等待超时：stage.isLevel() === false（exit 动画结束）"
+    },
+    {
+      "level": "l2",
+      "cycle": 3,
+      "error": "等待超时：stage.isLevel() === false（exit 动画结束）"
+    },
+    {
+      "level": "l2",
+      "cycle": 4,
+      "error": "等待超时：stage.isLevel() === false（exit 动画结束）"
+    },
+    {
+      "level": "l2",
+      "cycle": 5,
+      "error": "等待超时：stage.isLevel() === false（exit 动画结束）"
+    },
+    {
+      "level": "l2",
+      "cycle": 6,
+      "error": "等待超时：stage.isLevel() === false（exit 动画结束）"
+    },
+    {
+      "level": "l2",
+      "cycle": 7,
+      "error": "等待超时：stage.isLevel() === false（exit 动画结束）"
+    },
+    {
+      "level": "l2",
+      "cycle": 8,
+      "error": "等待超时：stage.isLevel() === false（exit 动画结束）"
+    },
+    {
+      "level": "l2",
+      "cycle": 9,
+      "error": "等待超时：stage.isLevel() === false（exit 动画结束）"
+    },
+    {
+      "level": "l2",
+      "cycle": 10,
+      "error": "等待超时：stage.isLevel() === false（exit 动画结束）"
+    }
+  ],
+  "capturedAt": "2026-11-27T07:58:18.329Z",
+  "cyclesPerLevel": 10,
+  "guard": {
+    "attached": false,
+    "level": null,
+    "dprScale": null,
+    "config": null
+  },
+  "policy": null,
+  "contextLost": 0,
+  "pageErrors": [],
+  "loadFailures": [
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "levels": {
+    "l1": {
+      "samples": [
+        {
+          "cycle": 1,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 102,
+            "triangles": 7056,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 2,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 101,
+            "triangles": 6992,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 3,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 101,
+            "triangles": 6992,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 4,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 101,
+            "triangles": 6992,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 5,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 101,
+            "triangles": 6992,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 6,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 101,
+            "triangles": 6992,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 7,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 101,
+            "triangles": 6992,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 8,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 101,
+            "triangles": 6992,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 9,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 101,
+            "triangles": 6992,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 10,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 101,
+            "triangles": 6992,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 565,
+            "textures": 8,
+            "programs": 13,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        }
+      ],
+      "growth": {
+        "geometries": 0,
+        "textures": 0,
+        "programs": 0
+      },
+      "stable": true,
+      "exitFailureCount": 0
+    },
+    "l2": {
+      "samples": [
+        {
+          "cycle": 1,
+          "exitFailed": true,
+          "inLevel": {
+            "geometries": 669,
+            "textures": 15,
+            "programs": 17,
+            "calls": 124,
+            "triangles": 20200,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 478,
+            "textures": 8,
+            "programs": 5,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 2,
+          "exitFailed": true,
+          "inLevel": {
+            "geometries": 582,
+            "textures": 15,
+            "programs": 9,
+            "calls": 124,
+            "triangles": 20200,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 478,
+            "textures": 8,
+            "programs": 5,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 3,
+          "exitFailed": true,
+          "inLevel": {
+            "geometries": 582,
+            "textures": 15,
+            "programs": 9,
+            "calls": 124,
+            "triangles": 20200,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 478,
+            "textures": 8,
+            "programs": 5,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 4,
+          "exitFailed": true,
+          "inLevel": {
+            "geometries": 582,
+            "textures": 15,
+            "programs": 9,
+            "calls": 124,
+            "triangles": 20200,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 478,
+            "textures": 8,
+            "programs": 5,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 5,
+          "exitFailed": true,
+          "inLevel": {
+            "geometries": 582,
+            "textures": 15,
+            "programs": 9,
+            "calls": 124,
+            "triangles": 20200,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 478,
+            "textures": 8,
+            "programs": 5,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 6,
+          "exitFailed": true,
+          "inLevel": {
+            "geometries": 582,
+            "textures": 15,
+            "programs": 9,
+            "calls": 124,
+            "triangles": 20200,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 478,
+            "textures": 8,
+            "programs": 5,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 7,
+          "exitFailed": true,
+          "inLevel": {
+            "geometries": 582,
+            "textures": 15,
+            "programs": 9,
+            "calls": 124,
+            "triangles": 20200,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 478,
+            "textures": 8,
+            "programs": 5,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 8,
+          "exitFailed": true,
+          "inLevel": {
+            "geometries": 582,
+            "textures": 15,
+            "programs": 9,
+            "calls": 124,
+            "triangles": 20200,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 478,
+            "textures": 8,
+            "programs": 5,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 9,
+          "exitFailed": true,
+          "inLevel": {
+            "geometries": 582,
+            "textures": 15,
+            "programs": 9,
+            "calls": 124,
+            "triangles": 20200,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 478,
+            "textures": 8,
+            "programs": 5,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 10,
+          "exitFailed": true,
+          "inLevel": {
+            "geometries": 582,
+            "textures": 15,
+            "programs": 9,
+            "calls": 124,
+            "triangles": 20200,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 478,
+            "textures": 8,
+            "programs": 5,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        }
+      ],
+      "growth": {
+        "geometries": 0,
+        "textures": 0,
+        "programs": 0
+      },
+      "stable": true,
+      "exitFailureCount": 10
+    },
+    "l3": {
+      "samples": [
+        {
+          "cycle": 1,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 625,
+            "textures": 12,
+            "programs": 10,
+            "calls": 184,
+            "triangles": 40690,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 625,
+            "textures": 12,
+            "programs": 10,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 2,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 185,
+            "triangles": 41458,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 3,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 185,
+            "triangles": 41458,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 4,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 185,
+            "triangles": 41458,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 5,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 185,
+            "triangles": 41458,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 6,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 185,
+            "triangles": 41458,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 7,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 185,
+            "triangles": 41458,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 8,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 185,
+            "triangles": 41458,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 9,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 185,
+            "triangles": 41458,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 10,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 185,
+            "triangles": 41458,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 626,
+            "textures": 12,
+            "programs": 10,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        }
+      ],
+      "growth": {
+        "geometries": 1,
+        "textures": 0,
+        "programs": 0
+      },
+      "stable": true,
+      "exitFailureCount": 0
+    },
+    "l4": {
+      "samples": [
+        {
+          "cycle": 1,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 352,
+            "triangles": 75138,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 2,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 352,
+            "triangles": 75138,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 3,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 352,
+            "triangles": 75138,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 4,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 352,
+            "triangles": 75138,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 5,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 352,
+            "triangles": 75138,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 6,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 352,
+            "triangles": 75138,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 7,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 352,
+            "triangles": 75138,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 8,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 352,
+            "triangles": 75138,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 9,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 352,
+            "triangles": 75138,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 10,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 352,
+            "triangles": 75138,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 913,
+            "textures": 15,
+            "programs": 16,
+            "calls": 293,
+            "triangles": 85392,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        }
+      ],
+      "growth": {
+        "geometries": 0,
+        "textures": 0,
+        "programs": 0
+      },
+      "stable": true,
+      "exitFailureCount": 0
+    },
+    "l5": {
+      "samples": [
+        {
+          "cycle": 1,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 980,
+            "textures": 29,
+            "programs": 16,
+            "calls": 69,
+            "triangles": 10312,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 980,
+            "textures": 29,
+            "programs": 17,
+            "calls": 358,
+            "triangles": 94868,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 2,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 1022,
+            "textures": 29,
+            "programs": 17,
+            "calls": 111,
+            "triangles": 15592,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 1022,
+            "textures": 29,
+            "programs": 17,
+            "calls": 400,
+            "triangles": 100148,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 3,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 1064,
+            "textures": 29,
+            "programs": 17,
+            "calls": 153,
+            "triangles": 20872,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 1064,
+            "textures": 29,
+            "programs": 17,
+            "calls": 442,
+            "triangles": 105428,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 4,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 1106,
+            "textures": 29,
+            "programs": 17,
+            "calls": 195,
+            "triangles": 26152,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 1106,
+            "textures": 29,
+            "programs": 17,
+            "calls": 484,
+            "triangles": 110708,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 5,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 1148,
+            "textures": 29,
+            "programs": 17,
+            "calls": 237,
+            "triangles": 31432,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 1148,
+            "textures": 29,
+            "programs": 17,
+            "calls": 526,
+            "triangles": 115988,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 6,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 1190,
+            "textures": 29,
+            "programs": 17,
+            "calls": 279,
+            "triangles": 36712,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 1190,
+            "textures": 29,
+            "programs": 17,
+            "calls": 568,
+            "triangles": 121268,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 7,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 1232,
+            "textures": 29,
+            "programs": 17,
+            "calls": 321,
+            "triangles": 41992,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 1232,
+            "textures": 29,
+            "programs": 17,
+            "calls": 610,
+            "triangles": 126548,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 8,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 1274,
+            "textures": 29,
+            "programs": 17,
+            "calls": 363,
+            "triangles": 47272,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 1274,
+            "textures": 29,
+            "programs": 17,
+            "calls": 652,
+            "triangles": 131828,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 9,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 1316,
+            "textures": 29,
+            "programs": 17,
+            "calls": 405,
+            "triangles": 52552,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 1316,
+            "textures": 29,
+            "programs": 17,
+            "calls": 694,
+            "triangles": 137108,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        },
+        {
+          "cycle": 10,
+          "exitFailed": false,
+          "inLevel": {
+            "geometries": 1358,
+            "textures": 29,
+            "programs": 17,
+            "calls": 447,
+            "triangles": 57832,
+            "pixelRatio": 1,
+            "guardLevel": null
+          },
+          "afterExit": {
+            "geometries": 1358,
+            "textures": 29,
+            "programs": 17,
+            "calls": 736,
+            "triangles": 142388,
+            "pixelRatio": 1,
+            "guardLevel": null
+          }
+        }
+      ],
+      "growth": {
+        "geometries": 378,
+        "textures": 0,
+        "programs": 0
+      },
+      "stable": false,
+      "exitFailureCount": 0
+    }
+  },
+  "overviewIdle": {
+    "geometries": 478,
+    "textures": 8,
+    "programs": 5,
+    "calls": 293,
+    "triangles": 85392,
+    "pixelRatio": 1,
+    "guardLevel": null
+  },
+  "finalIdle": {
+    "geometries": 1358,
+    "textures": 29,
+    "programs": 17,
+    "calls": 736,
+    "triangles": 142388,
+    "pixelRatio": 1,
+    "guardLevel": null
+  }
+}

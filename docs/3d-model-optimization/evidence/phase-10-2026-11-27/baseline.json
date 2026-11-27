@@ -1,0 +1,376 @@
+{
+  "schemaVersion": "1.0.0",
+  "capturedAt": "2026-11-27T07:48:02.043Z",
+  "sampleMs": 4000,
+  "env": {
+    "browser": "158.0.8127.88",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.0.0 Safari/537.36",
+    "viewport": {
+      "w": 1440,
+      "h": 900,
+      "dpr": 1
+    },
+    "gpu": {
+      "contextType": "webgl2",
+      "vendor": "WebKit",
+      "renderer": "WebKit WebGL",
+      "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "software": true,
+      "devicePixelRatio": 1,
+      "canvas": {
+        "w": 919,
+        "h": 601
+      },
+      "drawingBuffer": {
+        "w": 919,
+        "h": 601
+      },
+      "memory": {
+        "geometries": 478,
+        "textures": 8
+      },
+      "render": {
+        "calls": 293,
+        "triangles": 85392,
+        "points": 0,
+        "lines": 0
+      },
+      "programs": 5,
+      "capabilities": {
+        "maxTextureSize": 8192,
+        "maxSamples": 4
+      },
+      "toneMapping": 4,
+      "toneMappingExposure": 1.2,
+      "shadowsEnabled": false,
+      "pixelRatio": 1
+    }
+  },
+  "assets": {
+    "glbCount": 18,
+    "glbTotalBytes": 7380304,
+    "glb": {
+      "assets/products/products_asphalt/products_asphalt.glb": 26120,
+      "assets/products/products_fiber/products_fiber.glb": 50740,
+      "assets/products/products_fuel_containers/products_fuel_containers.glb": 58968,
+      "assets/products/products_nonpetro/products_nonpetro.glb": 60184,
+      "assets/products/products_plastics/products_plastics.glb": 41124,
+      "assets/products/products_rubber/products_rubber.glb": 56596,
+      "assets/products/products_wax/products_wax.glb": 6500,
+      "assets/separator/separator.glb": 403472,
+      "assets/spike/separator.glb": 500448,
+      "assets/storage/storage_fixed_roof_tank/storage_fixed_roof_tank.glb": 474336,
+      "assets/storage/storage_floating_roof_tank/storage_floating_roof_tank.glb": 284888,
+      "assets/storage/transfer_pump_set/transfer_pump_set.glb": 199964,
+      "assets/tower/tower.glb": 4033676,
+      "assets/underground/reservoir_micro/reservoir_micro.glb": 304924,
+      "assets/underground/underground.glb": 710412,
+      "assets/underground/underground_strata/underground_strata.glb": 92272,
+      "assets/underground/underground_wellbore/underground_wellbore.glb": 43452,
+      "assets/underground/underground_wellhead/underground_wellhead.glb": 32228
+    }
+  },
+  "scenarios": [
+    {
+      "id": "overview",
+      "label": "总览首屏",
+      "firstFrameMs": null,
+      "frames": 38,
+      "windowMs": 4085,
+      "fpsAvg": 9.69,
+      "fpsP5": 8.17,
+      "fpsMin": 5.25,
+      "frameTimeP50": 111.2,
+      "frameTimeP95": 122.4,
+      "info": {
+        "contextType": "webgl2",
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "software": true,
+        "devicePixelRatio": 1,
+        "canvas": {
+          "w": 919,
+          "h": 601
+        },
+        "drawingBuffer": {
+          "w": 919,
+          "h": 601
+        },
+        "memory": {
+          "geometries": 478,
+          "textures": 8
+        },
+        "render": {
+          "calls": 293,
+          "triangles": 85392,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 5,
+        "capabilities": {
+          "maxTextureSize": 8192,
+          "maxSamples": 4
+        },
+        "toneMapping": 4,
+        "toneMappingExposure": 1.2,
+        "shadowsEnabled": false,
+        "pixelRatio": 1
+      }
+    },
+    {
+      "id": "l1",
+      "label": "L1 关卡内",
+      "enterToSettledMs": 2793,
+      "frames": 30,
+      "windowMs": 4028,
+      "fpsAvg": 173.64,
+      "fpsP5": 6.42,
+      "fpsMin": 6.42,
+      "frameTimeP50": 133.6,
+      "frameTimeP95": 155.7,
+      "info": {
+        "contextType": "webgl2",
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "software": true,
+        "devicePixelRatio": 1,
+        "canvas": {
+          "w": 919,
+          "h": 626
+        },
+        "drawingBuffer": {
+          "w": 919,
+          "h": 626
+        },
+        "memory": {
+          "geometries": 565,
+          "textures": 8
+        },
+        "render": {
+          "calls": 102,
+          "triangles": 7056,
+          "points": 0,
+          "lines": 864
+        },
+        "programs": 13,
+        "capabilities": {
+          "maxTextureSize": 8192,
+          "maxSamples": 4
+        },
+        "toneMapping": 4,
+        "toneMappingExposure": 1.2,
+        "shadowsEnabled": false,
+        "pixelRatio": 1
+      },
+      "detail": {
+        "loaded": true,
+        "usingV2": true
+      }
+    },
+    {
+      "id": "l2",
+      "label": "L2 关卡内",
+      "enterToSettledMs": 3244,
+      "frames": 46,
+      "windowMs": 4034,
+      "fpsAvg": 11.6,
+      "fpsP5": 9.99,
+      "fpsMin": 6.91,
+      "frameTimeP50": 89,
+      "frameTimeP95": 100.1,
+      "info": {
+        "contextType": "webgl2",
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "software": true,
+        "devicePixelRatio": 1,
+        "canvas": {
+          "w": 919,
+          "h": 626
+        },
+        "drawingBuffer": {
+          "w": 919,
+          "h": 626
+        },
+        "memory": {
+          "geometries": 663,
+          "textures": 15
+        },
+        "render": {
+          "calls": 126,
+          "triangles": 20428,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 17,
+        "capabilities": {
+          "maxTextureSize": 8192,
+          "maxSamples": 4
+        },
+        "toneMapping": 4,
+        "toneMappingExposure": 1.2,
+        "shadowsEnabled": false,
+        "pixelRatio": 1
+      },
+      "detail": {}
+    },
+    {
+      "id": "l3",
+      "label": "L3 关卡内",
+      "enterToSettledMs": 2796,
+      "frames": 45,
+      "windowMs": 4062,
+      "fpsAvg": 11.16,
+      "fpsP5": 9.98,
+      "fpsMin": 9.98,
+      "frameTimeP50": 89,
+      "frameTimeP95": 100.2,
+      "info": {
+        "contextType": "webgl2",
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "software": true,
+        "devicePixelRatio": 1,
+        "canvas": {
+          "w": 919,
+          "h": 626
+        },
+        "drawingBuffer": {
+          "w": 919,
+          "h": 626
+        },
+        "memory": {
+          "geometries": 773,
+          "textures": 19
+        },
+        "render": {
+          "calls": 184,
+          "triangles": 40690,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 18,
+        "capabilities": {
+          "maxTextureSize": 8192,
+          "maxSamples": 4
+        },
+        "toneMapping": 4,
+        "toneMappingExposure": 1.2,
+        "shadowsEnabled": false,
+        "pixelRatio": 1
+      },
+      "detail": {
+        "level": 0.02,
+        "cut": true
+      }
+    },
+    {
+      "id": "l4",
+      "label": "L4 关卡内",
+      "enterToSettledMs": 3527,
+      "frames": 48,
+      "windowMs": 4071,
+      "fpsAvg": 12.11,
+      "fpsP5": 11.22,
+      "fpsMin": 9.97,
+      "frameTimeP50": 89,
+      "frameTimeP95": 89.1,
+      "info": {
+        "contextType": "webgl2",
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "software": true,
+        "devicePixelRatio": 1,
+        "canvas": {
+          "w": 919,
+          "h": 626
+        },
+        "drawingBuffer": {
+          "w": 919,
+          "h": 626
+        },
+        "memory": {
+          "geometries": 1060,
+          "textures": 22
+        },
+        "render": {
+          "calls": 352,
+          "triangles": 75138,
+          "points": 0,
+          "lines": 2
+        },
+        "programs": 24,
+        "capabilities": {
+          "maxTextureSize": 8192,
+          "maxSamples": 4
+        },
+        "toneMapping": 4,
+        "toneMappingExposure": 1.2,
+        "shadowsEnabled": false,
+        "pixelRatio": 1
+      },
+      "detail": {}
+    },
+    {
+      "id": "l5",
+      "label": "L5 关卡内",
+      "enterToSettledMs": 2824,
+      "frames": 66,
+      "windowMs": 4053,
+      "fpsAvg": 16.49,
+      "fpsP5": 14.97,
+      "fpsMin": 14.95,
+      "frameTimeP50": 66.7,
+      "frameTimeP95": 66.8,
+      "info": {
+        "contextType": "webgl2",
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "software": true,
+        "devicePixelRatio": 1,
+        "canvas": {
+          "w": 919,
+          "h": 626
+        },
+        "drawingBuffer": {
+          "w": 919,
+          "h": 626
+        },
+        "memory": {
+          "geometries": 1127,
+          "textures": 36
+        },
+        "render": {
+          "calls": 69,
+          "triangles": 10312,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 24,
+        "capabilities": {
+          "maxTextureSize": 8192,
+          "maxSamples": 4
+        },
+        "toneMapping": 4,
+        "toneMappingExposure": 1.2,
+        "shadowsEnabled": false,
+        "pixelRatio": 1
+      },
+      "detail": {
+        "loaded": 12,
+        "failed": 0
+      }
+    }
+  ],
+  "vram": {
+    "status": "NOT_AVAILABLE",
+    "note": "WebGL 不暴露显存占用；仅在有可靠驱动/系统来源时才记录"
+  },
+  "errors": []
+}

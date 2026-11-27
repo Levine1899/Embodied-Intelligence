@@ -160,16 +160,22 @@ export function resolveChromePath() {
  * @returns {Promise<{browser: import('playwright-core').Browser, version: string,
  *                    executablePath: string, args: string[]}>}
  */
-export async function launchChrome({ headless = process.env.PETRO_HEADFUL === '1' ? false : true } = {}) {
+export async function launchChrome({ headless = process.env.PETRO_HEADFUL === '1' ? false : true, hardware = false } = {}) {
   const executablePath = resolveChromePath();
+  /* hardware=true 只给性能测量用：去掉 swiftshader 软光栅开关，走系统 GPU。
+     E2E 默认仍用软光栅，保证结果与机器无关、可复现性优先。 */
+  const args = hardware
+    ? CHROME_ARGS.filter((a) => !/swiftshader|use-gl|use-angle/i.test(a))
+        .concat(['--use-angle=d3d11', '--ignore-gpu-blocklist', '--enable-gpu-rasterization'])
+    : CHROME_ARGS;
   const browser = await chromium.launch({
     executablePath,
-    headless,
-    args: CHROME_ARGS,
+    headless: hardware ? false : headless,
+    args,
     timeout: 60000,
   });
   const version = browser.version();
-  return { browser, version, executablePath, args: CHROME_ARGS.slice() };
+  return { browser, version, executablePath, args: args.slice(), hardware };
 }
 
 /**

@@ -1,0 +1,397 @@
+{
+  "schemaVersion": "1.0.0",
+  "capturedAt": "2026-11-27T07:50:38.204Z",
+  "sampleMs": 4000,
+  "env": {
+    "launch": {
+      "hardware": true,
+      "headless": false,
+      "args": [
+        "--no-first-run",
+        "--no-default-browser-check",
+        "--disable-background-networking",
+        "--disable-component-update",
+        "--disable-default-apps",
+        "--disable-sync",
+        "--no-service-autorun",
+        "--mute-audio",
+        "--hide-scrollbars",
+        "--disable-background-timer-throttling",
+        "--disable-renderer-backgrounding",
+        "--disable-backgrounding-occluded-windows",
+        "--use-angle=d3d11",
+        "--ignore-gpu-blocklist",
+        "--enable-gpu-rasterization"
+      ]
+    },
+    "browser": "158.0.8127.88",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.0.0 Safari/537.36",
+    "viewport": {
+      "w": 1440,
+      "h": 900,
+      "dpr": 1
+    },
+    "gpu": {
+      "contextType": "webgl2",
+      "vendor": "WebKit",
+      "renderer": "WebKit WebGL",
+      "unmaskedRenderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001681) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "software": false,
+      "devicePixelRatio": 1,
+      "canvas": {
+        "w": 919,
+        "h": 601
+      },
+      "drawingBuffer": {
+        "w": 919,
+        "h": 601
+      },
+      "memory": {
+        "geometries": 478,
+        "textures": 8
+      },
+      "render": {
+        "calls": 293,
+        "triangles": 85392,
+        "points": 0,
+        "lines": 0
+      },
+      "programs": 5,
+      "capabilities": {
+        "maxTextureSize": 16384,
+        "maxSamples": 8
+      },
+      "toneMapping": 4,
+      "toneMappingExposure": 1.2,
+      "shadowsEnabled": false,
+      "pixelRatio": 1
+    }
+  },
+  "assets": {
+    "glbCount": 18,
+    "glbTotalBytes": 7380304,
+    "glb": {
+      "assets/products/products_asphalt/products_asphalt.glb": 26120,
+      "assets/products/products_fiber/products_fiber.glb": 50740,
+      "assets/products/products_fuel_containers/products_fuel_containers.glb": 58968,
+      "assets/products/products_nonpetro/products_nonpetro.glb": 60184,
+      "assets/products/products_plastics/products_plastics.glb": 41124,
+      "assets/products/products_rubber/products_rubber.glb": 56596,
+      "assets/products/products_wax/products_wax.glb": 6500,
+      "assets/separator/separator.glb": 403472,
+      "assets/spike/separator.glb": 500448,
+      "assets/storage/storage_fixed_roof_tank/storage_fixed_roof_tank.glb": 474336,
+      "assets/storage/storage_floating_roof_tank/storage_floating_roof_tank.glb": 284888,
+      "assets/storage/transfer_pump_set/transfer_pump_set.glb": 199964,
+      "assets/tower/tower.glb": 4033676,
+      "assets/underground/reservoir_micro/reservoir_micro.glb": 304924,
+      "assets/underground/underground.glb": 710412,
+      "assets/underground/underground_strata/underground_strata.glb": 92272,
+      "assets/underground/underground_wellbore/underground_wellbore.glb": 43452,
+      "assets/underground/underground_wellhead/underground_wellhead.glb": 32228
+    }
+  },
+  "scenarios": [
+    {
+      "id": "overview",
+      "label": "总览首屏",
+      "firstFrameMs": null,
+      "frames": 360,
+      "windowMs": 4008,
+      "fpsAvg": 91.25,
+      "fpsP5": 86.96,
+      "fpsMin": 45.05,
+      "frameTimeP50": 11.1,
+      "frameTimeP95": 11.5,
+      "info": {
+        "contextType": "webgl2",
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedRenderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001681) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "software": false,
+        "devicePixelRatio": 1,
+        "canvas": {
+          "w": 919,
+          "h": 601
+        },
+        "drawingBuffer": {
+          "w": 919,
+          "h": 601
+        },
+        "memory": {
+          "geometries": 478,
+          "textures": 8
+        },
+        "render": {
+          "calls": 293,
+          "triangles": 85392,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 5,
+        "capabilities": {
+          "maxTextureSize": 16384,
+          "maxSamples": 8
+        },
+        "toneMapping": 4,
+        "toneMappingExposure": 1.2,
+        "shadowsEnabled": false,
+        "pixelRatio": 1
+      }
+    },
+    {
+      "id": "l1",
+      "label": "L1 关卡内",
+      "enterToSettledMs": 2802,
+      "frames": 357,
+      "windowMs": 4009,
+      "fpsAvg": 90.33,
+      "fpsP5": 86.96,
+      "fpsMin": 17.89,
+      "frameTimeP50": 11.1,
+      "frameTimeP95": 11.5,
+      "info": {
+        "contextType": "webgl2",
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedRenderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001681) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "software": false,
+        "devicePixelRatio": 1,
+        "canvas": {
+          "w": 919,
+          "h": 626
+        },
+        "drawingBuffer": {
+          "w": 919,
+          "h": 626
+        },
+        "memory": {
+          "geometries": 565,
+          "textures": 8
+        },
+        "render": {
+          "calls": 102,
+          "triangles": 7056,
+          "points": 0,
+          "lines": 864
+        },
+        "programs": 13,
+        "capabilities": {
+          "maxTextureSize": 16384,
+          "maxSamples": 8
+        },
+        "toneMapping": 4,
+        "toneMappingExposure": 1.2,
+        "shadowsEnabled": false,
+        "pixelRatio": 1
+      },
+      "detail": {
+        "loaded": true,
+        "usingV2": true
+      }
+    },
+    {
+      "id": "l2",
+      "label": "L2 关卡内",
+      "enterToSettledMs": 3133,
+      "frames": 345,
+      "windowMs": 4002,
+      "fpsAvg": 88.43,
+      "fpsP5": 86.21,
+      "fpsMin": 22.47,
+      "frameTimeP50": 11.1,
+      "frameTimeP95": 11.6,
+      "info": {
+        "contextType": "webgl2",
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedRenderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001681) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "software": false,
+        "devicePixelRatio": 1,
+        "canvas": {
+          "w": 919,
+          "h": 626
+        },
+        "drawingBuffer": {
+          "w": 919,
+          "h": 626
+        },
+        "memory": {
+          "geometries": 669,
+          "textures": 15
+        },
+        "render": {
+          "calls": 126,
+          "triangles": 20428,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 17,
+        "capabilities": {
+          "maxTextureSize": 16384,
+          "maxSamples": 8
+        },
+        "toneMapping": 4,
+        "toneMappingExposure": 1.2,
+        "shadowsEnabled": false,
+        "pixelRatio": 1
+      },
+      "detail": {}
+    },
+    {
+      "id": "l3",
+      "label": "L3 关卡内",
+      "enterToSettledMs": 2783,
+      "frames": 361,
+      "windowMs": 4011,
+      "fpsAvg": 90.22,
+      "fpsP5": 88.5,
+      "fpsMin": 79.37,
+      "frameTimeP50": 11.1,
+      "frameTimeP95": 11.3,
+      "info": {
+        "contextType": "webgl2",
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedRenderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001681) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "software": false,
+        "devicePixelRatio": 1,
+        "canvas": {
+          "w": 919,
+          "h": 626
+        },
+        "drawingBuffer": {
+          "w": 919,
+          "h": 626
+        },
+        "memory": {
+          "geometries": 779,
+          "textures": 19
+        },
+        "render": {
+          "calls": 114,
+          "triangles": 31734,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 18,
+        "capabilities": {
+          "maxTextureSize": 16384,
+          "maxSamples": 8
+        },
+        "toneMapping": 4,
+        "toneMappingExposure": 1.2,
+        "shadowsEnabled": false,
+        "pixelRatio": 1
+      },
+      "detail": {
+        "level": 0.02,
+        "cut": true
+      }
+    },
+    {
+      "id": "l4",
+      "label": "L4 关卡内",
+      "enterToSettledMs": 3280,
+      "frames": 360,
+      "windowMs": 4000,
+      "fpsAvg": 90.13,
+      "fpsP5": 88.5,
+      "fpsMin": 86.96,
+      "frameTimeP50": 11.1,
+      "frameTimeP95": 11.3,
+      "info": {
+        "contextType": "webgl2",
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedRenderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001681) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "software": false,
+        "devicePixelRatio": 1,
+        "canvas": {
+          "w": 919,
+          "h": 626
+        },
+        "drawingBuffer": {
+          "w": 919,
+          "h": 626
+        },
+        "memory": {
+          "geometries": 1066,
+          "textures": 22
+        },
+        "render": {
+          "calls": 352,
+          "triangles": 75138,
+          "points": 0,
+          "lines": 2
+        },
+        "programs": 24,
+        "capabilities": {
+          "maxTextureSize": 16384,
+          "maxSamples": 8
+        },
+        "toneMapping": 4,
+        "toneMappingExposure": 1.2,
+        "shadowsEnabled": false,
+        "pixelRatio": 1
+      },
+      "detail": {}
+    },
+    {
+      "id": "l5",
+      "label": "L5 关卡内",
+      "enterToSettledMs": 2789,
+      "frames": 361,
+      "windowMs": 4009,
+      "fpsAvg": 90.61,
+      "fpsP5": 88.5,
+      "fpsMin": 87.72,
+      "frameTimeP50": 11.1,
+      "frameTimeP95": 11.3,
+      "info": {
+        "contextType": "webgl2",
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedRenderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001681) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "software": false,
+        "devicePixelRatio": 1,
+        "canvas": {
+          "w": 919,
+          "h": 626
+        },
+        "drawingBuffer": {
+          "w": 919,
+          "h": 626
+        },
+        "memory": {
+          "geometries": 1133,
+          "textures": 36
+        },
+        "render": {
+          "calls": 69,
+          "triangles": 10312,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 24,
+        "capabilities": {
+          "maxTextureSize": 16384,
+          "maxSamples": 8
+        },
+        "toneMapping": 4,
+        "toneMappingExposure": 1.2,
+        "shadowsEnabled": false,
+        "pixelRatio": 1
+      },
+      "detail": {
+        "loaded": 12,
+        "failed": 0
+      }
+    }
+  ],
+  "vram": {
+    "status": "NOT_AVAILABLE",
+    "note": "WebGL 不暴露显存占用；仅在有可靠驱动/系统来源时才记录"
+  },
+  "errors": []
+}
