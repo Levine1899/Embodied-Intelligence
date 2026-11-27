@@ -1,0 +1,321 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "underground_wellhead",
+  "assetVersion": "2.0.0+phase9",
+  "source": {
+    "repository": "gitee.com/LYU_PRO/scienceagent",
+    "commit": "96f49cf8705d0206b7c147ce1250e2527251bab2",
+    "path": "assets-source/blender/underground_wellhead.blend",
+    "dirty": false
+  },
+  "build": {
+    "sourceFile": "assets-source/blender/underground_wellhead.blend",
+    "generator": "tools/blender/build_underground_v2.py",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "Khronos glTF Blender I/O",
+    "exportOptionsHash": "5aa31049e57bf3cf",
+    "invocation": "blender -b -P tools/blender/build_underground_v2.py",
+    "exportExtras": true
+  },
+  "runtime": {
+    "format": "glb",
+    "uri": "assets/underground/underground_wellhead/underground_wellhead.glb",
+    "sha256": "5aa31049e57bf3cf4f8cfe70c470d92c3c938ae32c3ad4052d881c68e1113919",
+    "bytes": 32236,
+    "extrasStatus": "verified"
+  },
+  "coordinateSystem": {
+    "unit": "meter",
+    "handedness": "right",
+    "upAxis": "+Y",
+    "spaceId": "underground_wellhead_asset_local",
+    "sourceSpaceNote": "Blender Z-up -> glTF Y-up via export_yup=True"
+  },
+  "bounds": {
+    "coordinateSpaceId": "underground_wellhead_asset_local",
+    "unit": "meter",
+    "min": [
+      -1,
+      0.04,
+      -1
+    ],
+    "max": [
+      3.132,
+      1.419,
+      1
+    ]
+  },
+  "defaults": {
+    "detailLevel": "detail",
+    "structureMode": "external",
+    "animationMode": "idle"
+  },
+  "systems": [
+    {
+      "systemId": "underground_wellhead",
+      "displayName": "井口装置",
+      "objectIds": [
+        "wellhead"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "objectId": "wellhead",
+      "systemId": "underground_wellhead",
+      "displayName": "wellhead",
+      "nodeUids": [
+        "d7283ea7-7768-56a9-bf4c-a93148675075",
+        "a4fd13ab-8747-5b7a-82ec-e098639d7714",
+        "78f82cc9-4413-5842-96ae-0c99aaca621f",
+        "4bd9af4a-823b-5980-9934-c53ba5a6080a",
+        "7a953077-1e87-5aba-af5a-810e11d25da3",
+        "604c20c5-a0a9-5a88-a74b-622b449e3467",
+        "3e839ff1-db8e-525a-bc71-b52eb94377df",
+        "b9e39da9-ca4b-58fa-8ad7-55b86c502a43",
+        "33bca594-d8de-5cc9-b57f-0ef7bf912dbc",
+        "b86ecbb1-6f74-543b-9384-47f487e94f8f"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeUid": "d7283ea7-7768-56a9-bf4c-a93148675075",
+      "nodeName": "surface_pad",
+      "objectId": "wellhead",
+      "systemId": "underground_wellhead",
+      "semanticId": "surface_pad",
+      "role": "pad",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a4fd13ab-8747-5b7a-82ec-e098639d7714",
+      "nodeName": "wellhead_flange_lower",
+      "objectId": "wellhead",
+      "systemId": "underground_wellhead",
+      "semanticId": "wellhead_flange_lower",
+      "role": "flange",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "78f82cc9-4413-5842-96ae-0c99aaca621f",
+      "nodeName": "wellhead_flange_side",
+      "objectId": "wellhead",
+      "systemId": "underground_wellhead",
+      "semanticId": "wellhead_flange_side",
+      "role": "flange",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "4bd9af4a-823b-5980-9934-c53ba5a6080a",
+      "nodeName": "wellhead_flowline_riser",
+      "objectId": "wellhead",
+      "systemId": "underground_wellhead",
+      "semanticId": "wellhead_flowline_riser",
+      "role": "flowline",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7a953077-1e87-5aba-af5a-810e11d25da3",
+      "nodeName": "wellhead_flowline_run",
+      "objectId": "wellhead",
+      "systemId": "underground_wellhead",
+      "semanticId": "wellhead_flowline_run",
+      "role": "flowline",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "604c20c5-a0a9-5a88-a74b-622b449e3467",
+      "nodeName": "wellhead_master_valve",
+      "objectId": "wellhead",
+      "systemId": "underground_wellhead",
+      "semanticId": "wellhead_master_valve",
+      "role": "valve",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "3e839ff1-db8e-525a-bc71-b52eb94377df",
+      "nodeName": "wellhead_master_valve_wheel",
+      "objectId": "wellhead",
+      "systemId": "underground_wellhead",
+      "semanticId": "wellhead_master_valve_wheel",
+      "role": "valve_wheel",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b9e39da9-ca4b-58fa-8ad7-55b86c502a43",
+      "nodeName": "wellhead_outlet",
+      "objectId": "wellhead",
+      "systemId": "underground_wellhead",
+      "semanticId": "wellhead_outlet",
+      "role": "outlet",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "33bca594-d8de-5cc9-b57f-0ef7bf912dbc",
+      "nodeName": "wellhead_tree",
+      "objectId": "wellhead",
+      "systemId": "underground_wellhead",
+      "semanticId": "wellhead_tree",
+      "role": "tree",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b86ecbb1-6f74-543b-9384-47f487e94f8f",
+      "nodeName": "wellhead_wing_valve",
+      "objectId": "wellhead",
+      "systemId": "underground_wellhead",
+      "semanticId": "wellhead_wing_valve",
+      "role": "valve",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    }
+  ],
+  "anchors": [],
+  "representations": {
+    "overview": [
+      "d7283ea7-7768-56a9-bf4c-a93148675075",
+      "4bd9af4a-823b-5980-9934-c53ba5a6080a",
+      "7a953077-1e87-5aba-af5a-810e11d25da3",
+      "604c20c5-a0a9-5a88-a74b-622b449e3467",
+      "b9e39da9-ca4b-58fa-8ad7-55b86c502a43",
+      "33bca594-d8de-5cc9-b57f-0ef7bf912dbc",
+      "b86ecbb1-6f74-543b-9384-47f487e94f8f"
+    ],
+    "detail": [
+      "d7283ea7-7768-56a9-bf4c-a93148675075",
+      "a4fd13ab-8747-5b7a-82ec-e098639d7714",
+      "78f82cc9-4413-5842-96ae-0c99aaca621f",
+      "4bd9af4a-823b-5980-9934-c53ba5a6080a",
+      "7a953077-1e87-5aba-af5a-810e11d25da3",
+      "604c20c5-a0a9-5a88-a74b-622b449e3467",
+      "3e839ff1-db8e-525a-bc71-b52eb94377df",
+      "b9e39da9-ca4b-58fa-8ad7-55b86c502a43",
+      "33bca594-d8de-5cc9-b57f-0ef7bf912dbc",
+      "b86ecbb1-6f74-543b-9384-47f487e94f8f"
+    ],
+    "closeup": [
+      "d7283ea7-7768-56a9-bf4c-a93148675075",
+      "a4fd13ab-8747-5b7a-82ec-e098639d7714",
+      "78f82cc9-4413-5842-96ae-0c99aaca621f",
+      "4bd9af4a-823b-5980-9934-c53ba5a6080a",
+      "7a953077-1e87-5aba-af5a-810e11d25da3",
+      "604c20c5-a0a9-5a88-a74b-622b449e3467",
+      "3e839ff1-db8e-525a-bc71-b52eb94377df",
+      "b9e39da9-ca4b-58fa-8ad7-55b86c502a43",
+      "33bca594-d8de-5cc9-b57f-0ef7bf912dbc",
+      "b86ecbb1-6f74-543b-9384-47f487e94f8f"
+    ]
+  },
+  "structureModes": {
+    "external": {
+      "show": [
+        "d7283ea7-7768-56a9-bf4c-a93148675075",
+        "a4fd13ab-8747-5b7a-82ec-e098639d7714",
+        "78f82cc9-4413-5842-96ae-0c99aaca621f",
+        "4bd9af4a-823b-5980-9934-c53ba5a6080a",
+        "7a953077-1e87-5aba-af5a-810e11d25da3",
+        "604c20c5-a0a9-5a88-a74b-622b449e3467",
+        "3e839ff1-db8e-525a-bc71-b52eb94377df",
+        "b9e39da9-ca4b-58fa-8ad7-55b86c502a43",
+        "33bca594-d8de-5cc9-b57f-0ef7bf912dbc",
+        "b86ecbb1-6f74-543b-9384-47f487e94f8f"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "half": {
+      "show": [
+        "d7283ea7-7768-56a9-bf4c-a93148675075",
+        "a4fd13ab-8747-5b7a-82ec-e098639d7714",
+        "78f82cc9-4413-5842-96ae-0c99aaca621f",
+        "4bd9af4a-823b-5980-9934-c53ba5a6080a",
+        "7a953077-1e87-5aba-af5a-810e11d25da3",
+        "604c20c5-a0a9-5a88-a74b-622b449e3467",
+        "3e839ff1-db8e-525a-bc71-b52eb94377df",
+        "b9e39da9-ca4b-58fa-8ad7-55b86c502a43",
+        "33bca594-d8de-5cc9-b57f-0ef7bf912dbc",
+        "b86ecbb1-6f74-543b-9384-47f487e94f8f"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "ghost": {
+      "show": [
+        "d7283ea7-7768-56a9-bf4c-a93148675075",
+        "a4fd13ab-8747-5b7a-82ec-e098639d7714",
+        "78f82cc9-4413-5842-96ae-0c99aaca621f",
+        "4bd9af4a-823b-5980-9934-c53ba5a6080a",
+        "7a953077-1e87-5aba-af5a-810e11d25da3",
+        "604c20c5-a0a9-5a88-a74b-622b449e3467",
+        "3e839ff1-db8e-525a-bc71-b52eb94377df",
+        "b9e39da9-ca4b-58fa-8ad7-55b86c502a43",
+        "33bca594-d8de-5cc9-b57f-0ef7bf912dbc",
+        "b86ecbb1-6f74-543b-9384-47f487e94f8f"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "full": {
+      "show": [
+        "d7283ea7-7768-56a9-bf4c-a93148675075",
+        "a4fd13ab-8747-5b7a-82ec-e098639d7714",
+        "78f82cc9-4413-5842-96ae-0c99aaca621f",
+        "4bd9af4a-823b-5980-9934-c53ba5a6080a",
+        "7a953077-1e87-5aba-af5a-810e11d25da3",
+        "604c20c5-a0a9-5a88-a74b-622b449e3467",
+        "3e839ff1-db8e-525a-bc71-b52eb94377df",
+        "b9e39da9-ca4b-58fa-8ad7-55b86c502a43",
+        "33bca594-d8de-5cc9-b57f-0ef7bf912dbc",
+        "b86ecbb1-6f74-543b-9384-47f487e94f8f"
+      ],
+      "hide": [],
+      "ghost": []
+    }
+  },
+  "dynamicBindings": [],
+  "nonInteractiveSupport": [],
+  "processBasis": [],
+  "limitations": [
+    "教学示意资产；地层厚度与比例不代表真实地质参数。",
+    "不含任何孔隙度、渗透率、压力等数值——只表达拓扑与层级关系。",
+    "井筒/井口尺寸为示意，非工程图。",
+    "井口树/主阀/翼阀/法兰×2/出口/出油管线各自独立语义节点",
+    "主阀带手轮，翼阀水平布置——两者形状可区分，不是同一块盒子"
+  ],
+  "license": {
+    "spdx": "LicenseRef-Proprietary",
+    "holder": "项目内部",
+    "terms": "由本仓库脚本生成，无第三方素材。",
+    "thirdParty": []
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "asset": "underground_wellbore",
+  "source": "tools/blender/build_underground_v2.py",
+  "blender": "5.3.0",
+  "meshes": 15,
+  "triangles": 780,
+  "vertices": 420,
+  "bounds": {
+    "min": [
+      -1.054,
+      -6.428,
+      -4.3
+    ],
+    "max": [
+      1.054,
+      -2.48,
+      4.3
+    ]
+  },
+  "notes": [
+    "射孔 12 个（3 段高度 × 4 方位），半径自 0.26（套管内壁）穿到 1.15（地层内）",
+    "套管 r=0.30 / 水泥环 r=0.52 / 油管 r=0.13，半径严格嵌套不穿插",
+    "射孔 y 区间 [-6.40, -5.00] 完整落在储层 [-7.27, -4.02] 内"
+  ],
+  "files": {
+    "glb_bytes": 43404,
+    "blend_bytes": 103739
+  }
+}

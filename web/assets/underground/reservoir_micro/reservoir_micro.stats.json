@@ -1,0 +1,28 @@
+{
+  "asset": "reservoir_micro",
+  "source": "tools/blender/build_underground_v2.py",
+  "blender": "5.3.0",
+  "meshes": 4,
+  "triangles": 10584,
+  "vertices": 5436,
+  "bounds": {
+    "min": [
+      -1.862,
+      -1.855,
+      -1.844
+    ],
+    "max": [
+      1.877,
+      1.862,
+      1.879
+    ]
+  },
+  "notes": [
+    "岩粒/孔隙/孔喉/油相均为真实几何体（非粒子），四者分层可单独选择",
+    "不含任何孔隙度、渗透率数值——本资产只表达拓扑关系"
+  ],
+  "files": {
+    "glb_bytes": 304916,
+    "blend_bytes": 241152
+  }
+}

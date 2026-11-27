@@ -14,6 +14,17 @@
   const ASSET_MTL = 'assets/underground/underground.mtl';
   const ASSET_OBJECT = 'underground_hero';
 
+/* Phase 9：v2 资产走 Manifest + ModelLoader；旧 OBJ 保留为回退路径。 */
+const ASSET_V2 = { strata: 'underground_strata', wellbore: 'underground_wellbore', wellhead: 'underground_wellhead', micro: 'reservoir_micro' };
+const ASSET_V2_BASE = 'assets/underground/';
+const ANCHORS_URL = 'data/underground.anchors.json';
+/* 分层只作用于"精修附加件"；岩层/套管/射孔仍由既有开关控制 */
+const REP_LEVELS = {
+  overview: {},
+  detail: { bedding: 1, valve: 1, flange: 1, throat: 1 },
+  closeup: { bedding: 1, valve: 1, valve_wheel: 1, flange: 1, flowline: 1, throat: 1, oil: 1 },
+};
+
   const LAYERS = [
     { key: 'overburden', name: '上覆地层', object: 'geo_overburden', tone: '#7d654d', desc: '这是储层上方的岩层。在漫长的地质过程中，沉积物逐层堆积并固结成岩。模型中的厚度只是教学示意，不代表真实地层比例。' },
     { key: 'caprock', name: '盖层', object: 'geo_caprock', tone: '#73756d', desc: '盖层通常是渗透率较低的岩层，能够减缓或阻止油气继续向上运移。它能否有效封住油气，还取决于岩层连续性以及断层、裂缝等地质条件。' },
@@ -54,6 +65,12 @@
   let down = null, dragged = false;
   let orbit = { target: new THREE.Vector3(), yaw: 0.36, pitch: 0.22, dist: 25 };
   let ui = null, hint = null, info = null, panel = null, legend = null;
+const v2 = {
+  loaded: false, loads: {}, manifests: {}, extraNodes: [], anchors: null,
+  repLevel: 'detail', microRoot: null, microReady: false, usingV2: false,
+  stats: { requested: 0, loaded: 0, failed: 0, assets: {} },
+  frustum: { enabled: 0, disabled: 0 },
+};
   let autoPoreTimer = 0;
   let lastInteraction = null;
 
@@ -294,6 +311,310 @@
   }
 
   function loadAsset() {
+
+    if (window.ModelLoader) {
+
+      loadV2().catch(function (err) {
+
+        console.warn('[L1] v2 资产加载失败，回退 OBJ 路径', err);
+
+        loadLegacy();
+
+      });
+
+      return;
+
+    }
+
+    loadLegacy();
+
+  }
+
+
+  function loadOneV2(id) {
+
+    var base = ASSET_V2_BASE + id + '/' + id;
+
+    v2.stats.requested += 1;
+
+    return Promise.all([
+
+      window.ModelLoader.load({ glbUrl: base + '.glb', manifestUrl: base + '.manifest.json' }),
+
+      fetch(base + '.manifest.json', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error('manifest HTTP ' + r.status); return r.json(); }),
+
+    ]).then(function (res) {
+
+      var handle = res[0], manifest = res[1];
+
+      v2.loads[id] = handle;
+
+      v2.manifests[id] = manifest;
+
+      v2.stats.loaded += 1;
+
+      v2.stats.assets[id] = { nodes: (manifest.nodes || []).length, reconciled: handle.stats.reconciled };
+
+      return handle;
+
+    }).catch(function (err) {
+
+      v2.stats.failed += 1;
+
+      v2.stats.assets[id] = { error: (err && err.message) || String(err) };
+
+      throw err;
+
+    });
+
+  }
+
+
+  function nodeRoleMap() {
+
+    var map = {};
+
+    Object.keys(v2.manifests).forEach(function (id) {
+
+      (v2.manifests[id].nodes || []).forEach(function (n) { map[n.nodeName] = n.role; });
+
+    });
+
+    return map;
+
+  }
+
+
+  function applyRep(level) {
+
+    v2.repLevel = REP_LEVELS[level] ? level : 'detail';
+
+    var allowed = REP_LEVELS[v2.repLevel];
+
+    v2.extraNodes.forEach(function (e) {
+
+      if (allowed[e.role] === 1) { e.mesh.visible = true; }
+
+      else { e.mesh.visible = false; }
+
+    });
+
+    return v2.repLevel;
+
+  }
+
+
+  function anchorPoint(name) {
+
+    if (!v2.anchors || !v2.anchors.anchors) return null;
+
+    var a = v2.anchors.anchors[name];
+
+    return a && a.point ? a.point : null;
+
+  }
+
+
+  /* v2 自己的绑定：与旧 OBJ 路径字段一致（layerMeshes / partMeshes / wellheadMeshes） */
+
+  function bindRootV2(root) {
+
+    var roles = nodeRoleMap();
+
+    root.traverse(function (node) {
+
+      if (!node.isMesh) return;
+
+      node.castShadow = true;
+
+      node.receiveShadow = true;
+
+      if (node.geometry && !node.geometry.boundingSphere) node.geometry.computeBoundingSphere();
+
+      node.frustumCulled = true;
+
+      v2.frustum.enabled += 1;
+
+      var name = node.name || '';
+
+      LAYERS.forEach(function (layer) {
+
+        if (name === layer.object) { node.userData.ugLayer = layer.key; layerMeshes[layer.key] = node; }
+
+      });
+
+      if (name === 'reservoir_lens') {
+
+        reservoirLens = node;
+
+        node.userData.ugLayer = 'reservoir_lens';
+
+        node.userData.objectId = 'reservoir';
+
+      }
+
+      PARTS.forEach(function (part) {
+
+        if (name === part.object || name.indexOf(part.object) === 0) {
+
+          node.userData.ugPart = part.key;
+
+          node.userData.objectId = 'wellbore';
+
+          if (!partMeshes[part.key]) partMeshes[part.key] = [];
+
+          partMeshes[part.key].push(node);
+
+        }
+
+      });
+
+      if (name.indexOf('wellhead') === 0 || name === 'surface_pad') {
+
+        node.userData.objectId = 'wellhead';
+
+        if (name.indexOf('wellhead') === 0) wellheadMeshes.push(node);
+
+      }
+
+      if (name === 'well_flowline' || name.indexOf('wellhead_flowline') === 0) {
+
+        node.userData.ugFlowline = true;
+
+        node.visible = false;
+
+      }
+
+      var role = roles[name];
+
+      if (role && REP_LEVELS.closeup[role] !== undefined && name.indexOf('wellhead_flowline') !== 0) {
+
+        v2.extraNodes.push({ mesh: node, role: role });
+
+      }
+
+    });
+
+    (partMeshes.cement || []).forEach(function (m) {
+
+      m.material.transparent = true;
+
+      m.material.opacity = 0.52;
+
+      m.material.depthWrite = false;
+
+      m.renderOrder = 2;
+
+    });
+
+  }
+
+
+  function loadMicroV2() {
+
+    var base = ASSET_V2_BASE + ASSET_V2.micro + '/' + ASSET_V2.micro;
+
+    return window.ModelLoader.load({ glbUrl: base + '.glb', manifestUrl: base + '.manifest.json' })
+
+      .then(function (h) {
+
+        v2.microRoot = h.root;
+
+        v2.microRoot.name = 'reservoir_micro';
+
+        v2.microRoot.position.set(0, -5.7, 0);
+
+        v2.microRoot.visible = false;
+
+        G.add(v2.microRoot);
+
+        v2.microReady = true;
+
+        return h;
+
+      })
+
+      .catch(function (err) { console.warn('[L1] 微观资产加载失败，微观视图回退程序化孔隙', err); return null; });
+
+  }
+
+
+  function loadV2() {
+
+    return Promise.all([loadOneV2(ASSET_V2.strata), loadOneV2(ASSET_V2.wellbore), loadOneV2(ASSET_V2.wellhead)])
+
+      .then(function (handles) {
+
+        assetRoot = new THREE.Group();
+
+        assetRoot.name = 'underground_hero';
+
+        assetRoot.userData.assetId = ASSET_OBJECT;
+
+        handles.forEach(function (h) { assetRoot.add(h.root); });
+
+        bindRootV2(assetRoot);
+
+        G.add(assetRoot);
+
+        var geologyProxy = new THREE.Object3D();
+
+        geologyProxy.name = 'underground_geology_proxy';
+
+        geologyProxy.position.set(0, -5.5, 0);
+
+        G.add(geologyProxy);
+
+        G.userData.geologyProxy = geologyProxy;
+
+        assetLoaded = true;
+
+        assetFailed = false;
+
+        v2.loaded = true;
+
+        v2.usingV2 = true;
+
+        applyRep('detail');
+
+        bindAssetState();
+
+        applyClip();
+
+        prepareWellboreCutaway();
+
+        addSurfacePipe();
+
+        updateLayerChips();
+
+        updatePartChips();
+
+        if (ui) {
+
+          hint.textContent = '地下剖面 · 点击岩层、储层或井筒';
+
+          setInfo('地下剖面已加载', '四层岩性、储层透镜和井筒在同一空间里。点击剖面岩层或右侧按钮逐层查看。',
+
+            '资产来源：Phase 9 重制（GLB + Manifest）；层厚为教学示意。');
+
+        }
+
+        return fetch(ANCHORS_URL, { cache: 'no-cache' })
+
+          .then(function (r) { return r.ok ? r.json() : null; })
+
+          .then(function (a) { v2.anchors = a; return a; })
+
+          .catch(function () { return null; });
+
+      })
+
+      .then(function () { return loadMicroV2(); });
+
+  }
+
+
+  function loadLegacy() {
     if (!window.ObjLite) { buildProceduralFallback(); return; }
     window.ObjLite.load(ASSET_OBJ, ASSET_MTL).then(function (root) {
       assetRoot = root;
@@ -304,7 +625,10 @@
         if (!node.isMesh) return;
         node.castShadow = true;
         node.receiveShadow = true;
-        node.frustumCulled = false;
+        /* Phase 9：开启剔除并确保包围球正确（原为无差别 false） */
+      if (node.geometry && !node.geometry.boundingSphere) node.geometry.computeBoundingSphere();
+      node.frustumCulled = true;
+      v2.frustum.enabled += 1;
         const name = node.name || '';
         LAYERS.forEach(function (layer) {
           if (name === layer.object) {
@@ -347,8 +671,17 @@
       assetLoaded = true;
       if (stage.isLevel() && !poreMode) setTimeout(function () { if (stage.isLevel() && !poreMode) enterPoreOverlay(); }, 400);
       bindAssetState();
+      /* 资产是异步到达的：地表物件在 addSurfacePipe() 里后建，此前的 hideSurfaceScene()
+         没能把它们藏掉，会留一整块地面糊住镜头；同时 layerVisibility 已被置全 false，
+         这里按"剖面总览"的预期状态复原。 */
+      hideSurfaceScene();
       applyClip();
       prepareWellboreCutaway();
+      /* 放在剖切准备之后：prepareWellboreCutaway() 会重设层可见性，
+         之前把复原放在它前面，等于刚点亮又被关掉。 */
+      layerVisibility = { overburden: true, caprock: true, reservoir: true, basement: true };
+      applyLayerVisibility();
+      applyPartVisibilityAll(true);
       addSurfacePipe();
       updateLayerChips();
       updatePartChips();
@@ -1039,7 +1372,11 @@
     if (!assetLoaded) return;
     const target = mode === 'perforation' ? 'wellbore-local' : 'wellbore';
     if (viewMode === target) { resetView(); hint.textContent = '总览剖面 · 已取消井筒选择'; return; }
-    if (poreMode) exitPore(true);
+    if (poreMode) { exitPore(true); }
+
+    if (v2.microRoot) v2.microRoot.visible = false;
+
+    applyRep('detail');
     if (!clipped) {
       clipped = true;
       applyClip();
@@ -1076,6 +1413,49 @@
   }
 
   function enterPore() {
+
+
+    /* 有真实微观资产时优先使用：岩粒/孔隙/孔喉都是网格，不是粒子 */
+
+
+    if (v2.microReady && v2.microRoot) {
+
+
+      poreMode = true;
+
+
+      if (poreGroup) poreGroup.visible = false;
+
+
+      v2.microRoot.visible = true;
+
+
+      if (ui) { var zb = ui.querySelector('#l1-zoom'); if (zb) zb.textContent = '返回剖面'; }
+
+
+      setInfo('储层孔隙 · 微观放大', '这一块是岩石骨架与孔隙空间的关系：油存在于孔隙里，而不是聚成地下油湖。',
+
+
+        '几何为教学抽象：岩粒与孔隙是真实网格，不含孔隙度/渗透率数值。');
+
+
+      if (stage.setInteraction) stage.setInteraction('enter_micro', '储层孔隙', '微观');
+
+
+      return;
+
+
+    }
+
+
+    return enterPoreOverlay();
+
+
+  }
+
+
+
+  function enterPoreOverlay() {
     if (poreZoom) return;
     if (!assetLoaded || !poreGroup) return;
     poreMode = true;
@@ -1101,6 +1481,9 @@
   }
 
   function exitPore(full) {
+
+
+    if (v2.microRoot) v2.microRoot.visible = false;
     if (!poreMode) return;
     if (!full && poreZoom) {
       /* 从放大退回默认的半透明孔隙叠加，小气泡仍留在基底里。 */
@@ -1407,6 +1790,28 @@
       get assetLoaded() { return assetLoaded; },
       get assetFailed() { return assetFailed; },
       get assetObject() { return ASSET_OBJECT; },
+
+      get usingV2() { return v2.usingV2; },
+
+      get modelStats() { return v2.stats; },
+
+      get repLevel() { return v2.repLevel; },
+
+      setRep: function (level) { return applyRep(level); },
+
+      get frustum() { return { enabled: v2.frustum.enabled, disabled: v2.frustum.disabled }; },
+
+      get anchors() { return v2.anchors; },
+
+      anchorPoint: anchorPoint,
+
+      get microReady() { return v2.microReady; },
+
+      get microMode() { return !!(v2.microRoot && v2.microRoot.visible); },
+
+      get renderStats() { var r = stage.renderer && stage.renderer.info; return r ? { calls: r.render.calls, tris: r.render.triangles } : null; },
+
+      get memory() { var m = stage.renderer && stage.renderer.info ? stage.renderer.info.memory : null; return m ? { geometries: m.geometries, textures: m.textures } : null; },
       get layers() { return Object.keys(layerMeshes); },
       get parts() { return Object.keys(partMeshes); },
       get poreMode() { return poreMode; }, get poreZoom() { return poreZoom; },

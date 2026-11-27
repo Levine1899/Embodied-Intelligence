@@ -1,0 +1,413 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "underground_wellbore",
+  "assetVersion": "2.0.0+phase9",
+  "source": {
+    "repository": "gitee.com/LYU_PRO/scienceagent",
+    "commit": "96f49cf8705d0206b7c147ce1250e2527251bab2",
+    "path": "assets-source/blender/underground_wellbore.blend",
+    "dirty": false
+  },
+  "build": {
+    "sourceFile": "assets-source/blender/underground_wellbore.blend",
+    "generator": "tools/blender/build_underground_v2.py",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "Khronos glTF Blender I/O",
+    "exportOptionsHash": "0980f8d902006b15",
+    "invocation": "blender -b -P tools/blender/build_underground_v2.py",
+    "exportExtras": true
+  },
+  "runtime": {
+    "format": "glb",
+    "uri": "assets/underground/underground_wellbore/underground_wellbore.glb",
+    "sha256": "0980f8d902006b15d778d2bb46f1d1a7d0d8477387606054fedeea71b60bbfa6",
+    "bytes": 43404,
+    "extrasStatus": "verified"
+  },
+  "coordinateSystem": {
+    "unit": "meter",
+    "handedness": "right",
+    "upAxis": "+Y",
+    "spaceId": "underground_wellbore_asset_local",
+    "sourceSpaceNote": "Blender Z-up -> glTF Y-up via export_yup=True"
+  },
+  "bounds": {
+    "coordinateSpaceId": "underground_wellbore_asset_local",
+    "unit": "meter",
+    "min": [
+      -1.054,
+      -6.428,
+      -4.3
+    ],
+    "max": [
+      1.054,
+      -2.48,
+      4.3
+    ]
+  },
+  "defaults": {
+    "detailLevel": "detail",
+    "structureMode": "external",
+    "animationMode": "idle"
+  },
+  "systems": [
+    {
+      "systemId": "underground_wellbore",
+      "displayName": "井筒剖面",
+      "objectIds": [
+        "wellbore"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "displayName": "wellbore",
+      "nodeUids": [
+        "059a7537-148d-5d13-971f-4c5fc3be6d63",
+        "e48faa30-e183-5421-8a78-e4ed7ca7ca6a",
+        "a2b08d24-5862-5b7c-a866-c2a227e8428c",
+        "5651d241-5c6e-5853-9c8d-72aef882c3c5",
+        "d7484f6f-9cab-535a-a6d3-ec3bfec89722",
+        "e20eab9b-ed7a-55b8-a7d5-e9f6fa311385",
+        "3a917525-2bfc-5cbd-9aa2-d4969272bdc2",
+        "b71bdfe2-170b-5fa3-a358-909888c3f91b",
+        "4c387639-f1e6-59db-8e68-005234ac3cad",
+        "46e1ad9e-ff43-5660-b466-beccf05673bd",
+        "9ee2ba83-10f4-5304-b831-5610b5dfd3ad",
+        "2b53251b-a4cd-5861-876e-9371368937c0",
+        "50ae4b2b-c5eb-5b87-94e3-a183a0f70714",
+        "753c88c9-53de-58b1-b21c-e5fb5b8a7662",
+        "08bac496-0553-53d7-beed-520815ad7112"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeUid": "059a7537-148d-5d13-971f-4c5fc3be6d63",
+      "nodeName": "well_casing",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_casing",
+      "role": "casing",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e48faa30-e183-5421-8a78-e4ed7ca7ca6a",
+      "nodeName": "well_cement",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_cement",
+      "role": "cement",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a2b08d24-5862-5b7c-a866-c2a227e8428c",
+      "nodeName": "well_perforation_00",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_perforation_00",
+      "role": "perforation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "5651d241-5c6e-5853-9c8d-72aef882c3c5",
+      "nodeName": "well_perforation_01",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_perforation_01",
+      "role": "perforation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d7484f6f-9cab-535a-a6d3-ec3bfec89722",
+      "nodeName": "well_perforation_02",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_perforation_02",
+      "role": "perforation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e20eab9b-ed7a-55b8-a7d5-e9f6fa311385",
+      "nodeName": "well_perforation_03",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_perforation_03",
+      "role": "perforation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "3a917525-2bfc-5cbd-9aa2-d4969272bdc2",
+      "nodeName": "well_perforation_04",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_perforation_04",
+      "role": "perforation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b71bdfe2-170b-5fa3-a358-909888c3f91b",
+      "nodeName": "well_perforation_05",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_perforation_05",
+      "role": "perforation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "4c387639-f1e6-59db-8e68-005234ac3cad",
+      "nodeName": "well_perforation_06",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_perforation_06",
+      "role": "perforation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "46e1ad9e-ff43-5660-b466-beccf05673bd",
+      "nodeName": "well_perforation_07",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_perforation_07",
+      "role": "perforation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "9ee2ba83-10f4-5304-b831-5610b5dfd3ad",
+      "nodeName": "well_perforation_08",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_perforation_08",
+      "role": "perforation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "2b53251b-a4cd-5861-876e-9371368937c0",
+      "nodeName": "well_perforation_09",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_perforation_09",
+      "role": "perforation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "50ae4b2b-c5eb-5b87-94e3-a183a0f70714",
+      "nodeName": "well_perforation_10",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_perforation_10",
+      "role": "perforation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "753c88c9-53de-58b1-b21c-e5fb5b8a7662",
+      "nodeName": "well_perforation_11",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_perforation_11",
+      "role": "perforation",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "08bac496-0553-53d7-beed-520815ad7112",
+      "nodeName": "well_tubing",
+      "objectId": "wellbore",
+      "systemId": "underground_wellbore",
+      "semanticId": "well_tubing",
+      "role": "tubing",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    }
+  ],
+  "anchors": [],
+  "representations": {
+    "overview": [
+      "059a7537-148d-5d13-971f-4c5fc3be6d63",
+      "e48faa30-e183-5421-8a78-e4ed7ca7ca6a",
+      "08bac496-0553-53d7-beed-520815ad7112"
+    ],
+    "detail": [
+      "059a7537-148d-5d13-971f-4c5fc3be6d63",
+      "e48faa30-e183-5421-8a78-e4ed7ca7ca6a",
+      "a2b08d24-5862-5b7c-a866-c2a227e8428c",
+      "5651d241-5c6e-5853-9c8d-72aef882c3c5",
+      "d7484f6f-9cab-535a-a6d3-ec3bfec89722",
+      "e20eab9b-ed7a-55b8-a7d5-e9f6fa311385",
+      "3a917525-2bfc-5cbd-9aa2-d4969272bdc2",
+      "b71bdfe2-170b-5fa3-a358-909888c3f91b",
+      "4c387639-f1e6-59db-8e68-005234ac3cad",
+      "46e1ad9e-ff43-5660-b466-beccf05673bd",
+      "9ee2ba83-10f4-5304-b831-5610b5dfd3ad",
+      "2b53251b-a4cd-5861-876e-9371368937c0",
+      "50ae4b2b-c5eb-5b87-94e3-a183a0f70714",
+      "753c88c9-53de-58b1-b21c-e5fb5b8a7662",
+      "08bac496-0553-53d7-beed-520815ad7112"
+    ],
+    "closeup": [
+      "059a7537-148d-5d13-971f-4c5fc3be6d63",
+      "e48faa30-e183-5421-8a78-e4ed7ca7ca6a",
+      "a2b08d24-5862-5b7c-a866-c2a227e8428c",
+      "5651d241-5c6e-5853-9c8d-72aef882c3c5",
+      "d7484f6f-9cab-535a-a6d3-ec3bfec89722",
+      "e20eab9b-ed7a-55b8-a7d5-e9f6fa311385",
+      "3a917525-2bfc-5cbd-9aa2-d4969272bdc2",
+      "b71bdfe2-170b-5fa3-a358-909888c3f91b",
+      "4c387639-f1e6-59db-8e68-005234ac3cad",
+      "46e1ad9e-ff43-5660-b466-beccf05673bd",
+      "9ee2ba83-10f4-5304-b831-5610b5dfd3ad",
+      "2b53251b-a4cd-5861-876e-9371368937c0",
+      "50ae4b2b-c5eb-5b87-94e3-a183a0f70714",
+      "753c88c9-53de-58b1-b21c-e5fb5b8a7662",
+      "08bac496-0553-53d7-beed-520815ad7112"
+    ]
+  },
+  "structureModes": {
+    "external": {
+      "show": [
+        "059a7537-148d-5d13-971f-4c5fc3be6d63",
+        "e48faa30-e183-5421-8a78-e4ed7ca7ca6a",
+        "a2b08d24-5862-5b7c-a866-c2a227e8428c",
+        "5651d241-5c6e-5853-9c8d-72aef882c3c5",
+        "d7484f6f-9cab-535a-a6d3-ec3bfec89722",
+        "e20eab9b-ed7a-55b8-a7d5-e9f6fa311385",
+        "3a917525-2bfc-5cbd-9aa2-d4969272bdc2",
+        "b71bdfe2-170b-5fa3-a358-909888c3f91b",
+        "4c387639-f1e6-59db-8e68-005234ac3cad",
+        "46e1ad9e-ff43-5660-b466-beccf05673bd",
+        "9ee2ba83-10f4-5304-b831-5610b5dfd3ad",
+        "2b53251b-a4cd-5861-876e-9371368937c0",
+        "50ae4b2b-c5eb-5b87-94e3-a183a0f70714",
+        "753c88c9-53de-58b1-b21c-e5fb5b8a7662",
+        "08bac496-0553-53d7-beed-520815ad7112"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "half": {
+      "show": [
+        "059a7537-148d-5d13-971f-4c5fc3be6d63",
+        "e48faa30-e183-5421-8a78-e4ed7ca7ca6a",
+        "a2b08d24-5862-5b7c-a866-c2a227e8428c",
+        "5651d241-5c6e-5853-9c8d-72aef882c3c5",
+        "d7484f6f-9cab-535a-a6d3-ec3bfec89722",
+        "e20eab9b-ed7a-55b8-a7d5-e9f6fa311385",
+        "3a917525-2bfc-5cbd-9aa2-d4969272bdc2",
+        "b71bdfe2-170b-5fa3-a358-909888c3f91b",
+        "4c387639-f1e6-59db-8e68-005234ac3cad",
+        "46e1ad9e-ff43-5660-b466-beccf05673bd",
+        "9ee2ba83-10f4-5304-b831-5610b5dfd3ad",
+        "2b53251b-a4cd-5861-876e-9371368937c0",
+        "50ae4b2b-c5eb-5b87-94e3-a183a0f70714",
+        "753c88c9-53de-58b1-b21c-e5fb5b8a7662",
+        "08bac496-0553-53d7-beed-520815ad7112"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "ghost": {
+      "show": [
+        "059a7537-148d-5d13-971f-4c5fc3be6d63",
+        "e48faa30-e183-5421-8a78-e4ed7ca7ca6a",
+        "a2b08d24-5862-5b7c-a866-c2a227e8428c",
+        "5651d241-5c6e-5853-9c8d-72aef882c3c5",
+        "d7484f6f-9cab-535a-a6d3-ec3bfec89722",
+        "e20eab9b-ed7a-55b8-a7d5-e9f6fa311385",
+        "3a917525-2bfc-5cbd-9aa2-d4969272bdc2",
+        "b71bdfe2-170b-5fa3-a358-909888c3f91b",
+        "4c387639-f1e6-59db-8e68-005234ac3cad",
+        "46e1ad9e-ff43-5660-b466-beccf05673bd",
+        "9ee2ba83-10f4-5304-b831-5610b5dfd3ad",
+        "2b53251b-a4cd-5861-876e-9371368937c0",
+        "50ae4b2b-c5eb-5b87-94e3-a183a0f70714",
+        "753c88c9-53de-58b1-b21c-e5fb5b8a7662",
+        "08bac496-0553-53d7-beed-520815ad7112"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "full": {
+      "show": [
+        "059a7537-148d-5d13-971f-4c5fc3be6d63",
+        "e48faa30-e183-5421-8a78-e4ed7ca7ca6a",
+        "a2b08d24-5862-5b7c-a866-c2a227e8428c",
+        "5651d241-5c6e-5853-9c8d-72aef882c3c5",
+        "d7484f6f-9cab-535a-a6d3-ec3bfec89722",
+        "e20eab9b-ed7a-55b8-a7d5-e9f6fa311385",
+        "3a917525-2bfc-5cbd-9aa2-d4969272bdc2",
+        "b71bdfe2-170b-5fa3-a358-909888c3f91b",
+        "4c387639-f1e6-59db-8e68-005234ac3cad",
+        "46e1ad9e-ff43-5660-b466-beccf05673bd",
+        "9ee2ba83-10f4-5304-b831-5610b5dfd3ad",
+        "2b53251b-a4cd-5861-876e-9371368937c0",
+        "50ae4b2b-c5eb-5b87-94e3-a183a0f70714",
+        "753c88c9-53de-58b1-b21c-e5fb5b8a7662",
+        "08bac496-0553-53d7-beed-520815ad7112"
+      ],
+      "hide": [],
+      "ghost": []
+    }
+  },
+  "dynamicBindings": [],
+  "nonInteractiveSupport": [],
+  "processBasis": [],
+  "limitations": [
+    "教学示意资产；地层厚度与比例不代表真实地质参数。",
+    "不含任何孔隙度、渗透率、压力等数值——只表达拓扑与层级关系。",
+    "井筒/井口尺寸为示意，非工程图。",
+    "射孔 12 个（3 段高度 × 4 方位），半径自 0.26（套管内壁）穿到 1.15（地层内）",
+    "套管 r=0.30 / 水泥环 r=0.52 / 油管 r=0.13，半径严格嵌套不穿插",
+    "射孔 y 区间 [-6.40, -5.00] 完整落在储层 [-7.27, -4.02] 内"
+  ],
+  "license": {
+    "spdx": "LicenseRef-Proprietary",
+    "holder": "项目内部",
+    "terms": "由本仓库脚本生成，无第三方素材。",
+    "thirdParty": []
+  }
+}

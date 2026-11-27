@@ -1,0 +1,201 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "reservoir_micro",
+  "assetVersion": "2.0.0+phase9",
+  "source": {
+    "repository": "gitee.com/LYU_PRO/scienceagent",
+    "commit": "96f49cf8705d0206b7c147ce1250e2527251bab2",
+    "path": "assets-source/blender/reservoir_micro.blend",
+    "dirty": false
+  },
+  "build": {
+    "sourceFile": "assets-source/blender/reservoir_micro.blend",
+    "generator": "tools/blender/build_underground_v2.py",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "Khronos glTF Blender I/O",
+    "exportOptionsHash": "9a7349c19d3eee4e",
+    "invocation": "blender -b -P tools/blender/build_underground_v2.py",
+    "exportExtras": true
+  },
+  "runtime": {
+    "format": "glb",
+    "uri": "assets/underground/reservoir_micro/reservoir_micro.glb",
+    "sha256": "9a7349c19d3eee4e0784b80a8d4496b109ab0163f746b7a39ca7624f4ec0200b",
+    "bytes": 304916,
+    "extrasStatus": "verified"
+  },
+  "coordinateSystem": {
+    "unit": "meter",
+    "handedness": "right",
+    "upAxis": "+Y",
+    "spaceId": "reservoir_micro_asset_local",
+    "sourceSpaceNote": "Blender Z-up -> glTF Y-up via export_yup=True"
+  },
+  "bounds": {
+    "coordinateSpaceId": "reservoir_micro_asset_local",
+    "unit": "meter",
+    "min": [
+      -1.862,
+      -1.855,
+      -1.844
+    ],
+    "max": [
+      1.877,
+      1.862,
+      1.879
+    ]
+  },
+  "defaults": {
+    "detailLevel": "detail",
+    "structureMode": "external",
+    "animationMode": "idle"
+  },
+  "systems": [
+    {
+      "systemId": "reservoir_micro",
+      "displayName": "储层孔隙微观",
+      "objectIds": [
+        "micro"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "objectId": "micro",
+      "systemId": "reservoir_micro",
+      "displayName": "micro",
+      "nodeUids": [
+        "6dd400f5-9428-573e-8edb-0e99a7bd9c1e",
+        "798c47f2-81fd-5865-b8f2-5a963ee1f3f1",
+        "18884340-8773-5fb8-a335-8be6d503f13d",
+        "8ad574c9-69af-5dfc-82fa-e28b85dec4f7"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeUid": "6dd400f5-9428-573e-8edb-0e99a7bd9c1e",
+      "nodeName": "micro_grains",
+      "objectId": "micro",
+      "systemId": "reservoir_micro",
+      "semanticId": "micro_grains",
+      "role": "grain",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "798c47f2-81fd-5865-b8f2-5a963ee1f3f1",
+      "nodeName": "micro_oil_saturation",
+      "objectId": "micro",
+      "systemId": "reservoir_micro",
+      "semanticId": "micro_oil_saturation",
+      "role": "oil",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "18884340-8773-5fb8-a335-8be6d503f13d",
+      "nodeName": "micro_pores",
+      "objectId": "micro",
+      "systemId": "reservoir_micro",
+      "semanticId": "micro_pores",
+      "role": "pore",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "8ad574c9-69af-5dfc-82fa-e28b85dec4f7",
+      "nodeName": "micro_throats",
+      "objectId": "micro",
+      "systemId": "reservoir_micro",
+      "semanticId": "micro_throats",
+      "role": "throat",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    }
+  ],
+  "anchors": [],
+  "representations": {
+    "overview": [
+      "6dd400f5-9428-573e-8edb-0e99a7bd9c1e",
+      "18884340-8773-5fb8-a335-8be6d503f13d"
+    ],
+    "detail": [
+      "6dd400f5-9428-573e-8edb-0e99a7bd9c1e",
+      "18884340-8773-5fb8-a335-8be6d503f13d",
+      "8ad574c9-69af-5dfc-82fa-e28b85dec4f7"
+    ],
+    "closeup": [
+      "6dd400f5-9428-573e-8edb-0e99a7bd9c1e",
+      "798c47f2-81fd-5865-b8f2-5a963ee1f3f1",
+      "18884340-8773-5fb8-a335-8be6d503f13d",
+      "8ad574c9-69af-5dfc-82fa-e28b85dec4f7"
+    ]
+  },
+  "structureModes": {
+    "external": {
+      "show": [
+        "6dd400f5-9428-573e-8edb-0e99a7bd9c1e",
+        "798c47f2-81fd-5865-b8f2-5a963ee1f3f1",
+        "18884340-8773-5fb8-a335-8be6d503f13d",
+        "8ad574c9-69af-5dfc-82fa-e28b85dec4f7"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "half": {
+      "show": [
+        "6dd400f5-9428-573e-8edb-0e99a7bd9c1e",
+        "798c47f2-81fd-5865-b8f2-5a963ee1f3f1",
+        "18884340-8773-5fb8-a335-8be6d503f13d",
+        "8ad574c9-69af-5dfc-82fa-e28b85dec4f7"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "ghost": {
+      "show": [
+        "6dd400f5-9428-573e-8edb-0e99a7bd9c1e",
+        "798c47f2-81fd-5865-b8f2-5a963ee1f3f1",
+        "18884340-8773-5fb8-a335-8be6d503f13d",
+        "8ad574c9-69af-5dfc-82fa-e28b85dec4f7"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "full": {
+      "show": [
+        "6dd400f5-9428-573e-8edb-0e99a7bd9c1e",
+        "798c47f2-81fd-5865-b8f2-5a963ee1f3f1",
+        "18884340-8773-5fb8-a335-8be6d503f13d",
+        "8ad574c9-69af-5dfc-82fa-e28b85dec4f7"
+      ],
+      "hide": [],
+      "ghost": []
+    }
+  },
+  "dynamicBindings": [],
+  "nonInteractiveSupport": [],
+  "processBasis": [],
+  "limitations": [
+    "教学示意资产；地层厚度与比例不代表真实地质参数。",
+    "不含任何孔隙度、渗透率、压力等数值——只表达拓扑与层级关系。",
+    "井筒/井口尺寸为示意，非工程图。",
+    "岩粒/孔隙/孔喉/油相均为真实几何体（非粒子），四者分层可单独选择",
+    "不含任何孔隙度、渗透率数值——本资产只表达拓扑关系"
+  ],
+  "license": {
+    "spdx": "LicenseRef-Proprietary",
+    "holder": "项目内部",
+    "terms": "由本仓库脚本生成，无第三方素材。",
+    "thirdParty": []
+  }
+}

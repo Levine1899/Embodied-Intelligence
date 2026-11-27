@@ -1,0 +1,28 @@
+{
+  "asset": "underground_strata",
+  "source": "tools/blender/build_underground_v2.py",
+  "blender": "5.3.0",
+  "meshes": 17,
+  "triangles": 1884,
+  "vertices": 976,
+  "bounds": {
+    "min": [
+      -9.011,
+      -12.3,
+      -6.0
+    ],
+    "max": [
+      9.01,
+      0.36,
+      6.022
+    ]
+  },
+  "notes": [
+    "四层地层严丝合缝不重叠；每层 3 条层理缝用于剖切面阅读",
+    "层序保持：上覆地层→盖层→储层→基底（未改动教学顺序）"
+  ],
+  "files": {
+    "glb_bytes": 96532,
+    "blend_bytes": 115548
+  }
+}

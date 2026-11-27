@@ -1,0 +1,28 @@
+{
+  "asset": "underground_wellhead",
+  "source": "tools/blender/build_underground_v2.py",
+  "blender": "5.3.0",
+  "meshes": 10,
+  "triangles": 636,
+  "vertices": 336,
+  "bounds": {
+    "min": [
+      -1.0,
+      0.04,
+      -1.0
+    ],
+    "max": [
+      3.132,
+      1.419,
+      1.0
+    ]
+  },
+  "notes": [
+    "井口树/主阀/翼阀/法兰×2/出口/出油管线各自独立语义节点",
+    "主阀带手轮，翼阀水平布置——两者形状可区分，不是同一块盒子"
+  ],
+  "files": {
+    "glb_bytes": 32236,
+    "blend_bytes": 103001
+  }
+}

@@ -1,0 +1,458 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "underground_strata",
+  "assetVersion": "2.0.0+phase9",
+  "source": {
+    "repository": "gitee.com/LYU_PRO/scienceagent",
+    "commit": "96f49cf8705d0206b7c147ce1250e2527251bab2",
+    "path": "assets-source/blender/underground_strata.blend",
+    "dirty": false
+  },
+  "build": {
+    "sourceFile": "assets-source/blender/underground_strata.blend",
+    "generator": "tools/blender/build_underground_v2.py",
+    "blenderVersion": "5.3.0",
+    "exporterVersion": "Khronos glTF Blender I/O",
+    "exportOptionsHash": "fad8d780f56018a3",
+    "invocation": "blender -b -P tools/blender/build_underground_v2.py",
+    "exportExtras": true
+  },
+  "runtime": {
+    "format": "glb",
+    "uri": "assets/underground/underground_strata/underground_strata.glb",
+    "sha256": "fad8d780f56018a3ce8138d386c44c2133e21529f42f2791a45b6696da2568dd",
+    "bytes": 96532,
+    "extrasStatus": "verified"
+  },
+  "coordinateSystem": {
+    "unit": "meter",
+    "handedness": "right",
+    "upAxis": "+Y",
+    "spaceId": "underground_strata_asset_local",
+    "sourceSpaceNote": "Blender Z-up -> glTF Y-up via export_yup=True"
+  },
+  "bounds": {
+    "coordinateSpaceId": "underground_strata_asset_local",
+    "unit": "meter",
+    "min": [
+      -9.011,
+      -12.3,
+      -6
+    ],
+    "max": [
+      9.01,
+      0.36,
+      6.022
+    ]
+  },
+  "defaults": {
+    "detailLevel": "detail",
+    "structureMode": "external",
+    "animationMode": "idle"
+  },
+  "systems": [
+    {
+      "systemId": "underground_geology",
+      "displayName": "地层剖面",
+      "objectIds": [
+        "geology",
+        "reservoir"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "displayName": "geology",
+      "nodeUids": [
+        "ac610cea-7421-536e-b4fb-66ddfecc31d6",
+        "048daf5d-a761-5938-9a52-96b85779dd19",
+        "f7e20a43-f502-513f-bc3b-e5650008b331",
+        "a3e04437-a04f-5f32-bc10-823dea323fd8",
+        "bb8d030f-cfd1-5a38-83a8-f4bc2cd1cc1a",
+        "d2526a84-6508-5f16-9fd0-215f319b1a76",
+        "d7c04bc7-ecfa-5d6f-92a8-883fd92f8ac0",
+        "a617c8a8-52af-56e3-874b-b228bfba3638",
+        "2f19b75d-b450-5e53-9c56-44b9918f0f9d",
+        "9de6a047-a8b0-5564-85b4-4943d3c1c6ec",
+        "7466f883-33ea-5aab-a386-eaac385b159f",
+        "af56286f-93c6-5356-addb-88669ec45855",
+        "767295b4-1aca-5b73-9ca3-bfa7857a1783",
+        "8a668b79-613a-5323-9ea3-efaa27a625aa",
+        "5f2486c8-0290-5549-807d-a5d88f66fefb",
+        "343c3136-a495-5629-a771-06ec1c51cbb9"
+      ]
+    },
+    {
+      "objectId": "reservoir",
+      "systemId": "underground_geology",
+      "displayName": "reservoir",
+      "nodeUids": [
+        "72bde451-5772-5ac1-be6a-fee8a96fd544"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeUid": "ac610cea-7421-536e-b4fb-66ddfecc31d6",
+      "nodeName": "geo_basement",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_basement",
+      "role": "stratum",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "048daf5d-a761-5938-9a52-96b85779dd19",
+      "nodeName": "geo_basement_bedding_1",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_basement_bedding_1",
+      "role": "bedding",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "f7e20a43-f502-513f-bc3b-e5650008b331",
+      "nodeName": "geo_basement_bedding_2",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_basement_bedding_2",
+      "role": "bedding",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a3e04437-a04f-5f32-bc10-823dea323fd8",
+      "nodeName": "geo_basement_bedding_3",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_basement_bedding_3",
+      "role": "bedding",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "bb8d030f-cfd1-5a38-83a8-f4bc2cd1cc1a",
+      "nodeName": "geo_caprock",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_caprock",
+      "role": "stratum",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d2526a84-6508-5f16-9fd0-215f319b1a76",
+      "nodeName": "geo_caprock_bedding_1",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_caprock_bedding_1",
+      "role": "bedding",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d7c04bc7-ecfa-5d6f-92a8-883fd92f8ac0",
+      "nodeName": "geo_caprock_bedding_2",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_caprock_bedding_2",
+      "role": "bedding",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "a617c8a8-52af-56e3-874b-b228bfba3638",
+      "nodeName": "geo_caprock_bedding_3",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_caprock_bedding_3",
+      "role": "bedding",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "2f19b75d-b450-5e53-9c56-44b9918f0f9d",
+      "nodeName": "geo_overburden",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_overburden",
+      "role": "stratum",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "9de6a047-a8b0-5564-85b4-4943d3c1c6ec",
+      "nodeName": "geo_overburden_bedding_1",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_overburden_bedding_1",
+      "role": "bedding",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7466f883-33ea-5aab-a386-eaac385b159f",
+      "nodeName": "geo_overburden_bedding_2",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_overburden_bedding_2",
+      "role": "bedding",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "af56286f-93c6-5356-addb-88669ec45855",
+      "nodeName": "geo_overburden_bedding_3",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_overburden_bedding_3",
+      "role": "bedding",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "767295b4-1aca-5b73-9ca3-bfa7857a1783",
+      "nodeName": "geo_reservoir_layer",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_reservoir_layer",
+      "role": "stratum",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "8a668b79-613a-5323-9ea3-efaa27a625aa",
+      "nodeName": "geo_reservoir_layer_bedding_1",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_reservoir_layer_bedding_1",
+      "role": "bedding",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "5f2486c8-0290-5549-807d-a5d88f66fefb",
+      "nodeName": "geo_reservoir_layer_bedding_2",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_reservoir_layer_bedding_2",
+      "role": "bedding",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "343c3136-a495-5629-a771-06ec1c51cbb9",
+      "nodeName": "geo_reservoir_layer_bedding_3",
+      "objectId": "geology",
+      "systemId": "underground_geology",
+      "semanticId": "geo_reservoir_layer_bedding_3",
+      "role": "bedding",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "72bde451-5772-5ac1-be6a-fee8a96fd544",
+      "nodeName": "reservoir_lens",
+      "objectId": "reservoir",
+      "systemId": "underground_geology",
+      "semanticId": "reservoir_lens",
+      "role": "reservoir_body",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    }
+  ],
+  "anchors": [],
+  "representations": {
+    "overview": [
+      "ac610cea-7421-536e-b4fb-66ddfecc31d6",
+      "bb8d030f-cfd1-5a38-83a8-f4bc2cd1cc1a",
+      "2f19b75d-b450-5e53-9c56-44b9918f0f9d",
+      "767295b4-1aca-5b73-9ca3-bfa7857a1783"
+    ],
+    "detail": [
+      "ac610cea-7421-536e-b4fb-66ddfecc31d6",
+      "048daf5d-a761-5938-9a52-96b85779dd19",
+      "f7e20a43-f502-513f-bc3b-e5650008b331",
+      "a3e04437-a04f-5f32-bc10-823dea323fd8",
+      "bb8d030f-cfd1-5a38-83a8-f4bc2cd1cc1a",
+      "d2526a84-6508-5f16-9fd0-215f319b1a76",
+      "d7c04bc7-ecfa-5d6f-92a8-883fd92f8ac0",
+      "a617c8a8-52af-56e3-874b-b228bfba3638",
+      "2f19b75d-b450-5e53-9c56-44b9918f0f9d",
+      "9de6a047-a8b0-5564-85b4-4943d3c1c6ec",
+      "7466f883-33ea-5aab-a386-eaac385b159f",
+      "af56286f-93c6-5356-addb-88669ec45855",
+      "767295b4-1aca-5b73-9ca3-bfa7857a1783",
+      "8a668b79-613a-5323-9ea3-efaa27a625aa",
+      "5f2486c8-0290-5549-807d-a5d88f66fefb",
+      "343c3136-a495-5629-a771-06ec1c51cbb9"
+    ],
+    "closeup": [
+      "ac610cea-7421-536e-b4fb-66ddfecc31d6",
+      "048daf5d-a761-5938-9a52-96b85779dd19",
+      "f7e20a43-f502-513f-bc3b-e5650008b331",
+      "a3e04437-a04f-5f32-bc10-823dea323fd8",
+      "bb8d030f-cfd1-5a38-83a8-f4bc2cd1cc1a",
+      "d2526a84-6508-5f16-9fd0-215f319b1a76",
+      "d7c04bc7-ecfa-5d6f-92a8-883fd92f8ac0",
+      "a617c8a8-52af-56e3-874b-b228bfba3638",
+      "2f19b75d-b450-5e53-9c56-44b9918f0f9d",
+      "9de6a047-a8b0-5564-85b4-4943d3c1c6ec",
+      "7466f883-33ea-5aab-a386-eaac385b159f",
+      "af56286f-93c6-5356-addb-88669ec45855",
+      "767295b4-1aca-5b73-9ca3-bfa7857a1783",
+      "8a668b79-613a-5323-9ea3-efaa27a625aa",
+      "5f2486c8-0290-5549-807d-a5d88f66fefb",
+      "343c3136-a495-5629-a771-06ec1c51cbb9",
+      "72bde451-5772-5ac1-be6a-fee8a96fd544"
+    ]
+  },
+  "structureModes": {
+    "external": {
+      "show": [
+        "ac610cea-7421-536e-b4fb-66ddfecc31d6",
+        "048daf5d-a761-5938-9a52-96b85779dd19",
+        "f7e20a43-f502-513f-bc3b-e5650008b331",
+        "a3e04437-a04f-5f32-bc10-823dea323fd8",
+        "bb8d030f-cfd1-5a38-83a8-f4bc2cd1cc1a",
+        "d2526a84-6508-5f16-9fd0-215f319b1a76",
+        "d7c04bc7-ecfa-5d6f-92a8-883fd92f8ac0",
+        "a617c8a8-52af-56e3-874b-b228bfba3638",
+        "2f19b75d-b450-5e53-9c56-44b9918f0f9d",
+        "9de6a047-a8b0-5564-85b4-4943d3c1c6ec",
+        "7466f883-33ea-5aab-a386-eaac385b159f",
+        "af56286f-93c6-5356-addb-88669ec45855",
+        "767295b4-1aca-5b73-9ca3-bfa7857a1783",
+        "8a668b79-613a-5323-9ea3-efaa27a625aa",
+        "5f2486c8-0290-5549-807d-a5d88f66fefb",
+        "343c3136-a495-5629-a771-06ec1c51cbb9",
+        "72bde451-5772-5ac1-be6a-fee8a96fd544"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "half": {
+      "show": [
+        "ac610cea-7421-536e-b4fb-66ddfecc31d6",
+        "048daf5d-a761-5938-9a52-96b85779dd19",
+        "f7e20a43-f502-513f-bc3b-e5650008b331",
+        "a3e04437-a04f-5f32-bc10-823dea323fd8",
+        "bb8d030f-cfd1-5a38-83a8-f4bc2cd1cc1a",
+        "d2526a84-6508-5f16-9fd0-215f319b1a76",
+        "d7c04bc7-ecfa-5d6f-92a8-883fd92f8ac0",
+        "a617c8a8-52af-56e3-874b-b228bfba3638",
+        "2f19b75d-b450-5e53-9c56-44b9918f0f9d",
+        "9de6a047-a8b0-5564-85b4-4943d3c1c6ec",
+        "7466f883-33ea-5aab-a386-eaac385b159f",
+        "af56286f-93c6-5356-addb-88669ec45855",
+        "767295b4-1aca-5b73-9ca3-bfa7857a1783",
+        "8a668b79-613a-5323-9ea3-efaa27a625aa",
+        "5f2486c8-0290-5549-807d-a5d88f66fefb",
+        "343c3136-a495-5629-a771-06ec1c51cbb9",
+        "72bde451-5772-5ac1-be6a-fee8a96fd544"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "ghost": {
+      "show": [
+        "ac610cea-7421-536e-b4fb-66ddfecc31d6",
+        "048daf5d-a761-5938-9a52-96b85779dd19",
+        "f7e20a43-f502-513f-bc3b-e5650008b331",
+        "a3e04437-a04f-5f32-bc10-823dea323fd8",
+        "bb8d030f-cfd1-5a38-83a8-f4bc2cd1cc1a",
+        "d2526a84-6508-5f16-9fd0-215f319b1a76",
+        "d7c04bc7-ecfa-5d6f-92a8-883fd92f8ac0",
+        "a617c8a8-52af-56e3-874b-b228bfba3638",
+        "2f19b75d-b450-5e53-9c56-44b9918f0f9d",
+        "9de6a047-a8b0-5564-85b4-4943d3c1c6ec",
+        "7466f883-33ea-5aab-a386-eaac385b159f",
+        "af56286f-93c6-5356-addb-88669ec45855",
+        "767295b4-1aca-5b73-9ca3-bfa7857a1783",
+        "8a668b79-613a-5323-9ea3-efaa27a625aa",
+        "5f2486c8-0290-5549-807d-a5d88f66fefb",
+        "343c3136-a495-5629-a771-06ec1c51cbb9",
+        "72bde451-5772-5ac1-be6a-fee8a96fd544"
+      ],
+      "hide": [],
+      "ghost": []
+    },
+    "full": {
+      "show": [
+        "ac610cea-7421-536e-b4fb-66ddfecc31d6",
+        "048daf5d-a761-5938-9a52-96b85779dd19",
+        "f7e20a43-f502-513f-bc3b-e5650008b331",
+        "a3e04437-a04f-5f32-bc10-823dea323fd8",
+        "bb8d030f-cfd1-5a38-83a8-f4bc2cd1cc1a",
+        "d2526a84-6508-5f16-9fd0-215f319b1a76",
+        "d7c04bc7-ecfa-5d6f-92a8-883fd92f8ac0",
+        "a617c8a8-52af-56e3-874b-b228bfba3638",
+        "2f19b75d-b450-5e53-9c56-44b9918f0f9d",
+        "9de6a047-a8b0-5564-85b4-4943d3c1c6ec",
+        "7466f883-33ea-5aab-a386-eaac385b159f",
+        "af56286f-93c6-5356-addb-88669ec45855",
+        "767295b4-1aca-5b73-9ca3-bfa7857a1783",
+        "8a668b79-613a-5323-9ea3-efaa27a625aa",
+        "5f2486c8-0290-5549-807d-a5d88f66fefb",
+        "343c3136-a495-5629-a771-06ec1c51cbb9",
+        "72bde451-5772-5ac1-be6a-fee8a96fd544"
+      ],
+      "hide": [],
+      "ghost": []
+    }
+  },
+  "dynamicBindings": [],
+  "nonInteractiveSupport": [],
+  "processBasis": [],
+  "limitations": [
+    "教学示意资产；地层厚度与比例不代表真实地质参数。",
+    "不含任何孔隙度、渗透率、压力等数值——只表达拓扑与层级关系。",
+    "井筒/井口尺寸为示意，非工程图。",
+    "四层地层严丝合缝不重叠；每层 3 条层理缝用于剖切面阅读",
+    "层序保持：上覆地层→盖层→储层→基底（未改动教学顺序）"
+  ],
+  "license": {
+    "spdx": "LicenseRef-Proprietary",
+    "holder": "项目内部",
+    "terms": "由本仓库脚本生成，无第三方素材。",
+    "thirdParty": []
+  }
+}
