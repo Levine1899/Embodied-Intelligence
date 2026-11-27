@@ -151,6 +151,24 @@ async function main() {
     await page.waitForTimeout(300);
     check('F 退出微观后回到剖面', (await page.evaluate(() => window.__l1.microMode)) === false);
 
+    /* ---------------- H 粒子路径引用 anchors ---------------- */
+    const flows = await page.evaluate(() => ({
+      anchors: window.__l1.flowAnchors,
+      endpoints: window.__l1.flowEndpoints,
+      anchorPoints: window.__l1.anchors && window.__l1.anchors.anchors,
+    }));
+    check('H 三条粒子路径都声明了锚点来源',
+      flows.anchors && flows.anchors.wellFlow.length === 2 &&
+      flows.anchors.perfFlow.length === 2 && flows.anchors.convFlows.length === 1,
+      flows.anchors);
+    const az = flows.anchorPoints && flows.anchorPoints.perforation_zone ? flows.anchorPoints.perforation_zone.point : null;
+    const wt = flows.anchorPoints && flows.anchorPoints.wellbore_top ? flows.anchorPoints.wellbore_top.point : null;
+    const rt = flows.anchorPoints && flows.anchorPoints.reservoir_top ? flows.anchorPoints.reservoir_top.point : null;
+    const near = (a, b, eps) => typeof a === 'number' && typeof b === 'number' && Math.abs(a - b) < (eps || 1e-6);
+    check('H wellFlow 起点 = perforation_zone − 1.1', !!az && near(flows.endpoints.wellFlow.start[1], az[1] - 1.1), { got: flows.endpoints.wellFlow.start, az });
+    check('H wellFlow 终点 = wellbore_top − 0.4', !!wt && near(flows.endpoints.wellFlow.end[1], wt[1] - 0.4), { got: flows.endpoints.wellFlow.end, wt });
+    check('H perfFlow 终点 = reservoir_top − 0.63', !!rt && near(flows.endpoints.perfFlow.end[1], rt[1] - 0.63), { got: flows.endpoints.perfFlow.end, rt });
+
     /* ---------------- 截图证据 ---------------- */
     /* 入场 1.2s 后会自动进孔隙视图（flyTo 到罐内）。拍"剖面总览"前必须先退出，
        并等 900ms 的恢复动画跑完，否则拍到的是罐内特写。 */

@@ -404,7 +404,15 @@ const v2 = {
   }
 
 
-  function anchorPoint(name) {
+  /* 锚点 → 世界/局部向量。锚点缺失时退回原常量，保证无锚点时行为不变。 */
+function anchorVec(name, fallback) {
+  const p = anchorPoint(name);
+  return p ? new THREE.Vector3(p[0], p[1], p[2]) : new THREE.Vector3(fallback[0], fallback[1], fallback[2]);
+}
+
+const flowAnchors = { wellFlow: [], perfFlow: [], convFlows: [] };
+
+function anchorPoint(name) {
 
     if (!v2.anchors || !v2.anchors.anchors) return null;
 
@@ -921,36 +929,46 @@ const v2 = {
 
   function buildWellFlow() {
     /* 抽取演示：储层两侧的油滴汇入射孔段，再沿井筒上行（V3 动画的可见版本）。 */
+    /* 起止点由资产锚点推导（perforation_zone / wellbore_top）。
+       锚点值恰好复现原常量：-5.7-1.1=-6.8、1.3-0.4=0.9，画面不变，
+       但端点从此来自数据源而不是魔法数字。 */
+    const perfZone = anchorVec('perforation_zone', [0, -5.7, 0]);
+    const wellTop = anchorVec('wellbore_top', [0, 1.3, 0]);
+    flowAnchors.wellFlow = ['perforation_zone', 'wellbore_top'];
     const curve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0, -6.8, 0.08),
+      new THREE.Vector3(perfZone.x, perfZone.y - 1.1, perfZone.z + 0.08),
       new THREE.Vector3(0.03, -5.6, 0.04),
       new THREE.Vector3(0.05, -4.2, 0.02),
       new THREE.Vector3(0.03, -2.0, 0),
-      new THREE.Vector3(0, 0.9, 0)
+      new THREE.Vector3(wellTop.x, wellTop.y - 0.4, wellTop.z)
     ]);
     wellFlow = buildFlow(curve, 34, 0xffcf67, 0.34, 0.105);
     wellFlow.name = 'wellbore_flow_particles';
     wellFlow.children.forEach(function (m) { m.material.depthTest = false; m.renderOrder = 6; });
     G.add(wellFlow);
     /* 射孔段专用上涌粒子：放在最前层渲染，避免被套管内壁/储层遮挡。 */
+    const resTop = anchorVec('reservoir_top', [0, -4.02, 0]);
+    flowAnchors.perfFlow = ['perforation_zone', 'reservoir_top'];
     const perfCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0, -6.7, 0.10),
-      new THREE.Vector3(0.04, -5.7, 0.05),
-      new THREE.Vector3(0, -4.65, 0.02)
+      new THREE.Vector3(perfZone.x, perfZone.y - 1.0, perfZone.z + 0.10),
+      new THREE.Vector3(0.04, perfZone.y, 0.05),
+      new THREE.Vector3(resTop.x, resTop.y - 0.63, resTop.z + 0.02)
     ]);
     perfFlow = buildFlow(perfCurve, 18, 0xffd77a, 0.46, 0.085);
     perfFlow.name = 'perforation_upflow';
     perfFlow.children.forEach(function (m) { m.material.depthTest = false; m.renderOrder = 8; });
     G.add(perfFlow);
+    flowAnchors.convFlows = ['perforation_zone'];
+    const sink = new THREE.Vector3(perfZone.x, perfZone.y + 0.5, perfZone.z);
     const c1 = new THREE.CatmullRomCurve3([
       new THREE.Vector3(-2.8, -5.7, 0.8),
       new THREE.Vector3(-1.4, -5.35, 0.35),
-      new THREE.Vector3(0, -5.2, 0)
+      sink
     ]);
     const c2 = new THREE.CatmullRomCurve3([
       new THREE.Vector3(2.6, -5.5, -0.8),
       new THREE.Vector3(1.2, -5.25, -0.3),
-      new THREE.Vector3(0, -5.2, 0)
+      sink.clone()
     ]);
     convFlows = [buildFlow(c1, 11, 0xffb45c, 0.22, 0.065), buildFlow(c2, 11, 0xffb45c, 0.22, 0.065)];
     convFlows.forEach(function (f, i) { f.name = 'reservoir_inflow_' + i; f.children.forEach(function (m) { m.material.depthTest = false; m.renderOrder = 7; }); G.add(f); });
@@ -959,7 +977,7 @@ const v2 = {
       new THREE.MeshBasicMaterial({ color: 0xffc56a, transparent: true, opacity: 0.55, depthWrite: false })
     );
     extractionRing.rotation.x = Math.PI / 2;
-    extractionRing.position.set(0, -5.2, 0);
+    extractionRing.position.set(perfZone.x, perfZone.y + 0.5, perfZone.z);
     extractionRing.name = 'extraction_pulse';
     G.add(extractionRing);
   }
@@ -1396,22 +1414,6 @@ const v2 = {
     setReadout();
   }
 
-  function enterPoreOverlay() {
-    if (poreMode) return;
-    if (!assetLoaded || !poreGroup) return;
-    poreMode = true;
-    originalVisibility = Object.assign({}, layerVisibility);
-    poreGroup.visible = true;
-    /* 叠加态放到最底层（基底）内，避免孔隙球跨过储层/盖层。 */
-    poreGroup.position.y = -9.9;
-    poreGroup.scale.set(1.05, 0.74, 1.05);
-    applyExtractionProgress();
-    const btn = ui.querySelector('#l1-pore');
-    if (btn) btn.textContent = '孔隙放大（示意）';
-    poreZoom = false;
-    setReadout();
-  }
-
   function enterPore() {
 
 
@@ -1805,6 +1807,21 @@ const v2 = {
       get frustum() { return { enabled: v2.frustum.enabled, disabled: v2.frustum.disabled }; },
 
       get anchors() { return v2.anchors; },
+    get flowAnchors() { return flowAnchors; },
+    /* 曲线端点（局部坐标），用于断言端点确实来自锚点 */
+    get flowEndpoints() {
+      if (!flowCurve && !wellFlow) return null;
+      const out = {};
+      if (wellFlow && wellFlow.userData.curve) {
+        const c = wellFlow.userData.curve;
+        out.wellFlow = { start: c.points[0].toArray(), end: c.points[c.points.length - 1].toArray() };
+      }
+      if (perfFlow && perfFlow.userData.curve) {
+        const c = perfFlow.userData.curve;
+        out.perfFlow = { start: c.points[0].toArray(), end: c.points[c.points.length - 1].toArray() };
+      }
+      return out;
+    },
 
       anchorPoint: anchorPoint,
 

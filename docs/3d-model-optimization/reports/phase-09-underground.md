@@ -121,8 +121,8 @@ v2 加载失败时**自动回退**到旧 OBJ 路径，再失败才回退程序�
 1. **工程审图 NOT_RUN**：层厚、井径、射孔参数都是教学示意，未经工程/地质审图；
 2. **录屏 NOT_RUN**；
 3. **GPU 性能 NOT_MEASURED**：无移动端帧率/显存数据，因此本报告不含任何"更快/更省"的结论；
-4. **粒子路径未改按 anchors 重建**：锚点已生成并可访问，但 `wellFlow/perfFlow/surfaceFlow` 仍用代码内常量曲线；这一项按"部分完成"记，未宣称完成；
-5. **`enterPoreOverlay` 存在一份重复定义**（新增包装与原实现同名，后者胜出，前者为死代码）：功能正确但应清理；
+4. ~~粒子路径未改按 anchors 重建~~ → **已完成**：`wellFlow` / `perfFlow` / 两条汇流与抽取环的端点改由 `perforation_zone` / `wellbore_top` / `reservoir_top` 锚点推导，锚点值恰好复现原常量（−5.7−1.1=−6.8、1.3−0.4=0.9），画面不变但端点有了数据源；缺锚点时仍回退原常量。
+5. ~~`enterPoreOverlay` 重复定义~~ → **已清理**：删掉不可达的叠加态实现（它被放大态同名函数遮蔽），现全文件只剩一份 `enterPore` + 一份 `enterPoreOverlay`，并加了静态守卫测试防止重复回来。
 6. **远景小件**：overview 已隐藏层理缝/阀轮/孔喉等，但未做基于屏幕占比的自动剔除。
 
 ## 九、复现
@@ -170,3 +170,34 @@ Blender 的 Principled `Base Color` 是**线性**空间，我按 sRGB 直觉填�
 - `run-phase9` **24 / 24**、`npm test` **130 / 130**、`validate:assets --strict` **16 / 16**；
 - 截图：`l1-front.png`（3/4 总览）、`l1-side-45.png`、`l1-rotated.png`、`l1-micro.png`、`l1-wellbore-cut.png`；
 - 仍属已知限制：块体右侧略出画、左侧面板压住约三分之一（不影响层序与井筒阅读）；工程审图、录屏、GPU 性能仍 NOT_RUN。
+
+---
+
+## 十二、还掉两笔技术债（收尾）
+
+### 1. 重复的 enterPoreOverlay
+排查后发现那两个同名函数**不是同一个东西**：一个把孔隙叠加层压进基底（不移动相机），一个做放大态（隐藏岩层 + flyTo）。
+我上一轮改 `enterPore()` 时把"两选一"的切换逻辑换成了"有微观资产就用资产，否则走放大态"，于是叠加态那份彻底不可达，才表现成"重复定义"。
+处理：删掉不可达的那份，保留放大态；现在全文件只有 `enterPore` × 1、`enterPoreOverlay` × 1。
+
+### 2. 粒子路径接 anchors
+`perforation_zone` / `wellbore_top` / `reservoir_top` 三个锚点成为曲线端点的数据源：
+
+| 路径 | 端点来源 | 期望值 | 实测 |
+|---|---|---|---|
+| wellFlow 起点 | perforation_zone − 1.1 | −6.8 | −6.800000000000001 |
+| wellFlow 终点 | wellbore_top − 0.4 | 0.9 | 0.9 |
+| perfFlow 终点 | reservoir_top − 0.63 | −4.65 | −4.6499999999999995 |
+
+锚点数值恰好复现原来的常量，所以画面不变——这一项的价值不在"看起来不同"，而在于**端点从魔法数字变成了资产数据**；锚点缺失时回退原常量，不会因为锚点加载失败而崩。
+
+### 3. 防止这两笔债再长回来
+新增 `tests/l1-structure.test.mjs`（4 条静态守卫）：
+- `enterPore` / `enterPoreOverlay` 各只有一份定义；
+- 不再出现无差别 `frustumCulled = false`；
+- 粒子端点必须调用 `anchorVec('perforation_zone' | 'wellbore_top' | 'reservoir_top')`。
+
+E2E 增加 H 段 4 条断言，验证三条粒子路径都声明了锚点来源、且端点数值确实等于锚点推导值。
+
+### 4. 验证
+`run-phase9` **28 / 28**、`npm test` **134 / 134**、`run-levels` **84 / 84**、`validate:assets --strict` **16 / 16**。
