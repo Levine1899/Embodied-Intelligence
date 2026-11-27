@@ -4,7 +4,7 @@
   "assetVersion": "1.0.0+phase7",
   "source": {
     "repository": "gitee.com/LYU_PRO/scienceagent",
-    "commit": "5c9b61a773d5193dd119f17ffb5eb87239e7fd90",
+    "commit": "cbbfc8e41268349c28e16f553d63af128deb52c6",
     "path": "assets-source/blender/transfer_pump_set.blend",
     "dirty": false
   },
@@ -13,15 +13,15 @@
     "generator": "tools/blender/build_storage_heroes.py",
     "blenderVersion": "5.3.0",
     "exporterVersion": "Khronos glTF Blender I/O v5.3.0",
-    "exportOptionsHash": "48d8d5bd7851c245",
+    "exportOptionsHash": "9952bccfc0b9915b",
     "invocation": "blender -b -P tools/blender/build_storage_heroes.py   # 无 CLI 参数，路径硬编码",
     "exportExtras": true
   },
   "runtime": {
     "format": "glb",
     "uri": "assets/storage/transfer_pump_set/transfer_pump_set.glb",
-    "sha256": "48d8d5bd7851c245b864429902a8210dfc4b7dcb12fb076eaea68295640a978a",
-    "bytes": 155060,
+    "sha256": "9952bccfc0b9915b9194fea3a847ceb0dfd253e3b801aad8aa00be0e28d55aa3",
+    "bytes": 199964,
     "extrasStatus": "verified"
   },
   "coordinateSystem": {
@@ -35,14 +35,14 @@
     "coordinateSpaceId": "transfer_pump_set_asset_local",
     "unit": "meter",
     "min": [
-      -2.3,
+      -2.45,
       0,
-      -0.95
+      -1.1
     ],
     "max": [
-      2.3,
+      2.45,
       3.5,
-      0.95
+      1.1
     ]
   },
   "defaults": {
@@ -65,10 +65,22 @@
       "systemId": "storage_transfer",
       "displayName": "转输泵组",
       "nodeUids": [
+        "060b0750-6ad8-5868-af15-981f6d7c3aa7",
+        "d489f130-88fb-5586-8829-8d82a6e4a1de",
+        "e97bf471-2e5f-5d7b-b542-2377d05e2a1d",
+        "d505329a-aae4-5009-a76e-41b2dc2cc5d7",
         "b8c1eb74-4ba2-52d9-81b2-b196b34dc735",
         "158f9446-68df-5d16-9217-b1e0cea81980",
         "c90771ad-9c75-5c61-b1f6-307b302ccc00",
         "1be6f450-1463-5fb6-a440-730f1e7c1193",
+        "8834e912-6bb3-5740-9eec-e18006717952",
+        "d78bb492-f052-5b68-a329-84b0f6817db5",
+        "fbb8a27c-1c87-503a-adc1-9ca79f91792f",
+        "f3cbb803-7421-5cd9-9a65-ffa49ec80702",
+        "e79bf485-606c-501c-abf0-1f62a59b9dc8",
+        "92e48421-8fa8-54e1-96a1-7bbe31a1867e",
+        "ea64d260-69ef-5ef3-936e-fda0065685f8",
+        "f8881be9-1c39-568b-88d5-61508fdd3cd0",
         "9ed476c1-2a93-57a8-9cfd-59c100c5482b",
         "4c91a9c1-6df3-59e1-8d34-f97cc6ef3da2",
         "089efba3-c81f-549d-937d-63602d2bb555",
@@ -96,6 +108,54 @@
     }
   ],
   "nodes": [
+    {
+      "nodeUid": "060b0750-6ad8-5868-af15-981f6d7c3aa7",
+      "nodeName": "anchor_bolt_11",
+      "objectId": "transfer_pump",
+      "systemId": "storage_transfer",
+      "semanticId": "anchor_bolt_11",
+      "role": "base",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d489f130-88fb-5586-8829-8d82a6e4a1de",
+      "nodeName": "anchor_bolt_12",
+      "objectId": "transfer_pump",
+      "systemId": "storage_transfer",
+      "semanticId": "anchor_bolt_12",
+      "role": "base",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e97bf471-2e5f-5d7b-b542-2377d05e2a1d",
+      "nodeName": "anchor_bolt_21",
+      "objectId": "transfer_pump",
+      "systemId": "storage_transfer",
+      "semanticId": "anchor_bolt_21",
+      "role": "base",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d505329a-aae4-5009-a76e-41b2dc2cc5d7",
+      "nodeName": "anchor_bolt_22",
+      "objectId": "transfer_pump",
+      "systemId": "storage_transfer",
+      "semanticId": "anchor_bolt_22",
+      "role": "base",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
     {
       "nodeUid": "b8c1eb74-4ba2-52d9-81b2-b196b34dc735",
       "nodeName": "bearing_housing",
@@ -139,6 +199,102 @@
       "systemId": "storage_transfer",
       "semanticId": "discharge_valve_wheel",
       "role": "valve",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "8834e912-6bb3-5740-9eec-e18006717952",
+      "nodeName": "fan_grille_1",
+      "objectId": "transfer_pump",
+      "systemId": "storage_transfer",
+      "semanticId": "fan_grille_1",
+      "role": "motor",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d78bb492-f052-5b68-a329-84b0f6817db5",
+      "nodeName": "fan_grille_2",
+      "objectId": "transfer_pump",
+      "systemId": "storage_transfer",
+      "semanticId": "fan_grille_2",
+      "role": "motor",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "fbb8a27c-1c87-503a-adc1-9ca79f91792f",
+      "nodeName": "fan_grille_3",
+      "objectId": "transfer_pump",
+      "systemId": "storage_transfer",
+      "semanticId": "fan_grille_3",
+      "role": "motor",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "f3cbb803-7421-5cd9-9a65-ffa49ec80702",
+      "nodeName": "gauge_dial_discharge",
+      "objectId": "transfer_pump",
+      "systemId": "storage_transfer",
+      "semanticId": "gauge_dial_discharge",
+      "role": "instrument",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "e79bf485-606c-501c-abf0-1f62a59b9dc8",
+      "nodeName": "gauge_dial_suction",
+      "objectId": "transfer_pump",
+      "systemId": "storage_transfer",
+      "semanticId": "gauge_dial_suction",
+      "role": "instrument",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "92e48421-8fa8-54e1-96a1-7bbe31a1867e",
+      "nodeName": "gauge_stem_discharge",
+      "objectId": "transfer_pump",
+      "systemId": "storage_transfer",
+      "semanticId": "gauge_stem_discharge",
+      "role": "instrument",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "ea64d260-69ef-5ef3-936e-fda0065685f8",
+      "nodeName": "gauge_stem_suction",
+      "objectId": "transfer_pump",
+      "systemId": "storage_transfer",
+      "semanticId": "gauge_stem_suction",
+      "role": "instrument",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "f8881be9-1c39-568b-88d5-61508fdd3cd0",
+      "nodeName": "grout_layer",
+      "objectId": "transfer_pump",
+      "systemId": "storage_transfer",
+      "semanticId": "grout_layer",
+      "role": "base",
       "interactive": true,
       "representations": [
         "detail"
@@ -461,10 +617,22 @@
   ],
   "representations": {
     "overview": [
+      "060b0750-6ad8-5868-af15-981f6d7c3aa7",
+      "d489f130-88fb-5586-8829-8d82a6e4a1de",
+      "e97bf471-2e5f-5d7b-b542-2377d05e2a1d",
+      "d505329a-aae4-5009-a76e-41b2dc2cc5d7",
       "b8c1eb74-4ba2-52d9-81b2-b196b34dc735",
       "158f9446-68df-5d16-9217-b1e0cea81980",
       "c90771ad-9c75-5c61-b1f6-307b302ccc00",
       "1be6f450-1463-5fb6-a440-730f1e7c1193",
+      "8834e912-6bb3-5740-9eec-e18006717952",
+      "d78bb492-f052-5b68-a329-84b0f6817db5",
+      "fbb8a27c-1c87-503a-adc1-9ca79f91792f",
+      "f3cbb803-7421-5cd9-9a65-ffa49ec80702",
+      "e79bf485-606c-501c-abf0-1f62a59b9dc8",
+      "92e48421-8fa8-54e1-96a1-7bbe31a1867e",
+      "ea64d260-69ef-5ef3-936e-fda0065685f8",
+      "f8881be9-1c39-568b-88d5-61508fdd3cd0",
       "9ed476c1-2a93-57a8-9cfd-59c100c5482b",
       "4c91a9c1-6df3-59e1-8d34-f97cc6ef3da2",
       "089efba3-c81f-549d-937d-63602d2bb555",
@@ -490,10 +658,22 @@
       "7529afc0-2154-5311-b838-c34b218380e0"
     ],
     "detail": [
+      "060b0750-6ad8-5868-af15-981f6d7c3aa7",
+      "d489f130-88fb-5586-8829-8d82a6e4a1de",
+      "e97bf471-2e5f-5d7b-b542-2377d05e2a1d",
+      "d505329a-aae4-5009-a76e-41b2dc2cc5d7",
       "b8c1eb74-4ba2-52d9-81b2-b196b34dc735",
       "158f9446-68df-5d16-9217-b1e0cea81980",
       "c90771ad-9c75-5c61-b1f6-307b302ccc00",
       "1be6f450-1463-5fb6-a440-730f1e7c1193",
+      "8834e912-6bb3-5740-9eec-e18006717952",
+      "d78bb492-f052-5b68-a329-84b0f6817db5",
+      "fbb8a27c-1c87-503a-adc1-9ca79f91792f",
+      "f3cbb803-7421-5cd9-9a65-ffa49ec80702",
+      "e79bf485-606c-501c-abf0-1f62a59b9dc8",
+      "92e48421-8fa8-54e1-96a1-7bbe31a1867e",
+      "ea64d260-69ef-5ef3-936e-fda0065685f8",
+      "f8881be9-1c39-568b-88d5-61508fdd3cd0",
       "9ed476c1-2a93-57a8-9cfd-59c100c5482b",
       "4c91a9c1-6df3-59e1-8d34-f97cc6ef3da2",
       "089efba3-c81f-549d-937d-63602d2bb555",
@@ -519,10 +699,22 @@
       "7529afc0-2154-5311-b838-c34b218380e0"
     ],
     "closeup": [
+      "060b0750-6ad8-5868-af15-981f6d7c3aa7",
+      "d489f130-88fb-5586-8829-8d82a6e4a1de",
+      "e97bf471-2e5f-5d7b-b542-2377d05e2a1d",
+      "d505329a-aae4-5009-a76e-41b2dc2cc5d7",
       "b8c1eb74-4ba2-52d9-81b2-b196b34dc735",
       "158f9446-68df-5d16-9217-b1e0cea81980",
       "c90771ad-9c75-5c61-b1f6-307b302ccc00",
       "1be6f450-1463-5fb6-a440-730f1e7c1193",
+      "8834e912-6bb3-5740-9eec-e18006717952",
+      "d78bb492-f052-5b68-a329-84b0f6817db5",
+      "fbb8a27c-1c87-503a-adc1-9ca79f91792f",
+      "f3cbb803-7421-5cd9-9a65-ffa49ec80702",
+      "e79bf485-606c-501c-abf0-1f62a59b9dc8",
+      "92e48421-8fa8-54e1-96a1-7bbe31a1867e",
+      "ea64d260-69ef-5ef3-936e-fda0065685f8",
+      "f8881be9-1c39-568b-88d5-61508fdd3cd0",
       "9ed476c1-2a93-57a8-9cfd-59c100c5482b",
       "4c91a9c1-6df3-59e1-8d34-f97cc6ef3da2",
       "089efba3-c81f-549d-937d-63602d2bb555",
@@ -575,7 +767,7 @@
   "processBasis": [],
   "limitations": [
     "教学示意结构，不用于工程设计、设备选型、机械强度或 CFD 仿真。",
-    "GLB 的 27 个节点全部携带 extras.petro，extrasStatus=verified。",
+    "GLB 的 39 个节点全部携带 extras.petro，extrasStatus=verified。",
     "罐体 half 模式使用真实开口半壳（近侧半圈删除），不是隐藏面或裁剪平面。",
     "half 模式的浮盘/边缘密封仍按真实液位定位。"
   ],

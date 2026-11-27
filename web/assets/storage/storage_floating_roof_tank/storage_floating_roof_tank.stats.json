@@ -3,9 +3,9 @@
   "objectId": "floating_roof_tank",
   "source": "tools/blender/build_storage_heroes.py",
   "blender": "5.3.0",
-  "triangles": 9956,
-  "vertices": 5016,
-  "meshes": 26,
+  "triangles": 11048,
+  "vertices": 5584,
+  "meshes": 38,
   "anchors": [
     {
       "anchorId": "anchor_floating_inlet",
@@ -93,8 +93,8 @@
   },
   "units": "meters; Blender Z-up -> glTF Y-up",
   "files": {
-    "glb_bytes": 246800,
-    "blend_bytes": 147467
+    "glb_bytes": 284888,
+    "blend_bytes": 156658
   },
   "note": "Teaching-grade Hero；几何由脚本真实生成，允许二次修改后重跑。"
 }

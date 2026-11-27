@@ -821,8 +821,8 @@
     if (!running) { running = true; loop(); }
 
     fly(startPos, startT,
-      new THREE.Vector3(anchor.x + 10.5, 11.5, anchor.z + 26.0),
-      new THREE.Vector3(anchor.x, 3.4, anchor.z), 1700, function () {
+      new THREE.Vector3(anchor.x + 12.5, 10.2, anchor.z + 23.0),
+      new THREE.Vector3(anchor.x + 0.4, 3.0, anchor.z), 1700, function () {
         hint.textContent = storageHint();
         act.hidden = false;
       });

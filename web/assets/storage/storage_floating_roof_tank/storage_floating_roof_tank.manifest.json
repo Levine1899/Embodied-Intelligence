@@ -4,7 +4,7 @@
   "assetVersion": "1.0.0+phase7",
   "source": {
     "repository": "gitee.com/LYU_PRO/scienceagent",
-    "commit": "5c9b61a773d5193dd119f17ffb5eb87239e7fd90",
+    "commit": "cbbfc8e41268349c28e16f553d63af128deb52c6",
     "path": "assets-source/blender/storage_floating_roof_tank.blend",
     "dirty": false
   },
@@ -13,15 +13,15 @@
     "generator": "tools/blender/build_storage_heroes.py",
     "blenderVersion": "5.3.0",
     "exporterVersion": "Khronos glTF Blender I/O v5.3.0",
-    "exportOptionsHash": "3648f30be9f1c3f5",
+    "exportOptionsHash": "8d96e0d01fcf5159",
     "invocation": "blender -b -P tools/blender/build_storage_heroes.py   # 无 CLI 参数，路径硬编码",
     "exportExtras": true
   },
   "runtime": {
     "format": "glb",
     "uri": "assets/storage/storage_floating_roof_tank/storage_floating_roof_tank.glb",
-    "sha256": "3648f30be9f1c3f59787c4a4f705af180ec7a5e6df8677edbe739b91631fdf75",
-    "bytes": 246800,
+    "sha256": "8d96e0d01fcf51599265370e26ad887360fbefe77ae639653b8304d33a5508b7",
+    "bytes": 284888,
     "extrasStatus": "verified"
   },
   "coordinateSystem": {
@@ -72,7 +72,18 @@
         "f0ab646e-cb47-5d6a-9b93-0edc10986731",
         "cf7577bb-9afc-5177-b27a-2f89ed21a22d",
         "e9bbe7bd-aa96-51c2-aad8-493c89f5e069",
+        "a7b77531-2007-5ad2-98c3-f9d668ca848f",
+        "2547aece-3ec3-56e8-8fac-ade7f067e6ce",
+        "15667be4-66c1-57f5-9fd5-66fa56330969",
+        "17ae0f5f-8caa-5ed0-a139-f5423dcefc7b",
+        "05a00ce4-b005-57d8-ad90-3cdd6d962f6b",
+        "b54de783-0eb0-5e1f-973a-8454e5344df9",
+        "bd18a992-ee75-50f1-abc7-ae18d3afa022",
+        "143b0e4e-f57c-55a2-b5e1-e7fae66da5d2",
         "ecb54000-effd-5a37-b7d3-94da24fe2ace",
+        "cd2d2dd1-c55b-5774-b81a-d2142cdc3420",
+        "55ab23fa-f903-52c5-b88d-1276497d342b",
+        "5b36a7cc-f44b-5969-9e48-50c00d5452f2",
         "dcad970c-d928-545c-81a1-0bc2974a6aed",
         "f4271bf8-39b6-5b56-8015-c25bf016fe9f",
         "8f77f2ad-5888-55a4-8a64-30cf93c0af3a",
@@ -85,6 +96,7 @@
         "661e25f5-4a80-5abe-b61b-b6aa631d9d0e",
         "919cf8f8-d1cf-5d08-9960-e3b2454d3003",
         "3e0919c6-649d-58df-ad94-4667cc255064",
+        "d8f43e2f-916b-5f74-9598-e8842d471a79",
         "1daa126b-230f-5e78-a372-1f3ff88fafba",
         "6c5fd7c3-ebb7-581f-8d4e-1c7431b60492",
         "6f98d970-0c77-578a-84c0-743fa42f691c",
@@ -180,12 +192,144 @@
       ]
     },
     {
+      "nodeUid": "a7b77531-2007-5ad2-98c3-f9d668ca848f",
+      "nodeName": "deck_seam_1",
+      "objectId": "floating_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "deck_seam_1",
+      "role": "floating_deck",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "2547aece-3ec3-56e8-8fac-ade7f067e6ce",
+      "nodeName": "deck_seam_2",
+      "objectId": "floating_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "deck_seam_2",
+      "role": "floating_deck",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "15667be4-66c1-57f5-9fd5-66fa56330969",
+      "nodeName": "deck_seam_3",
+      "objectId": "floating_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "deck_seam_3",
+      "role": "floating_deck",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "17ae0f5f-8caa-5ed0-a139-f5423dcefc7b",
+      "nodeName": "deck_seam_4",
+      "objectId": "floating_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "deck_seam_4",
+      "role": "floating_deck",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "05a00ce4-b005-57d8-ad90-3cdd6d962f6b",
+      "nodeName": "deck_seam_5",
+      "objectId": "floating_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "deck_seam_5",
+      "role": "floating_deck",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b54de783-0eb0-5e1f-973a-8454e5344df9",
+      "nodeName": "deck_seam_6",
+      "objectId": "floating_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "deck_seam_6",
+      "role": "floating_deck",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "bd18a992-ee75-50f1-abc7-ae18d3afa022",
+      "nodeName": "deck_seam_7",
+      "objectId": "floating_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "deck_seam_7",
+      "role": "floating_deck",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "143b0e4e-f57c-55a2-b5e1-e7fae66da5d2",
+      "nodeName": "deck_seam_8",
+      "objectId": "floating_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "deck_seam_8",
+      "role": "floating_deck",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
       "nodeUid": "ecb54000-effd-5a37-b7d3-94da24fe2ace",
       "nodeName": "foundation_ring",
       "objectId": "floating_roof_tank",
       "systemId": "storage_tankyard",
       "semanticId": "foundation_ring",
       "role": "support",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "cd2d2dd1-c55b-5774-b81a-d2142cdc3420",
+      "nodeName": "guide_bracket_1",
+      "objectId": "floating_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "guide_bracket_1",
+      "role": "guide",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "55ab23fa-f903-52c5-b88d-1276497d342b",
+      "nodeName": "guide_bracket_2",
+      "objectId": "floating_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "guide_bracket_2",
+      "role": "guide",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "5b36a7cc-f44b-5969-9e48-50c00d5452f2",
+      "nodeName": "guide_bracket_3",
+      "objectId": "floating_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "guide_bracket_3",
+      "role": "guide",
       "interactive": true,
       "representations": [
         "detail"
@@ -336,6 +480,18 @@
       ]
     },
     {
+      "nodeUid": "d8f43e2f-916b-5f74-9598-e8842d471a79",
+      "nodeName": "secondary_seal",
+      "objectId": "floating_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "secondary_seal",
+      "role": "rim_seal",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
       "nodeUid": "1daa126b-230f-5e78-a372-1f3ff88fafba",
       "nodeName": "shell",
       "objectId": "floating_roof_tank",
@@ -479,7 +635,18 @@
       "f0ab646e-cb47-5d6a-9b93-0edc10986731",
       "cf7577bb-9afc-5177-b27a-2f89ed21a22d",
       "e9bbe7bd-aa96-51c2-aad8-493c89f5e069",
+      "a7b77531-2007-5ad2-98c3-f9d668ca848f",
+      "2547aece-3ec3-56e8-8fac-ade7f067e6ce",
+      "15667be4-66c1-57f5-9fd5-66fa56330969",
+      "17ae0f5f-8caa-5ed0-a139-f5423dcefc7b",
+      "05a00ce4-b005-57d8-ad90-3cdd6d962f6b",
+      "b54de783-0eb0-5e1f-973a-8454e5344df9",
+      "bd18a992-ee75-50f1-abc7-ae18d3afa022",
+      "143b0e4e-f57c-55a2-b5e1-e7fae66da5d2",
       "ecb54000-effd-5a37-b7d3-94da24fe2ace",
+      "cd2d2dd1-c55b-5774-b81a-d2142cdc3420",
+      "55ab23fa-f903-52c5-b88d-1276497d342b",
+      "5b36a7cc-f44b-5969-9e48-50c00d5452f2",
       "dcad970c-d928-545c-81a1-0bc2974a6aed",
       "f4271bf8-39b6-5b56-8015-c25bf016fe9f",
       "8f77f2ad-5888-55a4-8a64-30cf93c0af3a",
@@ -492,6 +659,7 @@
       "661e25f5-4a80-5abe-b61b-b6aa631d9d0e",
       "919cf8f8-d1cf-5d08-9960-e3b2454d3003",
       "3e0919c6-649d-58df-ad94-4667cc255064",
+      "d8f43e2f-916b-5f74-9598-e8842d471a79",
       "1daa126b-230f-5e78-a372-1f3ff88fafba",
       "6c5fd7c3-ebb7-581f-8d4e-1c7431b60492",
       "6f98d970-0c77-578a-84c0-743fa42f691c",
@@ -507,7 +675,18 @@
       "f0ab646e-cb47-5d6a-9b93-0edc10986731",
       "cf7577bb-9afc-5177-b27a-2f89ed21a22d",
       "e9bbe7bd-aa96-51c2-aad8-493c89f5e069",
+      "a7b77531-2007-5ad2-98c3-f9d668ca848f",
+      "2547aece-3ec3-56e8-8fac-ade7f067e6ce",
+      "15667be4-66c1-57f5-9fd5-66fa56330969",
+      "17ae0f5f-8caa-5ed0-a139-f5423dcefc7b",
+      "05a00ce4-b005-57d8-ad90-3cdd6d962f6b",
+      "b54de783-0eb0-5e1f-973a-8454e5344df9",
+      "bd18a992-ee75-50f1-abc7-ae18d3afa022",
+      "143b0e4e-f57c-55a2-b5e1-e7fae66da5d2",
       "ecb54000-effd-5a37-b7d3-94da24fe2ace",
+      "cd2d2dd1-c55b-5774-b81a-d2142cdc3420",
+      "55ab23fa-f903-52c5-b88d-1276497d342b",
+      "5b36a7cc-f44b-5969-9e48-50c00d5452f2",
       "dcad970c-d928-545c-81a1-0bc2974a6aed",
       "f4271bf8-39b6-5b56-8015-c25bf016fe9f",
       "8f77f2ad-5888-55a4-8a64-30cf93c0af3a",
@@ -520,6 +699,7 @@
       "661e25f5-4a80-5abe-b61b-b6aa631d9d0e",
       "919cf8f8-d1cf-5d08-9960-e3b2454d3003",
       "3e0919c6-649d-58df-ad94-4667cc255064",
+      "d8f43e2f-916b-5f74-9598-e8842d471a79",
       "1daa126b-230f-5e78-a372-1f3ff88fafba",
       "6c5fd7c3-ebb7-581f-8d4e-1c7431b60492",
       "6f98d970-0c77-578a-84c0-743fa42f691c",
@@ -535,7 +715,18 @@
       "f0ab646e-cb47-5d6a-9b93-0edc10986731",
       "cf7577bb-9afc-5177-b27a-2f89ed21a22d",
       "e9bbe7bd-aa96-51c2-aad8-493c89f5e069",
+      "a7b77531-2007-5ad2-98c3-f9d668ca848f",
+      "2547aece-3ec3-56e8-8fac-ade7f067e6ce",
+      "15667be4-66c1-57f5-9fd5-66fa56330969",
+      "17ae0f5f-8caa-5ed0-a139-f5423dcefc7b",
+      "05a00ce4-b005-57d8-ad90-3cdd6d962f6b",
+      "b54de783-0eb0-5e1f-973a-8454e5344df9",
+      "bd18a992-ee75-50f1-abc7-ae18d3afa022",
+      "143b0e4e-f57c-55a2-b5e1-e7fae66da5d2",
       "ecb54000-effd-5a37-b7d3-94da24fe2ace",
+      "cd2d2dd1-c55b-5774-b81a-d2142cdc3420",
+      "55ab23fa-f903-52c5-b88d-1276497d342b",
+      "5b36a7cc-f44b-5969-9e48-50c00d5452f2",
       "dcad970c-d928-545c-81a1-0bc2974a6aed",
       "f4271bf8-39b6-5b56-8015-c25bf016fe9f",
       "8f77f2ad-5888-55a4-8a64-30cf93c0af3a",
@@ -548,6 +739,7 @@
       "661e25f5-4a80-5abe-b61b-b6aa631d9d0e",
       "919cf8f8-d1cf-5d08-9960-e3b2454d3003",
       "3e0919c6-649d-58df-ad94-4667cc255064",
+      "d8f43e2f-916b-5f74-9598-e8842d471a79",
       "1daa126b-230f-5e78-a372-1f3ff88fafba",
       "6c5fd7c3-ebb7-581f-8d4e-1c7431b60492",
       "6f98d970-0c77-578a-84c0-743fa42f691c",
@@ -578,10 +770,22 @@
         "f0ab646e-cb47-5d6a-9b93-0edc10986731",
         "cf7577bb-9afc-5177-b27a-2f89ed21a22d",
         "e9bbe7bd-aa96-51c2-aad8-493c89f5e069",
+        "a7b77531-2007-5ad2-98c3-f9d668ca848f",
+        "2547aece-3ec3-56e8-8fac-ade7f067e6ce",
+        "15667be4-66c1-57f5-9fd5-66fa56330969",
+        "17ae0f5f-8caa-5ed0-a139-f5423dcefc7b",
+        "05a00ce4-b005-57d8-ad90-3cdd6d962f6b",
+        "b54de783-0eb0-5e1f-973a-8454e5344df9",
+        "bd18a992-ee75-50f1-abc7-ae18d3afa022",
+        "143b0e4e-f57c-55a2-b5e1-e7fae66da5d2",
+        "cd2d2dd1-c55b-5774-b81a-d2142cdc3420",
+        "55ab23fa-f903-52c5-b88d-1276497d342b",
+        "5b36a7cc-f44b-5969-9e48-50c00d5452f2",
         "4470a9d1-765a-5e54-bf7d-0688fd92f163",
         "b23613f0-e91c-5c65-a75b-e68f655e027e",
         "b56a4cfb-64ee-516a-82f5-ac5df0edfe31",
-        "3e0919c6-649d-58df-ad94-4667cc255064"
+        "3e0919c6-649d-58df-ad94-4667cc255064",
+        "d8f43e2f-916b-5f74-9598-e8842d471a79"
       ],
       "hide": [
         "6c5fd7c3-ebb7-581f-8d4e-1c7431b60492",
@@ -613,10 +817,22 @@
         "f0ab646e-cb47-5d6a-9b93-0edc10986731",
         "cf7577bb-9afc-5177-b27a-2f89ed21a22d",
         "e9bbe7bd-aa96-51c2-aad8-493c89f5e069",
+        "a7b77531-2007-5ad2-98c3-f9d668ca848f",
+        "2547aece-3ec3-56e8-8fac-ade7f067e6ce",
+        "15667be4-66c1-57f5-9fd5-66fa56330969",
+        "17ae0f5f-8caa-5ed0-a139-f5423dcefc7b",
+        "05a00ce4-b005-57d8-ad90-3cdd6d962f6b",
+        "b54de783-0eb0-5e1f-973a-8454e5344df9",
+        "bd18a992-ee75-50f1-abc7-ae18d3afa022",
+        "143b0e4e-f57c-55a2-b5e1-e7fae66da5d2",
+        "cd2d2dd1-c55b-5774-b81a-d2142cdc3420",
+        "55ab23fa-f903-52c5-b88d-1276497d342b",
+        "5b36a7cc-f44b-5969-9e48-50c00d5452f2",
         "4470a9d1-765a-5e54-bf7d-0688fd92f163",
         "b23613f0-e91c-5c65-a75b-e68f655e027e",
         "b56a4cfb-64ee-516a-82f5-ac5df0edfe31",
-        "3e0919c6-649d-58df-ad94-4667cc255064"
+        "3e0919c6-649d-58df-ad94-4667cc255064",
+        "d8f43e2f-916b-5f74-9598-e8842d471a79"
       ],
       "hide": [
         "1daa126b-230f-5e78-a372-1f3ff88fafba"
@@ -643,10 +859,22 @@
         "f0ab646e-cb47-5d6a-9b93-0edc10986731",
         "cf7577bb-9afc-5177-b27a-2f89ed21a22d",
         "e9bbe7bd-aa96-51c2-aad8-493c89f5e069",
+        "a7b77531-2007-5ad2-98c3-f9d668ca848f",
+        "2547aece-3ec3-56e8-8fac-ade7f067e6ce",
+        "15667be4-66c1-57f5-9fd5-66fa56330969",
+        "17ae0f5f-8caa-5ed0-a139-f5423dcefc7b",
+        "05a00ce4-b005-57d8-ad90-3cdd6d962f6b",
+        "b54de783-0eb0-5e1f-973a-8454e5344df9",
+        "bd18a992-ee75-50f1-abc7-ae18d3afa022",
+        "143b0e4e-f57c-55a2-b5e1-e7fae66da5d2",
+        "cd2d2dd1-c55b-5774-b81a-d2142cdc3420",
+        "55ab23fa-f903-52c5-b88d-1276497d342b",
+        "5b36a7cc-f44b-5969-9e48-50c00d5452f2",
         "4470a9d1-765a-5e54-bf7d-0688fd92f163",
         "b23613f0-e91c-5c65-a75b-e68f655e027e",
         "b56a4cfb-64ee-516a-82f5-ac5df0edfe31",
-        "3e0919c6-649d-58df-ad94-4667cc255064"
+        "3e0919c6-649d-58df-ad94-4667cc255064",
+        "d8f43e2f-916b-5f74-9598-e8842d471a79"
       ],
       "hide": [
         "6c5fd7c3-ebb7-581f-8d4e-1c7431b60492",
@@ -699,7 +927,7 @@
     {
       "bindingId": "deck_follows_oil_level_4",
       "kind": "floating_deck",
-      "targetNodeUid": "4470a9d1-765a-5e54-bf7d-0688fd92f163",
+      "targetNodeUid": "a7b77531-2007-5ad2-98c3-f9d668ca848f",
       "parameter": "deckY",
       "unit": "meter",
       "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
@@ -707,7 +935,7 @@
     {
       "bindingId": "deck_follows_oil_level_5",
       "kind": "floating_deck",
-      "targetNodeUid": "b23613f0-e91c-5c65-a75b-e68f655e027e",
+      "targetNodeUid": "2547aece-3ec3-56e8-8fac-ade7f067e6ce",
       "parameter": "deckY",
       "unit": "meter",
       "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
@@ -715,7 +943,7 @@
     {
       "bindingId": "deck_follows_oil_level_6",
       "kind": "floating_deck",
-      "targetNodeUid": "b56a4cfb-64ee-516a-82f5-ac5df0edfe31",
+      "targetNodeUid": "15667be4-66c1-57f5-9fd5-66fa56330969",
       "parameter": "deckY",
       "unit": "meter",
       "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
@@ -723,7 +951,103 @@
     {
       "bindingId": "deck_follows_oil_level_7",
       "kind": "floating_deck",
+      "targetNodeUid": "17ae0f5f-8caa-5ed0-a139-f5423dcefc7b",
+      "parameter": "deckY",
+      "unit": "meter",
+      "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
+    },
+    {
+      "bindingId": "deck_follows_oil_level_8",
+      "kind": "floating_deck",
+      "targetNodeUid": "05a00ce4-b005-57d8-ad90-3cdd6d962f6b",
+      "parameter": "deckY",
+      "unit": "meter",
+      "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
+    },
+    {
+      "bindingId": "deck_follows_oil_level_9",
+      "kind": "floating_deck",
+      "targetNodeUid": "b54de783-0eb0-5e1f-973a-8454e5344df9",
+      "parameter": "deckY",
+      "unit": "meter",
+      "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
+    },
+    {
+      "bindingId": "deck_follows_oil_level_10",
+      "kind": "floating_deck",
+      "targetNodeUid": "bd18a992-ee75-50f1-abc7-ae18d3afa022",
+      "parameter": "deckY",
+      "unit": "meter",
+      "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
+    },
+    {
+      "bindingId": "deck_follows_oil_level_11",
+      "kind": "floating_deck",
+      "targetNodeUid": "143b0e4e-f57c-55a2-b5e1-e7fae66da5d2",
+      "parameter": "deckY",
+      "unit": "meter",
+      "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
+    },
+    {
+      "bindingId": "deck_follows_oil_level_12",
+      "kind": "floating_deck",
+      "targetNodeUid": "cd2d2dd1-c55b-5774-b81a-d2142cdc3420",
+      "parameter": "deckY",
+      "unit": "meter",
+      "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
+    },
+    {
+      "bindingId": "deck_follows_oil_level_13",
+      "kind": "floating_deck",
+      "targetNodeUid": "55ab23fa-f903-52c5-b88d-1276497d342b",
+      "parameter": "deckY",
+      "unit": "meter",
+      "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
+    },
+    {
+      "bindingId": "deck_follows_oil_level_14",
+      "kind": "floating_deck",
+      "targetNodeUid": "5b36a7cc-f44b-5969-9e48-50c00d5452f2",
+      "parameter": "deckY",
+      "unit": "meter",
+      "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
+    },
+    {
+      "bindingId": "deck_follows_oil_level_15",
+      "kind": "floating_deck",
+      "targetNodeUid": "4470a9d1-765a-5e54-bf7d-0688fd92f163",
+      "parameter": "deckY",
+      "unit": "meter",
+      "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
+    },
+    {
+      "bindingId": "deck_follows_oil_level_16",
+      "kind": "floating_deck",
+      "targetNodeUid": "b23613f0-e91c-5c65-a75b-e68f655e027e",
+      "parameter": "deckY",
+      "unit": "meter",
+      "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
+    },
+    {
+      "bindingId": "deck_follows_oil_level_17",
+      "kind": "floating_deck",
+      "targetNodeUid": "b56a4cfb-64ee-516a-82f5-ac5df0edfe31",
+      "parameter": "deckY",
+      "unit": "meter",
+      "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
+    },
+    {
+      "bindingId": "deck_follows_oil_level_18",
+      "kind": "floating_deck",
       "targetNodeUid": "3e0919c6-649d-58df-ad94-4667cc255064",
+      "parameter": "deckY",
+      "unit": "meter",
+      "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
+    },
+    {
+      "bindingId": "deck_follows_oil_level_19",
+      "kind": "floating_deck",
+      "targetNodeUid": "d8f43e2f-916b-5f74-9598-e8842d471a79",
       "parameter": "deckY",
       "unit": "meter",
       "note": "随油面高度升降，始终紧贴液面（不虚构中间态）"
@@ -733,7 +1057,7 @@
   "processBasis": [],
   "limitations": [
     "教学示意结构，不用于工程设计、设备选型、机械强度或 CFD 仿真。",
-    "GLB 的 26 个节点全部携带 extras.petro，extrasStatus=verified。",
+    "GLB 的 38 个节点全部携带 extras.petro，extrasStatus=verified。",
     "罐体 half 模式使用真实开口半壳（近侧半圈删除），不是隐藏面或裁剪平面。",
     "half 模式的浮盘/边缘密封仍按真实液位定位。"
   ],

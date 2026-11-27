@@ -3,9 +3,9 @@
   "objectId": "transfer_pump",
   "source": "tools/blender/build_storage_heroes.py",
   "blender": "5.3.0",
-  "triangles": 5144,
-  "vertices": 2642,
-  "meshes": 27,
+  "triangles": 6452,
+  "vertices": 3314,
+  "meshes": 39,
   "anchors": [
     {
       "anchorId": "anchor_pump_suction",
@@ -46,8 +46,8 @@
   "dimensions": {},
   "units": "meters; Blender Z-up -> glTF Y-up",
   "files": {
-    "glb_bytes": 155060,
-    "blend_bytes": 136456
+    "glb_bytes": 199964,
+    "blend_bytes": 150739
   },
   "note": "Teaching-grade Hero；几何由脚本真实生成，允许二次修改后重跑。"
 }

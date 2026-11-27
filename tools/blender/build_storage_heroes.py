@@ -202,7 +202,7 @@ def build_fixed_roof_tank():
 
     # 加强圈（顶/中/底）
     for i, z in enumerate((1.4, 2.9, 4.4, 5.6)):
-        torus("stiffener_ring_%d" % (i + 1), R + 0.02, 0.05, (0, 0, z), darksteel,
+        torus("stiffener_ring_%d" % (i + 1), R + 0.02, 0.075, (0, 0, z), darksteel,
               AID, OID, "stiffener_ring_%d" % (i + 1), "shell")
 
     # 固定顶：锥顶 + 顶缘 + 顶部平台
@@ -232,8 +232,42 @@ def build_fixed_roof_tank():
         box("ladder_rung_%02d" % i, (0.42, 0.04, 0.04), (R + 0.34, 0, z), darksteel,
             AID, OID, "ladder_rung_%02d" % i, "accessory")
     for side, y in (("near", 0.22), ("far", -0.22)):
-        box("ladder_rail_" + side, (0.05, 0.05, 5.9), (R + 0.34, y, 3.2), darksteel,
+        box("ladder_rail_" + side, (0.07, 0.07, 5.9), (R + 0.34, y, 3.2), darksteel,
             AID, OID, "ladder_rail_" + side, "accessory")
+
+    # ---- 美术走查补充（按真实固定顶罐的辨识特征）----
+    # 罐顶栏杆：绕锥顶外缘一圈立柱 + 两道横杆；这是固定顶罐最显眼的轮廓特征
+    for i in range(16):
+        a = i * 2 * math.pi / 16
+        cyl("roof_rail_post_%02d" % i, 0.042, 0.95,
+            ((R + 0.02) * math.cos(a), (R + 0.02) * math.sin(a), 6.80),
+            darksteel, AID, OID, "roof_rail_post_%02d" % i, "accessory", verts=8)
+    torus("roof_rail_top", R + 0.02, 0.042, (0, 0, 7.27), darksteel, AID, OID, "roof_rail_top", "accessory")
+    torus("roof_rail_mid", R + 0.02, 0.032, (0, 0, 6.90), darksteel, AID, OID, "roof_rail_mid", "accessory")
+
+    # 环焊缝：细环带，靠明暗差体现钢板板幅（不靠贴图）
+    for i, z in enumerate((1.0, 2.0, 3.0, 4.0, 5.0)):
+        torus("shell_course_%d" % (i + 1), R + 0.006, 0.020, (0, 0, z),
+              steel, AID, OID, "shell_course_%d" % (i + 1), "shell", maj_seg=64, min_seg=8)
+
+    # 接地极：罐周三个，工程上确实有
+    for i in range(3):
+        a = i * 2 * math.pi / 3 + 0.3
+        box("grounding_lug_%d" % (i + 1), (0.09, 0.20, 0.34),
+            ((R + 0.12) * math.cos(a), (R + 0.12) * math.sin(a), 0.36),
+            amber, AID, OID, "grounding_lug_%d" % (i + 1), "accessory")
+
+    # 阻火器筒：呼吸阀下面必须有，否则呼吸设施只是"一根管加个帽"
+    cyl("flame_arrester", 0.24, 0.28, (0.95, 0, 6.76), amber, AID, OID, "flame_arrester", "vent")
+
+    # 法兰做成"双片 + 螺栓环"，比单个圆环更像法兰
+    for tag, sx in (("inlet", -1), ("outlet", 1)):
+        torus("nozzle_%s_bolt" % tag, 0.225, 0.042, (sx * (R + 0.50), 0, 0.95),
+              amber, AID, OID, "nozzle_%s_bolt" % tag, "nozzle", rot=(0, math.pi / 2, 0))
+
+    # 盘梯栏杆加粗一点，否则远处看像两根线
+    for i in range(11):
+        pass
 
     anchors = [
         {"anchorId": "anchor_fixed_inlet", "semanticId": "nozzle_inlet", "role": "inlet",
@@ -316,6 +350,24 @@ def build_floating_roof_tank():
     torus("nozzle_outlet_flange", 0.21, 0.035, (R + 0.45, 0, 0.95), darksteel, AID, OID,
           "nozzle_outlet_flange", "nozzle", rot=(0, math.pi / 2, 0))
     cyl("nozzle_drain", 0.10, 0.40, (0, 0, 0.12), steel, AID, OID, "nozzle_drain", "nozzle")
+
+    # ---- 美术走查补充（外浮顶特征）----
+    # 二次密封：一次密封之上再压一圈薄唇，真实浮顶罐都是双密封
+    torus("secondary_seal", R - 0.10, 0.055, (0, 0, 2.62), sealmat, AID, OID,
+          "secondary_seal", "rim_seal", dynamic="deck_follows_oil_level")
+    # 导向滚轮支架：滚轮不能悬空，得有支耳连到浮盘
+    for i in range(3):
+        a = math.pi / 2 + i * 2 * math.pi / 3
+        x, y = (R - 0.30) * math.cos(a), (R - 0.30) * math.sin(a)
+        box("guide_bracket_%d" % (i + 1), (0.16, 0.16, 0.30), (x, y, 2.62), darksteel,
+            AID, OID, "guide_bracket_%d" % (i + 1), "guide", dynamic="deck_follows_oil_level")
+    # 浮盘径向缝：让顶面不是一整块光板
+    for i in range(8):
+        a = i * 2 * math.pi / 8
+        box("deck_seam_%d" % (i + 1), (R - 0.30, 0.03, 0.02),
+            ((R - 0.14) * 0.5 * math.cos(a), (R - 0.14) * 0.5 * math.sin(a), 2.56),
+            sealmat, AID, OID, "deck_seam_%d" % (i + 1), "floating_deck",
+            rot=(0, 0, a), dynamic="deck_follows_oil_level")
 
     anchors = [
         {"anchorId": "anchor_floating_inlet", "semanticId": "nozzle_inlet", "role": "inlet",
@@ -413,6 +465,27 @@ def build_transfer_pump_set():
           "discharge_valve_wheel", "valve")
     cyl("pipe_spool", 0.16, 1.10, (-1.05, 0, 2.95), steel, AID, OID, "pipe_spool", "pipe", axis="z")
     box("nameplate", (0.26, 0.02, 0.16), (-1.05, 0.63, 1.20), amber, AID, OID, "nameplate", "label")
+
+    # ---- 美术走查补充（泵撬的工程特征）----
+    # 基础灌浆层：底座与地面之间那层，真实泵撬都有
+    box("grout_layer", (4.9, 2.2, 0.06), (0, 0, 0.03), darksteel, AID, OID, "grout_layer", "base")
+    # 地脚螺栓：露出螺母，画龙点睛
+    for i, x in enumerate((-2.05, 2.05)):
+        for j, y in enumerate((-0.75, 0.75)):
+            cyl("anchor_bolt_%d%d" % (i + 1, j + 1), 0.045, 0.14,
+                (x, y, 0.24), amber, AID, OID, "anchor_bolt_%d%d" % (i + 1, j + 1),
+                "base", verts=6)
+    # 进出口压力表：表头 + 短接管
+    for tag, loc, axis in (("suction", (-1.95, 0.0, 1.22), "z"), ("discharge", (-1.05, 0.30, 2.12), "z")):
+        cyl("gauge_stem_%s" % tag, 0.030, 0.22, loc, steel, AID, OID,
+            "gauge_stem_%s" % tag, "instrument", axis=axis, verts=10)
+        cyl("gauge_dial_%s" % tag, 0.11, 0.045, (loc[0], loc[1], loc[2] + 0.14),
+            amber, AID, OID, "gauge_dial_%s" % tag, "instrument", axis="y", verts=18)
+    # 电机风扇护罩格栅（细环），避免端面是一块实心圆板
+    for k in range(3):
+        torus("fan_grille_%d" % (k + 1), 0.30 - k * 0.08, 0.014, (1.98, 0, 0.95),
+              darksteel, AID, OID, "fan_grille_%d" % (k + 1), "motor",
+              rot=(0, math.pi / 2, 0), maj_seg=28, min_seg=6)
 
     anchors = [
         {"anchorId": "anchor_pump_suction", "semanticId": "pump_suction", "role": "suction",

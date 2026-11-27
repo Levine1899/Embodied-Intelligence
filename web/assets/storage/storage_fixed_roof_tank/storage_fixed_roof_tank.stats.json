@@ -3,9 +3,9 @@
   "objectId": "fixed_roof_tank",
   "source": "tools/blender/build_storage_heroes.py",
   "blender": "5.3.0",
-  "triangles": 9880,
-  "vertices": 4996,
-  "meshes": 35,
+  "triangles": 19448,
+  "vertices": 9820,
+  "meshes": 64,
   "anchors": [
     {
       "anchorId": "anchor_fixed_inlet",
@@ -85,8 +85,8 @@
   },
   "units": "meters; Blender Z-up -> glTF Y-up",
   "files": {
-    "glb_bytes": 255248,
-    "blend_bytes": 148490
+    "glb_bytes": 474336,
+    "blend_bytes": 183857
   },
   "note": "Teaching-grade Hero；几何由脚本真实生成，允许二次修改后重跑。"
 }

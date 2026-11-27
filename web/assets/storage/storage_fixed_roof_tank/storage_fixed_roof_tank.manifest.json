@@ -4,7 +4,7 @@
   "assetVersion": "1.0.0+phase7",
   "source": {
     "repository": "gitee.com/LYU_PRO/scienceagent",
-    "commit": "5c9b61a773d5193dd119f17ffb5eb87239e7fd90",
+    "commit": "cbbfc8e41268349c28e16f553d63af128deb52c6",
     "path": "assets-source/blender/storage_fixed_roof_tank.blend",
     "dirty": false
   },
@@ -13,15 +13,15 @@
     "generator": "tools/blender/build_storage_heroes.py",
     "blenderVersion": "5.3.0",
     "exporterVersion": "Khronos glTF Blender I/O v5.3.0",
-    "exportOptionsHash": "a29d23ee118e762c",
+    "exportOptionsHash": "4f57b7a662f87623",
     "invocation": "blender -b -P tools/blender/build_storage_heroes.py   # 无 CLI 参数，路径硬编码",
     "exportExtras": true
   },
   "runtime": {
     "format": "glb",
     "uri": "assets/storage/storage_fixed_roof_tank/storage_fixed_roof_tank.glb",
-    "sha256": "a29d23ee118e762ca5ee1470ca2ae6c2306be8119a44f990741555bd072cacf2",
-    "bytes": 255248,
+    "sha256": "4f57b7a662f87623b10c5c9545b6c48d26dd24c3f2bc00e3ba91797f03691acc",
+    "bytes": 474336,
     "extrasStatus": "verified"
   },
   "coordinateSystem": {
@@ -35,13 +35,13 @@
     "coordinateSpaceId": "storage_fixed_roof_tank_asset_local",
     "unit": "meter",
     "min": [
-      -3.683,
+      -3.74,
       -0.08,
       -3.65
     ],
     "max": [
       3.75,
-      7.155,
+      7.31,
       3.65
     ]
   },
@@ -71,7 +71,11 @@
         "3b06b6c4-a6a0-5ba4-a6b9-c57ac462bbe3",
         "5bf9ceb3-17cd-5e11-a520-6b9651247c01",
         "ab9a0e4d-5bde-57fd-9477-cc9bd1f82b79",
+        "cb5742cc-49ff-5b6a-b1cd-99033a74f59a",
         "dd2d0d09-ccca-5f66-b790-696194244ef8",
+        "cace4b72-046e-5220-9693-9e5e50f41622",
+        "2b3ea370-2602-5c93-80fc-4a24b6c8fc06",
+        "88193e41-7c83-5578-8080-3107841848db",
         "6b21bb7f-2f5d-537b-8425-722c5ae1e930",
         "98d62fa4-b539-5ca2-8094-f3eb0f6f3cbf",
         "c2d144df-9760-5fc9-a935-f137c7018606",
@@ -87,13 +91,38 @@
         "d4176369-7500-5747-807d-16356e8d1ee5",
         "70754fa6-4619-59e8-8ba1-6b0d7185ec73",
         "4270d0ff-7f18-5809-ad2b-e87ddfb57aad",
+        "b6e7f25a-cb37-5d14-9169-7f316b0f0455",
         "518f01b0-ffd4-5212-9be8-4de6705a2b2c",
         "d03538c7-ce28-524f-9142-d93f86ffeb99",
+        "6fb92318-01a8-52ae-9576-d6eee85dee3e",
         "3c41516f-0501-507f-b6e1-bf57c1add1a6",
         "273f8d11-639b-5b62-8585-f65cc0460a79",
         "43f03bd8-c4e4-5006-8fb7-f00fc25d9838",
+        "cf181481-b869-554f-a439-227009d50b6a",
+        "b6de0d4c-687f-55d3-bf73-b2773f2458f8",
+        "fceb645a-507f-5ec7-a299-766da345b954",
+        "c0dc42fb-056d-5a43-994b-0bc417e14dd1",
+        "db82e80f-1220-58b8-861d-110c93e74702",
+        "586c1a99-c4f5-5d7d-8a5b-cec97d72f4f3",
+        "6df25228-291f-5d82-a09d-04b676becbe0",
+        "612d56c2-7382-5f2e-8a09-d248d8f51d35",
+        "32ec4bd0-2fa8-5ae7-89c4-6a4db5b7ba9a",
+        "d1e9ff66-44f6-5b27-949b-b0858a15c879",
+        "affcdf73-0140-5302-aba4-4eb000e110dd",
+        "d53fca7f-e807-5139-953a-6d2eca5a36c6",
+        "bd07ede2-eafc-5dc6-9405-0d1466e6acb9",
+        "7029a466-13b4-5f5f-884c-65be2d4e7f52",
+        "9c65cfa8-89d8-5ff7-b85d-584f38ea4ea8",
+        "92d886a9-87a5-5a9a-84f5-d7b289714d6a",
+        "b1737286-acf5-5c45-9004-ce658d27b1d6",
+        "ecec0fe2-d84f-5911-afb2-82d7c62ac757",
         "9f8ae4a5-54b1-5460-9f7e-4a1bb8c436b0",
         "4fea1997-21b4-50a0-a229-9e26478d123b",
+        "0364989c-cad3-57d4-83fd-af7a65040576",
+        "fd56021e-0c88-56a9-9342-4a7a80333985",
+        "6e402546-c051-5cfd-9a39-26d8b152ae63",
+        "29db46dd-7c6e-504e-b4f4-3d52b394de78",
+        "5b9b8e02-9305-5b35-97b2-47c3cc82b858",
         "f3c93e75-168c-5c3a-ad25-579adf767b26",
         "7c389a4a-7864-5f86-83dd-e5a4bcebe88b",
         "b0dbeaff-85b9-55cc-a2f0-a21659626a4c",
@@ -177,12 +206,60 @@
       ]
     },
     {
+      "nodeUid": "cb5742cc-49ff-5b6a-b1cd-99033a74f59a",
+      "nodeName": "flame_arrester",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "flame_arrester",
+      "role": "vent",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
       "nodeUid": "dd2d0d09-ccca-5f66-b790-696194244ef8",
       "nodeName": "foundation_ring",
       "objectId": "fixed_roof_tank",
       "systemId": "storage_tankyard",
       "semanticId": "foundation_ring",
       "role": "support",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "cace4b72-046e-5220-9693-9e5e50f41622",
+      "nodeName": "grounding_lug_1",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "grounding_lug_1",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "2b3ea370-2602-5c93-80fc-4a24b6c8fc06",
+      "nodeName": "grounding_lug_2",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "grounding_lug_2",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "88193e41-7c83-5578-8080-3107841848db",
+      "nodeName": "grounding_lug_3",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "grounding_lug_3",
+      "role": "accessory",
       "interactive": true,
       "representations": [
         "detail"
@@ -369,6 +446,18 @@
       ]
     },
     {
+      "nodeUid": "b6e7f25a-cb37-5d14-9169-7f316b0f0455",
+      "nodeName": "nozzle_inlet_bolt",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "nozzle_inlet_bolt",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
       "nodeUid": "518f01b0-ffd4-5212-9be8-4de6705a2b2c",
       "nodeName": "nozzle_inlet_flange",
       "objectId": "fixed_roof_tank",
@@ -386,6 +475,18 @@
       "objectId": "fixed_roof_tank",
       "systemId": "storage_tankyard",
       "semanticId": "nozzle_outlet",
+      "role": "nozzle",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "6fb92318-01a8-52ae-9576-d6eee85dee3e",
+      "nodeName": "nozzle_outlet_bolt",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "nozzle_outlet_bolt",
       "role": "nozzle",
       "interactive": true,
       "representations": [
@@ -429,6 +530,222 @@
       ]
     },
     {
+      "nodeUid": "cf181481-b869-554f-a439-227009d50b6a",
+      "nodeName": "roof_rail_mid",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_mid",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b6de0d4c-687f-55d3-bf73-b2773f2458f8",
+      "nodeName": "roof_rail_post_00",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_00",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "fceb645a-507f-5ec7-a299-766da345b954",
+      "nodeName": "roof_rail_post_01",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_01",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "c0dc42fb-056d-5a43-994b-0bc417e14dd1",
+      "nodeName": "roof_rail_post_02",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_02",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "db82e80f-1220-58b8-861d-110c93e74702",
+      "nodeName": "roof_rail_post_03",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_03",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "586c1a99-c4f5-5d7d-8a5b-cec97d72f4f3",
+      "nodeName": "roof_rail_post_04",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_04",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "6df25228-291f-5d82-a09d-04b676becbe0",
+      "nodeName": "roof_rail_post_05",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_05",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "612d56c2-7382-5f2e-8a09-d248d8f51d35",
+      "nodeName": "roof_rail_post_06",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_06",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "32ec4bd0-2fa8-5ae7-89c4-6a4db5b7ba9a",
+      "nodeName": "roof_rail_post_07",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_07",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d1e9ff66-44f6-5b27-949b-b0858a15c879",
+      "nodeName": "roof_rail_post_08",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_08",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "affcdf73-0140-5302-aba4-4eb000e110dd",
+      "nodeName": "roof_rail_post_09",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_09",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "d53fca7f-e807-5139-953a-6d2eca5a36c6",
+      "nodeName": "roof_rail_post_10",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_10",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "bd07ede2-eafc-5dc6-9405-0d1466e6acb9",
+      "nodeName": "roof_rail_post_11",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_11",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "7029a466-13b4-5f5f-884c-65be2d4e7f52",
+      "nodeName": "roof_rail_post_12",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_12",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "9c65cfa8-89d8-5ff7-b85d-584f38ea4ea8",
+      "nodeName": "roof_rail_post_13",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_13",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "92d886a9-87a5-5a9a-84f5-d7b289714d6a",
+      "nodeName": "roof_rail_post_14",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_14",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "b1737286-acf5-5c45-9004-ce658d27b1d6",
+      "nodeName": "roof_rail_post_15",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_post_15",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "ecec0fe2-d84f-5911-afb2-82d7c62ac757",
+      "nodeName": "roof_rail_top",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "roof_rail_top",
+      "role": "accessory",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
       "nodeUid": "9f8ae4a5-54b1-5460-9f7e-4a1bb8c436b0",
       "nodeName": "roof_rim",
       "objectId": "fixed_roof_tank",
@@ -446,6 +763,66 @@
       "objectId": "fixed_roof_tank",
       "systemId": "storage_tankyard",
       "semanticId": "shell",
+      "role": "shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "0364989c-cad3-57d4-83fd-af7a65040576",
+      "nodeName": "shell_course_1",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "shell_course_1",
+      "role": "shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "fd56021e-0c88-56a9-9342-4a7a80333985",
+      "nodeName": "shell_course_2",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "shell_course_2",
+      "role": "shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "6e402546-c051-5cfd-9a39-26d8b152ae63",
+      "nodeName": "shell_course_3",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "shell_course_3",
+      "role": "shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "29db46dd-7c6e-504e-b4f4-3d52b394de78",
+      "nodeName": "shell_course_4",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "shell_course_4",
+      "role": "shell",
+      "interactive": true,
+      "representations": [
+        "detail"
+      ]
+    },
+    {
+      "nodeUid": "5b9b8e02-9305-5b35-97b2-47c3cc82b858",
+      "nodeName": "shell_course_5",
+      "objectId": "fixed_roof_tank",
+      "systemId": "storage_tankyard",
+      "semanticId": "shell_course_5",
       "role": "shell",
       "interactive": true,
       "representations": [
@@ -583,7 +960,11 @@
       "3b06b6c4-a6a0-5ba4-a6b9-c57ac462bbe3",
       "5bf9ceb3-17cd-5e11-a520-6b9651247c01",
       "ab9a0e4d-5bde-57fd-9477-cc9bd1f82b79",
+      "cb5742cc-49ff-5b6a-b1cd-99033a74f59a",
       "dd2d0d09-ccca-5f66-b790-696194244ef8",
+      "cace4b72-046e-5220-9693-9e5e50f41622",
+      "2b3ea370-2602-5c93-80fc-4a24b6c8fc06",
+      "88193e41-7c83-5578-8080-3107841848db",
       "6b21bb7f-2f5d-537b-8425-722c5ae1e930",
       "98d62fa4-b539-5ca2-8094-f3eb0f6f3cbf",
       "c2d144df-9760-5fc9-a935-f137c7018606",
@@ -599,13 +980,38 @@
       "d4176369-7500-5747-807d-16356e8d1ee5",
       "70754fa6-4619-59e8-8ba1-6b0d7185ec73",
       "4270d0ff-7f18-5809-ad2b-e87ddfb57aad",
+      "b6e7f25a-cb37-5d14-9169-7f316b0f0455",
       "518f01b0-ffd4-5212-9be8-4de6705a2b2c",
       "d03538c7-ce28-524f-9142-d93f86ffeb99",
+      "6fb92318-01a8-52ae-9576-d6eee85dee3e",
       "3c41516f-0501-507f-b6e1-bf57c1add1a6",
       "273f8d11-639b-5b62-8585-f65cc0460a79",
       "43f03bd8-c4e4-5006-8fb7-f00fc25d9838",
+      "cf181481-b869-554f-a439-227009d50b6a",
+      "b6de0d4c-687f-55d3-bf73-b2773f2458f8",
+      "fceb645a-507f-5ec7-a299-766da345b954",
+      "c0dc42fb-056d-5a43-994b-0bc417e14dd1",
+      "db82e80f-1220-58b8-861d-110c93e74702",
+      "586c1a99-c4f5-5d7d-8a5b-cec97d72f4f3",
+      "6df25228-291f-5d82-a09d-04b676becbe0",
+      "612d56c2-7382-5f2e-8a09-d248d8f51d35",
+      "32ec4bd0-2fa8-5ae7-89c4-6a4db5b7ba9a",
+      "d1e9ff66-44f6-5b27-949b-b0858a15c879",
+      "affcdf73-0140-5302-aba4-4eb000e110dd",
+      "d53fca7f-e807-5139-953a-6d2eca5a36c6",
+      "bd07ede2-eafc-5dc6-9405-0d1466e6acb9",
+      "7029a466-13b4-5f5f-884c-65be2d4e7f52",
+      "9c65cfa8-89d8-5ff7-b85d-584f38ea4ea8",
+      "92d886a9-87a5-5a9a-84f5-d7b289714d6a",
+      "b1737286-acf5-5c45-9004-ce658d27b1d6",
+      "ecec0fe2-d84f-5911-afb2-82d7c62ac757",
       "9f8ae4a5-54b1-5460-9f7e-4a1bb8c436b0",
       "4fea1997-21b4-50a0-a229-9e26478d123b",
+      "0364989c-cad3-57d4-83fd-af7a65040576",
+      "fd56021e-0c88-56a9-9342-4a7a80333985",
+      "6e402546-c051-5cfd-9a39-26d8b152ae63",
+      "29db46dd-7c6e-504e-b4f4-3d52b394de78",
+      "5b9b8e02-9305-5b35-97b2-47c3cc82b858",
       "f3c93e75-168c-5c3a-ad25-579adf767b26",
       "7c389a4a-7864-5f86-83dd-e5a4bcebe88b",
       "b0dbeaff-85b9-55cc-a2f0-a21659626a4c",
@@ -620,7 +1026,11 @@
       "3b06b6c4-a6a0-5ba4-a6b9-c57ac462bbe3",
       "5bf9ceb3-17cd-5e11-a520-6b9651247c01",
       "ab9a0e4d-5bde-57fd-9477-cc9bd1f82b79",
+      "cb5742cc-49ff-5b6a-b1cd-99033a74f59a",
       "dd2d0d09-ccca-5f66-b790-696194244ef8",
+      "cace4b72-046e-5220-9693-9e5e50f41622",
+      "2b3ea370-2602-5c93-80fc-4a24b6c8fc06",
+      "88193e41-7c83-5578-8080-3107841848db",
       "6b21bb7f-2f5d-537b-8425-722c5ae1e930",
       "98d62fa4-b539-5ca2-8094-f3eb0f6f3cbf",
       "c2d144df-9760-5fc9-a935-f137c7018606",
@@ -636,13 +1046,38 @@
       "d4176369-7500-5747-807d-16356e8d1ee5",
       "70754fa6-4619-59e8-8ba1-6b0d7185ec73",
       "4270d0ff-7f18-5809-ad2b-e87ddfb57aad",
+      "b6e7f25a-cb37-5d14-9169-7f316b0f0455",
       "518f01b0-ffd4-5212-9be8-4de6705a2b2c",
       "d03538c7-ce28-524f-9142-d93f86ffeb99",
+      "6fb92318-01a8-52ae-9576-d6eee85dee3e",
       "3c41516f-0501-507f-b6e1-bf57c1add1a6",
       "273f8d11-639b-5b62-8585-f65cc0460a79",
       "43f03bd8-c4e4-5006-8fb7-f00fc25d9838",
+      "cf181481-b869-554f-a439-227009d50b6a",
+      "b6de0d4c-687f-55d3-bf73-b2773f2458f8",
+      "fceb645a-507f-5ec7-a299-766da345b954",
+      "c0dc42fb-056d-5a43-994b-0bc417e14dd1",
+      "db82e80f-1220-58b8-861d-110c93e74702",
+      "586c1a99-c4f5-5d7d-8a5b-cec97d72f4f3",
+      "6df25228-291f-5d82-a09d-04b676becbe0",
+      "612d56c2-7382-5f2e-8a09-d248d8f51d35",
+      "32ec4bd0-2fa8-5ae7-89c4-6a4db5b7ba9a",
+      "d1e9ff66-44f6-5b27-949b-b0858a15c879",
+      "affcdf73-0140-5302-aba4-4eb000e110dd",
+      "d53fca7f-e807-5139-953a-6d2eca5a36c6",
+      "bd07ede2-eafc-5dc6-9405-0d1466e6acb9",
+      "7029a466-13b4-5f5f-884c-65be2d4e7f52",
+      "9c65cfa8-89d8-5ff7-b85d-584f38ea4ea8",
+      "92d886a9-87a5-5a9a-84f5-d7b289714d6a",
+      "b1737286-acf5-5c45-9004-ce658d27b1d6",
+      "ecec0fe2-d84f-5911-afb2-82d7c62ac757",
       "9f8ae4a5-54b1-5460-9f7e-4a1bb8c436b0",
       "4fea1997-21b4-50a0-a229-9e26478d123b",
+      "0364989c-cad3-57d4-83fd-af7a65040576",
+      "fd56021e-0c88-56a9-9342-4a7a80333985",
+      "6e402546-c051-5cfd-9a39-26d8b152ae63",
+      "29db46dd-7c6e-504e-b4f4-3d52b394de78",
+      "5b9b8e02-9305-5b35-97b2-47c3cc82b858",
       "f3c93e75-168c-5c3a-ad25-579adf767b26",
       "7c389a4a-7864-5f86-83dd-e5a4bcebe88b",
       "b0dbeaff-85b9-55cc-a2f0-a21659626a4c",
@@ -657,16 +1092,24 @@
       "3b06b6c4-a6a0-5ba4-a6b9-c57ac462bbe3",
       "5bf9ceb3-17cd-5e11-a520-6b9651247c01",
       "ab9a0e4d-5bde-57fd-9477-cc9bd1f82b79",
+      "cb5742cc-49ff-5b6a-b1cd-99033a74f59a",
       "dd2d0d09-ccca-5f66-b790-696194244ef8",
       "70754fa6-4619-59e8-8ba1-6b0d7185ec73",
       "4270d0ff-7f18-5809-ad2b-e87ddfb57aad",
+      "b6e7f25a-cb37-5d14-9169-7f316b0f0455",
       "518f01b0-ffd4-5212-9be8-4de6705a2b2c",
       "d03538c7-ce28-524f-9142-d93f86ffeb99",
+      "6fb92318-01a8-52ae-9576-d6eee85dee3e",
       "3c41516f-0501-507f-b6e1-bf57c1add1a6",
       "273f8d11-639b-5b62-8585-f65cc0460a79",
       "43f03bd8-c4e4-5006-8fb7-f00fc25d9838",
       "9f8ae4a5-54b1-5460-9f7e-4a1bb8c436b0",
       "4fea1997-21b4-50a0-a229-9e26478d123b",
+      "0364989c-cad3-57d4-83fd-af7a65040576",
+      "fd56021e-0c88-56a9-9342-4a7a80333985",
+      "6e402546-c051-5cfd-9a39-26d8b152ae63",
+      "29db46dd-7c6e-504e-b4f4-3d52b394de78",
+      "5b9b8e02-9305-5b35-97b2-47c3cc82b858",
       "f3c93e75-168c-5c3a-ad25-579adf767b26",
       "7c389a4a-7864-5f86-83dd-e5a4bcebe88b",
       "b0dbeaff-85b9-55cc-a2f0-a21659626a4c",
@@ -775,7 +1218,7 @@
   "processBasis": [],
   "limitations": [
     "教学示意结构，不用于工程设计、设备选型、机械强度或 CFD 仿真。",
-    "GLB 的 35 个节点全部携带 extras.petro，extrasStatus=verified。",
+    "GLB 的 64 个节点全部携带 extras.petro，extrasStatus=verified。",
     "罐体 half 模式使用真实开口半壳（近侧半圈删除），不是隐藏面或裁剪平面。",
     "half 模式的浮盘/边缘密封仍按真实液位定位。"
   ],
