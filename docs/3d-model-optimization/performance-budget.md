@@ -37,3 +37,11 @@
 - 资源字节按 `BufferAttribute` 与贴图尺寸估算时必须标 **estimate**。
 - 显存占用本机 **NOT_AVAILABLE**（WebGL 不暴露）。
 - CI/无头环境走 SwiftShader，**只做功能验证**，其结果不得作为 GPU 性能证据。
+
+---
+
+## 5. 时效说明（2026-11-27 追加）
+
+L1 已于同日按用户要求退回 Phase 9 之前的实现（`ce0402a^`，旧 OBJ 资产）。
+上表 **L1 那一行的 draw calls / triangles 是 v2 四资产时期测的，不再代表当前 L1**；
+其余关卡（总览、L2–L5）未受影响。如需 L1 新基线，需重跑 `tools/perf/run-baseline.mjs`。
